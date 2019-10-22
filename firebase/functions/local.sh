@@ -1,0 +1,1 @@
+firebasae serve --only functions

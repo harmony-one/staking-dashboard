@@ -1,0 +1,135 @@
+@import "reset";
+@import "variables";
+@import "vendor/vue-directive-tooltip.css";
+
+/* global-reset() */
+
+/* reset-html5() */
+
+/* --- MODULES --- */
+@import "table.css";
+
+/* --- BASICS --- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  background: var(--app-bg);
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+#app {
+  font-size: var(--x);
+  line-height: 1.5;
+  font-family: var(--sans);
+  color: var(--txt);
+  display: flex;
+  flex-flow: column nowrap;
+  min-width: 0;
+}
+
+#app-content {
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.tm-field {
+  border-radius: 0.25rem !important;
+}
+
+input[readonly],
+input[disabled],
+textarea[readonly],
+textarea[disabled] {
+  background: var(--bc-dim) !important;
+  border-color: var(--bc) !important;
+}
+
+input[type="radio"] {
+  margin: 0;
+}
+
+input.tm-field {
+  height: inherit !important;
+}
+
+.tm-select .tm-field-select-addon {
+  height: 100% !important;
+  border-left: 1px solid var(--input-bc, #ccc);
+  width: 29px !important;
+}
+
+.tm-li-container {
+  margin-right: 1rem;
+}
+
+.input-suffix {
+  background: var(--bc-dim);
+  display: inline-block;
+  position: absolute;
+  padding: 8px;
+  font-size: var(--sm);
+  text-transform: uppercase;
+  top: 2px;
+  right: 30px;
+  letter-spacing: 1px;
+  text-align: right;
+  font-weight: 500;
+  border-radius: 2px;
+}
+
+.input-suffix.max-button {
+  right: 124px;
+}
+
+.field-checkbox-label {
+  display: block;
+  padding-left: 1.5rem;
+  text-indent: -1.5rem;
+  line-height: 14px;
+}
+
+#bar-container {
+  display: block;
+}
+
+@media screen and (max-width: 1023px) {
+  #app-content {
+    padding-top: 44px;
+  }
+}
+
+@media screen and (min-width: 1023px) {
+  #app {
+    flex-flow: row nowrap;
+  }
+
+  #app-content {
+    display: flex;
+    min-width: 0;
+  }
+}
+
+@media screen and (max-width: 667px) {
+  .hide-xs {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 668px) {
+  .hide-m {
+    display: none !important;
+  }
+}

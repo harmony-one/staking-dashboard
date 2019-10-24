@@ -1,0 +1,18 @@
+{
+  "when_login": {
+    "operationName": "Networks",
+    "variables": {},
+    "query": "query Networks {\n  networks(where: {id: {_eq: \"cosmoshub\"}, feature_session: {_eq: true}}) {\n    id\n    __typename\n  }\n}\n"
+  },
+  "login_response": {
+    "data": {
+      "networks": [
+        {
+          "id": "cosmoshub",
+          "__typename": "networks"
+        }
+      ]
+    }
+  },
+  "pool_url": "https: //lcd.nylira.net/staking/pool"
+}

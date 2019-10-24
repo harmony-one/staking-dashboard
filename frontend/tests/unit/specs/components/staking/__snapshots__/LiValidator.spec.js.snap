@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LiValidator has the expected html structure 1`] = `
+<tr
+  class="li-validator"
+  data-moniker="mr_mounty"
+>
+  <td>
+    2
+  </td>
+   
+  <td
+    class="hide-xs"
+  >
+    <div
+      class="status-container"
+    >
+      <span
+        class="validator-status active"
+      >
+        
+        Active
+      
+      </span>
+    </div>
+  </td>
+   
+  <td
+    class="data-table__row__info"
+  >
+    <img
+      alt="validator logo for mr_mounty"
+      class="li-validator-image"
+      src="https://s3.amazonaws.com/img/path.jpg"
+    />
+     
+    <div
+      class="validator-info"
+    >
+      <h3
+        class="li-validator-name"
+      >
+        
+        mr_mounty
+      
+      </h3>
+       
+      <!---->
+    </div>
+  </td>
+   
+  <td
+    class="hide-xs"
+  >
+    
+    13.00%
+  
+  </td>
+   
+  <td
+    class="hide-xs"
+  >
+    
+    1.40%
+  
+  </td>
+</tr>
+`;

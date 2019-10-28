@@ -1,37 +1,42 @@
 :root {
   /*  ============================================================================= */
-
-  /* colors */
-  --tertiary: hsl(325, 20%, 96%);
+  --tertiary: hsl(325, 96%, 59%);
   --secondary: hsl(277, 92%, 58%);
-  --primary: hsl(210, 96%, 56%);
-  --primary-alpha: hsla(233, 88%, 57%, 0.6);
-  --primary-dark: rgb(23, 111, 171);
-  --primary-hover: hsl(233, 88%, 57%);
+  --primary: #0a93eb;
+  --primary-button-background-color: #0a93eb;
+  --primary-button-hover-background-color: #0987d7;
+  --primary-alpha: #0a93eb;
+  --primary-dark: #0981cf;
   --link: hsl(217, 100%, 70%);
-  --input-bc: hsla(220, 11%, 84%, 1);
+  --input-bc: #bdc7d8;
   --link-dark: hsl(233, 88%, 50%);
   --link-hover: rgba(31, 117, 255, 1);
+  --link-white: hsl(183, 88%, 50%);
+  --link-orange: hsl(86, 100%, 87%);
+  --link-orange-hover: hsl(85, 62%, 80%);
   --hover: rgba(0, 0, 0, 8%);
   --hover-bg: rgba(27, 113, 255, 0.1);
   --bright: hsl(0, 100%, 100%);
-  --bright-blue: hsl(183, 88%, 50%);
-  --txt: hsl(0, 100%, 100%);
-  --txt-black: hsl(233, 36%, 15%);
-  --dim: hsl(0, 0%, 100%);
-  --dim-black: hsl(233, 10%, 32%);
-  --bc: hsl(195, 59%, 88%);
+  --bright-light: rgba(255, 255, 255, 0.1);
+  --txt: #4d4b5a;
+  --txt-header: #222;
+  --text-white: #fefefe;
+  --dim: #777;
+  --bc: hsla(233, 24%, 75%, 0.175);
   --bc-dim: hsla(233, 24%, 75%, 0.0875);
-  --app-fg: hsla(187, 50%, 85%, 0.4);
+  --app-fg: rgba(255, 255, 255, 0.1);
   --app-fg-dark: hsl(233, 36%, 15%);
-  --app-bg:hsl(233, 37%, 98%);
-  --app-nav: linear-gradient(45deg, rgba(68,178,218,1) 50%, rgba(70,185,217,1) 56%, rgba(82,239,213,1) 100%);
-  --app-nav-light: hsl(233, 38%, 11%);
+  --app-bg: #f7f7ff;
+  --app-bg-dark: #d9d9e0;
+  --app-nav: linear-gradient(to right top, #00aee9, #4fe7c8);
+  --app-nav-light: linear-gradient(to right top, #00aee9, #4fe7c8);
+  --app-light-blue: #4fe7c8;
+  --app-dark-blue: #00aee9;
   --black: rgb(0, 0, 0);
   --grey: hsl(234, 13%, 85%);
+  --white: #fff;
   --white-fade-1: rgba(177, 179, 187, 0.25);
   --white-fade-2: rgba(208, 209, 214, 0.15);
-  --white: rgb(255, 255, 255);
   --green: hsl(105, 60%, 44%, 1);
   --green-fade-1: hsla(105, 60%, 44%, 0.25);
   --green-fade-2: hsla(105, 60%, 44%, 0.15);
@@ -52,7 +57,7 @@
   --input-bg: transparent;
   --success: hsl(120, 58%, 50%);
   --success-bc: hsl(120, 58%, 41%);
-  --warning:hsl(61, 90%, 52%);
+  --warning: hsl(61, 90%, 52%);
   --warning-bc: hsl(35, 75%, 38%);
   --danger: hsl(0, 100%, 55%);
   --danger-bc: hsl(0, 100%, 41%);
@@ -76,6 +81,7 @@
     "Droid Sans",
     "Helvetica Neue",
     sans-serif;
+  --helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: Consolas, Monaco, monospace;
   --xxl: calc(var(--x) * 1.75);
   --xl: calc(var(--x) * 1.5);

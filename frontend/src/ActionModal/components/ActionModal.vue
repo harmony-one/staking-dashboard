@@ -702,7 +702,8 @@ export default {
 
 <style>
 .action-modal {
-  background: var(--app-nav-light);
+  /* background: var(--app-nav-light); */
+  background: var(--white);
   display: flex;
   flex-direction: column;
   right: 1rem;
@@ -731,7 +732,7 @@ export default {
   flex: 1;
   font-size: var(--h2);
   font-weight: 400;
-  color: var(--bright);
+  color: var(--txt-header);
   padding-bottom: 2rem;
 }
 
@@ -790,7 +791,6 @@ export default {
 }
 
 .form-message {
-  font-size: var(--sm);
   font-weight: 500;
   font-style: italic;
   color: var(--dim);
@@ -826,6 +826,7 @@ export default {
   #send-modal {
     text-align: center;
   }
+
   .tm-data-msg__icon {
     margin-right: 0;
   }

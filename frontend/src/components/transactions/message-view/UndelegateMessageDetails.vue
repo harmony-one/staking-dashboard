@@ -71,6 +71,6 @@ export default {
 .tx__content__caption {
   line-height: 18px;
   font-size: 18px;
-  color: var(--bright);
+  color: var(--txt);
 }
 </style>

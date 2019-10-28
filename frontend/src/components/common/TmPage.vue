@@ -187,7 +187,7 @@ h4 {
 }
 
 .row span {
-  color: var(--bright);
+  color: var(--txt);
   font-size: var(--sm);
   font-weight: 400;
   line-height: 1rem;

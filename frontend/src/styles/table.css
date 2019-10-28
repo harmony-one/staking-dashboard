@@ -3,7 +3,7 @@
   width: 100%;
   padding: 0;
   table-layout: fixed;
-  background: var(--white);
+  /*background: var(--white);*/
 }
 
 .data-table tr td:first-child::before {
@@ -14,25 +14,25 @@
   left: -1.5rem;
 }
 
+.data-table th {
+  padding: 0.5rem 2rem;
+  text-align: left;
+}
+
 .data-table th:first-child {
   width: 5%;
   color: var(--dim-black);
-  font-size: var(--sm)
+  font-size: var(--sm);
 }
 
 .data-table th:nth-child(2) {
   width: 10%;
   color: var(--dim-black);
-  font-size: var(--sm)
+  font-size: var(--sm);
 }
 
 .data-table th:nth-child(3) {
   width: 50%;
-}
-
-.data-table th {
-  padding: 0.5rem 2rem;
-  text-align: left;
 }
 
 .data-table td {

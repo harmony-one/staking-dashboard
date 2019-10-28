@@ -40,7 +40,7 @@ export default {
   top: 0;
   width: 100%;
   padding: 1rem;
-  font-family: var(--sans);
+  font-family: var(--helvetica);
   background-color: #551f38;
   font-size: 14px;
   line-height: 20px;
@@ -49,7 +49,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--bright);
+  color: var(--text-white);
 }
 
 .bar.primary {
@@ -74,7 +74,7 @@ export default {
 
 .bar .link {
   text-decoration: underline;
-  color: var(--bright-blue);
+  color: var(--link-white);
   cursor: pointer;
 }
 

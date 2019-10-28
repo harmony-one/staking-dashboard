@@ -60,7 +60,7 @@ export default {
 }
 
 .tm-li-session-title {
-  color: var(--bright);
+  color: var(--txt);
   font-size: var(--h4);
   font-weight: 400;
 }

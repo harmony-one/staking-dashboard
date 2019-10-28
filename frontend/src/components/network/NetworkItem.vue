@@ -94,7 +94,7 @@ export default {
   font-size: 1rem;
   line-height: 18px;
   font-weight: 500;
-  color: var(--bright);
+  color: var(--txt);
 }
 
 .network-caption {

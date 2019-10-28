@@ -144,15 +144,14 @@ export default {
 
 .li-validator:hover {
   cursor: pointer;
-  background: var(--hover-bg);
-  color: var(--bright);
+  color: var(--txt);
 }
 
 .li-validator-name {
   font-size: 1rem;
   line-height: 18px;
   font-weight: 500;
-  color: var(--txt-black);
+  color: var(--txt);
   display: inline-block;
 }
 

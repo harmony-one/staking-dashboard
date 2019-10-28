@@ -5,7 +5,7 @@
         <a href="https://lunie.io">
           <img
             class="header-item-logo"
-            src="~assets/images/harmony-logo.png"
+            src="~assets/images/harmony-logo-white.svg"
             alt="Lunie spaceship accelerating into a colourful space sky"
           />
           Lunie
@@ -81,7 +81,7 @@ export default {
 }
 
 .app-header .header-item.open {
-  background: var(--app-nav);
+  background: transparent;
 }
 
 .mobile-menu-action {
@@ -104,7 +104,7 @@ export default {
 }
 
 .header-item-logo {
-  height: 5rem;
+  height: 2.5rem;
 }
 
 @media screen and (max-width: 1023px) {
@@ -114,7 +114,7 @@ export default {
   }
 
   .container {
-    background: var(--app-fg-dark);
+    background: var(--app-nav);
     position: fixed;
     width: 100%;
   }
@@ -124,12 +124,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 0.5rem 0.5rem 1rem;
-    color: var(--link);
+    color: white;
     cursor: pointer;
   }
 
   .header-item-logo {
-    height: 3rem;
+    height: 2rem;
   }
 }
 

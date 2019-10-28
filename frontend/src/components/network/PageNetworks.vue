@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import { Networks, NetworksResult } from "src/gql"
 import NetworkList from "./NetworkList"
 
 import TmPage from "common/TmPage"
+import { fetchNetworks } from "../../mock-service"
 export default {
   name: `page-network`,
   components: {
@@ -31,11 +31,8 @@ export default {
       return this.networks.filter(network => network.testnet)
     }
   },
-  apollo: {
-    networks: {
-      query: Networks,
-      update: NetworksResult
-    }
+  mounted() {
+    fetchNetworks().then(networks => (this.networks = networks))
   }
 }
 </script>

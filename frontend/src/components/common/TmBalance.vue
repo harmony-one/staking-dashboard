@@ -153,7 +153,7 @@ export default {
   font-size: 24px;
   font-weight: 500;
   line-height: 24px;
-  color: var(--bright);
+  color: var(--txt);
 }
 
 .values-container h3 {

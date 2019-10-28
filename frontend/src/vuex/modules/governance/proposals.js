@@ -1,5 +1,6 @@
 import Vue from "vue"
 import BigNumber from "bignumber.js"
+import { fetchProposals } from "../../../mock-service"
 
 export const setProposalTally = (commit, node) => async proposal => {
   commit(`setProposal`, proposal)
@@ -38,10 +39,15 @@ export default ({ node }) => {
     },
     async getProposals({ state, commit, rootState }) {
       state.loading = true
-      if (!rootState.connection.connected) return
+
+      console.log(rootState)
+      // if (!rootState.connection.connected) return
 
       try {
-        const proposals = await node.get.proposals()
+        // const proposals = await node.get.proposals()
+
+        const proposals = await fetchProposals()
+
         if (proposals.length > 0) {
           await Promise.all(proposals.map(setProposalTally(commit, node)))
         }

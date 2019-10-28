@@ -1,1 +1,2 @@
-firebasae serve --only functions
+firebase serve --only functions
+

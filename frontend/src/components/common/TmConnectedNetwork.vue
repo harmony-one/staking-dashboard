@@ -51,7 +51,7 @@
     >
       <img
         class="tm-connected-network-loader"
-        src="~assets/images/loader.svg"
+        src="~assets/images/loader-white.svg"
         alt="a small spinning circle to display loading"
       />
       <div
@@ -107,7 +107,7 @@ export default {
 .tm-connected-network {
   align-items: center;
   border-radius: 0.25rem;
-  color: var(--dim);
+  color: var(--text-white);
   display: flex;
   font-size: var(--sm);
   justify-content: space-between;

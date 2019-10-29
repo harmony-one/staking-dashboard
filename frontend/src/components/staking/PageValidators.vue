@@ -42,11 +42,11 @@
 
 <script>
 import { mapState } from "vuex"
-import axios from "axios"
 import TableValidators from "staking/TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
+import { fetchValidators } from "../../mock-service"
 
 export default {
   name: `tab-validators`,
@@ -65,10 +65,7 @@ export default {
     ...mapState({ network: state => state.connection.network })
   },
   async mounted() {
-    const res = await axios.get(
-      "https://us-central1-staking-explorer.cloudfunctions.net/validators"
-    )
-    this.validators = res.data.validators
+    this.validators = await fetchValidators()
   }
 }
 </script>
@@ -96,6 +93,10 @@ export default {
   }
 }
 
+.filterOptions .btn-radio {
+  border-radius: 0;
+}
+
 .filterOptions .btn-radio:last-child {
   border-radius: 0 0.5rem 0.5rem 0;
   margin-left: -1px;
@@ -104,10 +105,6 @@ export default {
 .filterOptions .btn-radio:first-child {
   border-radius: 0.5rem 0 0 0.5rem;
   margin-right: -1px;
-}
-
-.filterOptions .btn-radio {
-  border-radius: 0;
 }
 
 @media screen and (min-width: 768px) {

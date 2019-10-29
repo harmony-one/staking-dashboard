@@ -32,7 +32,7 @@ a:hover {
 #app {
   font-size: var(--x);
   line-height: 1.5;
-  font-family: var(--sans);
+  font-family: var(--helvetica);
   color: var(--txt);
   display: flex;
   flex-flow: column nowrap;
@@ -47,6 +47,11 @@ a:hover {
 
 .tm-field {
   border-radius: 0.25rem !important;
+}
+
+.card-white {
+  background: white;
+  border-radius: 0.25em;
 }
 
 input[readonly],

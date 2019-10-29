@@ -202,7 +202,7 @@ export default {
   margin: 0.5rem 1rem;
   font-weight: 400;
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-white);
   border-radius: 0.25rem;
   transition: all 0.5s ease;
 }
@@ -219,6 +219,7 @@ export default {
   font-size: 12px;
   margin: 1rem;
   padding: 0.5rem 0.75rem;
+  color: var(--text-white);
   border: 2px solid var(--bc);
   border-radius: 0.25rem;
   display: flex;
@@ -227,7 +228,7 @@ export default {
 }
 
 .user-box i {
-  color: var(--dim);
+  color: var(--bright);
   font-size: var(--m);
   display: flex;
   align-items: center;
@@ -250,11 +251,10 @@ export default {
 }
 
 .app-menu .app-menu-item.router-link-active i {
-  color: var(--tertiary);
+  color: white;
 }
 
 .app-menu .app-menu-item.router-link-active h2 {
-  color: var(--bright);
   font-weight: 500;
 }
 

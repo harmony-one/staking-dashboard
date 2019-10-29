@@ -44,6 +44,7 @@
 
 .session-main {
   flex: 1;
+
   /* padding: 0 1rem; */
 }
 
@@ -54,7 +55,7 @@
 .session-title {
   font-size: var(--h2);
   line-height: 44px;
-  color: var(--bright);
+  color: var(--txt);
   font-weight: 600;
   padding: 1rem 0 0;
 }

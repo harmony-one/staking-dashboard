@@ -92,7 +92,7 @@ export default {
 
 <style>
 .tm-notification {
-  background: var(--app-nav);
+  background: var(--app-bg-dark);
   font-size: 0.75rem;
   cursor: pointer;
   user-select: none;

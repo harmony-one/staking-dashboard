@@ -41,9 +41,19 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .account-list {
   padding: 2rem 0;
+}
+
+.account-list .account-button {
+  padding: 0.25rem 0.5rem;
+  font-size: 13px;
+}
+
+.account-list .bech32-address .address {
+  font-size: 14px;
+  color: var(--primary-dark) !important;
 }
 
 .account {
@@ -54,10 +64,11 @@ export default {
   background: var(--app-fg);
   border-radius: 0.25rem;
   border: 2px solid var(--bc-dim);
+  margin-bottom: 0.5rem;
 }
 
 .account h3 {
-  color: var(--bright);
+  color: var(--txt);
   font-weight: 500;
   font-size: 14px;
 }
@@ -65,13 +76,5 @@ export default {
 .account-info {
   display: flex;
   flex-direction: column;
-}
-
-.account-button {
-  padding: 0.25rem 0.5rem;
-}
-
-.bech32-address {
-  font-size: 14px;
 }
 </style>

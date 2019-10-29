@@ -38,7 +38,7 @@ export default {
 
 <style scoped>
 .button {
-  font-family: var(--sans);
+  font-family: var(--helvetica);
   font-size: 14px;
   font-weight: 400;
   padding: 8px 16px;
@@ -81,16 +81,19 @@ export default {
 }
 
 .button.secondary:hover {
-  background: var(--primary-hover);
-  border: 2px solid var(--primary-hover);
+  /* background: var(--primary-hover); */
+
+  /* border: 2px solid var(--primary-hover); */
+  background: var(--primary-dark);
+  border: 2px solid var(--primary-dark);
 }
 
 .button.secondary.small {
   padding: 6px 10px;
   font-size: 12px;
   min-width: 0;
-  color: var(--dim);
-  border-color: var(--bc);
+  color: var(--text-white);
+  border-color: var(--bright-light);
   background-color: transparent;
 }
 
@@ -105,7 +108,7 @@ export default {
 }
 
 .addon-max {
-  font-family: var(--sans);
+  font-family: var(--helvetica);
   font-size: 14px;
   font-weight: 400;
   padding: 4px 16px;

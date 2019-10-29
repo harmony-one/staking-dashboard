@@ -59,7 +59,7 @@ export default {
   display: block;
   cursor: pointer;
   max-width: 680px;
-  background: var(--app-fg);
+  background: var(--white);
   border-radius: 0.25rem;
   border: 1px solid var(--bc-dim);
 }
@@ -72,7 +72,7 @@ export default {
 .li-proposal-title {
   font-size: var(--xl);
   line-height: 32px;
-  color: var(--bright);
+  color: var(--txt);
   font-weight: 500;
   display: block;
   padding: 1rem 0 0.5rem 0;

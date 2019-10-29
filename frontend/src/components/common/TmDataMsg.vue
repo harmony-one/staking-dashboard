@@ -71,7 +71,7 @@ export default {
 
 .tm-data-msg__title {
   font-weight: 400;
-  color: var(--bright);
+  color: var(--txt-header);
   font-size: var(--h2);
 }
 

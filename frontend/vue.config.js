@@ -11,6 +11,10 @@ const commitHash = require(`child_process`)
   .toString()
   .trim()
 
+const DEFAULT_MOCK_API_URL = "https://us-central1-staking-explorer.cloudfunctions.net"
+// const DEFAULT_MOCK_API_URL =
+//   "http://localhost:5000/staking-explorer-c9991/us-central1"
+
 module.exports = {
   publicPath: `/`,
   configureWebpack: () => {
@@ -38,6 +42,9 @@ module.exports = {
             RPC: JSON.stringify(process.env.RPC),
             STARGATE: JSON.stringify(process.env.STARGATE),
             RELEASE: JSON.stringify(commitHash),
+            MOCK_API_URL: JSON.stringify(
+              process.env.MOCK_API_URL || DEFAULT_MOCK_API_URL
+            ),
             GOOGLE_ANALYTICS_UID: JSON.stringify(
               process.env.GOOGLE_ANALYTICS_UID
             )

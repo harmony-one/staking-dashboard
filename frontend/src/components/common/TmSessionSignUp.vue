@@ -125,11 +125,15 @@
         </div>
       </div>
       <div v-if="!session.insecureMode" class="session-main">
-        <p>
-          Creating an address in the browser is unsafe. To offer you a secure
-          alternative we will be releasing a browser extension and a mobile app
-          soon.
+        <p v-if="!extension.enabled">
+          Creating an address in the browser is unsafe. Please install our
+          <a target="_blank" href="http://example.com">browser extension</a>
         </p>
+        <!--        <p>-->
+        <!--          Creating an address in the browser is unsafe. To offer you a secure-->
+        <!--          alternative we will be releasing a browser extension and a mobile app-->
+        <!--          soon.-->
+        <!--        </p>-->
         <p>
           In the meantime, you can create a new account outside of the browser
           by using a
@@ -187,13 +191,17 @@ export default {
     }
   }),
   computed: {
-    ...mapState([`session`])
+    ...mapState([`session`]),
+    ...mapState([`extension`])
   },
   mounted() {
     this.$store.dispatch(`createSeed`).then(seedPhrase => {
       this.creating = false
       this.fields.signUpSeed = seedPhrase
     })
+    if (this.extension.enabled) {
+      this.$router.push("extension")
+    }
   },
   methods: {
     async onSubmit() {

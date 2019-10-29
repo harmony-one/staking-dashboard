@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="data-table">
+    <table class="data-table card-white">
       <thead>
         <PanelSort
           :sort="sort"

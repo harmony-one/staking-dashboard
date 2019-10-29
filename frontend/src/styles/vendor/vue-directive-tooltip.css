@@ -1,6 +1,6 @@
 .vue-tooltip {
   line-height: 1.5;
-  font-family: var(--sans);
+  font-family: var(--helvetica);
   background: var(--black);
   box-sizing: border-box;
   color: var(--bright);

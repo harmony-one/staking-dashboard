@@ -57,83 +57,85 @@
         />
       </div>
 
-      <ul class="row">
-        <li class="column">
-          <h4>Description</h4>
-          <span>
-            {{ validator.details | noBlanks }}
-          </span>
-        </li>
-        <li class="column">
-          <h4>Website</h4>
-          <span v-if="website !== `--`">
-            <a
-              id="validator-website"
-              :href="website"
-              target="_blank"
-              rel="nofollow noreferrer noopener"
-              >{{ website }}</a
-            >
-          </span>
-          <span v-else id="validator-website">
-            {{ website | noBlanks }}
-          </span>
-        </li>
-        <li class="column">
-          <h4>Validator Address</h4>
-          <span>
-            <Bech32 :address="validator.operator_address" />
-          </span>
-        </li>
-      </ul>
+      <div class="card-white">
+        <ul class="row">
+          <li class="column">
+            <h4>Description</h4>
+            <span>
+              {{ validator.details | noBlanks }}
+            </span>
+          </li>
+          <li class="column">
+            <h4>Website</h4>
+            <span v-if="website !== `--`">
+              <a
+                id="validator-website"
+                :href="website"
+                target="_blank"
+                rel="nofollow noreferrer noopener"
+                >{{ website }}</a
+              >
+            </span>
+            <span v-else id="validator-website">
+              {{ website | noBlanks }}
+            </span>
+          </li>
+          <li class="column">
+            <h4>Validator Address</h4>
+            <span>
+              <Bech32 :address="validator.operator_address" />
+            </span>
+          </li>
+        </ul>
 
-      <ul class="row">
-        <li>
-          <h4>Rewards</h4>
-          <span id="page-profile__rewards">
-            {{ returns | percent }}
-          </span>
-        </li>
-        <li>
-          <h4>Voting Power / Total Stake</h4>
-          <span id="page-profile__power">
-            {{ validator.voting_power | percent }} /
-            {{ validator.tokens | atoms | shortDecimals }}
-          </span>
-        </li>
-        <li>
-          <h4>Self Stake</h4>
-          <span id="page-profile__self-bond">
-            {{ selfBond }} / {{ selfBondAmount }}
-          </span>
-        </li>
-        <li>
-          <h4>Validator Since</h4>
-          <span> Block #{{ validator.start_height }} </span>
-        </li>
-        <li>
-          <h4>Uptime</h4>
-          <span id="page-profile__uptime">
-            {{ validator.uptime_percentage | percent }}
-          </span>
-        </li>
-        <li>
-          <h4>Current Commission Rate</h4>
-          <span>{{ validator.rate | percent }}</span>
-        </li>
-        <li>
-          <h4>Max Commission Rate</h4>
-          <span>{{ validator.max_rate | percent }}</span>
-        </li>
-        <li>
-          <h4>Max Daily Commission Change</h4>
-          <span>{{ validator.max_change_rate | percent }}</span>
-        </li>
-        <li>
-          <h4>Last Commission Change</h4>
-          <span>{{ lastCommissionChange }}</span>
-        </li>
-      </ul>
+        <ul class="row">
+          <li>
+            <h4>Rewards</h4>
+            <span id="page-profile__rewards">
+              {{ returns | percent }}
+            </span>
+          </li>
+          <li>
+            <h4>Voting Power / Total Stake</h4>
+            <span id="page-profile__power">
+              {{ validator.voting_power | percent }} /
+              {{ validator.tokens | atoms | shortDecimals }}
+            </span>
+          </li>
+          <li>
+            <h4>Self Stake</h4>
+            <span id="page-profile__self-bond">
+              {{ selfBond }} / {{ selfBondAmount }}
+            </span>
+          </li>
+          <li>
+            <h4>Validator Since</h4>
+            <span> Block #{{ validator.start_height }} </span>
+          </li>
+          <li>
+            <h4>Uptime</h4>
+            <span id="page-profile__uptime">
+              {{ validator.uptime_percentage | percent }}
+            </span>
+          </li>
+          <li>
+            <h4>Current Commission Rate</h4>
+            <span>{{ validator.rate | percent }}</span>
+          </li>
+          <li>
+            <h4>Max Commission Rate</h4>
+            <span>{{ validator.max_rate | percent }}</span>
+          </li>
+          <li>
+            <h4>Max Daily Commission Change</h4>
+            <span>{{ validator.max_change_rate | percent }}</span>
+          </li>
+          <li>
+            <h4>Last Commission Change</h4>
+            <span>{{ lastCommissionChange }}</span>
+          </li>
+        </ul>
+      </div>
 
       <DelegationModal
         ref="delegationModal"
@@ -428,7 +430,7 @@ export default {
 }
 
 .li-validator-name {
-  color: var(--bright);
+  color: var(--txt);
   font-size: var(--h1);
   line-height: 2rem;
   font-weight: 500;

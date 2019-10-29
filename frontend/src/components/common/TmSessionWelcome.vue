@@ -4,7 +4,7 @@
       <router-link to="/">
         <img
           class="session-logo-mobile"
-          src="~assets/images/lunie-logo-white.svg"
+          src="~assets/images/harmony-logo-white.svg"
           alt="a small spinning circle to display loading"
         />
       </router-link>
@@ -22,7 +22,7 @@
           id="creat-new-address"
           icon="person_add"
           title="Create a new address"
-          route="create"
+          :route="extension.enabled ? 'extension' : 'create'"
         />
         <LiSession
           id="use-an-existing-address"
@@ -47,11 +47,16 @@
 <script>
 import SessionFrame from "common/SessionFrame.vue"
 import LiSession from "common/TmLiSession"
+import { mapState } from "vuex"
+
 export default {
   name: `session-welcome`,
   components: {
     SessionFrame,
     LiSession
+  },
+  computed: {
+    ...mapState([`extension`])
   }
 }
 </script>

@@ -8,14 +8,14 @@
 h1 {
   font-size: var(--xxl);
   line-height: 36px;
-  color: var(--bright);
+  color: var(--txt-header);
   margin-bottom: 1rem;
   font-weight: 500;
 }
 
 p {
   margin-bottom: 1rem;
-  color: var(--bright);
+  color: var(--txt);
   font-size: 14px;
 }
 
@@ -62,7 +62,7 @@ li {
   margin-left: 1rem;
   margin-bottom: 0.5rem;
   font-size: 14px;
-  color: var(--bright);
+  color: var(--txt);
 }
 
 ol li {

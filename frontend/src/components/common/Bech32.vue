@@ -56,13 +56,13 @@ export default {
 }
 
 .bech32-address .address {
-  color: var(--link);
+  color: var(--link-orange);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .bech32-address .address:hover {
-  color: var(--link-hover);
+  color: var(--link-orange-hover);
 }
 
 .bech32-address .copied {

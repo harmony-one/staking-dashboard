@@ -24,6 +24,7 @@ export default function tendermintConnect() {
       this.socket.close()
     },
     async connect(websocketEndpoint) {
+      console.log('TENDERMINT WEBSOCKET ENDPOINT -> ', websocketEndpoint)
       // if we have an existing connection, first disconnect that one
       if (this.isConnected()) {
         await this.disconnect()
@@ -32,6 +33,8 @@ export default function tendermintConnect() {
       try {
         const socket = await connect(websocketEndpoint)
         this.socket = socket
+
+        console.log('SOCKET HERE -> ', socket)
       } catch (error) {
         throw error
       }

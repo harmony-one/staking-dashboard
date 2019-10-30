@@ -1,7 +1,10 @@
 const dev = process.env.NODE_ENV === `development`
 const stargate = process.env.STARGATE || `http://localhost:9071`
-const rpc = process.env.RPC || `localhost:26657`
+// const rpc = process.env.RPC || `localhost:26657`
+const rpc = 'localhost:26657/socket.io'
+
 const graphql = process.env.VUE_APP_GRAPHQL_URL || `localhost:8080`
+// const graphql = `https://backend.lunie.io/v1/graphql`
 
 export default {
   name: `Lunie`,

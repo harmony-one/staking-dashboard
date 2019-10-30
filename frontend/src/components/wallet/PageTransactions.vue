@@ -28,7 +28,6 @@ import { mapState, mapGetters } from "vuex"
 import DataEmptyTx from "common/TmDataEmptyTx"
 import TmPage from "common/TmPage"
 import TransactionList from "transactions/TransactionList"
-import { AllValidators, AllValidatorsResult } from "src/gql"
 
 export default {
   name: `page-transactions`,
@@ -75,18 +74,6 @@ export default {
     },
     loadMore() {
       this.showing += 10
-    }
-  },
-  apollo: {
-    validators: {
-      query() {
-        /* istanbul ignore next */
-        return AllValidators(this.network)
-      },
-      update(data) {
-        /* istanbul ignore next */
-        return AllValidatorsResult(this.network)(data)
-      }
     }
   }
 }

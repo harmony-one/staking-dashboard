@@ -2,6 +2,17 @@ import Vue from "vue"
 import config from "src/config"
 import axios from "axios"
 
+const mockState = {
+  balances: [
+    {
+      denom: "uatom",
+      amount: "500000"
+    }
+  ],
+  loading: false,
+  loaded: true,
+}
+
 export default ({ node }) => {
   const emptyState = {
     balances: [],
@@ -15,6 +26,9 @@ export default ({ node }) => {
   }
   const state = JSON.parse(JSON.stringify(emptyState))
   state.externals.axios = axios
+
+  // TODO Temp
+  Object.assign(state, mockState)
 
   const mutations = {
     setWalletBalances(state, balances) {
@@ -112,10 +126,17 @@ export default ({ node }) => {
     }
   }
 
+
+  // TODO TEMP Mock actions to empty functions
+  const mockedActions = Object.keys(actions).reduce((acc, key) => {
+    acc[key] = () => {}
+    return acc
+  }, {})
+
   return {
     state,
     mutations,
-    actions
+    actions: mockedActions
   }
 }
 

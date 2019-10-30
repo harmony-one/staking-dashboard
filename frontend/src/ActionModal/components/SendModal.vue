@@ -207,6 +207,7 @@ export default {
       this.$refs.actionModal.open()
     },
     validateForm() {
+      console.log('VALIDATE FORM RUNNING')
       this.$v.$touch()
 
       return !this.$v.$invalid

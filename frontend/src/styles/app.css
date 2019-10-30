@@ -1,6 +1,7 @@
 @import "reset";
 @import "variables";
 @import "vendor/vue-directive-tooltip.css";
+@import "vendor/material-icons.css";
 
 /* global-reset() */
 

@@ -1,5 +1,9 @@
 import Vue from "vue"
 
+const mockState = {
+  loaded: true
+}
+
 export default ({ node }) => {
   const emptyState = {
     loading: false,
@@ -11,6 +15,8 @@ export default ({ node }) => {
     unbondingDelegations: {}
   }
   const state = JSON.parse(JSON.stringify(emptyState))
+
+  Object.assign(state, mockState)
 
   const mutations = {
     setCommittedDelegation(state, { candidateId, value }) {

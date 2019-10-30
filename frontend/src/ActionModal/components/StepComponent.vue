@@ -54,13 +54,14 @@ export default {
 }
 
 .circle--default {
-  border: 0.1rem var(--grey) solid;
+  color: white;
+  font-weight: 500;
   border-radius: 50%;
   background: var(--app-nav-light);
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 2.2rem;
+  height: 2.2rem;
   margin-bottom: 0.75rem;
-  font-size: var(--xs);
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +69,7 @@ export default {
 }
 
 .active {
-  border-color: var(--tertiary);
+  border: 2px solid var(--tertiary);
 }
 
 .text--default {
@@ -89,10 +90,10 @@ export default {
   display: inline-block;
   content: "";
   background: var(--grey);
-  width: 3rem;
+  width: 39px;
   height: 2px;
   position: absolute;
-  left: 24px;
+  left: 36px;
 }
 
 .textActive {

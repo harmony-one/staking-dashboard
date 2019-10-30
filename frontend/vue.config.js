@@ -11,9 +11,7 @@ const commitHash = require(`child_process`)
   .toString()
   .trim()
 
-const DEFAULT_MOCK_API_URL = "https://us-central1-staking-explorer.cloudfunctions.net"
-// const DEFAULT_MOCK_API_URL =
-//   "http://localhost:5000/staking-explorer-c9991/us-central1"
+const DEFAULT_MOCK_API_URL = "https://us-central1-staking-explorer-c9991.cloudfunctions.net"
 
 module.exports = {
   publicPath: `/`,

@@ -1,6 +1,8 @@
 :root {
   /*  ============================================================================= */
-  --tertiary: hsl(325, 96%, 59%);
+  --q-tertiary: hsl(325, 96%, 59%);
+  --tertiary: #0987d9;
+
   --secondary: hsl(277, 92%, 58%);
   --primary: #0a93eb;
   --primary-button-background-color: #0a93eb;

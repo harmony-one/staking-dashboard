@@ -4,6 +4,15 @@ import config from "src/config"
 const NODE_HALTED_TIMEOUT = config.node_halted_timeout
 const MAX_CONNECTION_ATTEMPTS = 5
 
+const moskState = {
+  connected: true,
+  network: "Test Network",
+  lastHeader: {
+    chain_id: "cosmoshub-2",
+    height: "2377566"
+  }
+}
+
 export default function({ node }) {
   // get tendermint RPC client from basecoin client
 
@@ -23,6 +32,9 @@ export default function({ node }) {
       config
     }
   }
+
+  // TODO Temp
+  Object.assign(state, moskState)
 
   const mutations = {
     stopConnecting(state, stop = true) {
@@ -139,9 +151,15 @@ export default function({ node }) {
     }
   }
 
+  // TODO Temp remove
+  const mockedActions = Object.keys(actions).reduce((acc, key) => {
+    acc[key] = () => {}
+    return acc
+  }, {})
+
   return {
     state,
     mutations,
-    actions
+    actions: mockedActions
   }
 }

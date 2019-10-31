@@ -10,9 +10,9 @@ transactions with your Ledger Nano S will not work. Please use another
 operating system, or version of Windows.`
 
 const mockSessionState = {
-  signedIn: true,
-  address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
-  sessionType: "extension"
+  // signedIn: true,
+  // address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
+  // sessionType: "extension"
 }
 
 export default () => {
@@ -151,10 +151,10 @@ export default () => {
         addresses
       })
 
-      state.externals.track(`event`, `session`, `sign-in`, sessionType)
+      // state.externals.track(`event`, `session`, `sign-in`, sessionType)
     },
     signOut({ state, commit, dispatch }) {
-      state.externals.track(`event`, `session`, `sign-out`)
+      // state.externals.track(`event`, `session`, `sign-out`)
 
       dispatch(`resetSessionData`)
       commit(`setSignIn`, false)
@@ -227,6 +227,6 @@ export default () => {
   return {
     state,
     mutations,
-    actions: mockedActions
+    actions
   }
 }

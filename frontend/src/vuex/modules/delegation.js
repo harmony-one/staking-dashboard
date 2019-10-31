@@ -49,7 +49,7 @@ export default ({ node }) => {
       rootState.delegation = JSON.parse(JSON.stringify(emptyState))
     },
     async initializeWallet({ dispatch }) {
-      await dispatch(`getBondedDelegates`)
+      // await dispatch(`getBondedDelegates`)
     },
     // load committed delegations from LCD
     async getBondedDelegates({ state, rootState, commit, dispatch }) {

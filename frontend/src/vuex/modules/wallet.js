@@ -1,16 +1,17 @@
 import Vue from "vue"
 import config from "src/config"
 import axios from "axios"
+import { fetchAccount } from "../../mock-service"
 
 const mockState = {
-  balances: [
-    {
-      denom: "uatom",
-      amount: "500000"
-    }
-  ],
-  loading: false,
-  loaded: true,
+  // balances: [
+  //   {
+  //     denom: "uatom",
+  //     amount: "500000"
+  //   }
+  // ],
+  // loading: false,
+  // loaded: true
 }
 
 export default ({ node }) => {
@@ -61,10 +62,13 @@ export default ({ node }) => {
     },
     async initializeWallet({ commit, dispatch }, { address }) {
       commit(`setWalletAddress`, address)
+
       dispatch(`queryWalletBalances`)
-      dispatch(`walletSubscribe`)
-      await dispatch(`getBondedDelegates`) // TODO move away
-      dispatch(`getRewardsFromMyValidators`) // TODO move away
+
+      // dispatch(`walletSubscribe`)
+
+      // await dispatch(`getBondedDelegates`) // TODO move away
+      // dispatch(`getRewardsFromMyValidators`) // TODO move away
     },
     resetSessionData({ rootState }) {
       // clear previous account state
@@ -78,7 +82,11 @@ export default ({ node }) => {
       if (!rootState.connection.connected) return
 
       try {
-        const res = await node.get.account(state.address)
+        // const res = await node.get.account(state.address)
+
+        // Mock account data
+        const { value: res } = await fetchAccount(state.address)
+
         state.error = null
         const { coins, account_number } = res || {}
         commit(`setAccountNumber`, account_number)
@@ -126,7 +134,6 @@ export default ({ node }) => {
     }
   }
 
-
   // TODO TEMP Mock actions to empty functions
   const mockedActions = Object.keys(actions).reduce((acc, key) => {
     acc[key] = () => {}
@@ -136,7 +143,8 @@ export default ({ node }) => {
   return {
     state,
     mutations,
-    actions: mockedActions
+    actions
+    // actions: mockedActions
   }
 }
 

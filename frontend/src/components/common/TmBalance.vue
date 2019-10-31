@@ -76,7 +76,6 @@ export default {
       `totalRewards`
     ]),
     loaded() {
-      console.log('Balance loaded -> ', this.wallet.loaded && this.delegation.loaded)
       return this.wallet.loaded && this.delegation.loaded
     },
     totalAtomsDisplay() {

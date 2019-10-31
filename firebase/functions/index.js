@@ -1,34 +1,41 @@
-const functions = require('firebase-functions');
-const validators = require('./mock-data/validators');
-const proposals = require('./mock-data/proposals');
-const networks = require('./mock-data/networks');
+const functions = require("firebase-functions");
 
-let counter = 0;
-setInterval(() => counter++, 2000);
-exports.validators = functions.https.onRequest((req, res) => {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET, POST');
+const express = require("express");
+const cors = require("cors");
 
-  res.status(200).json(validators);
-});
+const validators = require("./mock-data/validators");
+const proposals = require("./mock-data/proposals");
+const networks = require("./mock-data/networks");
+const account = require("./mock-data/account");
+const stakingPool = require("./mock-data/staking.pool");
+const mintingAnnualProvisions = require("./mock-data/minting.annualprovisions");
 
-exports.counter = functions.https.onRequest((req, res) => {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET, POST');
+const app = express();
 
-  res.status(200).json({ counter });
-});
+app.use(cors());
 
-exports.proposals = functions.https.onRequest((req, res) => {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET, POST');
+app.get("/validators", (req, res) => res.json(validators));
+app.get("/proposals", (req, res) => res.json(proposals));
+app.get("/networks", (req, res) => res.json(networks));
+app.get("/account", (req, res) => res.json(account));
 
-  res.status(200).json(proposals);
-});
+// These endpoints below are used by "cosmos" api
+app.get("/auth/accounts/:accountId", (req, res) => res.json(account));
+app.get("/staking/pool", (req, res) => res.json(stakingPool));
+app.get("/minting/annual-provisions", (req, res) =>
+  res.json(mintingAnnualProvisions)
+);
+// Final step of transaction
+app.post("/txs", (req, res) =>
+  res.json({
+    height: "0",
+    txhash: "CD68C99E83A8453E71A67F20DB7BF3057B85BDFA57D24D156C44A968F9D4E5D8"
+  })
+);
 
-exports.networks = functions.https.onRequest((req, res) => {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET, POST');
+// TODO Mock tx result
+// app.get("/txs/:txId", (req, res) => {
+//   res.json({});
+// });
 
-  res.status(200).json(networks);
-});
+exports.mocks = functions.https.onRequest(app);

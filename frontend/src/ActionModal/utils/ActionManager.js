@@ -3,6 +3,7 @@ import config from "src/config"
 import { getSigner } from "./signer"
 import transaction from "./transactionTypes"
 import { uatoms } from "scripts/num"
+import { mockTransfer } from "../../mock-service"
 
 export default class ActionManager {
   constructor() {
@@ -60,14 +61,34 @@ export default class ActionManager {
   }
 
   async simulate(memo) {
-    this.readyCheck()
-    const gasEstimate = await this.message.simulate({
-      memo: memo
-    })
-    return gasEstimate
+    const rez = await mockTransfer(memo)
+
+    return rez.gas_estimate
+
+    // this.readyCheck()
+    // const gasEstimate = await this.message.simulate({
+    //   memo: memo
+    // })
+    // return gasEstimate
   }
 
   async send(memo, txMetaData) {
+    // memo - "(Sent via Lunie)"
+    // txtMetaData example
+    // {
+    //   gasEstimate: "24341",
+    //     gasPrice: { amount: "0.000000001", denom: "uatom" },
+    //   password: null,
+    //     submitType: "extension"
+    // }
+
+    // const txtMetaData = {
+    //   gasEstimate: "24341",
+    //   gasPrice: { amount: "0.000000001", denom: "uatom" },
+    //   password: null,
+    //   submitType: "extension"
+    // }
+
     this.readyCheck()
 
     const { gasEstimate, gasPrice, submitType, password } = txMetaData
@@ -80,16 +101,21 @@ export default class ActionManager {
       this.message = this.createWithdrawTransaction()
     }
 
-    const { included, hash } = await this.message.send(
-      {
-        gas: String(gasEstimate),
-        gasPrices: convertCurrencyData([gasPrice]),
-        memo
-      },
-      signer
-    )
+    // Send message to extension and wait to response
+    try {
+      const { included, hash } = await this.message.send(
+        {
+          gas: String(gasEstimate),
+          gasPrices: convertCurrencyData([gasPrice]),
+          memo
+        },
+        signer
+      )
 
-    return { included, hash }
+      return { included, hash }
+    } catch (err) {
+      console.log("[ActionManager] send error", err)
+    }
   }
 
   createWithdrawTransaction() {

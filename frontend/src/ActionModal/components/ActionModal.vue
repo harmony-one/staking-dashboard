@@ -542,20 +542,10 @@ export default {
       }
     },
     async validateChangeStep() {
-      console.log('8* validateChangeStepV', this.step)
       if (this.disabled) return
-
-
-
-
       // An ActionModal is only the prototype of a parent modal
       switch (this.step) {
-
-
         case defaultStep:
-
-          console.log('defaultStep', this.isValidChildForm)
-
           if (!this.isValidChildForm) {
             return
           }
@@ -586,18 +576,14 @@ export default {
       }
     },
     async simulate() {
-
-      console.log('simulate', this.transactionData)
       const { type, memo, ...properties } = this.transactionData
       this.actionManager.setMessage(type, properties)
-
-      console.log('BEFORE FINAL')
-      // try {
-      //   this.gasEstimate = await this.actionManager.simulate(memo)
-      //   this.step = feeStep
-      // } catch ({ message }) {
-      //   this.submissionError = `${this.submissionErrorPrefix}: ${message}.`
-      // }
+      try {
+        this.gasEstimate = await this.actionManager.simulate(memo)
+        this.step = feeStep
+      } catch ({ message }) {
+        this.submissionError = `${this.submissionErrorPrefix}: ${message}.`
+      }
 
       // limit fees to the maximum the user has
       if (this.invoiceTotal > this.balanceInAtoms) {
@@ -606,10 +592,8 @@ export default {
       }
     },
     async submit() {
-
-      console.log('****** SUBMIT RUNNING -> ', this)
       this.submissionError = null
-      this.trackEvent(`event`, `submit`, this.title, this.selectedSignMethod)
+      // this.trackEvent(`event`, `submit`, this.title, this.selectedSignMethod)
 
       if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
         try {
@@ -643,8 +627,8 @@ export default {
         this.txHash = hash
         await this.waitForInclusion(included)
         this.onTxIncluded(type, transactionProperties, feeProperties)
-
       } catch ({ message }) {
+        console.log("[submit] error", message)
         this.onSendingFailed(message)
       } finally {
         this.txHash = null
@@ -677,8 +661,7 @@ export default {
       await this.$store.dispatch(`connectLedgerApp`)
     },
     async checkFeatureAvailable() {
-
-      return true; // Temp
+      return true // Temp
       // /* istanbul ignore next */
       // if (this.network === "testnet") {
       //   this.featureAvailable = true

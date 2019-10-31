@@ -1,10 +1,23 @@
 const dev = process.env.NODE_ENV === `development`
-const stargate = process.env.STARGATE || `http://localhost:9071`
+// const stargate = process.env.STARGATE || `http://localhost:9071`
 // const rpc = process.env.RPC || `localhost:26657`
-const rpc = 'localhost:26657/socket.io'
+// const rpc = 'localhost:26657/socket.io'
 
-const graphql = process.env.VUE_APP_GRAPHQL_URL || `localhost:8080`
+// const graphql = process.env.VUE_APP_GRAPHQL_URL || `localhost:8080`
 // const graphql = `https://backend.lunie.io/v1/graphql`
+
+// TODO TEMP
+// const stargate = `https://lcd.nylira.net`
+const stargate  = `https://us-central1-staking-explorer-c9991.cloudfunctions.net/mocks`
+
+// const rpc = `https://rpc.nylira.net`
+const rpc = ``
+// const graphql = `https://backend.lunie.io/v1/graphql`
+
+const graphql = ``
+
+
+
 
 export default {
   name: `Lunie`,

@@ -25,6 +25,8 @@ Vue.directive(`focus-last`, focusParentLast)
 const urlParams = getURLParams(window)
 const { store, router, apolloProvider } = init(urlParams)
 
+window.store = store;
+
 new Vue({
   router,
   ...App,

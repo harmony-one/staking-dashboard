@@ -37,5 +37,5 @@ app.post("/txs", (req, res) =>
 // app.get("/txs/:txId", (req, res) => {
 //   res.json({});
 // });
-
-exports.mocks = functions.https.onRequest(app);
+app.listen(3000, () => console.log(`Example app listening on port ${3000}!`))
+// exports.mocks = functions.https.onRequest(app);

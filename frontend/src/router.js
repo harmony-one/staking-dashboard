@@ -17,14 +17,14 @@ export const routeGuard = (store, apollo) => async (to, from, next) => {
     return
   }
 
-  if (
-    to.meta.feature &&
-    !(store.state.connection.network === "testnet") && // TODO remove once we have Hasura integrated in e2e tests
-    !(await featureAvailable(apollo, store.state.connection.network, to))
-  ) {
-    next(`/feature-not-available/${to.meta.feature}`)
-    return
-  }
+  // if (
+  //   to.meta.feature &&
+  //   !(store.state.connection.network === "testnet") && // TODO remove once we have Hasura integrated in e2e tests
+  //   !(await featureAvailable(apollo, store.state.connection.network, to))
+  // ) {
+  //   next(`/feature-not-available/${to.meta.feature}`)
+  //   return
+  // }
 
   if (from.fullPath !== to.fullPath && !store.state.session.pauseHistory) {
     store.commit(`addHistory`, from.fullPath)

@@ -46,7 +46,6 @@ import TableValidators from "staking/TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
-import { fetchValidators } from "../../mock-service"
 
 export default {
   name: `tab-validators`,
@@ -58,14 +57,15 @@ export default {
   },
   data: () => ({
     searchTerm: "",
-    activeOnly: true,
-    validators: []
+    activeOnly: true
   }),
   computed: {
-    ...mapState({ network: state => state.connection.network })
+    ...mapState({ network: state => state.connection.network }),
+    ...mapState({ validators: state => state.validators.validators })
+
   },
   async mounted() {
-    this.validators = await fetchValidators()
+    this.$store.dispatch(`getValidators`)
   }
 }
 </script>

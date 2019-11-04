@@ -40,12 +40,14 @@ export const totalRewards = (state, getters) =>
   )
 
 // staking
-export const liquidAtoms = state =>
-  (
+export const liquidAtoms = state => {
+  return (
     state.wallet.balances.find(
       balance => balance.denom === state.stakingParameters.parameters.bond_denom
-    ) || { amount: 0 }
+    ) || {amount: 0}
   ).amount
+
+}
 export const totalAtoms = (state, getters) => {
   return new BN(getters.liquidAtoms)
     .plus(getters.oldBondedAtoms)

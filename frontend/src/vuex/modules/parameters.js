@@ -1,3 +1,15 @@
+const mockState = {
+  parameters: {
+    unbonding_time: "1814400000000000",
+    max_validators: 100,
+    max_entries: 7,
+    bond_denom: "uatom"
+  },
+  loading: false,
+  loaded: true,
+  error: null
+}
+
 export default ({ node }) => {
   const emptyState = {
     parameters: {},
@@ -6,6 +18,8 @@ export default ({ node }) => {
     error: null
   }
   const state = JSON.parse(JSON.stringify(emptyState))
+
+  Object.assign(state, mockState)
 
   const mutations = {
     setStakingParameters(state, parameters) {
@@ -39,9 +53,15 @@ export default ({ node }) => {
     }
   }
 
+  // TODO TEMP Mock actions to empty functions
+  const mockedActions = Object.keys(actions).reduce((acc, key) => {
+    acc[key] = () => {}
+    return acc
+  }, {})
+
   return {
     state,
     mutations,
-    actions
+    actions: mockedActions
   }
 }

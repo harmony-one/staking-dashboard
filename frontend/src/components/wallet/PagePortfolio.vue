@@ -1,21 +1,23 @@
 <template>
-  <TmPage
-    :managed="true"
-    :loading="wallet.loading && delegation.loading"
-    :loaded="wallet.loaded && delegation.loaded"
-    :error="wallet.error || delegation.error"
-    :sign-in-required="true"
-  >
-    <template slot="managed-body">
-      <DelegationsOverview />
-      <template v-if="Object.keys(delegation.unbondingDelegations).length">
-        <h3 class="tab-header">
-          Pending Undelegations
-        </h3>
-        <Undelegations />
+  <div>
+    <TmPage
+      :managed="true"
+      :loading="wallet.loading && delegation.loading"
+      :loaded="wallet.loaded && delegation.loaded"
+      :error="wallet.error || delegation.error"
+      :sign-in-required="true"
+    >
+      <template slot="managed-body">
+        <DelegationsOverview />
+        <template v-if="Object.keys(delegation.unbondingDelegations).length">
+          <h3 class="tab-header">
+            Pending Undelegations
+          </h3>
+          <Undelegations />
+        </template>
       </template>
-    </template>
-  </TmPage>
+    </TmPage>
+  </div>
 </template>
 
 <script>

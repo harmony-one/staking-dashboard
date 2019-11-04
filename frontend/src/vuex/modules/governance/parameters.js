@@ -1,3 +1,30 @@
+const mockState = {
+  parameters: {
+    deposit: {
+      min_deposit: [
+        {
+          denom: "uatom",
+          amount: "512000000"
+        }
+      ],
+      max_deposit_period: "1209600000000000"
+    },
+    tallying: {
+      quorum: "0.400000000000000000",
+      threshold: "0.500000000000000000",
+      veto: "0.334000000000000000"
+    },
+    voting: {
+      voting_period: "1209600000000000"
+    },
+  },
+  loading: false,
+  loaded: true,
+  error: null
+}
+
+
+
 export default ({ node }) => {
   const emptyState = {
     parameters: {
@@ -10,6 +37,9 @@ export default ({ node }) => {
     error: null
   }
   const state = JSON.parse(JSON.stringify(emptyState))
+
+  // Todo temp
+  Object.assign(state, mockState)
 
   const mutations = {
     setGovParameters(state, parameters) {
@@ -46,9 +76,15 @@ export default ({ node }) => {
     }
   }
 
+  // TODO TEMP Mock actions to empty functions
+  const mockedActions = Object.keys(actions).reduce((acc, key) => {
+    acc[key] = () => {}
+    return acc
+  }, {})
+
   return {
     state,
     mutations,
-    actions
+    actions: mockedActions
   }
 }

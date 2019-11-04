@@ -1,3 +1,13 @@
+const mockState = {
+  pool: {
+    not_bonded_tokens: "65706862715402",
+    bonded_tokens: "180782006808966"
+  },
+  loading: false,
+  loaded: true,
+  error: null
+}
+
 export default ({ node }) => {
   const emptyState = {
     pool: {},
@@ -6,6 +16,9 @@ export default ({ node }) => {
     error: null
   }
   const state = JSON.parse(JSON.stringify(emptyState))
+
+  // TODO Temp
+  Object.assign(state, mockState)
 
   const mutations = {
     setPool(state, pool) {

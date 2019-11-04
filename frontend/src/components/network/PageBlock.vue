@@ -177,7 +177,7 @@ export default {
 </script>
 <style scoped>
 .page-profile__title {
-  color: var(--bright);
+  color: var(--txt-header);
   font-size: var(--h1);
   line-height: 2.25rem;
   font-weight: 500;

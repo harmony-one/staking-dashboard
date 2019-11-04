@@ -13,6 +13,10 @@ export function fetchValidators() {
   return axios.get(`${API_URL}/validators`).then(rez => rez.data.validators)
 }
 
+export function fetchValidatorByAddress(address) {
+  return axios.get(`${API_URL}/validators/${address}`).then(rez => rez.data)
+}
+
 export function fetchAccount(address) {
   console.log("Fetching account data for ", address)
   return axios.get(`${API_URL}/account`).then(rez => rez.data)

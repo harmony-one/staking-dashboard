@@ -153,14 +153,15 @@ export default ({ node }) => {
   }
 
   // TODO TEMP Mock actions to empty functions
-  const mockedActions = Object.keys(actions).reduce((acc, key) => {
-    acc[key] = () => {}
-    return acc
-  }, {})
+  // const mockedActions = Object.keys(actions).reduce((acc, key) => {
+  //   acc[key] = () => {}
+  //   return acc
+  // }, {})
 
   return {
     state,
     mutations,
-    actions: mockedActions
+    actions
+    // actions: mockedActions
   }
 }

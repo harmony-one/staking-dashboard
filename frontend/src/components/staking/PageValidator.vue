@@ -1,9 +1,9 @@
 <template>
   <TmPage
     :managed="true"
-    :loading="$apollo.queries.validator.loading"
-    :loaded="!$apollo.queries.validator.loading"
-    :error="$apollo.queries.validator.error"
+    :loading="loading"
+    :loaded="!loading"
+    :error="validator.error"
     :data-empty="!validator.operator_address"
     :hide-header="true"
     data-title="Validator"
@@ -178,7 +178,7 @@ import Avatar from "common/Avatar"
 import Bech32 from "common/Bech32"
 import TmPage from "common/TmPage"
 import isEmpty from "lodash.isempty"
-import { ValidatorProfile, ValidatorResult } from "src/gql"
+import { fetchValidatorByAddress } from "../../mock-service"
 
 export default {
   name: `page-validator`,
@@ -208,6 +208,7 @@ export default {
     }
   },
   data: () => ({
+    loading: true,
     validator: {}
   }),
   computed: {
@@ -392,24 +393,29 @@ export default {
       return myWallet.concat(redelegationOptions)
     }
   },
-  apollo: {
-    validator: {
-      query() {
-        /* istanbul ignore next */
-        return ValidatorProfile(this.connection.network)
-      },
-      variables() {
-        /* istanbul ignore next */
-        return {
-          address: this.$route.params.validator
-        }
-      },
-      update(data) {
-        /* istanbul ignore next */
-        return ValidatorResult(this.connection.network)(data)
-      }
-    }
+
+  async mounted() {
+    this.validator = await fetchValidatorByAddress(this.$route.params.validator)
+    this.loading = false
   }
+  // apollo: {
+  //   validator: {
+  //     query() {
+  //       /* istanbul ignore next */
+  //       return ValidatorProfile(this.connection.network)
+  //     },
+  //     variables() {
+  //       /* istanbul ignore next */
+  //       return {
+  //         address: this.$route.params.validator
+  //       }
+  //     },
+  //     update(data) {
+  //       /* istanbul ignore next */
+  //       return ValidatorResult(this.connection.network)(data)
+  //     }
+  //   }
+  // }
 }
 </script>
 <style scoped>

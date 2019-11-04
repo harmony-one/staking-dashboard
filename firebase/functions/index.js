@@ -9,6 +9,7 @@ const networks = require("./mock-data/networks");
 const account = require("./mock-data/account");
 const stakingPool = require("./mock-data/staking.pool");
 const mintingAnnualProvisions = require("./mock-data/minting.annualprovisions");
+const block = require("./mock-data/block");
 
 const app = express();
 
@@ -26,16 +27,23 @@ app.get("/minting/annual-provisions", (req, res) =>
   res.json(mintingAnnualProvisions)
 );
 // Final step of transaction
-app.post("/txs", (req, res) =>
+app.post("/txs", (req, res) => {
   res.json({
     height: "0",
     txhash: "CD68C99E83A8453E71A67F20DB7BF3057B85BDFA57D24D156C44A968F9D4E5D8"
   })
+}
 );
 
 // TODO Mock tx result
-// app.get("/txs/:txId", (req, res) => {
-//   res.json({});
-// });
+app.get("/txs/:txtId", (req, res) => {
+  res.json({});
+});
+
+app.get("/blocks/:blockId", (req, res) => {
+  console.log(req.query)
+  res.json(block);
+});
+
 app.listen(3000, () => console.log(`Example app listening on port ${3000}!`))
 // exports.mocks = functions.https.onRequest(app);

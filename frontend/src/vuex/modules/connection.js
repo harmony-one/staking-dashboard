@@ -160,6 +160,6 @@ export default function({ node }) {
   return {
     state,
     mutations,
-    actions: mockedActions
+    actions: actions
   }
 }

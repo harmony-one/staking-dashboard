@@ -1,5 +1,5 @@
 import { track, deanonymize, anonymize } from "scripts/google-analytics"
-import config from "src/config"
+import config from "../../config"
 
 function isWindowsPlatform() {
   return window.navigator.platform.match(/win32|win64/i) !== null
@@ -8,6 +8,12 @@ function isWindowsPlatform() {
 const windowsWarning = `If you’re using Windows 10 (May 2019 update), signing
 transactions with your Ledger Nano S will not work. Please use another
 operating system, or version of Windows.`
+
+const mockSessionState = {
+  // signedIn: true,
+  // address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
+  // sessionType: "extension"
+}
 
 export default () => {
   const USER_PREFERENCES_KEY = `lunie_user_preferences`
@@ -46,6 +52,9 @@ export default () => {
       deanonymize
     }
   }
+
+  // Temp Mock data
+  Object.assign(state, mockSessionState)
 
   const mutations = {
     setSignIn(state, hasSignedIn) {
@@ -142,10 +151,10 @@ export default () => {
         addresses
       })
 
-      state.externals.track(`event`, `session`, `sign-in`, sessionType)
+      // state.externals.track(`event`, `session`, `sign-in`, sessionType)
     },
     signOut({ state, commit, dispatch }) {
-      state.externals.track(`event`, `session`, `sign-out`)
+      // state.externals.track(`event`, `session`, `sign-out`)
 
       dispatch(`resetSessionData`)
       commit(`setSignIn`, false)
@@ -208,6 +217,12 @@ export default () => {
       }
     }
   }
+
+  // TODO TEMP Mock actions to empty functions
+  const mockedActions = Object.keys(actions).reduce((acc, key) => {
+    acc[key] = () => {}
+    return acc
+  }, {})
 
   return {
     state,

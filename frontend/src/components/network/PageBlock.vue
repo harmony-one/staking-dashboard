@@ -89,6 +89,7 @@ export default {
     ...mapState({ network: state => state.connection.network }),
     ...mapState([`delegation`, `session`]),
     ...mapGetters([`lastHeader`]),
+    ...mapState({ validators: state => state.validators.validators }),
     validatorsAddressMap() {
       const names = {}
       this.validators.forEach(item => {
@@ -134,6 +135,9 @@ export default {
   async created() {
     this.getBlock()
   },
+  mounted(){
+    this.$store.dispatch(`getValidators`)
+  },
   methods: {
     async getBlock({ $store, $route, $router, lastHeader } = this) {
       try {
@@ -157,23 +161,23 @@ export default {
       }
     }
   },
-  apollo: {
-    validators: {
-      query() {
-        /* istanbul ignore next */
-        return AllValidators(this.network)
-      },
-      update(data) {
-        /* istanbul ignore next */
-        return AllValidatorsResult(this.network)(data)
-      }
-    }
-  }
+  // apollo: {
+  //   validators: {
+  //     query() {
+  //       /* istanbul ignore next */
+  //       return AllValidators(this.network)
+  //     },
+  //     update(data) {
+  //       /* istanbul ignore next */
+  //       return AllValidatorsResult(this.network)(data)
+  //     }
+  //   }
+  // }
 }
 </script>
 <style scoped>
 .page-profile__title {
-  color: var(--bright);
+  color: var(--txt-header);
   font-size: var(--h1);
   line-height: 2.25rem;
   font-weight: 500;

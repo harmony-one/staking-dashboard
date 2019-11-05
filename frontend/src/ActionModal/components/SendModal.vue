@@ -208,7 +208,6 @@ export default {
     },
     validateForm() {
       this.$v.$touch()
-
       return !this.$v.$invalid
     },
     clear() {

@@ -543,7 +543,6 @@ export default {
     },
     async validateChangeStep() {
       if (this.disabled) return
-
       // An ActionModal is only the prototype of a parent modal
       switch (this.step) {
         case defaultStep:
@@ -594,7 +593,7 @@ export default {
     },
     async submit() {
       this.submissionError = null
-      this.trackEvent(`event`, `submit`, this.title, this.selectedSignMethod)
+      // this.trackEvent(`event`, `submit`, this.title, this.selectedSignMethod)
 
       if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
         try {
@@ -629,6 +628,7 @@ export default {
         await this.waitForInclusion(included)
         this.onTxIncluded(type, transactionProperties, feeProperties)
       } catch ({ message }) {
+        console.log("[submit] error", message)
         this.onSendingFailed(message)
       } finally {
         this.txHash = null
@@ -661,18 +661,19 @@ export default {
       await this.$store.dispatch(`connectLedgerApp`)
     },
     async checkFeatureAvailable() {
-      /* istanbul ignore next */
-      if (this.network === "testnet") {
-        this.featureAvailable = true
-        return
-      }
-
-      const action = `action_${this.title.toLowerCase().replace(" ", "_")}`
-      const { data } = await this.$apollo.query({
-        query: NetworkCapability(this.network, action)
-      })
-
-      this.featureAvailable = NetworkCapabilityResult(data)
+      return true // Temp
+      // /* istanbul ignore next */
+      // if (this.network === "testnet") {
+      //   this.featureAvailable = true
+      //   return
+      // }
+      //
+      // const action = `action_${this.title.toLowerCase().replace(" ", "_")}`
+      // const { data } = await this.$apollo.query({
+      //   query: NetworkCapability(this.network, action)
+      // })
+      //
+      // this.featureAvailable = NetworkCapabilityResult(data)
     }
   },
   validations() {

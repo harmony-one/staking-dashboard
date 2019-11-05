@@ -1,6 +1,8 @@
 :root {
   /*  ============================================================================= */
-  --tertiary: hsl(325, 96%, 59%);
+  --q-tertiary: hsl(325, 96%, 59%);
+  --tertiary: #0987d9;
+
   --secondary: hsl(277, 92%, 58%);
   --primary: #0a93eb;
   --primary-button-background-color: #0a93eb;
@@ -12,8 +14,8 @@
   --link-dark: hsl(233, 88%, 50%);
   --link-hover: rgba(31, 117, 255, 1);
   --link-white: hsl(183, 88%, 50%);
-  --link-orange: hsl(86, 100%, 87%);
-  --link-orange-hover: hsl(85, 62%, 80%);
+  --link-orange: hsl(191, 100%, 81%);
+  --link-orange-hover: hsl(193, 75%, 76%);
   --hover: rgba(0, 0, 0, 8%);
   --hover-bg: rgba(27, 113, 255, 0.1);
   --bright: hsl(0, 100%, 100%);

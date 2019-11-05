@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!$apollo.queries.validators.loading && validators.length > 0">
+    <div v-if="!loading && validators.length > 0">
       <TableValidators
         :validators="validators"
         show-on-mobile="expectedReturns"
@@ -26,7 +26,6 @@
 import { mapState, mapGetters } from "vuex"
 import TmDataMsg from "common/TmDataMsg"
 import TableValidators from "staking/TableValidators"
-import { SomeValidators, AllValidatorsResult } from "src/gql"
 
 export default {
   name: `delegations-overview`,
@@ -35,6 +34,7 @@ export default {
     TmDataMsg
   },
   data: () => ({
+    loading: false,
     validators: []
   }),
   computed: {
@@ -42,24 +42,6 @@ export default {
     ...mapGetters([`committedDelegations`]),
     delegationsAddressList() {
       return Object.keys(this.committedDelegations)
-    }
-  },
-  apollo: {
-    validators: {
-      query() {
-        /* istanbul ignore next */
-        return SomeValidators(this.network)
-      },
-      variables() {
-        /* istanbul ignore next */
-        return {
-          addressList: Object.keys(this.committedDelegations)
-        }
-      },
-      update(data) {
-        /* istanbul ignore next */
-        return AllValidatorsResult(this.network)(data)
-      }
     }
   }
 }

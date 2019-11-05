@@ -6,6 +6,7 @@
 
 import Vue from "vue"
 import Vuex from "vuex"
+import createLogger from "vuex/dist/logger"
 import merge from "lodash.merge"
 import * as getters from "./getters"
 import modules from "./modules"
@@ -24,7 +25,8 @@ export default (opts = {}) => {
     modules: modules(opts),
     actions: {
       loadPersistedState
-    }
+    },
+    plugins: [createLogger()]
   })
 
   let pending = null

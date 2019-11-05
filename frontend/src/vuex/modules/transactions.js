@@ -3,6 +3,11 @@ import Vue from "vue"
 
 // TODO simplify with one call
 
+const mockState = {
+  loading: false,
+  loaded: true
+}
+
 export default ({ node }) => {
   const emptyState = {
     loading: false,
@@ -20,6 +25,8 @@ export default ({ node }) => {
     TypeDistribution = `distribution`
 
   const state = JSON.parse(JSON.stringify(emptyState))
+
+  Object.assign(state, mockState)
 
   const mutations = {
     setBankTxs(state, txs) {
@@ -145,9 +152,16 @@ export default ({ node }) => {
     }
   }
 
+  // TODO TEMP Mock actions to empty functions
+  // const mockedActions = Object.keys(actions).reduce((acc, key) => {
+  //   acc[key] = () => {}
+  //   return acc
+  // }, {})
+
   return {
     state,
     mutations,
     actions
+    // actions: mockedActions
   }
 }

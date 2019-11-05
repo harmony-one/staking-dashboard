@@ -10,6 +10,7 @@ const account = require("./mock-data/account");
 const stakingPool = require("./mock-data/staking.pool");
 const mintingAnnualProvisions = require("./mock-data/minting.annualprovisions");
 const block = require("./mock-data/block");
+const tx = require("./mock-data/tx");
 
 const app = express();
 
@@ -36,12 +37,12 @@ app.post("/txs", (req, res) => {
 );
 
 // TODO Mock tx result
-app.get("/txs/:txtId", (req, res) => {
-  res.json({});
+app.get("/txs", (req, res) => {
+  const txId = req.query['tx.height']
+  res.json(tx);
 });
 
 app.get("/blocks/:blockId", (req, res) => {
-  console.log(req.query)
   res.json(block);
 });
 

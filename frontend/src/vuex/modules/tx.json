@@ -8,7 +8,7 @@
           "to_address": "cosmos18da7h02z3e46ulee5prg5zl6pr9va0ytv6w46k",
           "amount": [
             {
-              "denom": "uatom",
+              "denom": "one",
               "amount": "1000000"
             }
           ]
@@ -45,7 +45,7 @@
         "amount": [
           {
             "amount": "1000000",
-            "denom": "uatom"
+            "denom": "one"
           }
         ]
       }

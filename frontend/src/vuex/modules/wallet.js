@@ -6,7 +6,7 @@ import { fetchAccount } from "../../mock-service"
 const mockState = {
   // balances: [
   //   {
-  //     denom: "uatom",
+  //     denom: "one",
   //     amount: "500000"
   //   }
   // ],

@@ -85,14 +85,14 @@ export const committedDelegations = state => state.delegation.committedDelegates
 export const bondDenom = state =>
   (state.stakingParameters.parameters &&
     state.stakingParameters.parameters.bond_denom) ||
-  `uatom`
+  `one`
 
 // governance
 export const depositDenom = state =>
   state.governanceParameters.loaded &&
   state.governanceParameters.parameters.deposit.min_deposit
     ? state.governanceParameters.parameters.deposit.min_deposit[0].denom
-    : `uatom`
+    : `one`
 
 // connection
 export const connected = state => state.connection.connected

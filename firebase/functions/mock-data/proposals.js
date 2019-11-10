@@ -21,7 +21,7 @@ module.exports = [
     deposit_end_time: "2019-04-03T06:41:27.040075748Z",
     total_deposit: [
       {
-        denom: "uatom",
+        denom: "one",
         amount: "512100000"
       }
     ],
@@ -49,7 +49,7 @@ module.exports = [
     deposit_end_time: "2019-04-08T21:42:19.240550245Z",
     total_deposit: [
       {
-        denom: "uatom",
+        denom: "one",
         amount: "521400000"
       }
     ],

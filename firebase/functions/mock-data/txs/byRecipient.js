@@ -23,11 +23,11 @@ module.exports = [
             value: {
               from_address: "cosmos1yj8de8wf3ewgg92u6cksytpun0hhg85yvnxqvf",
               to_address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
-              amount: [{ denom: "uatom", amount: "500000" }]
+              amount: [{ denom: "one", amount: "500000" }]
             }
           }
         ],
-        fee: { amount: [{ denom: "uatom", amount: "913" }], gas: "36512" },
+        fee: { amount: [{ denom: "one", amount: "913" }], gas: "36512" },
         signatures: [
           {
             pub_key: {

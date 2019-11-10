@@ -23,11 +23,11 @@ module.exports = [
             value: {
               from_address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
               to_address: "cosmos1gr2nqfwan6y9y89clr6cr8hnjmdxagm5rpdsgu",
-              amount: [{ denom: "uatom", amount: "100000" }]
+              amount: [{ denom: "one", amount: "100000" }]
             }
           }
         ],
-        fee: { amount: [{ denom: "uatom", amount: "913" }], gas: "36512" },
+        fee: { amount: [{ denom: "one", amount: "913" }], gas: "36512" },
         signatures: [
           {
             pub_key: {
@@ -67,11 +67,11 @@ module.exports = [
             value: {
               from_address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
               to_address: "cosmos1gr2nqfwan6y9y89clr6cr8hnjmdxagm5rpdsgu",
-              amount: [{ denom: "uatom", amount: "10000" }]
+              amount: [{ denom: "one", amount: "10000" }]
             }
           }
         ],
-        fee: { amount: [{ denom: "uatom", amount: "917" }], gas: "36686" },
+        fee: { amount: [{ denom: "one", amount: "917" }], gas: "36686" },
         signatures: [
           {
             pub_key: {

@@ -1,4 +1,4 @@
-import Cosmos from "@lunie/cosmos-api"
+import Staking from "staking-client"
 import config from "src/config"
 import { getSigner } from "./signer"
 import transaction from "./transactionTypes"
@@ -17,7 +17,7 @@ export default class ActionManager {
       throw Error("Context cannot be empty")
     }
     this.context = context
-    this.cosmos = new Cosmos(this.context.url || "", this.context.chainId || "")
+    this.cosmos = new Staking(this.context.url || "", this.context.chainId || "")
   }
 
   readyCheck() {

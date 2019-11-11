@@ -1,15 +1,20 @@
 "use strict"
 
-import Cosmos from "@lunie/cosmos-api"
+//import Cosmos from "@lunie/cosmos-api"
+
+import Staking from 'staking-client';
+
 import Tendermint from "./tendermint"
 
 export default function Connector(stargateUrl) {
-  const cosmosClient = new Cosmos(stargateUrl, "no_address")
-  const tendermint = Tendermint(cosmosClient)
 
-  Object.assign(cosmosClient, {
+  const stakingClient = new Staking(stargateUrl, "no_address")
+
+  const tendermint = Tendermint(stakingClient)
+
+  Object.assign(stakingClient, {
     tendermint
   })
 
-  return cosmosClient
+  return stakingClient
 }

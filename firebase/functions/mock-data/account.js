@@ -1,14 +1,14 @@
 module.exports = {
-  type: "auth/Account",
+  type: 'auth/Account',
   value: {
-    address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
-    coins: [{ denom: "one", amount: "7550000" }],
+    address: 'one1ntgnnl7f7c48cg2hvm09jqgjgspvhef3wpr66r',
+    coins: [{ denom: 'one', amount: '7550000' }],
     public_key: {
-      type: "tendermint/PubKeySecp256k1",
-      value: "A3Au1T7dOrrui03yqIVtDGev+iWlDTwZ7dpx9M4LePk9"
+      type: 'tendermint/PubKeySecp256k1',
+      value: 'A3Au1T7dOrrui03yqIVtDGev+iWlDTwZ7dpx9M4LePk9'
     },
-    account_number: "22147",
-    sequence: "2"
+    account_number: '22147',
+    sequence: '2'
   }
 };
 

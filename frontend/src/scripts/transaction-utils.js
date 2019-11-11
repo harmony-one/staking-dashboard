@@ -6,7 +6,7 @@ import {
   transactionGroup
 } from "src/components/transactions/messageTypes"
 
-const getFees = (transaction, defaultDenom = "ATOM") => {
+const getFees = (transaction, defaultDenom = "ONE") => {
   if (transaction.tx.value.fee && transaction.tx.value.fee.amount) {
     return transaction.tx.value.fee.amount[0]
   }

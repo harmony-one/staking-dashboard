@@ -8,7 +8,7 @@ import VueClipboard from "vue-clipboard2"
 import { focusElement, focusParentLast } from "src/directives"
 import App from "./App.vue"
 import init from "./initializeApp"
-import { getURLParams } from "scripts/url"
+import { getURLParams } from "./scripts/url"
 import "./registerServiceWorker"
 import "@babel/polyfill"
 
@@ -25,7 +25,7 @@ Vue.directive(`focus-last`, focusParentLast)
 const urlParams = getURLParams(window)
 const { store, router, apolloProvider } = init(urlParams)
 
-window.store = store;
+// window.store = store;
 
 new Vue({
   router,

@@ -1,10 +1,10 @@
 // Bank
-export function MsgSend (
-  senderAddress,
+export function MsgSend(
+  senderAddress: string,
   {
     toAddress,
     amounts // [{ denom, amount}]
-  }
+  }: any
 ) {
   return {
     type: `cosmos-sdk/MsgSend`,
@@ -17,13 +17,9 @@ export function MsgSend (
 }
 
 // Staking
-export function MsgDelegate (
-  senderAddress,
-  {
-    validatorAddress,
-    amount,
-    denom
-  }
+export function MsgDelegate(
+  senderAddress: string,
+  { validatorAddress, amount, denom }: any
 ) {
   return {
     type: `cosmos-sdk/MsgDelegate`,
@@ -35,13 +31,9 @@ export function MsgDelegate (
   }
 }
 
-export function MsgUndelegate (
-  senderAddress,
-  {
-    validatorAddress,
-    amount,
-    denom
-  }
+export function MsgUndelegate(
+  senderAddress: string,
+  { validatorAddress, amount, denom }: any
 ) {
   return {
     type: `cosmos-sdk/MsgUndelegate`,
@@ -53,14 +45,9 @@ export function MsgUndelegate (
   }
 }
 
-export function MsgRedelegate (
-  senderAddress,
-  {
-    validatorSourceAddress,
-    validatorDestinationAddress,
-    amount,
-    denom
-  }
+export function MsgRedelegate(
+  senderAddress: string,
+  { validatorSourceAddress, validatorDestinationAddress, amount, denom }: any
 ) {
   return {
     type: `cosmos-sdk/MsgBeginRedelegate`,
@@ -75,14 +62,14 @@ export function MsgRedelegate (
 
 // Governance
 
-export function MsgSubmitProposal (
-  senderAddress,
+export function MsgSubmitProposal(
+  senderAddress: string,
   {
     proposalType,
     title,
     description,
     initialDeposits // [{ denom, amount }]
-  }
+  }: any
 ) {
   return {
     type: `cosmos-sdk/MsgSubmitProposal`,
@@ -96,13 +83,7 @@ export function MsgSubmitProposal (
   }
 }
 
-export function MsgVote (
-  senderAddress,
-  {
-    proposalId,
-    option
-  }
-) {
+export function MsgVote(senderAddress: string, { proposalId, option }: any) {
   return {
     type: `cosmos-sdk/MsgVote`,
     value: {
@@ -113,12 +94,12 @@ export function MsgVote (
   }
 }
 
-export function MsgDeposit (
-  senderAddress,
+export function MsgDeposit(
+  senderAddress: string,
   {
     proposalId,
     amounts // [{ denom, amount }]
-  }
+  }: any
 ) {
   return {
     type: `cosmos-sdk/MsgDeposit`,
@@ -130,11 +111,9 @@ export function MsgDeposit (
   }
 }
 
-export function MsgWithdrawDelegationReward (
-  senderAddress,
-  {
-    validatorAddress
-  }
+export function MsgWithdrawDelegationReward(
+  senderAddress: string,
+  { validatorAddress }: any
 ) {
   return {
     type: `cosmos-sdk/MsgWithdrawDelegationReward`,
@@ -145,20 +124,22 @@ export function MsgWithdrawDelegationReward (
   }
 }
 
-function Coin ({ amount, denom }) {
-  return ({
+function Coin({ amount, denom }: any) {
+  return {
     amount: String(amount),
     denom
-  })
+  }
 }
 
+export type TMsgFuncConstructor = (senderAddress: string, params: any) => { type: string; value: any };
+
 export default {
-  'MsgSend': MsgSend,
-  'MsgDelegate': MsgDelegate,
-  'MsgUndelegate': MsgUndelegate,
-  'MsgRedelegate': MsgRedelegate,
-  'MsgSubmitProposal': MsgSubmitProposal,
-  'MsgVote': MsgVote,
-  'MsgDeposit': MsgDeposit,
-  'MsgWithdrawDelegationReward': MsgWithdrawDelegationReward
-}
+  MsgSend: MsgSend,
+  MsgDelegate: MsgDelegate,
+  MsgUndelegate: MsgUndelegate,
+  MsgRedelegate: MsgRedelegate,
+  MsgSubmitProposal: MsgSubmitProposal,
+  MsgVote: MsgVote,
+  MsgDeposit: MsgDeposit,
+  MsgWithdrawDelegationReward: MsgWithdrawDelegationReward
+};

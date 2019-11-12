@@ -48,7 +48,7 @@ export default class Staking {
     MsgWithdrawDelegationReward
   );
 
-  constructor(cosmosRESTURL: string, chainId = undefined) {
+  constructor(cosmosRESTURL: string, chainId?: string) {
     this.url = cosmosRESTURL
     this.accounts = {} // storing sequence numbers to not send two transactions with the same sequence number
     this.chainId = chainId

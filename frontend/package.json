@@ -73,6 +73,8 @@
     "@capacitor/core": "1.1.1",
     "@capacitor/ios": "1.1.1",
     "@types/jest": "^23.1.4",
+    "@types/lodash": "4.14.146",
+    "@types/lodash.uniqby": "4.7.6",
     "@vue/cli-plugin-babel": "^3.10.0",
     "@vue/cli-plugin-eslint": "^3.10.0",
     "@vue/cli-plugin-pwa": "^3.10.0",

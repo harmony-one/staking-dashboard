@@ -1,24 +1,25 @@
 import Vue from "vue"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
 
 const mockState = {
   loaded: true
 }
 
-export default ({ node }) => {
-  const emptyState = {
-    loading: false,
-    loaded: false,
-    error: null,
+const emptyState = {
+  loading: false,
+  loaded: false,
+  error: null,
 
-    // our delegations which are already on the blockchain
-    committedDelegates: {},
-    unbondingDelegations: {}
-  }
-  const state = JSON.parse(JSON.stringify(emptyState))
+  // our delegations which are already on the blockchain
+  committedDelegates: {} as any,
+  unbondingDelegations: {} as any,
+  ...mockState
+}
 
-  Object.assign(state, mockState)
-
-  const mutations = {
+export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
+  state: JSON.parse(JSON.stringify(emptyState)),
+  mutations: {
     setCommittedDelegation(state, { candidateId, value }) {
       Vue.set(state.committedDelegates, candidateId, value)
       if (value === 0) {
@@ -30,7 +31,7 @@ export default ({ node }) => {
         ? unbondingDelegations
             // building a dict from the array and taking out the validators with no undelegations
             .reduce(
-              (dict, { validator_address, entries }) => ({
+              (dict: any, { validator_address, entries }: any) => ({
                 ...dict,
                 [validator_address]: entries.length > 0 ? entries : undefined
               }),
@@ -38,8 +39,8 @@ export default ({ node }) => {
             )
         : {}
     }
-  }
-  const actions = {
+  },
+  actions: {
     reconnected({ state, dispatch, rootState }) {
       if (state.loading && rootState.session.signedIn) {
         dispatch(`getBondedDelegates`)
@@ -82,19 +83,22 @@ export default ({ node }) => {
         }
 
         if (delegator.delegations) {
-          delegator.delegations.forEach(({ validator_address, shares }) => {
-            commit(`setCommittedDelegation`, {
-              candidateId: validator_address,
-              value: parseFloat(shares)
-            })
-          })
+          delegator.delegations.forEach(
+            ({ validator_address, shares }: any) => {
+              commit(`setCommittedDelegation`, {
+                candidateId: validator_address,
+                value: parseFloat(shares)
+              })
+            }
+          )
         }
         // delete delegations not present anymore
         Object.keys(state.committedDelegates).forEach(validatorAddr => {
           if (
             !delegator.delegations ||
             !delegator.delegations.find(
-              ({ validator_address }) => validator_address === validatorAddr
+              ({ validator_address }: any) =>
+                validator_address === validatorAddr
             )
           )
             commit(`setCommittedDelegation`, {
@@ -115,10 +119,4 @@ export default ({ node }) => {
       state.loading = false
     }
   }
-
-  return {
-    state,
-    mutations,
-    actions
-  }
-}
+})

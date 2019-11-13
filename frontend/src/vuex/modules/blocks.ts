@@ -1,13 +1,27 @@
 import Vue from "vue"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
 
-export const cache = (list, element, maxSize = 100) => {
+export const cache = (list: any[], element: object, maxSize = 100) => {
   if (list.length >= maxSize) list.splice(-1, 1)
   list.unshift(element)
   return list
 }
 
-export default ({ node }) => {
-  const state = {
+interface IState {
+  blockMetas: any
+  blocks: any[]
+  subscription: boolean
+  subscribedRPC: any
+  syncing: boolean
+  loading: boolean
+  loaded: boolean
+  error: any
+  blockHeight: any
+}
+
+export default ({ node }: { node: TNode }): Module<IState, any> => ({
+  state: {
     blockMetas: {},
     blocks: [],
     subscription: false,
@@ -15,10 +29,11 @@ export default ({ node }) => {
     syncing: true,
     loading: false,
     loaded: false,
-    error: null
-  }
+    error: null,
+    blockHeight: null
+  },
 
-  const mutations = {
+  mutations: {
     setBlockHeight: (state, height) => (state.blockHeight = height),
     setSyncing: (state, syncing) => (state.syncing = syncing),
     setBlockMetas: (state, blockMetas) => (state.blockMetas = blockMetas),
@@ -32,9 +47,9 @@ export default ({ node }) => {
     setBlocksLoading: (state, loading) => (state.loading = loading),
     setBlocksLoaded: (state, loaded) => (state.loaded = loaded),
     setBlocksError: (state, error) => (state.error = error)
-  }
+  },
 
-  const actions = {
+  actions: {
     reconnected({ commit, dispatch }) {
       //on a reconnect we assume, that the rpc connector changed, so we can safely resubscribe to blocks
       commit(`setSubscription`, false)
@@ -43,7 +58,7 @@ export default ({ node }) => {
     async getBlockTxs({ dispatch }, height) {
       let txs = await node.get.txsByHeight(height)
       const time = (await dispatch("queryBlockInfo", height)).header.time
-      txs = txs.map(tx =>
+      txs = txs.map((tx: any) =>
         Object.assign({}, tx, {
           height,
           time
@@ -82,6 +97,7 @@ export default ({ node }) => {
       commit(`setSubscribedRPC`, node.tendermint)
 
       const status = await node.tendermint.status()
+
       commit(`setBlockHeight`, status.sync_info.latest_block_height)
       if (status.sync_info.catching_up) {
         // still syncing, let's try subscribing again in 30 seconds
@@ -96,21 +112,18 @@ export default ({ node }) => {
       commit(`setBlocks`, [])
 
       // only subscribe if the node is not catching up anymore
-      node.tendermint.subscribe({ query: `tm.event = 'NewBlock'` }, event => {
-        if (state.subscription === false) commit(`setSubscription`, true)
-        commit(`addBlock`, event.block)
-        event.block &&
-          event.block.header &&
-          commit(`setBlockHeight`, event.block.header.height)
-      })
+      node.tendermint.subscribe(
+        { query: `tm.event = 'NewBlock'` },
+        (event: any) => {
+          if (state.subscription === false) commit(`setSubscription`, true)
+          commit(`addBlock`, event.block)
+          event.block &&
+            event.block.header &&
+            commit(`setBlockHeight`, event.block.header.height)
+        }
+      )
 
       return true
     }
   }
-
-  return {
-    state,
-    mutations,
-    actions
-  }
-}
+})

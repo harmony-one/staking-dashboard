@@ -1,5 +1,7 @@
 import uniqBy from "lodash.uniqby"
 import Vue from "vue"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
 
 // TODO simplify with one call
 
@@ -8,45 +10,54 @@ const mockState = {
   loaded: true
 }
 
-export default ({ node }) => {
-  const emptyState = {
-    loading: false,
-    loaded: false,
-    error: null,
-    bank: [], // {height, result: { gas, tags }, tx: { type, value: { fee: { amount: [{denom, amount}], gas}, msg: {type, inputs, outputs}}, signatures} }}
-    staking: [],
-    governance: [],
-    distribution: []
-  }
+const emptyState = {
+  loading: false,
+  loaded: false,
+  error: null,
+  bank: [], // {height, result: { gas, tags }, tx: { type, value: { fee: { amount: [{denom, amount}], gas}, msg: {type, inputs, outputs}}, signatures} }}
+  staking: [],
+  governance: [],
+  distribution: [],
+  mockState,
+  TypeBank: [],
+  TypeStaking: [],
+  TypeGovernance: [],
+  TypeDistribution: []
+}
 
-  const TypeBank = `bank`,
-    TypeStaking = `staking`,
-    TypeGovernance = `governance`,
-    TypeDistribution = `distribution`
+const TX_TYPES: Record<TxTypes, string> = {
+  TypeBank: `bank`,
+  TypeStaking: `staking`,
+  TypeGovernance: `governance`,
+  TypeDistribution: `distribution`
+}
 
-  const state = JSON.parse(JSON.stringify(emptyState))
+type TxTypes =
+  | "TypeBank"
+  | "TypeStaking"
+  | "TypeGovernance"
+  | "TypeDistribution"
 
-  Object.assign(state, mockState)
-
-  const mutations = {
+export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
+  state: JSON.parse(JSON.stringify(emptyState)),
+  mutations: {
     setBankTxs(state, txs) {
-      Vue.set(state, TypeBank, txs)
+      Vue.set(state, TX_TYPES.TypeBank, txs)
     },
     setStakingTxs(state, txs) {
-      Vue.set(state, TypeStaking, txs)
+      Vue.set(state, TX_TYPES.TypeStaking, txs)
     },
     setGovernanceTxs(state, txs) {
-      Vue.set(state, TypeGovernance, txs)
+      Vue.set(state, TX_TYPES.TypeGovernance, txs)
     },
     setDistributionTxs(state, txs) {
-      Vue.set(state, TypeDistribution, txs)
+      Vue.set(state, TX_TYPES.TypeDistribution, txs)
     },
     setHistoryLoading(state, loading) {
       Vue.set(state, `loading`, loading)
     }
-  }
-
-  const actions = {
+  },
+  actions: {
     resetSessionData({ rootState }) {
       // clear previous account state
       rootState.transactions = JSON.parse(JSON.stringify(emptyState))
@@ -60,7 +71,10 @@ export default ({ node }) => {
     async initializeWallet({ dispatch }) {
       await dispatch(`getAllTxs`)
     },
-    async parseAndSetTxs({ commit, dispatch, state }, { txType }) {
+    async parseAndSetTxs(
+      { commit, dispatch, state },
+      { txType }: { txType: TxTypes }
+    ) {
       const txs = await dispatch(`getTx`, txType)
       if (state[txType] && txs.length > state[txType].length) {
         let newTxs = uniqBy(txs.concat(state[txType]), `txhash`)
@@ -69,16 +83,16 @@ export default ({ node }) => {
           txType
         })
         switch (txType) {
-          case TypeBank:
+          case TX_TYPES.TypeBank:
             commit(`setBankTxs`, newTxs)
             break
-          case TypeStaking:
+          case TX_TYPES.TypeStaking:
             commit(`setStakingTxs`, newTxs)
             break
-          case TypeGovernance:
+          case TX_TYPES.TypeGovernance:
             commit(`setGovernanceTxs`, newTxs)
             break
-          case TypeDistribution:
+          case TX_TYPES.TypeDistribution:
             commit(`setDistributionTxs`, newTxs)
             break
         }
@@ -93,8 +107,8 @@ export default ({ node }) => {
         }
 
         await Promise.all(
-          [TypeBank, TypeStaking, TypeGovernance, TypeDistribution].map(
-            txType => dispatch(`parseAndSetTxs`, { txType })
+          Object.keys(TX_TYPES).map(txType =>
+            dispatch(`parseAndSetTxs`, { txType })
           )
         )
 
@@ -116,16 +130,16 @@ export default ({ node }) => {
       let response
       const validatorAddress = address.replace(`cosmos`, `cosmosvaloper`)
       switch (type) {
-        case TypeBank:
+        case TX_TYPES.TypeBank:
           response = await node.get.bankTxs(address)
           break
-        case TypeStaking:
+        case TX_TYPES.TypeStaking:
           response = await node.get.stakingTxs(address, validatorAddress)
           break
-        case TypeGovernance:
+        case TX_TYPES.TypeGovernance:
           response = await node.get.governanceTxs(address)
           break
-        case TypeDistribution:
+        case TX_TYPES.TypeDistribution:
           response = await node.get.distributionTxs(address, validatorAddress)
           break
         default:
@@ -138,7 +152,7 @@ export default ({ node }) => {
     },
     async enrichTransactions({ dispatch }, { transactions, txType }) {
       const enrichedTransactions = await Promise.all(
-        transactions.map(async tx => {
+        transactions.map(async (tx: any) => {
           const blockMetaInfo = await dispatch(`queryBlockInfo`, tx.height)
 
           const enrichedTx = Object.assign({}, tx, {
@@ -151,17 +165,11 @@ export default ({ node }) => {
       return enrichedTransactions
     }
   }
+})
 
-  // TODO TEMP Mock actions to empty functions
-  // const mockedActions = Object.keys(actions).reduce((acc, key) => {
-  //   acc[key] = () => {}
-  //   return acc
-  // }, {})
-
-  return {
-    state,
-    mutations,
-    actions
-    // actions: mockedActions
-  }
-}
+// actions: mockedActions
+// TODO TEMP Mock actions to empty functions
+// const mockedActions = Object.keys(actions).reduce((acc, key) => {
+//   acc[key] = () => {}
+//   return acc
+// }, {})

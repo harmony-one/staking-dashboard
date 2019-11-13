@@ -1,11 +1,9 @@
-export default ({ node }) => {
-  const state = {
-    node
-  }
+import { Module } from "vuex"
 
-  const mutations = {}
-
-  const actions = {
+export default (): Module<{}, any> => ({
+  state: {},
+  mutations: {},
+  actions: {
     postMsgSend({ commit, rootState, getters }, { txProps, txMeta }) {
       const { toAddress } = txProps
       const { gasEstimate, gasPrice } = txMeta
@@ -23,10 +21,4 @@ export default ({ node }) => {
       })
     }
   }
-
-  return {
-    state,
-    mutations,
-    actions
-  }
-}
+});

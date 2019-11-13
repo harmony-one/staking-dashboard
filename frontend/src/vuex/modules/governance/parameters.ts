@@ -5,7 +5,7 @@ const mockState = {
     deposit: {
       min_deposit: [
         {
-          denom: "uatom",
+          denom: "one",
           amount: "512000000"
         }
       ],

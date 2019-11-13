@@ -25,7 +25,7 @@ describe(`Module: Deposits`, () => {
 
   it(`adds deposits to state`, () => {
     const { mutations, state } = module
-    mutations.setProposalDeposits(state, `1`, deposits)
+    mutations.setProposalDeposits(state, { proposalId: `1`, deposits })
     expect(state.deposits[`1`]).toEqual(deposits)
   })
 
@@ -46,8 +46,7 @@ describe(`Module: Deposits`, () => {
       )
       expect(commit.mock.calls[i]).toEqual([
         `setProposalDeposits`,
-        proposal_id,
-        deposits[proposal_id]
+        { proposalId: proposal_id, deposits: deposits[proposal_id] }
       ])
     })
   })

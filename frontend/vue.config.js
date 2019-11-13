@@ -24,7 +24,6 @@ module.exports = {
           "@": resolve(`src`),
           assets: resolve(`src/assets`),
           scripts: resolve(`src/scripts`),
-          'staking-client': resolve(`src/staking-client`),
           common: resolve(`src/components/common`),
           governance: resolve(`src/components/governance`),
           network: resolve(`src/components/network`),

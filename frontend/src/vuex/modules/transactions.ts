@@ -107,7 +107,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
         }
 
         await Promise.all(
-          Object.keys(TX_TYPES).map(txType =>
+          Object.values(TX_TYPES).map(txType =>
             dispatch(`parseAndSetTxs`, { txType })
           )
         )
@@ -128,7 +128,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       type
     ) {
       let response
+
       const validatorAddress = address.replace(`cosmos`, `cosmosvaloper`)
+
       switch (type) {
         case TX_TYPES.TypeBank:
           response = await node.get.bankTxs(address)

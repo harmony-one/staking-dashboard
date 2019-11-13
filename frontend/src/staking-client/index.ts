@@ -5,7 +5,7 @@ import {
   // MsgDelegate,
   // MsgDeposit,
   // MsgRedelegate,
-  // MsgSend,
+  MsgSend,
   // MsgSubmitProposal,
   // MsgUndelegate,
   // MsgVote,
@@ -35,7 +35,7 @@ export default class Staking {
     }
   }
 
-  // MsgSend: TMsgFunc = this.createMessageFunc(MsgSend);
+  MsgSend: TMsgFunc = this.createMessageFunc(MsgSend);
   // MsgDelegate: TMsgFunc = this.createMessageFunc(MsgDelegate);
   // MsgUndelegate: TMsgFunc = this.createMessageFunc(MsgUndelegate);
   // MsgRedelegate: TMsgFunc = this.createMessageFunc(MsgRedelegate);

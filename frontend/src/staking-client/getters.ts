@@ -91,7 +91,7 @@ export default class Getters {
 
   txsByHeight = (height: string) => this.get(`/txs?tx.height=${height}`)
 
-  tx = (hash: string) => this.get(`/txs/${hash}`)
+  // tx = (hash: string) => this.get(`/txs/${hash}`)
 
   /* ============ STAKE ============ */
   stakingTxs = async (address: string, valAddress: string = "") => {
@@ -136,9 +136,9 @@ export default class Getters {
     return this.get(`/staking/redelegations?delegator=${addr}`)
   }
   // Query all validators that a delegator is bonded to
-  delegatorValidators = (delegatorAddr: string) => {
-    return this.get(`/staking/delegators/${delegatorAddr}/validators`)
-  }
+  // delegatorValidators = (delegatorAddr: string) => {
+  //   return this.get(`/staking/delegators/${delegatorAddr}/validators`)
+  // }
   // Get a list containing all the validator candidates
   validators = () =>
     Promise.all([
@@ -152,7 +152,7 @@ export default class Getters {
   }
 
   // Get the list of the validators in the latest validator set
-  validatorSet = () => this.get(`/validatorsets/latest`)
+  // validatorSet = () => this.get(`/validatorsets/latest`)
 
   // Query a delegation between a delegator and a validator
   delegation = (delegatorAddr: string, validatorAddr: string) => {
@@ -161,12 +161,12 @@ export default class Getters {
       1
     )
   }
-  unbondingDelegation = (delegatorAddr: string, validatorAddr: string) => {
-    return this.get(
-      `/staking/delegators/${delegatorAddr}/unbonding_delegations/${validatorAddr}`,
-      1
-    )
-  }
+  // unbondingDelegation = (delegatorAddr: string, validatorAddr: string) => {
+  //   return this.get(
+  //     `/staking/delegators/${delegatorAddr}/unbonding_delegations/${validatorAddr}`,
+  //     1
+  //   )
+  // }
 
   pool = () => this.get(`/staking/pool`)
 
@@ -174,9 +174,9 @@ export default class Getters {
 
   /* ============ Slashing ============ */
 
-  validatorSigningInfo = (pubKey: string) => {
-    return this.get(`/slashing/validators/${pubKey}/signing_info`)
-  }
+  // validatorSigningInfo = (pubKey: string) => {
+  //   return this.get(`/slashing/validators/${pubKey}/signing_info`)
+  // }
 
   /* ============ Governance ============ */
 
@@ -187,21 +187,21 @@ export default class Getters {
   proposalVotes = (proposalId: string) => {
     return this.get(`/gov/proposals/${proposalId}/votes`)
   }
-  proposalVote = (proposalId: string, address: string) => {
-    return this.get(`/gov/proposals/${proposalId}/votes/${address}`)
-  }
+  // proposalVote = (proposalId: string, address: string) => {
+  //   return this.get(`/gov/proposals/${proposalId}/votes/${address}`)
+  // }
   proposalDeposits = (proposalId: string) => {
     return this.get(`/gov/proposals/${proposalId}/deposits`)
   }
-  proposalDeposit = (proposalId: string, address: string) => {
-    return this.get(`/gov/proposals/${proposalId}/deposits/${address}`, 1)
-  }
+  // proposalDeposit = (proposalId: string, address: string) => {
+  //   return this.get(`/gov/proposals/${proposalId}/deposits/${address}`, 1)
+  // }
   proposalTally = (proposalId: string) => {
     return this.get(`/gov/proposals/${proposalId}/tally`)
   }
-  govDepositParameters = () => this.get(`/gov/parameters/deposit`)
-  govTallyingParameters = () => this.get(`/gov/parameters/tallying`)
-  govVotingParameters = () => this.get(`/gov/parameters/voting`)
+  // govDepositParameters = () => this.get(`/gov/parameters/deposit`)
+  // govTallyingParameters = () => this.get(`/gov/parameters/tallying`)
+  // govVotingParameters = () => this.get(`/gov/parameters/voting`)
   governanceTxs = async (address: string) => {
     return Promise.all([
       this.get(`/txs?action=submit_proposal&proposer=${address}`),
@@ -236,9 +236,9 @@ export default class Getters {
         )
     )
   }
-  delegatorRewards = (delegatorAddr: string) => {
-    return this.get(`/distribution/delegators/${delegatorAddr}/rewards`)
-  }
+  // delegatorRewards = (delegatorAddr: string) => {
+  //   return this.get(`/distribution/delegators/${delegatorAddr}/rewards`)
+  // }
   delegatorRewardsFromValidator = async (
     delegatorAddr: string,
     validatorAddr: string
@@ -249,12 +249,12 @@ export default class Getters {
       )) || []
     )
   }
-  validatorDistributionInformation = (validatorAddr: string) => {
-    return this.get(`/distribution/validators/${validatorAddr}`)
-  }
-  validatorRewards = (validatorAddr: string) => {
-    return this.get(`/distribution/validators/${validatorAddr}/rewards`)
-  }
+  // validatorDistributionInformation = (validatorAddr: string) => {
+  //   return this.get(`/distribution/validators/${validatorAddr}`)
+  // }
+  // validatorRewards = (validatorAddr: string) => {
+  //   return this.get(`/distribution/validators/${validatorAddr}/rewards`)
+  // }
   distributionParameters = () => {
     return this.get(`/distribution/parameters`)
   }
@@ -265,10 +265,10 @@ export default class Getters {
   annualProvisionedTokens = () => {
     return this.get(`/minting/annual-provisions`)
   }
-  inflation = () => {
-    return this.get(`/minting/inflation`)
-  }
-  mintingParameters = () => {
-    return this.get(`/minting/parameters`)
-  }
+  // inflation = () => {
+  //   return this.get(`/minting/inflation`)
+  // }
+  // mintingParameters = () => {
+  //   return this.get(`/minting/parameters`)
+  // }
 }

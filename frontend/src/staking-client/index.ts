@@ -2,13 +2,13 @@ import _Getters from "./getters"
 import send from "./send"
 import simulate, { TMsg } from "./simulate"
 import {
-  MsgDelegate,
-  MsgDeposit,
-  MsgRedelegate,
-  MsgSend,
-  MsgSubmitProposal,
-  MsgUndelegate,
-  MsgVote,
+  // MsgDelegate,
+  // MsgDeposit,
+  // MsgRedelegate,
+  // MsgSend,
+  // MsgSubmitProposal,
+  // MsgUndelegate,
+  // MsgVote,
   MsgWithdrawDelegationReward,
   TMsgFuncConstructor
 } from "./messages"
@@ -35,15 +35,15 @@ export default class Staking {
     }
   }
 
-  MsgSend: TMsgFunc = this.createMessageFunc(MsgSend);
-  MsgDelegate: TMsgFunc = this.createMessageFunc(MsgDelegate);
-  MsgUndelegate: TMsgFunc = this.createMessageFunc(MsgUndelegate);
-  MsgRedelegate: TMsgFunc = this.createMessageFunc(MsgRedelegate);
-  MsgSubmitProposal: TMsgFunc = this.createMessageFunc(
-    MsgSubmitProposal
-  );
-  MsgVote: TMsgFunc = this.createMessageFunc(MsgVote);
-  MsgDeposit: TMsgFunc = this.createMessageFunc(MsgDeposit);
+  // MsgSend: TMsgFunc = this.createMessageFunc(MsgSend);
+  // MsgDelegate: TMsgFunc = this.createMessageFunc(MsgDelegate);
+  // MsgUndelegate: TMsgFunc = this.createMessageFunc(MsgUndelegate);
+  // MsgRedelegate: TMsgFunc = this.createMessageFunc(MsgRedelegate);
+  // MsgSubmitProposal: TMsgFunc = this.createMessageFunc(
+  //   MsgSubmitProposal
+  // );
+  // MsgVote: TMsgFunc = this.createMessageFunc(MsgVote);
+  // MsgDeposit: TMsgFunc = this.createMessageFunc(MsgDeposit);
   MsgWithdrawDelegationReward: TMsgFunc = this.createMessageFunc(
     MsgWithdrawDelegationReward
   );

@@ -1,80 +1,51 @@
 import { Module } from "vuex"
+import { TNode } from "@/connectors/node"
 
-const mockState = {
+const emptyState = {
   parameters: {
-    deposit: {
-      min_deposit: [
-        {
-          denom: "one",
-          amount: "512000000"
-        }
-      ],
-      max_deposit_period: "1209600000000000"
-    },
-    tallying: {
-      quorum: "0.400000000000000000",
-      threshold: "0.500000000000000000",
-      veto: "0.334000000000000000"
-    },
-    voting: {
-      voting_period: "1209600000000000"
-    }
+    deposit: {},
+    tallying: {},
+    voting: {}
   },
   loading: false,
-  loaded: true,
+  loaded: false,
   error: null
 }
 
-// const emptyState = {
-//   parameters: {
-//     deposit: {},
-//     tallying: {},
-//     voting: {}
-//   },
-//   loading: false,
-//   loaded: false,
-//   error: null
-// }
-
-export default (): Module<typeof mockState, any> => ({
-  state: JSON.parse(JSON.stringify(mockState)),
+export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
+  state: JSON.parse(JSON.stringify(emptyState)),
   mutations: {
     setGovParameters(state, parameters) {
       state.parameters = parameters
     }
   },
   actions: {
-    signIn() {},
-    async getGovParameters() {}
+    signIn({ dispatch }) {
+      // needed for deposit denom for governance
+      dispatch(`getGovParameters`)
+    },
+    async getGovParameters({ state, commit, rootState }) {
+      state.loading = true
+
+      if (!rootState.connection.connected) return
+
+      try {
+        const deposit = await node.get.govDepositParameters()
+        const tallying = await node.get.govTallyingParameters()
+        const voting = await node.get.govVotingParameters()
+
+        state.error = null
+        state.loading = false
+        state.loaded = true
+        commit(`setGovParameters`, { deposit, tallying, voting })
+      } catch (error) {
+        commit(`notifyError`, {
+          title: `Error fetching governance parameters`,
+          body: error.message
+        })
+        state.error = error
+      }
+      state.loading = false
+    }
   }
 })
-
-// Mocked Actions -> empty actions
-// const actions = {
-//   signIn({ dispatch }) {
-//     // needed for deposit denom for governance
-//     dispatch(`getGovParameters`)
-//   },
-//   async getGovParameters({ state, commit, rootState }) {
-//     state.loading = true
-//
-//     if (!rootState.connection.connected) return
-//
-//     try {
-//       const deposit = await node.get.govDepositParameters()
-//       const tallying = await node.get.govTallyingParameters()
-//       const voting = await node.get.govVotingParameters()
-//       state.error = null
-//       state.loading = false
-//       state.loaded = true
-//       commit(`setGovParameters`, { deposit, tallying, voting })
-//     } catch (error) {
-//       commit(`notifyError`, {
-//         title: `Error fetching governance parameters`,
-//         body: error.message
-//       })
-//       state.error = error
-//     }
-//     state.loading = false
-//   }
-// }

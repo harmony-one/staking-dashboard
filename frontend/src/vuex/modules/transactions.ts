@@ -5,11 +5,6 @@ import { Module } from "vuex"
 
 // TODO simplify with one call
 
-const mockState = {
-  loading: false,
-  loaded: true
-}
-
 const emptyState = {
   loading: false,
   loaded: false,
@@ -18,7 +13,6 @@ const emptyState = {
   staking: [],
   governance: [],
   distribution: [],
-  mockState,
   TypeBank: [],
   TypeStaking: [],
   TypeGovernance: [],

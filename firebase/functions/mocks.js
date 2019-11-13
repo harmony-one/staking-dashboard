@@ -1,4 +1,3 @@
-const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
 
@@ -13,16 +12,6 @@ const transactionResult = require("./mock-data/transaction.info");
 const txBySender = require("./mock-data/txs/bySender");
 const txByRecipient = require("./mock-data/txs/byRecipient");
 const blocks = require("./mock-data/txs/blocks");
-
-const admin = require("firebase-admin");
-
-admin.initializeApp(functions.config().firebase);
-
-const db = admin.firestore();
-console.log("testing");
-setInterval(async () => {
-  console.log("hello");
-}, 100);
 
 const app = express();
 
@@ -82,4 +71,4 @@ app.get("/txs/:txId", (req, res) => {
   res.json(transactionResult);
 });
 
-exports.mocks = functions.https.onRequest(app);
+module.exports = { mocks: app };

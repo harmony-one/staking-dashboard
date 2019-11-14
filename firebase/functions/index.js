@@ -69,7 +69,7 @@ app.get("/txs", (req, res) => {
 // Mocks for https://lcd.nylira.net/blocks/2369584
 app.get("/blocks/:blockId", (req, res) => {
   const { blockId } = req.params;
-  res.json(blocks[blockId]);
+  res.json(blocks.find(block => block.header.height === blockId));
 });
 
 // Final step of transaction

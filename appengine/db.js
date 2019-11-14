@@ -36,7 +36,7 @@ const collections = [
         path: getPath('staking.pool'),
     },
     {
-        name: 'transaction.info',
+        name: 'transaction',
         path: getPath('transaction.info'),
     },
     {

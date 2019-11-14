@@ -1,5 +1,5 @@
-module.exports = {
-  2390963: {
+module.exports = [
+  {
     block_meta: {
       block_id: {
         hash:
@@ -1997,7 +1997,7 @@ module.exports = {
       }
     }
   },
-  2391327: {
+  {
     block_meta: {
       block_id: {
         hash:
@@ -3999,7 +3999,7 @@ module.exports = {
       }
     }
   },
-  2369584: {
+  {
     block_meta: {
       block_id: {
         hash:
@@ -5997,4 +5997,4 @@ module.exports = {
       }
     }
   }
-};
+];

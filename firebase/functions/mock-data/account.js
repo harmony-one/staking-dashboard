@@ -1,7 +1,7 @@
 module.exports = {
   type: 'auth/Account',
   value: {
-    address: 'one1ntgnnl7f7c48cg2hvm09jqgjgspvhef3wpr66r',
+    address: 'one10a6tld9lwkp4fnfxgvx7ptv0haqz747kgj6jzd',
     coins: [{ denom: 'one', amount: '7550000' }],
     public_key: {
       type: 'tendermint/PubKeySecp256k1',

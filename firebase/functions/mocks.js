@@ -8,6 +8,7 @@ const account = require("./mock-data/account");
 const stakingPool = require("./mock-data/staking.pool");
 const mintingAnnualProvisions = require("./mock-data/minting.annualprovisions");
 const transactionResult = require("./mock-data/transaction.info");
+const stakingParameters = require("./mock-data/staking.parameters");
 // /Txs
 const txBySender = require("./mock-data/txs/bySender");
 const txByRecipient = require("./mock-data/txs/byRecipient");
@@ -17,9 +18,9 @@ const app = express();
 
 app.use(cors());
 
-app.get("/validators", (req, res) => res.json(validators));
+app.get("/validators", (req, res) => res.json({ validators }));
 app.get("/validators/:address", (req, res) => {
-  const validator = validators.validators.find(
+  const validator = validators.find(
     item => (item.operator_address = req.params.address)
   );
   res.json(validator);
@@ -69,6 +70,10 @@ app.post("/txs", (req, res) => {
 
 app.get("/txs/:txId", (req, res) => {
   res.json(transactionResult);
+});
+
+app.get("/staking/parameters", (req, res) => {
+  res.json(stakingParameters);
 });
 
 module.exports = { mocks: app };

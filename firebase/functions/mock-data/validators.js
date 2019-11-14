@@ -67,6 +67,4 @@ const validators = [
   }
 ];
 
-module.exports = {
-  validators
-};
+module.exports = validators;

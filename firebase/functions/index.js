@@ -30,9 +30,9 @@ const app = express();
 
 app.use(cors());
 
-app.get("/validators", (req, res) => res.json(validators));
+app.get("/validators", (req, res) => res.json({ validators }));
 app.get("/validators/:address", (req, res) => {
-  const validator = validators.validators.find(
+  const validator = validators.find(
     item => (item.operator_address = req.params.address)
   );
   res.json(validator);

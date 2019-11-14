@@ -6,6 +6,7 @@ const validators = require("./mock-data/validators");
 const proposals = require("./mock-data/proposals");
 const govParameters = require("./mock-data/gov.parameters");
 const stakingParameters = require("./mock-data/staking.parameters");
+const stakingValidators = require("./mock-data/staking.validators");
 const networks = require("./mock-data/networks");
 const account = require("./mock-data/account");
 const stakingPool = require("./mock-data/staking.pool");
@@ -91,5 +92,15 @@ app.get("/staking/parameters", (req, res) => {
   res.json(stakingParameters);
 });
 
+app.get("/staking/validators", (req, res) => {
+  switch (req.query.status) {
+    case 'unbonding':
+      return res.json(stakingValidators.splice(0, 1));
+    case 'bonded':
+      return res.json(stakingValidators.splice(1, 1));
+    case 'unbonded':
+      return res.json(stakingValidators.splice(2, 1));
+  }
+});
 
 exports.mocks = functions.https.onRequest(app);

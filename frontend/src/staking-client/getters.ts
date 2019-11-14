@@ -146,10 +146,12 @@ export default class Getters {
       this.get(`/staking/validators?status=bonded`),
       this.get(`/staking/validators?status=unbonded`)
     ]).then(validatorGroups => [].concat(...validatorGroups))
+
   // Get information from a validator
-  validator = (addr: string) => {
-    return this.get(`/staking/validators/${addr}`)
-  }
+
+  // validator = (addr: string) => {
+  //   return this.get(`/staking/validators/${addr}`)
+  // }
 
   // Get the list of the validators in the latest validator set
   // validatorSet = () => this.get(`/validatorsets/latest`)

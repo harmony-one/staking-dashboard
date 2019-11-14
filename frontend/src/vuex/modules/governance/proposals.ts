@@ -1,8 +1,12 @@
 import Vue from "vue"
 import BigNumber from "bignumber.js"
 import { fetchProposals } from "../../../mock-service"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
 
-export const setProposalTally = (commit, node) => async proposal => {
+export const setProposalTally = (commit: any, node: TNode) => async (
+  proposal: any
+) => {
   commit(`setProposal`, proposal)
   const final_tally_result =
     proposal.proposal_status === `VotingPeriod`
@@ -14,24 +18,25 @@ export const setProposalTally = (commit, node) => async proposal => {
   })
 }
 
-export default ({ node }) => {
-  const emptyState = {
-    loading: false,
-    loaded: false,
-    error: null,
-    proposals: {},
-    tallies: {}
-  }
-  const state = JSON.parse(JSON.stringify(emptyState))
-  const mutations = {
+const emptyState = {
+  loading: false,
+  loaded: false,
+  error: null,
+  proposals: {},
+  tallies: {}
+}
+
+export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
+  state: JSON.parse(JSON.stringify(emptyState)),
+  mutations: {
     setProposal(state, proposal) {
       Vue.set(state.proposals, proposal.proposal_id, proposal)
     },
     setProposalTally(state, { proposal_id, final_tally_result }) {
       Vue.set(state.tallies, proposal_id, final_tally_result)
     }
-  }
-  const actions = {
+  },
+  actions: {
     async reconnected({ state, dispatch }) {
       if (state.loading) {
         await dispatch(`getProposals`)
@@ -74,24 +79,20 @@ export default ({ node }) => {
       return undefined
     },
     async postMsgSubmitProposal(
-      {
-        state,
-        rootState: { wallet },
-        dispatch,
-        commit
-      },
-      {
-        txProps: { initialDeposits, title, description }
-      }
+      { state, rootState: { wallet }, dispatch, commit },
+      { txProps: { initialDeposits, title, description } }
     ) {
       // optimistic updates
-      initialDeposits.forEach(({ amount, denom }) => {
+      initialDeposits.forEach(({ amount, denom }: any) => {
         const oldBalance = wallet.balances.find(
-          balance => balance.denom === denom
+          (balance: any) => balance.denom === denom
         )
+
+        const BigNumberC = BigNumber as any
+
         commit(`updateWalletBalance`, {
           denom,
-          amount: BigNumber(oldBalance.amount)
+          amount: BigNumberC(oldBalance.amount)
             .minus(amount)
             .toNumber()
         })
@@ -113,9 +114,4 @@ export default ({ node }) => {
       await dispatch(`getAllTxs`)
     }
   }
-  return {
-    state,
-    actions,
-    mutations
-  }
-}
+})

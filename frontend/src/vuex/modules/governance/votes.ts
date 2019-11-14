@@ -1,19 +1,22 @@
 import Vue from "vue"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
 
-export default ({ node }) => {
-  const state = {
-    loading: false,
-    loaded: false,
-    error: null,
-    votes: {}
-  }
+const state = {
+  loading: false,
+  loaded: false,
+  error: null,
+  votes: {}
+}
 
-  const mutations = {
+export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
+  state,
+  mutations: {
     setProposalVotes(state, { proposalId, votes }) {
       Vue.set(state.votes, proposalId, votes)
     }
-  }
-  const actions = {
+  },
+  actions: {
     async getProposalVotes({ state, commit, rootState }, proposalId) {
       state.loading = true
 
@@ -29,20 +32,10 @@ export default ({ node }) => {
         state.error = error
       }
     },
-    async postMsgVote(
-      { dispatch },
-      {
-        txProps: { proposalId }
-      }
-    ) {
+    async postMsgVote({ dispatch }, { txProps: { proposalId } }) {
       await dispatch(`getProposalVotes`, proposalId)
       await dispatch(`getProposal`, proposalId)
       await dispatch(`getAllTxs`)
     }
   }
-  return {
-    state,
-    actions,
-    mutations
-  }
-}
+})

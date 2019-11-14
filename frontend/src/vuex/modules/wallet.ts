@@ -2,36 +2,24 @@ import Vue from "vue"
 import config from "src/config"
 import axios from "axios"
 import { fetchAccount } from "../../mock-service"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
+import Tendermint from "@/connectors/tendermint"
 
-const mockState = {
-  // balances: [
-  //   {
-  //     denom: "one",
-  //     amount: "500000"
-  //   }
-  // ],
-  // loading: false,
-  // loaded: true
+const emptyState = {
+  balances: Array<any>(),
+  loading: true,
+  loaded: false,
+  error: null,
+  accountNumber: null,
+  address: null,
+  subscribedRPC: {} as Tendermint,
+  externals: { config, axios }
 }
 
-export default ({ node }) => {
-  const emptyState = {
-    balances: [],
-    loading: true,
-    loaded: false,
-    error: null,
-    accountNumber: null,
-    address: null,
-    subscribedRPC: null,
-    externals: { config }
-  }
-  const state = JSON.parse(JSON.stringify(emptyState))
-  state.externals.axios = axios
-
-  // TODO Temp
-  Object.assign(state, mockState)
-
-  const mutations = {
+export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
+  state: JSON.parse(JSON.stringify(emptyState)),
+  mutations: {
     setWalletBalances(state, balances) {
       Vue.set(state, `balances`, balances)
       Vue.set(state, `loading`, false)
@@ -52,9 +40,8 @@ export default ({ node }) => {
     setAccountNumber(state, accountNumber) {
       state.accountNumber = accountNumber
     }
-  }
-
-  const actions = {
+  },
+  actions: {
     async reconnected({ rootState, state, dispatch }) {
       if (state.loading && state.address && rootState.session.signedIn) {
         await dispatch(`queryWalletBalances`)
@@ -88,7 +75,7 @@ export default ({ node }) => {
         const { value: res } = await fetchAccount(state.address)
 
         state.error = null
-        const { coins, account_number } = res || {}
+        const { coins, account_number } = res || {} as any;
         commit(`setAccountNumber`, account_number)
         commit(`setWalletBalances`, coins || [])
         state.loading = false
@@ -120,7 +107,7 @@ export default ({ node }) => {
       // we need to resubscribe on rpc reconnections
       if (state.subscribedRPC === node.tendermint) return
 
-      state.subscribedRPC = node.tendermint
+      state.subscribedRPC = node.tendermint;
 
       try {
         await subscribeToTxs(
@@ -133,23 +120,16 @@ export default ({ node }) => {
       }
     }
   }
+})
 
-  // TODO TEMP Mock actions to empty functions
-  const mockedActions = Object.keys(actions).reduce((acc, key) => {
-    acc[key] = () => {}
-    return acc
-  }, {})
+// // TODO TEMP Mock actions to empty functions
+// const mockedActions = Object.keys(actions).reduce((acc, key) => {
+//   acc[key] = () => {}
+//   return acc
+// }, {})
 
-  return {
-    state,
-    mutations,
-    actions
-    // actions: mockedActions
-  }
-}
-
-function subscribeToTxs(tendermint, address, dispatch) {
-  function onTx(data) {
+function subscribeToTxs(tendermint: Tendermint, address: string, dispatch: any) {
+  function onTx(data: any) {
     dispatch(`queryWalletStateAfterHeight`, data.TxResult.height + 1)
   }
 

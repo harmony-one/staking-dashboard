@@ -1,32 +1,24 @@
-const mockState = {
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
+
+const emptyState = {
   pool: {
-    not_bonded_tokens: "65706862715402",
-    bonded_tokens: "180782006808966"
+    not_bonded_tokens: "0",
+    bonded_tokens: "0"
   },
   loading: false,
-  loaded: true,
+  loaded: false,
   error: null
 }
 
-export default ({ node }) => {
-  const emptyState = {
-    pool: {},
-    loading: false,
-    loaded: false,
-    error: null
-  }
-  const state = JSON.parse(JSON.stringify(emptyState))
-
-  // TODO Temp
-  Object.assign(state, mockState)
-
-  const mutations = {
+export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
+  state: JSON.parse(JSON.stringify(emptyState)),
+  mutations: {
     setPool(state, pool) {
       state.pool = pool
     }
-  }
-
-  const actions = {
+  },
+  actions: {
     reconnected({ state, dispatch }) {
       if (state.loading) {
         dispatch(`getPool`)
@@ -51,10 +43,4 @@ export default ({ node }) => {
       }
     }
   }
-
-  return {
-    state,
-    mutations,
-    actions
-  }
-}
+});

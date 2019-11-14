@@ -1,33 +1,21 @@
-const mockState = {
-  parameters: {
-    unbonding_time: "1814400000000000",
-    max_validators: 100,
-    max_entries: 7,
-    bond_denom: "one"
-  },
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
+
+const state = {
+  parameters: {},
   loading: false,
-  loaded: true,
+  loaded: false,
   error: null
 }
 
-export default ({ node }) => {
-  const emptyState = {
-    parameters: {},
-    loading: false,
-    loaded: false,
-    error: null
-  }
-  const state = JSON.parse(JSON.stringify(emptyState))
-
-  Object.assign(state, mockState)
-
-  const mutations = {
+export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
+  state: JSON.parse(JSON.stringify(state)),
+  mutations: {
     setStakingParameters(state, parameters) {
       state.parameters = parameters
     }
-  }
-
-  const actions = {
+  },
+  actions: {
     signIn({ dispatch }) {
       // needed for bond denom for gas calculation
       dispatch(`getStakingParameters`)
@@ -52,16 +40,4 @@ export default ({ node }) => {
       }
     }
   }
-
-  // TODO TEMP Mock actions to empty functions
-  const mockedActions = Object.keys(actions).reduce((acc, key) => {
-    acc[key] = () => {}
-    return acc
-  }, {})
-
-  return {
-    state,
-    mutations,
-    actions: mockedActions
-  }
-}
+})

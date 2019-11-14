@@ -1,40 +1,42 @@
 import Vue from "vue"
-import { coinsToObject } from "scripts/common"
+import { coinsToObject } from "@/scripts/common"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
 
-export default ({ node }) => {
-  const emptyState = {
-    loading: false,
-    loaded: false,
-    error: null,
-    /* rewards use the following format:
-        {
-            validatorAddr1: {
-                denom1: amount1,
-                ... ,
-                denomN: amountN
-            },
-            ... ,
-            validatorAddrN: {
-                denom1: amount1,
-                ... ,
-                denomN: amountN
-            }
-        }
-    */
-    rewards: {},
-    parameters: {},
-    /* outstandingRewards use the following format:
-        {
-            denom1: amount1,
-            ... ,
-            denomN: amountN
-        }
-    */
-    outstandingRewards: {}
-  }
-  const state = JSON.parse(JSON.stringify(emptyState))
+const emptyState = {
+  loading: false,
+  loaded: false,
+  error: null,
+  /* rewards use the following format:
+      {
+          validatorAddr1: {
+              denom1: amount1,
+              ... ,
+              denomN: amountN
+          },
+          ... ,
+          validatorAddrN: {
+              denom1: amount1,
+              ... ,
+              denomN: amountN
+          }
+      }
+  */
+  rewards: {},
+  parameters: {},
+  /* outstandingRewards use the following format:
+      {
+          denom1: amount1,
+          ... ,
+          denomN: amountN
+      }
+  */
+  outstandingRewards: {}
+}
 
-  const mutations = {
+export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
+  state: JSON.parse(JSON.stringify(emptyState)),
+  mutations: {
     setDelegationRewards(state, { validatorAddr, rewards }) {
       Vue.set(state.rewards, validatorAddr, rewards)
     },
@@ -47,8 +49,8 @@ export default ({ node }) => {
     setDistributionError(state, error) {
       state.error = error
     }
-  }
-  const actions = {
+  },
+  actions: {
     async reconnected({ rootState, state, dispatch }) {
       if (state.loading && rootState.session.signedIn) {
         await dispatch(`getRewardsFromMyValidators`)
@@ -74,7 +76,7 @@ export default ({ node }) => {
     }) {
       state.loading = true
       await Promise.all(
-        yourValidators.map(validator =>
+        yourValidators.map((validator: any) =>
           dispatch(`getRewardsFromValidator`, validator.operator_address)
         )
       )
@@ -114,7 +116,7 @@ export default ({ node }) => {
       state.loading = false
     },
     // TODO: move to a common parameters module
-    async getDistributionParameters({ commit }) {
+    async getDistributionParameters({ commit, state }) {
       state.loading = true
       try {
         const parameters = await node.get.distributionParameters()
@@ -126,7 +128,7 @@ export default ({ node }) => {
       }
       state.loading = false
     },
-    async getOutstandingRewards({ commit }) {
+    async getOutstandingRewards({ commit, state }) {
       state.loading = true
       try {
         const oustandingRewardsArray = await node.get.distributionOutstandingRewards()
@@ -140,10 +142,4 @@ export default ({ node }) => {
       state.loading = false
     }
   }
-
-  return {
-    state,
-    mutations,
-    actions
-  }
-}
+});

@@ -4,6 +4,8 @@ const cors = require("cors");
 
 const validators = require("./mock-data/validators");
 const proposals = require("./mock-data/proposals");
+const govParameters = require("./mock-data/gov.parameters");
+const stakingParameters = require("./mock-data/staking.parameters");
 const networks = require("./mock-data/networks");
 const account = require("./mock-data/account");
 const stakingPool = require("./mock-data/staking.pool");
@@ -81,5 +83,22 @@ app.post("/txs", (req, res) => {
 app.get("/txs/:txId", (req, res) => {
   res.json(transactionResult);
 });
+
+app.get("/gov/parameters/deposit", (req, res) => {
+  res.json(govParameters.deposit);
+});
+
+app.get("/gov/parameters/tallying", (req, res) => {
+  res.json(govParameters.tallying);
+});
+
+app.get("/gov/parameters/voting", (req, res) => {
+  res.json(govParameters.voting);
+});
+
+app.get("/staking/parameters", (req, res) => {
+  res.json(stakingParameters);
+});
+
 
 exports.mocks = functions.https.onRequest(app);

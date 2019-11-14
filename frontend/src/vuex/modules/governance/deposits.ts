@@ -1,19 +1,22 @@
 import Vue from "vue"
+import { TNode } from "@/connectors/node"
+import { Module } from "vuex"
 
-export default ({ node }) => {
-  const state = {
-    loading: false,
-    error: null,
-    loaded: false,
-    deposits: {}
-  }
+const state = {
+  loading: false,
+  error: null,
+  loaded: false,
+  deposits: {}
+}
 
-  const mutations = {
-    setProposalDeposits(state, proposalId, deposits) {
+export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
+  state,
+  mutations: {
+    setProposalDeposits(state, { proposalId, deposits }: any) {
       Vue.set(state.deposits, proposalId, deposits)
     }
-  }
-  const actions = {
+  },
+  actions: {
     async getProposalDeposits({ state, commit, rootState }, proposalId) {
       state.loading = true
 
@@ -24,25 +27,19 @@ export default ({ node }) => {
         state.error = null
         state.loading = false
         state.loaded = true
-        commit(`setProposalDeposits`, proposalId, deposits)
+        commit(`setProposalDeposits`, { proposalId, deposits })
       } catch (error) {
         state.error = error
       }
     },
     async postMsgDeposit(
-      {
-        rootState: { wallet },
-        dispatch,
-        commit
-      },
-      {
-        txProps: { proposalId, amounts }
-      }
+      { rootState: { wallet }, dispatch, commit },
+      { txProps: { proposalId, amounts } }
     ) {
       // optimistic update
-      amounts.forEach(({ amount, denom }) => {
+      amounts.forEach(({ amount, denom }: any) => {
         const oldBalance = wallet.balances.find(
-          balance => balance.denom === denom
+          (balance: any) => balance.denom === denom
         )
         commit(`updateWalletBalance`, {
           denom,
@@ -55,9 +52,4 @@ export default ({ node }) => {
       await dispatch(`getAllTxs`)
     }
   }
-  return {
-    state,
-    actions,
-    mutations
-  }
-}
+})

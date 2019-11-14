@@ -199,9 +199,9 @@ export default class Getters {
   proposalTally = (proposalId: string) => {
     return this.get(`/gov/proposals/${proposalId}/tally`)
   }
-  // govDepositParameters = () => this.get(`/gov/parameters/deposit`)
-  // govTallyingParameters = () => this.get(`/gov/parameters/tallying`)
-  // govVotingParameters = () => this.get(`/gov/parameters/voting`)
+  govDepositParameters = () => this.get(`/gov/parameters/deposit`)
+  govTallyingParameters = () => this.get(`/gov/parameters/tallying`)
+  govVotingParameters = () => this.get(`/gov/parameters/voting`)
   governanceTxs = async (address: string) => {
     return Promise.all([
       this.get(`/txs?action=submit_proposal&proposer=${address}`),

@@ -1,10 +1,9 @@
-import Vue from "vue"
-import config from "src/config"
-import axios from "axios"
-import { fetchAccount } from "../../mock-service"
 import { TNode } from "@/connectors/node"
-import { Module } from "vuex"
 import Tendermint from "@/connectors/tendermint"
+import axios from "axios"
+import config from "src/config"
+import Vue from "vue"
+import { Module } from "vuex"
 
 const emptyState = {
   balances: Array<any>(),
@@ -69,13 +68,10 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       if (!rootState.connection.connected) return
 
       try {
-        // const res = await node.get.account(state.address)
-
-        // Mock account data
-        const { value: res } = await fetchAccount(state.address)
+        const res = await node.get.account(state.address)
 
         state.error = null
-        const { coins, account_number } = res || {} as any;
+        const { coins, account_number } = res || ({} as any)
         commit(`setAccountNumber`, account_number)
         commit(`setWalletBalances`, coins || [])
         state.loading = false
@@ -107,7 +103,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       // we need to resubscribe on rpc reconnections
       if (state.subscribedRPC === node.tendermint) return
 
-      state.subscribedRPC = node.tendermint;
+      state.subscribedRPC = node.tendermint
 
       try {
         await subscribeToTxs(
@@ -128,7 +124,11 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
 //   return acc
 // }, {})
 
-function subscribeToTxs(tendermint: Tendermint, address: string, dispatch: any) {
+function subscribeToTxs(
+  tendermint: Tendermint,
+  address: string,
+  dispatch: any
+) {
   function onTx(data: any) {
     dispatch(`queryWalletStateAfterHeight`, data.TxResult.height + 1)
   }

@@ -39,6 +39,9 @@ export default class Getters {
       account_number: `0`
     }
 
+    // call get balance at frontend here
+
+    //
     return this.get(`/auth/accounts/${address}`)
       .then((res: any) => {
         // HACK, hope for: https://github.com/cosmos/cosmos-sdk/issues/3885
@@ -216,7 +219,7 @@ export default class Getters {
     return this.get(`/blocks/${blockHeight}`)
   }
   /* ============ Distribution ============ */
-  distributionTxs = async (address: string, valAddress: string = '') => {
+  distributionTxs = async (address: string, valAddress: string = "") => {
     return Promise.all([
       this.get(`/txs?action=set_withdraw_address&delegator=${address}`),
       this.get(`/txs?action=withdraw_delegator_reward&delegator=${address}`),

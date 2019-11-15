@@ -8,7 +8,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const getPath = name => `../firebase/functions/mock-data/${name}.js`;
+const getPath = name => `./mock-data/${name}.js`;
 
 const collections = [
     {
@@ -36,7 +36,7 @@ const collections = [
         path: getPath('staking.pool'),
     },
     {
-        name: 'transaction.info',
+        name: 'transaction',
         path: getPath('transaction.info'),
     },
     {

@@ -1,7 +1,7 @@
-"use strict"
+'use strict'
 
-const LUNIE_EXT_TYPE = "FROM_LUNIE_EXTENSION"
-const LUNIE_WEBSITE_TYPE = "FROM_LUNIE_IO"
+const LUNIE_EXT_TYPE = 'FROM_LUNIE_EXTENSION'
+const LUNIE_WEBSITE_TYPE = 'FROM_LUNIE_IO'
 
 const unWrapMessageFromContentScript = data => data.message
 
@@ -11,12 +11,12 @@ const unWrapMessageFromContentScript = data => data.message
 // eslint-disable-next-line no-unused-vars
 const processMessage = (store, type, payload) => {
   switch (type) {
-    case "INIT_EXTENSION":
-      store.commit("setExtensionAvailable")
-      store.dispatch("getAddressesFromExtension")
+    case 'INIT_EXTENSION':
+      store.commit('setExtensionAvailable')
+      store.dispatch('getAddressesFromExtension')
       break
-    case "GET_WALLETS_RESPONSE":
-      store.commit("setExtensionAccounts", payload)
+    case 'GET_WALLETS_RESPONSE':
+      store.commit('setExtensionAccounts', payload)
       break
     default:
       return
@@ -41,13 +41,13 @@ export const processLunieExtensionMessages = store =>
 // listen to incoming events
 export const listenToExtensionMessages = store => {
   const handler = processLunieExtensionMessages(store)
-  window.addEventListener("message", handler)
+  window.addEventListener('message', handler)
 }
 
 // ---- Querying -----
 
 const sendMessageToContentScript = (payload, skipResponse = false) => {
-  window.postMessage({ type: LUNIE_WEBSITE_TYPE, payload, skipResponse }, "*")
+  window.postMessage({ type: LUNIE_WEBSITE_TYPE, payload, skipResponse }, '*')
 }
 
 // react to certain response type
@@ -60,9 +60,9 @@ function waitForResponse(type) {
       }
 
       // cleanup
-      window.removeEventListener("message", handler)
+      window.removeEventListener('message', handler)
     })
-    window.addEventListener("message", handler)
+    window.addEventListener('message', handler)
   })
 }
 
@@ -73,7 +73,7 @@ const sendAsyncMessageToContentScript = async payload => {
   // await async response
   const response = await waitForResponse(`${payload.type}_RESPONSE`)
   if (response.rejected) {
-    throw new Error("User rejected action in extension.")
+    throw new Error('User rejected action in extension.')
   }
   if (response.error) {
     throw new Error(response.error)
@@ -82,12 +82,15 @@ const sendAsyncMessageToContentScript = async payload => {
 }
 
 export const getAccountsFromExtension = () => {
-  sendMessageToContentScript({ type: "GET_WALLETS" })
+  sendMessageToContentScript({ type: 'GET_WALLETS' })
 }
 
 export const signWithExtension = async (signMessage, senderAddress) => {
-  const { signature, publicKey } = await sendAsyncMessageToContentScript({
-    type: "LUNIE_SIGN_REQUEST",
+  const {
+    rawTransaction,
+    unsignedRawTransaction
+  } = await sendAsyncMessageToContentScript({
+    type: 'LUNIE_SIGN_REQUEST',
     payload: {
       signMessage,
       senderAddress
@@ -95,7 +98,7 @@ export const signWithExtension = async (signMessage, senderAddress) => {
   })
 
   return {
-    signature: Buffer.from(signature, "hex"),
-    publicKey: Buffer.from(publicKey, "hex")
+    rawTransaction: Buffer.from(rawTransaction, 'hex'),
+    unsignedRawTransaction: Buffer.from(unsignedRawTransaction, 'hex')
   }
 }

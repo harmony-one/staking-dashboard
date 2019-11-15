@@ -1,14 +1,31 @@
-"use strict"
-
-/* eslint-env browser */
+import { IAccount } from "@/staking-client/interfaces"
+import { Harmony } from "@harmony-js/core";
+import {ChainID, ChainType} from "@harmony-js/utils";
 
 const RETRIES = 4
 
+// const URL_TESTNET = `https://api.s0.b.hmny.io`;
+const URL_MAINNET = `https://api.s0.t.hmny.io`
+
 export default class Getters {
   url: string
+  harmony: Harmony
 
   constructor(cosmosRESTURL: string) {
     this.url = cosmosRESTURL
+
+    // 1. initialize the Harmony instance
+    this.harmony = new Harmony(
+      // rpc url
+      URL_MAINNET,
+      {
+        // chainType set to Harmony
+        chainType: ChainType.Harmony,
+        // chainType set to HmyLocal
+        // chainId: ChainID.HmyTestnet
+        chainId: ChainID.Default
+      } as any // HarmonyConfig
+    )
   }
 
   // request and retry
@@ -32,46 +49,29 @@ export default class Getters {
   nodeVersion = () => fetch(this.url + `/node_version`).then(res => res.text())
 
   // coins
-  account = (address: string) => {
-    const emptyAccount = {
+  account = (address: string): Promise<IAccount> => {
+    const emptyAccount: IAccount = {
       coins: [],
       sequence: `0`,
-      account_number: `0`
-    }
+      account_number: `0`,
+      address
+    };
 
-    return this.get(`/auth/accounts/${address}`)
+    return this.harmony.blockchain
+      .getBalance({ address })
       .then((res: any) => {
-        // HACK, hope for: https://github.com/cosmos/cosmos-sdk/issues/3885
-        let account = res.value || emptyAccount
-        if (res.type === `auth/DelayedVestingAccount`) {
-          if (!account.BaseVestingAccount) {
-            console.error(
-              `SDK format of vesting accounts responses has changed`
-            )
-            return emptyAccount
-          }
-          account = Object.assign(
-            {},
-            account.BaseVestingAccount.BaseAccount,
-            account.BaseVestingAccount
-          )
-          delete account.BaseAccount
-          delete account.BaseVestingAccount
-        }
-        return account
+        const amount = new this.harmony.utils.Unit(res.result).asWei().toSzabo()
+
+        emptyAccount.coins.push({ denom: "one", amount });
+
+        return emptyAccount
       })
       .catch((err: any) => {
-        // if account not found, return null instead of throwing
-        if (
-          err.response &&
-          (err.response.data.includes(`account bytes are empty`) ||
-            err.response.data.includes(`failed to prove merkle proof`))
-        ) {
-          return emptyAccount
-        }
-        throw err
+        console.log(err)
+
+        return emptyAccount
       })
-  }
+  };
 
   txs = (addr: string) => {
     return Promise.all([
@@ -216,7 +216,7 @@ export default class Getters {
     return this.get(`/blocks/${blockHeight}`)
   }
   /* ============ Distribution ============ */
-  distributionTxs = async (address: string, valAddress: string = '') => {
+  distributionTxs = async (address: string, valAddress: string = "") => {
     return Promise.all([
       this.get(`/txs?action=set_withdraw_address&delegator=${address}`),
       this.get(`/txs?action=withdraw_delegator_reward&delegator=${address}`),

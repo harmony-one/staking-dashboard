@@ -790,10 +790,24 @@
     "@ledgerhq/logs" "^4.70.0"
     rxjs "^6.5.3"
 
+"@ledgerhq/devices@^4.74.1":
+  version "4.74.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-4.74.1.tgz#29b689a6cb7f3da63118f45ebe5748471e07b0c8"
+  integrity sha512-Jg3o4qMWCe9ml65IhkqDRcYQD72ikTS7bqXNSRsADD2ohRuXfw+lZMe8cQ4lPSJHWFyW7xGfbIBd/OsI9eFZKQ==
+  dependencies:
+    "@ledgerhq/errors" "^4.74.1"
+    "@ledgerhq/logs" "^4.72.0"
+    rxjs "^6.5.3"
+
 "@ledgerhq/errors@^4.70.0":
   version "4.70.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.70.0.tgz#3ec196ed8f1211ed2f4e84969c26e9e97a3a4bc0"
   integrity sha512-XFFuVGJ34dhkIfqTUGudPvnSx3cRGuZ+oVr8lR4UFuc29TwDVjf1X4GJ5wQU4XUqS4rNe+I+Tq7BK7V1DFX9lQ==
+
+"@ledgerhq/errors@^4.74.1":
+  version "4.74.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.74.1.tgz#df13ad069705a4aeee379a4b738d95e3165f28da"
+  integrity sha512-eRwm8M+1GWkt03gYiMk3ghLiP96KjtwSNacAZWFlmjZ2G/0DORFBZCFuCGa3NFyjtCj2zvioyN2jH8gSjp90Zw==
 
 "@ledgerhq/hw-transport-u2f@^4.61.0":
   version "4.70.0"
@@ -804,6 +818,16 @@
     "@ledgerhq/hw-transport" "^4.70.0"
     "@ledgerhq/logs" "^4.70.0"
     u2f-api "0.2.7"
+
+"@ledgerhq/hw-transport-webusb@4.74.1":
+  version "4.74.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-webusb/-/hw-transport-webusb-4.74.1.tgz#ffd2579b30af2825a68fb982a9af5a3ccb1290f1"
+  integrity sha512-XPzqclTD7VTxQWC4b5kgJj+H9Imswb2ljK5I1Jg2vf8T0vPZUhRnsl1W2ZIBjO70MfeQ91uOg7qAVk0AB49QKQ==
+  dependencies:
+    "@ledgerhq/devices" "^4.74.1"
+    "@ledgerhq/errors" "^4.74.1"
+    "@ledgerhq/hw-transport" "^4.74.1"
+    "@ledgerhq/logs" "^4.72.0"
 
 "@ledgerhq/hw-transport-webusb@^4.61.0":
   version "4.70.0"
@@ -824,10 +848,24 @@
     "@ledgerhq/errors" "^4.70.0"
     events "^3.0.0"
 
+"@ledgerhq/hw-transport@^4.74.1":
+  version "4.74.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.74.1.tgz#a85d277ce01abb654ab600a42d457fd01ec098f1"
+  integrity sha512-o9m5/R9ieVyAsmrdf3qET1WV1Tk7OdFnpVe0OAyLhuerPT//ziApzKGA8tkfSiexXaqhPT6/aaEwBbmzJ7pVkg==
+  dependencies:
+    "@ledgerhq/devices" "^4.74.1"
+    "@ledgerhq/errors" "^4.74.1"
+    events "^3.0.0"
+
 "@ledgerhq/logs@^4.70.0":
   version "4.70.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.70.0.tgz#b5176430ccb5a81becce25fcbbd8afcfa91a4388"
   integrity sha512-hyMppU1b2tBDRyKJiV71RnN51Tkkriv/7DHQF9thAmrwEDFmfmEwAQaS2VyeIogir0HD7aDcKg7DnHqgiWe/8g==
+
+"@ledgerhq/logs@^4.72.0":
+  version "4.72.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.72.0.tgz#43df23af013ad1135407e5cf33ca6e4c4c7708d5"
+  integrity sha512-o+TYF8vBcyySRsb2kqBDv/KMeme8a2nwWoG+lAWzbDmWfb2/MrVWYCVYDYvjXdSoI/Cujqy1i0gIDrkdxa9chA==
 
 "@lunie/cosmos-api@0.1.2":
   version "0.1.2"

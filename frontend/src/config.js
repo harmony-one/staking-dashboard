@@ -11,8 +11,10 @@ const dev = process.env.NODE_ENV === `development`
 // const stargate  = `https://us-central1-staking-explorer-c9991.cloudfunctions.net/mocks`
 const stargate = "http://localhost:8080"
 
+const rpc = `http://localhost:9500`
+
 // const rpc = `https://rpc.nylira.net`
-const rpc = ``
+// const rpc = ``
 // const graphql = `https://backend.lunie.io/v1/graphql`
 
 const graphql = ``
@@ -24,7 +26,7 @@ export default {
   stargate,
   rpc,
   graphql,
-  google_analytics_uid: process.env.GOOGLE_ANALYTICS_UID || "",
+  google_analytics_uid: process.env.GOOGLE_ANALYTICS_UID || '',
   node_halted_timeout: 120000,
   block_timeout: 10000,
   default_gas_price: dev ? 1e-9 : 2.5e-8, // Recommended from Cosmos Docs

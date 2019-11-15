@@ -8,7 +8,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const getPath = name => `../firebase/functions/mock-data/${name}.js`;
+const getPath = name => `./mock-data/${name}.js`;
 
 const collections = [
     {

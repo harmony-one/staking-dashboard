@@ -7,11 +7,9 @@ const dev = process.env.NODE_ENV === `development`
 // const graphql = `https://backend.lunie.io/v1/graphql`
 
 // TODO TEMP
-const stargate = `https://lcd.nylira.net`
+// const stargate = `https://lcd.nylira.net`
 // const stargate  = `https://us-central1-staking-explorer-c9991.cloudfunctions.net/mocks`
-// const stargate = `https://us-central1-staking-explorer.cloudfunctions.net/mocks`
-
-const rpc = `http://localhost:9500`
+const stargate = `http://localhost:8080/`
 
 // const rpc = `https://rpc.nylira.net`
 // const rpc = ``

@@ -22,7 +22,8 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
   actions: {
     signIn({ dispatch }) {
       // needed for deposit denom for governance
-      dispatch(`getGovParameters`)
+
+      // dispatch(`getGovParameters`)
     },
     async getGovParameters({ state, commit, rootState }) {
       state.loading = true

@@ -1,2 +1,0 @@
-firebase serve --only functions
-

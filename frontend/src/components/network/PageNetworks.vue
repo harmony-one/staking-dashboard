@@ -11,28 +11,27 @@
 
 <script>
 import NetworkList from "./NetworkList"
-
+import { mapState } from "vuex"
 import TmPage from "common/TmPage"
-import { fetchNetworks } from "../../mock-service"
+
 export default {
   name: `page-network`,
   components: {
     TmPage,
     NetworkList
   },
-  data: () => ({
-    networks: []
-  }),
+  data: () => ({}),
   computed: {
+    ...mapState([`connection`]),
+    networks() {
+      return this.connection.networks
+    },
     mainNetworks() {
       return this.networks.filter(network => !network.testnet)
     },
     testNetworks() {
       return this.networks.filter(network => network.testnet)
     }
-  },
-  mounted() {
-    fetchNetworks().then(networks => (this.networks = networks))
   }
 }
 </script>

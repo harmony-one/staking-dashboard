@@ -96,6 +96,7 @@ export const depositDenom = state =>
 
 // connection
 export const connected = state => state.connection.connected
+export const networks = state => state.connection.networks
 export const lastHeader = state => state.connection.lastHeader
 export const nodeUrl = state =>
   state.connection.connected ? state.connection.nodeUrl : undefined

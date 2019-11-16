@@ -1,6 +1,6 @@
 import { IAccount } from "@/staking-client/interfaces"
 import { Harmony } from "@harmony-js/core"
-import { ChainID, ChainType } from "@harmony-js/utils"
+import { ChainType } from "@harmony-js/utils"
 
 const RETRIES = 4
 
@@ -8,17 +8,14 @@ export default class Getters {
   url: string
   harmony?: Harmony
 
-  initHarmony = (rpc_url: string) => {
+  initHarmony = (rpc_url: string, chainId: string) => {
     // 1. initialize the Harmony instance
     this.harmony = new Harmony(
       // rpc url
       rpc_url,
       {
-        // chainType set to Harmony
         chainType: ChainType.Harmony,
-        // chainType set to HmyLocal
-        // chainId: ChainID.HmyTestnet
-        chainId: ChainID.Default
+        chainId
       } as any // HarmonyConfig
     )
   }

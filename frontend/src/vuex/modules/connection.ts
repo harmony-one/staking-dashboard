@@ -2,14 +2,15 @@ import Vue from "vue"
 import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
+import { fetchNetworks } from "../../mock-service"
 
-const defaultNetworkConfig = {
-  id: "harmony",
-  chain_id: "mainnet-1",
-  testnet: false,
-  title: "Harmony Mainnet",
-  rpc_url: "https://api.s0.t.hmny.io",
-  __typename: "networks"
+interface INetworkConfig {
+  id: string
+  chain_id: string
+  testnet: boolean
+  title: string
+  rpc_url: string
+  __typename: string
 }
 
 const state = {
@@ -17,15 +18,18 @@ const state = {
   connected: false,
   lastHeader: {
     height: 0,
-    chain_id: `mainnet-1`
+    chain_id: `1`
   },
-  networkConfig: defaultNetworkConfig,
-  network: defaultNetworkConfig.id,
+  networkConfig: {} as INetworkConfig,
+  network: "",
   connectionAttempts: 0,
   nodeUrl: config.stargate,
   rpcUrl: config.rpc,
-  externals: {} as { config: typeof config; node: TNode }
+  externals: {} as { config: typeof config; node: TNode },
+  networks: Array<INetworkConfig>(),
 }
+
+const DEFAULT_NETWORK_ID = "mainnet"
 
 export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   // get tendermint RPC client from basecoin client
@@ -64,30 +68,50 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   // },
 
   mutations: {
-    setNetwork(state, networkConfig: typeof defaultNetworkConfig) {
+    setNetwork(state, networkConfig: INetworkConfig) {
       state.networkConfig = networkConfig
       state.network = networkConfig.id
       state.lastHeader = { height: 0, chain_id: networkConfig.chain_id }
     },
     setConnected(state, connected) {
       Vue.set(state, `connected`, connected)
-    }
+    },
+    setNetworks(state, networks: INetworkConfig[]) {
+      state.networks = networks;
+    },
   },
 
   actions: {
     async setLastHeader() {},
 
+    async init({ dispatch, commit }) {
+      const networks: INetworkConfig[] = await fetchNetworks()
+
+      const network = networks.find(
+        network => network.id === DEFAULT_NETWORK_ID
+      )
+
+      commit('setNetworks', networks);
+      dispatch("setNetwork", network || networks[0])
+    },
+
     async reconnect({ commit, state }) {
-      await node.get.initHarmony(state.networkConfig.rpc_url)
+      await node.get.initHarmony(
+        state.networkConfig.rpc_url,
+        state.networkConfig.chain_id
+      )
 
       commit("setConnected", true)
     },
 
-    async connect({ commit, state }) {
-      await node.get.initHarmony(state.networkConfig.rpc_url)
-
-      commit("setConnected", true)
-    },
+    // async connect({ commit, state }) {
+    //   await node.get.initHarmony(
+    //     state.networkConfig.rpc_url,
+    //     state.networkConfig.chain_id
+    //   )
+    //
+    //   commit("setConnected", true)
+    // },
 
     async rpcSubscribe() {},
     checkNodeHalted() {},

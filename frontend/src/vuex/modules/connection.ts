@@ -3,13 +3,13 @@ import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 
-const moskState = {
-  connected: true,
-  network: "Test Network",
-  lastHeader: {
-    chain_id: "cosmoshub-2",
-    height: "2377566"
-  }
+const defaultNetworkConfig = {
+  id: "harmony",
+  chain_id: "mainnet-1",
+  testnet: false,
+  title: "Harmony Mainnet",
+  rpc_url: "https://api.s0.t.hmny.io",
+  __typename: "networks"
 }
 
 const state = {
@@ -17,14 +17,14 @@ const state = {
   connected: false,
   lastHeader: {
     height: 0,
-    chain_id: ``
+    chain_id: `mainnet-1`
   },
-  network: config.network, // network id to reference network capabilities stored in Hasura
+  networkConfig: defaultNetworkConfig,
+  network: defaultNetworkConfig.id,
   connectionAttempts: 0,
   nodeUrl: config.stargate,
   rpcUrl: config.rpc,
-  externals: {} as { config: typeof config; node: TNode },
-  ...moskState
+  externals: {} as { config: typeof config; node: TNode }
 }
 
 export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
@@ -38,38 +38,64 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     }
   },
 
+  // mutations: {
+  //   stopConnecting(state, stop = true) {
+  //     Vue.set(state, `stopConnecting`, stop)
+  //   },
+  //   setConnected(state, connected) {
+  //     if (connected) {
+  //       state.connectionAttempts = 0
+  //     }
+  //     Vue.set(state, `connected`, connected)
+  //   },
+  //   increaseConnectionAttempts(state) {
+  //     state.connectionAttempts = state.connectionAttempts + 1
+  //   },
+  //   resetConnectionAttempts(state) {
+  //     state.connectionAttempts = 0
+  //   },
+  //   setRpcUrl(state, rpcUrl) {
+  //     console.log(state.rpcUrl, rpcUrl)
+  //     state.rpcUrl = rpcUrl
+  //   },
+  //   setNetworkId(state, networkId) {
+  //     state.network = networkId
+  //   }
+  // },
+
   mutations: {
-    stopConnecting(state, stop = true) {
-      Vue.set(state, `stopConnecting`, stop)
+    setNetwork(state, networkConfig: typeof defaultNetworkConfig) {
+      state.networkConfig = networkConfig
+      state.network = networkConfig.id
+      state.lastHeader = { height: 0, chain_id: networkConfig.chain_id }
     },
     setConnected(state, connected) {
-      if (connected) {
-        state.connectionAttempts = 0
-      }
       Vue.set(state, `connected`, connected)
-    },
-    increaseConnectionAttempts(state) {
-      state.connectionAttempts = state.connectionAttempts + 1
-    },
-    resetConnectionAttempts(state) {
-      state.connectionAttempts = 0
-    },
-    setRpcUrl(state, rpcUrl) {
-      console.log(state.rpcUrl, rpcUrl)
-      state.rpcUrl = rpcUrl
-    },
-    setNetworkId(state, networkId) {
-      state.network = networkId
     }
   },
 
   actions: {
     async setLastHeader() {},
-    reconnect() {},
-    async connect() {},
+
+    async reconnect({ commit, state }) {
+      await node.get.initHarmony(state.networkConfig.rpc_url)
+
+      commit("setConnected", true)
+    },
+
+    async connect({ commit, state }) {
+      await node.get.initHarmony(state.networkConfig.rpc_url)
+
+      commit("setConnected", true)
+    },
+
     async rpcSubscribe() {},
     checkNodeHalted() {},
-    async setNetwork() {}
+
+    async setNetwork({ state, commit, dispatch }, network) {
+      commit("setNetwork", network)
+      dispatch("reconnect")
+    }
   }
 })
 

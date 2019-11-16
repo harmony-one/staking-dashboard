@@ -1,23 +1,18 @@
 import { IAccount } from "@/staking-client/interfaces"
-import { Harmony } from "@harmony-js/core";
-import {ChainID, ChainType} from "@harmony-js/utils";
+import { Harmony } from "@harmony-js/core"
+import { ChainID, ChainType } from "@harmony-js/utils"
 
 const RETRIES = 4
 
-// const URL_TESTNET = `https://api.s0.b.hmny.io`;
-const URL_MAINNET = `https://api.s0.t.hmny.io`
-
 export default class Getters {
   url: string
-  harmony: Harmony
+  harmony?: Harmony
 
-  constructor(cosmosRESTURL: string) {
-    this.url = cosmosRESTURL
-
+  initHarmony = (rpc_url: string) => {
     // 1. initialize the Harmony instance
     this.harmony = new Harmony(
       // rpc url
-      URL_MAINNET,
+      rpc_url,
       {
         // chainType set to Harmony
         chainType: ChainType.Harmony,
@@ -26,6 +21,10 @@ export default class Getters {
         chainId: ChainID.Default
       } as any // HarmonyConfig
     )
+  }
+
+  constructor(cosmosRESTURL: string) {
+    this.url = cosmosRESTURL
   }
 
   // request and retry
@@ -55,14 +54,24 @@ export default class Getters {
       sequence: `0`,
       account_number: `0`,
       address
-    };
+    }
+
+    if (!this.harmony) {
+      console.error(`Harmony client is not initialize`)
+
+      return Promise.resolve(emptyAccount)
+    }
 
     return this.harmony.blockchain
       .getBalance({ address })
       .then((res: any) => {
-        const amount = new this.harmony.utils.Unit(res.result).asWei().toSzabo()
+        if (this.harmony) {
+          const amount = new this.harmony.utils.Unit(res.result)
+            .asWei()
+            .toSzabo()
 
-        emptyAccount.coins.push({ denom: "one", amount });
+          emptyAccount.coins.push({ denom: "one", amount })
+        }
 
         return emptyAccount
       })
@@ -71,7 +80,7 @@ export default class Getters {
 
         return emptyAccount
       })
-  };
+  }
 
   txs = (addr: string) => {
     return Promise.all([

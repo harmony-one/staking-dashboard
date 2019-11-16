@@ -1,6 +1,7 @@
 /* eslint-env browser */
-
+import { Harmony } from '@harmony-js/core'
 import { createSignMessage, createSignature } from './signature'
+import { ChainType, ChainID } from '@harmony-js/utils'
 
 const DEFAULT_GAS_PRICE = [{ amount: (2.5e-8).toFixed(9), denom: `uatom` }]
 
@@ -19,20 +20,28 @@ export default async function send(
     signer,
     chainId,
     accountNumber,
-    sequence
+    sequence,
+    cosmosRESTURL
   )
 
-  // broadcast transaction with signatures included
-  const body = createBroadcastBody(signedTx, `sync`)
-  const res = await fetch(`${cosmosRESTURL}/txs`, { method: `POST`, body })
-    .then(res => res.json())
-    .then(assertOk)
-
+  const [sentTxn, hash] = await signedTx.sendTransaction()
   return {
-    hash: res.txhash,
+    hash,
     sequence,
-    included: () => queryTxInclusion(res.txhash, cosmosRESTURL)
+    included: () => sentTxn.confirm(hash)
   }
+
+  // broadcast transaction with signatures included
+  // const body = createBroadcastBody(signedTx, `sync`)
+  // const res = await fetch(`${cosmosRESTURL}/txs`, { method: `POST`, body })
+  //   .then(res => res.json())
+  //   .then(assertOk)
+
+  // return {
+  //   hash: res.txhash,
+  //   sequence,
+  //   included: () => queryTxInclusion(res.txhash, cosmosRESTURL)
+  // }
 }
 
 export async function createSignedTransaction(
@@ -41,29 +50,52 @@ export async function createSignedTransaction(
   signer,
   chainId,
   accountNumber,
-  sequence
+  sequence,
+  cosmosRESTURL
 ) {
+  const harmony = new Harmony(cosmosRESTURL, {
+    chainType: ChainType.Harmony,
+    chainId
+  })
+  const nonce = await harmony.blockchain.getTransactionCount({
+    address: messages.value.from_address,
+    blockNumber: 'latest',
+    shardID: 0
+  })
+
   // sign transaction
-  const stdTx = createStdTx({ gas, gasPrices, memo }, messages)
+  const stdTx = createStdTx({ gas, gasPrices, memo }, messages, nonce)
   const signMessage = createSignMessage(stdTx, {
     sequence,
     accountNumber,
     chainId
   })
-  let signature, publicKey
+
+  let rawTranaction, unsignedRawTransaction
+
   try {
-    ;({ signature, publicKey } = await signer(signMessage))
-  } catch (err) {
+    ;({ rawTranaction, unsignedRawTransaction } = await signer(signMessage))
+  } catch (error) {
     throw new Error('Signing failed: ' + err.message)
   }
 
-  const signatureObject = createSignature(
-    signature,
-    sequence,
-    accountNumber,
-    publicKey
-  )
-  const signedTx = createSignedTransactionObject(stdTx, signatureObject)
+  // // modify here
+  // let signature, publicKey
+  // try {
+  //   ;({ signature, publicKey } = await signer(signMessage))
+  // } catch (err) {
+  //   throw new Error('Signing failed: ' + err.message)
+  // }
+
+  // const signatureObject = createSignature(
+  //   signature,
+  //   sequence,
+  //   accountNumber,
+  //   publicKey
+  // )
+  // const signedTx = createSignedTransactionObject(stdTx, signatureObject)
+
+  const signedTx = harmony.transactions.recover(rawTranaction)
 
   return signedTx
 }
@@ -108,7 +140,7 @@ export async function queryTxInclusion(
 }
 
 // attaches the request meta data to the message
-export function createStdTx({ gas, gasPrices, memo }, messages) {
+export function createStdTx({ gas, gasPrices, memo }, messages, nonce) {
   const fees = gasPrices
     .map(({ amount, denom }) => ({
       amount: String(Math.round(amount * gas)),
@@ -122,7 +154,8 @@ export function createStdTx({ gas, gasPrices, memo }, messages) {
       gas
     },
     signatures: null,
-    memo
+    memo,
+    nonce
   }
 }
 

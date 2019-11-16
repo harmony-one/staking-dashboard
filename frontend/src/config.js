@@ -12,7 +12,7 @@ const dev = process.env.NODE_ENV === `development`
 const stargate = `http://localhost:8080`
 
 // const rpc = `https://rpc.nylira.net`
-const rpc = ``
+// const rpc = ``
 // const graphql = `https://backend.lunie.io/v1/graphql`
 
 const graphql = ``

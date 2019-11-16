@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from 'axios'
 
 const API_URL = process.env.MOCK_API_URL
 
@@ -18,8 +18,21 @@ export function fetchValidatorByAddress(address) {
 }
 
 export function fetchAccount(address) {
-  console.log("Fetching account data for ", address)
+  console.log('Fetching account data for ', address)
   return axios.get(`${API_URL}/account`).then(rez => rez.data)
+  // return Promise.resolve({
+  //   type: 'auth/Account',
+  //   value: {
+  //     address: 'one18alpumnzqarg749ahwp627t0wyjs428u4a7uny',
+  //     coins: [{ denom: 'one', amount: '7550000' }],
+  //     public_key: {
+  //       type: 'tendermint/PubKeySecp256k1',
+  //       value: 'A3Au1T7dOrrui03yqIVtDGev+iWlDTwZ7dpx9M4LePk9'
+  //     },
+  //     account_number: '22147',
+  //     sequence: '2'
+  //   }
+  // })
 }
 
 // This request is happening before we got to 2nd step (Fee) while making "Send" action
@@ -44,7 +57,7 @@ export function fetchAccount(address) {
 // Example
 // { gas_estimate: "24341" }
 export function mockTransfer(data) {
-  console.log("Data to send -> ", data)
+  console.log('Data to send -> ', data)
   // return axios.get(`${API_URL}/accounts/${data.from_address}/transfers`).then(rez => rez.data)
-  return { gas_estimate: "24341" }
+  return { gas_estimate: '24341' }
 }

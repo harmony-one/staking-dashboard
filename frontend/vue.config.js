@@ -12,7 +12,8 @@ const commitHash = require(`child_process`)
   .trim()
 
 const DEFAULT_MOCK_API_URL = `http://localhost:8080`
-// "https://us-central1-staking-explorer-c9991.cloudfunctions.net/mocks"
+// const DEFAULT_MOCK_API_URL =
+//   'https://us-central1-staking-explorer-c9991.cloudfunctions.net/mocks'
 
 module.exports = {
   publicPath: `/`,
@@ -21,7 +22,7 @@ module.exports = {
       resolve: {
         alias: {
           src: resolve(`src`),
-          "@": resolve(`src`),
+          '@': resolve(`src`),
           assets: resolve(`src/assets`),
           scripts: resolve(`src/scripts`),
           common: resolve(`src/components/common`),
@@ -36,7 +37,7 @@ module.exports = {
       },
       plugins: [
         new webpack.DefinePlugin({
-          "process.env": {
+          'process.env': {
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),
             RPC: JSON.stringify(process.env.RPC),
             STARGATE: JSON.stringify(process.env.STARGATE),
@@ -56,13 +57,13 @@ module.exports = {
       config.plugins.push(
         // adds the content security policy to the index.html
         new CSPWebpackPlugin({
-          "object-src": `'none'`,
-          "base-uri": `'self'`,
-          "default-src": `'self'`,
-          "script-src": [`'self'`, `https://*.lunie.io`],
-          "worker-src": `'none'`,
-          "style-src": [`'self'`, `'unsafe-inline'`],
-          "connect-src": [
+          'object-src': `'none'`,
+          'base-uri': `'self'`,
+          'default-src': `'self'`,
+          'script-src': [`'self'`, `https://*.lunie.io`],
+          'worker-src': `'none'`,
+          'style-src': [`'self'`, `'unsafe-inline'`],
+          'connect-src': [
             // third party tools
             `https://api-iam.intercom.io`,
             // mainnet
@@ -73,10 +74,10 @@ module.exports = {
             ...[process.env.STARGATE].filter(x => x !== undefined),
             ...[process.env.RPC]
               .filter(x => x !== undefined)
-              .map(x => x.replace("https", "wss"))
+              .map(x => x.replace('https', 'wss'))
           ],
-          "frame-src": [`'self'`, `https://api-iam.intercom.io`],
-          "img-src": [`'self'`, `https://www.google-analytics.com/`]
+          'frame-src': [`'self'`, `https://api-iam.intercom.io`],
+          'img-src': [`'self'`, `https://www.google-analytics.com/`]
         })
       )
     }

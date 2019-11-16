@@ -88,8 +88,6 @@ export default class ActionManager {
       password
     })
 
-    console.log({ signer })
-
     if (this.messageType === transaction.WITHDRAW) {
       this.message = this.createWithdrawTransaction()
     }

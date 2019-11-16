@@ -53,7 +53,7 @@ export async function createSignedTransaction(
   sequence,
   cosmosRESTURL
 ) {
-  const harmony = new Harmony(cosmosRESTURL, {
+  const harmony = new Harmony('http://localhost:9500', {
     chainType: ChainType.Harmony,
     chainId
   })
@@ -71,10 +71,10 @@ export async function createSignedTransaction(
     chainId
   })
 
-  let rawTranaction, unsignedRawTransaction
+  let rawTransaction, unsignedRawTransaction
 
   try {
-    ;({ rawTranaction, unsignedRawTransaction } = await signer(signMessage))
+    ;({ rawTransaction, unsignedRawTransaction } = await signer(signMessage))
   } catch (error) {
     throw new Error('Signing failed: ' + err.message)
   }
@@ -95,7 +95,7 @@ export async function createSignedTransaction(
   // )
   // const signedTx = createSignedTransactionObject(stdTx, signatureObject)
 
-  const signedTx = harmony.transactions.recover(rawTranaction)
+  const signedTx = harmony.transactions.recover(rawTransaction)
 
   return signedTx
 }

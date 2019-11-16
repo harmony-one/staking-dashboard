@@ -98,7 +98,7 @@ export const signWithExtension = async (signMessage, senderAddress) => {
   })
 
   return {
-    rawTransaction: Buffer.from(rawTransaction, 'hex'),
-    unsignedRawTransaction: Buffer.from(unsignedRawTransaction, 'hex')
+    rawTransaction,
+    unsignedRawTransaction
   }
 }

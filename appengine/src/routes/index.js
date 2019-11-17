@@ -2,8 +2,7 @@ const {asyncHandler, createError} = require("./helpers");
 
 module.exports = (app, db) => {
     app.get("/validators", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('validators').get();
-        const data = snapshot.docs.map(doc => doc.data());
+        const data = await db.getCollectionData('validators');
 
         if(!data) {
             throw createError(400, 'Not found');
@@ -13,8 +12,7 @@ module.exports = (app, db) => {
     }));
 
     app.get("/validators/:address", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('validators').get();
-        const data = snapshot.docs.map(doc => doc.data());
+        const data = await db.getCollectionData('validators');
 
         const validator = data.find(
             item => (item.operator_address === req.params.address)
@@ -28,8 +26,7 @@ module.exports = (app, db) => {
     }));
 
     app.get("/proposals", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('proposals').get();
-        const data = snapshot.docs.map(doc => doc.data());
+        const data = await db.getCollectionData('proposals');
 
         if(!data) {
             throw createError(400, 'Not found');
@@ -39,8 +36,7 @@ module.exports = (app, db) => {
     }));
 
     app.get("/networks", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('networks').get();
-        const data = snapshot.docs.map(doc => doc.data());
+        const data = await db.getCollectionData('networks');
 
         if(!data) {
             throw createError(400, 'Not found');
@@ -50,8 +46,7 @@ module.exports = (app, db) => {
     }));
 
     app.get("/auth/accounts/:accountId", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('accounts').get();
-        const data = snapshot.docs.map(doc => doc.data());
+        const data = await db.getCollectionData('accounts');
 
         const account = data.find(
             item => (item.value.address === req.params.accountId)
@@ -65,8 +60,8 @@ module.exports = (app, db) => {
     }));
 
     app.get("/staking/parameters", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('staking.parameters').get();
-        const data = snapshot.docs[0].data();
+        const allData = await db.getCollectionData('staking.parameters');
+        const data = allData[0];
 
         if(!data) {
             throw createError(400, 'Not found');
@@ -76,8 +71,8 @@ module.exports = (app, db) => {
     }));
 
     app.get("/account", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('accounts').get();
-        const data = snapshot.docs[0].data();
+        const allData = await db.getCollectionData('accounts');
+        const data = allData[0];
 
         if(!data) {
             throw createError(400, 'Not found');
@@ -88,8 +83,8 @@ module.exports = (app, db) => {
 
     // // These endpoints below are used by "cosmos" api
     app.get("/staking/pool", asyncHandler( async (req, res) => {
-        const snapshot = await db.collection('staking.pool').get();
-        const data = snapshot.docs[0].data();
+        const allData = await db.getCollectionData('staking.pool');
+        const data = allData[0];
 
         if(!data) {
             throw createError(400, 'Not found');
@@ -107,14 +102,12 @@ module.exports = (app, db) => {
         if (req.query && Object.keys(req.query).length) {
             // by sender
             if (req.query.sender) {
-                const snapshot = await db.collection('txs.BySender').get();
-                const data = snapshot.docs.map(doc => doc.data());
+                const data = await db.getCollectionData('txs.BySender');
 
                 return res.json(data);
             }
             if (req.query.recipient) {
-                const snapshot = await db.collection('txs.ByRecipient').get();
-                const data = snapshot.docs.map(doc => doc.data());
+                const data = await db.getCollectionData('txs.ByRecipient');
 
                 return res.json(data);
             }
@@ -136,10 +129,9 @@ module.exports = (app, db) => {
     app.get("/blocks/:blockId", asyncHandler( async (req, res) => {
         const { blockId } = req.params;
 
-        const snapshot = await db.collection('blocks').get();
-        const blocks = snapshot.docs.map(doc => doc.data());
+        const allData = await db.getCollectionData('blocks');
 
-        const data = blocks.find(block => block.header.height === blockId);
+        const data = allData.find(block => block.header.height === blockId);
 
         if(!data) {
             throw createError(400, 'Not found');
@@ -152,10 +144,9 @@ module.exports = (app, db) => {
     app.get("/txs/:txId", asyncHandler( async(req, res) => {
         const { txId } = req.params;
 
-        const snapshot = await db.collection('transactions').get();
-        const txs = snapshot.docs.map(doc => doc.data());
+        const allData = await db.getCollectionData('transactions');
 
-        const data = txs.find(tx => tx.txhash === txId);
+        const data = allData.find(tx => tx.txhash === txId);
 
         if(!data) {
             throw createError(400, 'Not found');

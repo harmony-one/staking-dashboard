@@ -4,7 +4,8 @@
 const express = require("express");
 const cors = require("cors");
 
-const routes = require("./routes");
+const routes = require("./src/routes");
+const DBService = require("./src/services/database");
 
 const app = express();
 app.use(cors());
@@ -18,20 +19,11 @@ app.get("/", (req, res) => {
   res.send("Hello from App Engine!");
 });
 
-
-// Init admin
-const admin = require("firebase-admin");
-var serviceAccount = require("./keys/staking_explorer.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://staking-explorer.firebaseio.com"
-});
-
-const db = admin.firestore();
+//create dbService
+const dbService = new DBService();
 
 // Init routes
-routes(app, db);
+routes(app, dbService);
 
 // send errors response
 app.use(function (err, req, res, next) {

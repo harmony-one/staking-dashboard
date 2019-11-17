@@ -4,7 +4,7 @@
     :class="{ active: connection.network === network.id }"
   >
     <div class="network-icon">
-      <img src="~assets/images/networks/cosmoshub.png" alt="cosmic atom token" />
+      <img :src=network.logo_url alt="harmony one token" />
     </div>
     <div class="network-content">
       <h4 class="network-title">

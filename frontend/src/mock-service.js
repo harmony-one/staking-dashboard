@@ -17,10 +17,10 @@ export function fetchValidatorByAddress(address) {
   return axios.get(`${API_URL}/validators/${address}`).then(rez => rez.data)
 }
 
-export function fetchAccount(address) {
-  console.log("Fetching account data for ", address)
-  return axios.get(`${API_URL}/account`).then(rez => rez.data)
-}
+// export function fetchAccount(address) {
+//   console.log("Fetching account data for ", address)
+//   return axios.get(`${API_URL}/account`).then(rez => rez.data)
+// }
 
 // This request is happening before we got to 2nd step (Fee) while making "Send" action
 // Origin endpoint - POST https://lcd.nylira.net/bank/accounts/cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5/transfers

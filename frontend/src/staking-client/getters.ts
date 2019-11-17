@@ -1,11 +1,24 @@
-"use strict"
-
-/* eslint-env browser */
+import { IAccount } from "@/staking-client/interfaces"
+import { Harmony } from "@harmony-js/core"
+import { ChainType } from "@harmony-js/utils"
 
 const RETRIES = 4
 
 export default class Getters {
   url: string
+  harmony?: Harmony
+
+  initHarmony = (rpc_url: string, chainId: string) => {
+    // 1. initialize the Harmony instance
+    this.harmony = new Harmony(
+      // rpc url
+      rpc_url,
+      {
+        chainType: ChainType.Harmony,
+        chainId
+      } as any // HarmonyConfig
+    )
+  }
 
   constructor(cosmosRESTURL: string) {
     this.url = cosmosRESTURL
@@ -32,44 +45,37 @@ export default class Getters {
   nodeVersion = () => fetch(this.url + `/node_version`).then(res => res.text())
 
   // coins
-  account = (address: string) => {
-    const emptyAccount = {
+  account = (address: string): Promise<IAccount> => {
+    const emptyAccount: IAccount = {
       coins: [],
       sequence: `0`,
-      account_number: `0`
+      account_number: `0`,
+      address
     }
 
-    return this.get(`/auth/accounts/${address}`)
+    if (!this.harmony) {
+      console.error(`Harmony client is not initialize`)
+
+      return Promise.resolve(emptyAccount)
+    }
+
+    return this.harmony.blockchain
+      .getBalance({ address })
       .then((res: any) => {
-        // HACK, hope for: https://github.com/cosmos/cosmos-sdk/issues/3885
-        let account = res.value || emptyAccount
-        if (res.type === `auth/DelayedVestingAccount`) {
-          if (!account.BaseVestingAccount) {
-            console.error(
-              `SDK format of vesting accounts responses has changed`
-            )
-            return emptyAccount
-          }
-          account = Object.assign(
-            {},
-            account.BaseVestingAccount.BaseAccount,
-            account.BaseVestingAccount
-          )
-          delete account.BaseAccount
-          delete account.BaseVestingAccount
+        if (this.harmony) {
+          const amount = new this.harmony.utils.Unit(res.result)
+            .asWei()
+            .toSzabo()
+
+          emptyAccount.coins.push({ denom: "one", amount })
         }
-        return account
+
+        return emptyAccount
       })
       .catch((err: any) => {
-        // if account not found, return null instead of throwing
-        if (
-          err.response &&
-          (err.response.data.includes(`account bytes are empty`) ||
-            err.response.data.includes(`failed to prove merkle proof`))
-        ) {
-          return emptyAccount
-        }
-        throw err
+        console.log(err)
+
+        return emptyAccount
       })
   }
 
@@ -216,7 +222,7 @@ export default class Getters {
     return this.get(`/blocks/${blockHeight}`)
   }
   /* ============ Distribution ============ */
-  distributionTxs = async (address: string, valAddress: string = '') => {
+  distributionTxs = async (address: string, valAddress: string = "") => {
     return Promise.all([
       this.get(`/txs?action=set_withdraw_address&delegator=${address}`),
       this.get(`/txs?action=withdraw_delegator_reward&delegator=${address}`),

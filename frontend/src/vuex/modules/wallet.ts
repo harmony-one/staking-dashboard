@@ -1,7 +1,6 @@
 import Vue from "vue"
 import config from "src/config"
 import axios from "axios"
-import { fetchAccount } from "../../mock-service"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 import Tendermint from "@/connectors/tendermint"
@@ -12,7 +11,7 @@ const emptyState = {
   loaded: false,
   error: null,
   accountNumber: null,
-  address: null,
+  address: '',
   subscribedRPC: {} as Tendermint,
   externals: { config, axios }
 }
@@ -69,10 +68,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       if (!rootState.connection.connected) return
 
       try {
-        // const res = await node.get.account(state.address)
-
-        // Mock account data
-        const { value: res } = await fetchAccount(state.address)
+        const res = await node.get.account(state.address);
 
         state.error = null
         const { coins, account_number } = res || {} as any;

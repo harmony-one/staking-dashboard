@@ -54,7 +54,7 @@ export default function init(urlParams, env = process.env) {
 
 
   store
-    .dispatch(`connect`)
+    .dispatch(`init`)
     // wait for connected as the check for session will sign in directly and query account data
     .then(() => {
       store.dispatch(`checkForPersistedSession`)

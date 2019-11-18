@@ -3,7 +3,8 @@ import { signWithExtension } from "src/scripts/extension-utils"
 export async function getSigner(
   config,
   submitType = "",
-  { address, password }
+  { address, password },
+  networkConfig,
 ) {
   if (submitType === `local`) {
     const { signWithPrivateKey, getStoredWallet } = await import(
@@ -38,7 +39,7 @@ export async function getSigner(
     }
   } else if (submitType === `extension`) {
     return signMessage => {
-      return signWithExtension(signMessage, address)
+      return signWithExtension(signMessage, address, networkConfig)
     }
   }
 }

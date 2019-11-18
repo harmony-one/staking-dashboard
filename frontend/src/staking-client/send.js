@@ -1,6 +1,7 @@
 /* eslint-env browser */
 
-import { createSignMessage, createSignature } from './signature'
+import { createSignMessage, createSignature } from "./signature"
+import { waitTransactionConfirm } from "../scripts/extension-utils"
 
 const DEFAULT_GAS_PRICE = [{ amount: (2.5e-8).toFixed(9), denom: `uatom` }]
 
@@ -39,31 +40,45 @@ export async function createSignedTransaction ({ gas, gasPrices = DEFAULT_GAS_PR
 
 // wait for inclusion of a tx in a block
 // Default waiting time: 60 * 3s = 180s
-export async function queryTxInclusion (txHash, cosmosRESTURL, iterations = 60, timeout = 3000) {
-  let includedTx
-  while (iterations-- > 0) {
-    try {
-      includedTx = await fetch(`${cosmosRESTURL}/txs/${txHash}`)
-        .then(function (response) {
-          if (response.status >= 200 && response.status < 300) {
-            return Promise.resolve(response.json())
-          } else {
-            var error = new Error(response.statusText || response.status)
-            error.response = response
-            return Promise.reject(error)
-          }
-        })
-      break
-    } catch (err) {
-      // tx wasn't included in a block yet
-      await new Promise(resolve =>
-        setTimeout(resolve, timeout)
-      )
-    }
-  }
-  if (iterations <= 0) {
-    throw new Error(`The transaction was still not included in a block. We can't say for certain it will be included in the future.`)
-  }
+export async function queryTxInclusion(
+  txHash,
+  cosmosRESTURL,
+  iterations = 60,
+  timeout = 3000
+) {
+
+  let includedTx = await waitTransactionConfirm(txHash);
+
+  // while (iterations-- > 0) {
+  //   try {
+  //     includedTx = await fetch(`${cosmosRESTURL}/txs/${txHash}`).then(function(
+  //       response
+  //     ) {
+  //       if (response.status >= 200 && response.status < 300) {
+  //         debugger
+  //
+  //         return Promise.resolve(response.json())
+  //       } else {
+  //         debugger;
+  //         var error = new Error(response.statusText || response.status)
+  //         error.response = response
+  //         return Promise.reject(error)
+  //       }
+  //     })
+  //
+  //     debugger
+  //
+  //     break
+  //   } catch (err) {
+  //     // tx wasn't included in a block yet
+  //     await new Promise(resolve => setTimeout(resolve, timeout))
+  //   }
+  // }
+  // if (iterations <= 0) {
+  //   throw new Error(
+  //     `The transaction was still not included in a block. We can't say for certain it will be included in the future.`
+  //   )
+  // }
 
   assertOk(includedTx)
 
@@ -87,7 +102,7 @@ export function createStdTx ({ gas, gasPrices, memo }, messages) {
 
 // the broadcast body consists of the signed tx and a return type
 // returnType can be block (inclusion in block), async (right away), sync (after checkTx has passed)
-function createBroadcastBody (signedTx, returnType = `sync`) {
+function createBroadcastBody(signedTx, returnType = `sync`) {
   return JSON.stringify({
     tx: signedTx,
     mode: returnType
@@ -95,14 +110,14 @@ function createBroadcastBody (signedTx, returnType = `sync`) {
 }
 
 // adds the signature object to the tx
-function createSignedTransactionObject (tx, signature) {
+function createSignedTransactionObject(tx, signature) {
   return Object.assign({}, tx, {
     signatures: [signature]
   })
 }
 
 // assert that a transaction was sent successful
-function assertOk (res) {
+function assertOk(res) {
   if (Array.isArray(res)) {
     if (res.length === 0) throw new Error(`Error sending transaction`)
 

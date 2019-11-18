@@ -637,6 +637,9 @@ export default {
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
       const { height } = await includedFn()
+
+      this.$store.dispatch(`queryWalletBalances`)
+
       this.includedHeight = height
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {

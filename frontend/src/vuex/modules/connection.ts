@@ -3,6 +3,7 @@ import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 import { fetchNetworks } from "../../mock-service"
+import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 
 interface INetworkConfig {
   id: string
@@ -100,6 +101,8 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         state.networkConfig.rpc_url,
         state.networkConfig.chain_id
       )
+
+      setNetworkToExtension(state.networkConfig);
 
       commit("setConnected", true)
     },

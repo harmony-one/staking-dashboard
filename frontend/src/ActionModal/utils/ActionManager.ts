@@ -80,11 +80,13 @@ export default class ActionManager {
 
     this.readyCheck()
 
+    const networkConfig = {};
+
     const { gasEstimate, gasPrice, submitType, password } = txMetaData
     const signer = await getSigner(config, submitType, {
       address: this.context.userAddress,
       password
-    })
+    }, networkConfig)
 
     if (this.messageType === transaction.WITHDRAW) {
       this.message = this.createWithdrawTransaction()

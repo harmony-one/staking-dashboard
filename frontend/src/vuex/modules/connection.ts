@@ -29,7 +29,7 @@ const state = {
   networks: Array<INetworkConfig>(),
 }
 
-const DEFAULT_NETWORK_ID = "mainnet"
+const DEFAULT_NETWORK_ID = "harmony-testnet"
 
 export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   // get tendermint RPC client from basecoin client

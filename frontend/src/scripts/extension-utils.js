@@ -85,13 +85,12 @@ export const getAccountsFromExtension = () => {
   sendMessageToContentScript({ type: "GET_WALLETS" })
 }
 
-export const signWithExtension = async (signMessage, senderAddress, networkConfig) => {
+export const signWithExtension = async (signMessage, senderAddress) => {
   const res = await sendAsyncMessageToContentScript({
     type: "LUNIE_SIGN_REQUEST",
     payload: {
       signMessage,
-      senderAddress,
-      networkConfig
+      senderAddress
     }
   })
 
@@ -102,5 +101,15 @@ export const signWithExtension = async (signMessage, senderAddress, networkConfi
 }
 
 export const waitTransactionConfirm = async () => {
-  return await waitForResponse(`TRANSACTION_CONFIRM_RESPONSE`);
+  return await waitForResponse(`TRANSACTION_CONFIRM_RESPONSE`)
+}
+
+export const setNetwork = async networkConfig => {
+  return await sendMessageToContentScript(
+    {
+      type: "SET_NETWORK_REQUEST",
+      payload: networkConfig
+    },
+    true
+  )
 }

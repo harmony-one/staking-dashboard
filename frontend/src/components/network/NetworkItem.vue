@@ -11,7 +11,7 @@
         {{ network.title }}
       </h4>
       <p class="network-caption">
-        {{ network.chain_id }}
+        {{ network.chain_title }}
       </p>
     </div>
     <div class="network-status">

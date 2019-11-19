@@ -211,9 +211,9 @@
               {{ notifyMessage.body }}
               <br />
               <br />Block
-              <router-link :to="`/blocks/${includedHeight}`"
-                >#{{ prettyIncludedHeight }}</router-link
-              >
+              <a href="linkToTransaction">
+                #{{ prettyIncludedHeight }}
+              </a>
             </div>
           </TmDataMsg>
         </div>
@@ -399,9 +399,10 @@ export default {
     featureAvailable: true
   }),
   computed: {
-    ...mapState([`extension`, `session`]),
+    ...mapState([`extension`, `session`, `connection`]),
     ...mapState({
-      network: state => state.connection.network
+      network: state => state.connection.network,
+      networkConfig: state => state.connection.networkConfig,
     }),
     ...mapGetters([`connected`, `bondDenom`, `liquidAtoms`, `modalContext`]),
     requiresSignIn() {
@@ -458,6 +459,9 @@ export default {
     },
     prettyIncludedHeight() {
       return prettyInt(this.includedHeight)
+    },
+    linkToTransaction() {
+      return this.networkConfig.explorer_url + this.txHash;
     }
   },
   watch: {
@@ -624,8 +628,11 @@ export default {
           memo,
           feeProperties
         )
+
         this.txHash = hash
+
         await this.waitForInclusion(included)
+
         this.onTxIncluded(type, transactionProperties, feeProperties)
       } catch ({ message }) {
         console.log("[submit] error", message)
@@ -636,11 +643,12 @@ export default {
     },
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
-      const { height } = await includedFn()
+      const { blockNumbers, txHash } = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
 
-      this.includedHeight = height
+      this.includedHeight = blockNumbers;
+      this.txHash = txHash;
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {
       this.step = successStep

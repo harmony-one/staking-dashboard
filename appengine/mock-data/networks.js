@@ -5,28 +5,34 @@ module.exports = [
   {
     id: "harmony-testnet",
     chain_id: HmyTestnet,
+    chain_title: "Testnet",
     logo_url: "https://harmony.one/logo",
     testnet: true,
     title: "Harmony Testnet",
     rpc_url: "https://api.s0.b.hmny.io",
+    explorer_url: "https://explorer.testnet.harmony.one/#/tx/",
     __typename: "networks"
   },
   {
     id: "harmony",
     chain_id: HmyMainnet,
+    chain_title: "Mainnet",
     logo_url: "https://harmony.one/logo",
     testnet: false,
     title: "Harmony Mainnet",
     rpc_url: "https://api.s0.t.hmny.io",
+    explorer_url: "https://explorer.harmony.one/#/tx/",
     __typename: "networks"
   },
   {
     id: "harmony-testnet-local",
     chain_id: HmyTestnet,
+    chain_title: "Localnet",
     logo_url: "https://harmony.one/logo",
     testnet: true,
     title: "Harmony Testnet Local",
     rpc_url: 'http://localhost:9500',
+    explorer_url: "http://localhost:9500/#/tx/",
     __typename: "networks"
   }
 ];

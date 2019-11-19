@@ -211,7 +211,7 @@
               {{ notifyMessage.body }}
               <br />
               <br />Block
-              <a :href="linkToTransaction">
+              <a :href="linkToTransaction" target="_blank">
                 #{{ prettyIncludedHeight }}
               </a>
             </div>
@@ -402,7 +402,7 @@ export default {
     ...mapState([`extension`, `session`, `connection`]),
     ...mapState({
       network: state => state.connection.network,
-      networkConfig: state => state.connection.networkConfig,
+      networkConfig: state => state.connection.networkConfig
     }),
     ...mapGetters([`connected`, `bondDenom`, `liquidAtoms`, `modalContext`]),
     requiresSignIn() {
@@ -461,7 +461,7 @@ export default {
       return prettyInt(this.includedHeight)
     },
     linkToTransaction() {
-      return this.networkConfig.explorer_url + this.txHash;
+      return this.networkConfig.explorer_url + this.txHash
     }
   },
   watch: {
@@ -637,18 +637,18 @@ export default {
       } catch ({ message }) {
         console.log("[submit] error", message)
         this.onSendingFailed(message)
-      } finally {
         this.txHash = null
       }
     },
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
-      const { blockNumbers, txHash } = await includedFn()
+
+      const { blockNumbers, txhash } = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
 
-      this.includedHeight = blockNumbers;
-      this.txHash = txHash;
+      this.includedHeight = blockNumbers[0]
+      this.txHash = txhash
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {
       this.step = successStep

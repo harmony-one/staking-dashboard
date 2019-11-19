@@ -210,9 +210,9 @@
             <div slot="subtitle">
               {{ notifyMessage.body }}
               <br />
-              <br />Block
+              <br />Transaction:
               <a :href="linkToTransaction" target="_blank">
-                #{{ prettyIncludedHeight }}
+                {{ prettyTransactionHash }}
               </a>
             </div>
           </TmDataMsg>
@@ -288,6 +288,7 @@ import TableInvoice from "./TableInvoice"
 import Steps from "./Steps"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, prettyInt } from "src/scripts/num"
+import { transactionToShortString } from "src/scripts/transaction-utils"
 import { between, requiredIf } from "vuelidate/lib/validators"
 import { track } from "scripts/google-analytics"
 import { NetworkCapability, NetworkCapabilityResult } from "src/gql"
@@ -459,6 +460,9 @@ export default {
     },
     prettyIncludedHeight() {
       return prettyInt(this.includedHeight)
+    },
+    prettyTransactionHash() {
+      return this.txHash ? transactionToShortString(this.txHash) : '';
     },
     linkToTransaction() {
       return this.networkConfig.explorer_url + this.txHash

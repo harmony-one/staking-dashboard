@@ -211,7 +211,7 @@
               {{ notifyMessage.body }}
               <br />
               <br />Block
-              <a href="linkToTransaction">
+              <a :href="linkToTransaction">
                 #{{ prettyIncludedHeight }}
               </a>
             </div>

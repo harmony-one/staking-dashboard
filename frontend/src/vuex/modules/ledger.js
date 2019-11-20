@@ -1,4 +1,6 @@
 import config from "src/config"
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import HarmonyApp from './harmony-ledger';
 
 export default () => {
   const emptyState = {}
@@ -10,13 +12,10 @@ export default () => {
 
   const actions = {
     async connectLedgerApp({ state }) {
-      const { default: Ledger } = await import("@lunie/cosmos-ledger")
-
-      const ledger = new Ledger({
-        testModeAllowed: state.externals.config.testModeAllowed
-      })
-
-      return await ledger.getCosmosAddress()
+      const transport = await TransportWebUSB.create();
+      const app = new HarmonyApp(transport);
+      const response = await app.publicKey();
+      return response.one_address.toString();
     }
   }
   return {

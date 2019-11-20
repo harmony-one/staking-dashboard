@@ -12,7 +12,7 @@
         <HardwareState :loading="status === `connect` ? false : true">
           <template v-if="status === `connect` || status === `detect`">
             <p>
-              Please plug in your Ledger&nbsp;Nano and open the Cosmos Ledger
+              Please plug in your Ledger&nbsp;Nano and open the Harmony Ledger
               app
             </p>
           </template>
@@ -77,6 +77,8 @@ export default {
         return
       }
 
+      console.log("address = ");
+      console.log(this.address);
       await this.$store.dispatch(`signIn`, {
         sessionType: `ledger`,
         address: this.address

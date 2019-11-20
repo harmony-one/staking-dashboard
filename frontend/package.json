@@ -31,6 +31,7 @@
     "@babel/polyfill": "^7.4.4",
     "@dicebear/avatars": "3.1.4",
     "@dicebear/avatars-jdenticon-sprites": "1.1.4",
+    "@ledgerhq/hw-transport-webusb": "4.74.1",
     "@harmony-js/core": "0.1.32",
     "@harmony-js/network": "0.0.7",
     "@harmony-js/utils": "0.0.7",

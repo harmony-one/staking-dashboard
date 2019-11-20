@@ -642,16 +642,17 @@ export default {
         console.log("[submit] error", message)
         this.onSendingFailed(message)
         this.txHash = null
+        this.session.currrentModalOpen.close();
       }
     },
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
 
-      const { blockNumbers, txhash } = await includedFn()
+      const { txhash } = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
 
-      this.includedHeight = blockNumbers[0]
+      // this.includedHeight = blockNumbers[0]
       this.txHash = txhash
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {

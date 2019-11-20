@@ -210,10 +210,10 @@
             <div slot="subtitle">
               {{ notifyMessage.body }}
               <br />
-              <br />Block
-              <router-link :to="`/blocks/${includedHeight}`"
-                >#{{ prettyIncludedHeight }}</router-link
-              >
+              <br />Transaction:
+              <a :href="linkToTransaction" target="_blank">
+                {{ prettyTransactionHash }}
+              </a>
             </div>
           </TmDataMsg>
         </div>
@@ -288,6 +288,7 @@ import TableInvoice from "./TableInvoice"
 import Steps from "./Steps"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, prettyInt } from "src/scripts/num"
+import { transactionToShortString } from "src/scripts/transaction-utils"
 import { between, requiredIf } from "vuelidate/lib/validators"
 import { track } from "scripts/google-analytics"
 import { NetworkCapability, NetworkCapabilityResult } from "src/gql"
@@ -399,9 +400,10 @@ export default {
     featureAvailable: true
   }),
   computed: {
-    ...mapState([`extension`, `session`]),
+    ...mapState([`extension`, `session`, `connection`]),
     ...mapState({
-      network: state => state.connection.network
+      network: state => state.connection.network,
+      networkConfig: state => state.connection.networkConfig
     }),
     ...mapGetters([`connected`, `bondDenom`, `liquidAtoms`, `modalContext`]),
     requiresSignIn() {
@@ -458,6 +460,12 @@ export default {
     },
     prettyIncludedHeight() {
       return prettyInt(this.includedHeight)
+    },
+    prettyTransactionHash() {
+      return this.txHash ? transactionToShortString(this.txHash) : '';
+    },
+    linkToTransaction() {
+      return this.networkConfig.explorer_url + this.txHash
     }
   },
   watch: {
@@ -624,23 +632,28 @@ export default {
           memo,
           feeProperties
         )
+
         this.txHash = hash
+
         await this.waitForInclusion(included)
+
         this.onTxIncluded(type, transactionProperties, feeProperties)
       } catch ({ message }) {
         console.log("[submit] error", message)
         this.onSendingFailed(message)
-      } finally {
         this.txHash = null
+        this.session.currrentModalOpen.close();
       }
     },
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
-      const { height } = await includedFn()
+
+      const { txhash } = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
 
-      this.includedHeight = height
+      // this.includedHeight = blockNumbers[0]
+      this.txHash = txhash
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {
       this.step = successStep

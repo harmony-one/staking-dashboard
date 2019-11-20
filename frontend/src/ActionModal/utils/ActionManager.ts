@@ -5,20 +5,23 @@ import { uatoms } from "@/scripts/num"
 import { mockTransfer } from "../../mock-service"
 import Staking from "@/staking-client"
 
-type MsgType = keyof Staking;
+type MsgType = keyof Staking
 
 export default class ActionManager {
-  context: any;
-  staking?: Staking;
-  message: any;
-  messageType?: MsgType;
+  context: any
+  staking?: Staking
+  message: any
+  messageType?: MsgType
 
   setContext(context = null) {
     if (!context) {
       throw Error("Context cannot be empty")
     }
     this.context = context
-    this.staking = new Staking(this.context.url || "", this.context.chainId || "")
+    this.staking = new Staking(
+      this.context.url || "",
+      this.context.chainId || ""
+    )
   }
 
   readyCheck() {
@@ -42,11 +45,10 @@ export default class ActionManager {
       throw Error("This modal has no context.")
     }
 
-    this.messageType = type;
-    this.message = this.staking && this.staking[type](
-      this.context.userAddress,
-      transactionProperties
-    )
+    this.messageType = type
+    this.message =
+      this.staking &&
+      this.staking[type](this.context.userAddress, transactionProperties)
   }
 
   async simulate(memo: any) {
@@ -80,13 +82,18 @@ export default class ActionManager {
 
     this.readyCheck()
 
-    const networkConfig = {};
+    const networkConfig = {}
 
     const { gasEstimate, gasPrice, submitType, password } = txMetaData
-    const signer = await getSigner(config, submitType, {
-      address: this.context.userAddress,
-      password
-    }, networkConfig)
+    const signer = await getSigner(
+      config,
+      submitType,
+      {
+        address: this.context.userAddress,
+        password
+      },
+      networkConfig
+    )
 
     if (this.messageType === transaction.WITHDRAW) {
       this.message = this.createWithdrawTransaction()
@@ -115,23 +122,28 @@ export default class ActionManager {
       this.context.rewards
     )
     return this.createMultiMessage(
-      'MsgWithdrawDelegationReward',
+      "MsgWithdrawDelegationReward",
       this.context.userAddress,
       { validatorAddresses: addresses }
     )
   }
 
   // Withdrawing is a multi message for all validators you have bonds with
-  createMultiMessage(type: MsgType, senderAddress: string, params:{ validatorAddresses: string[] }) {
-    const messages = params.validatorAddresses.map(validatorAddress =>
-      this.staking && this.staking[type](senderAddress, { validatorAddress })
+  createMultiMessage(
+    type: MsgType,
+    senderAddress: string,
+    params: { validatorAddresses: string[] }
+  ) {
+    const messages = params.validatorAddresses.map(
+      validatorAddress =>
+        this.staking && this.staking[type](senderAddress, { validatorAddress })
     )
     return this.staking && this.staking.MultiMessage(senderAddress, messages)
   }
 }
 
 function convertCurrencyData(amounts: any[]) {
-  return amounts.map(({ amount, denom } : any) => ({
+  return amounts.map(({ amount, denom }: any) => ({
     amount: toMicroAtomString(amount),
     denom
   }))
@@ -144,7 +156,8 @@ function toMicroAtomString(amount: number) {
 // // limitation of the block, so we pick the top 5 rewards and inform the user.
 function getTop5RewardsValidators(bondDenom: string, rewardsObject: object) {
   // Compares the amount in a [address1, {denom: amount}] array
-  const byBalanceOfDenom = (denom: string) => (a: any[], b: any[]) => b[1][denom] - a[1][denom]
+  const byBalanceOfDenom = (denom: string) => (a: any[], b: any[]) =>
+    b[1][denom] - a[1][denom]
   const validatorList = Object.entries(rewardsObject)
     .sort(byBalanceOfDenom(bondDenom))
     .slice(0, 5) // Just the top 5

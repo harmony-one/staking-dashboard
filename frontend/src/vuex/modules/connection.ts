@@ -8,9 +8,11 @@ import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 interface INetworkConfig {
   id: string
   chain_id: string
+  chain_title: string
   testnet: boolean
   title: string
   rpc_url: string
+  explorer_url: string
   __typename: string
 }
 
@@ -72,7 +74,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     setNetwork(state, networkConfig: INetworkConfig) {
       state.networkConfig = networkConfig
       state.network = networkConfig.id
-      state.lastHeader = { height: 0, chain_id: networkConfig.chain_id }
+      state.lastHeader = { height: 0, ...networkConfig }
     },
     setConnected(state, connected) {
       Vue.set(state, `connected`, connected)

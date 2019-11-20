@@ -63,3 +63,5 @@ export const getCoin = transaction => {
     return transaction.value.amount
   }
 }
+
+export const transactionToShortString = tx => tx.slice(0,5) + '...' + tx.slice(tx.length-5);

@@ -24,7 +24,7 @@
           class="tm-connected-network__string"
         >
           <span v-tooltip.top="networkTooltip" class="chain-id">
-            {{ connection.lastHeader.chain_id }}
+            {{ connection.lastHeader.chain_title }}
           </span>
         </div>
       </div>
@@ -82,7 +82,7 @@ export default {
   computed: {
     ...mapState([`connection`]),
     networkTooltip() {
-      return `You're connected to ${this.connection.lastHeader.chain_id} via ${this.connection.nodeUrl}`
+      return `You're connected to ${this.connection.lastHeader.chain_title} via ${this.connection.networkConfig.rpc_url}`
     }
   }
 }

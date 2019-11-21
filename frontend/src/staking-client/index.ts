@@ -2,7 +2,7 @@ import _Getters from "./getters"
 import send from "./send"
 import simulate, { TMsg } from "./simulate"
 import {
-  // MsgDelegate,
+  MsgDelegate,
   // MsgDeposit,
   // MsgRedelegate,
   MsgSend,
@@ -36,7 +36,7 @@ export default class Staking {
   }
 
   MsgSend: TMsgFunc = this.createMessageFunc(MsgSend);
-  // MsgDelegate: TMsgFunc = this.createMessageFunc(MsgDelegate);
+  MsgDelegate: TMsgFunc = this.createMessageFunc(MsgDelegate);
   // MsgUndelegate: TMsgFunc = this.createMessageFunc(MsgUndelegate);
   // MsgRedelegate: TMsgFunc = this.createMessageFunc(MsgRedelegate);
   // MsgSubmitProposal: TMsgFunc = this.createMessageFunc(

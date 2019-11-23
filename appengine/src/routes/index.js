@@ -20,11 +20,7 @@ module.exports = (app, db) => {
   app.get(
     "/validators/:address",
     asyncHandler(async (req, res) => {
-      const data = await db.getCollectionData("validators");
-
-      const validator = data.find(
-        item => item.operator_address === req.params.address
-      );
+      const validator = validatorInfo(req.params.address);
 
       if (!validator) {
         throw createError(400, "Not found");
@@ -33,6 +29,13 @@ module.exports = (app, db) => {
       res.json(validator);
     })
   );
+
+    app.get(
+        "/delegations/:address",
+        asyncHandler(async (req, res) => {
+            res.json(delegationsByDelegator(req.params.address));
+        })
+    );
 
   app.get(
     "/proposals",

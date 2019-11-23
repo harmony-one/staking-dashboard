@@ -35,15 +35,37 @@ export default {
   },
   data: () => ({
     loading: false,
-    validators: []
+    // validators: []
   }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
     ...mapGetters([`committedDelegations`]),
     delegationsAddressList() {
       return Object.keys(this.committedDelegations)
-    }
+    },
+    ...mapState({ validators: state => state.validators.validators })
+  },
+  async mounted() {
+    this.$store.dispatch(`getValidators`)
   }
+  // apollo: {
+  //   validators: {
+  //     query() {
+  //       /* istanbul ignore next */
+  //       return SomeValidators(this.network)
+  //     },
+  //     variables() {
+  //       /* istanbul ignore next */
+  //       return {
+  //         addressList: Object.keys(this.committedDelegations)
+  //       }
+  //     },
+  //     update(data) {
+  //       /* istanbul ignore next */
+  //       return AllValidatorsResult(this.network)(data)
+  //     }
+  //   }
+  // }
 }
 </script>
 <style scoped>

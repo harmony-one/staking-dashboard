@@ -34,19 +34,29 @@ export default {
     TmDataMsg
   },
   data: () => ({
-    loading: false,
+    loading: false
     // validators: []
   }),
   computed: {
+    ...mapState(["delegates"]),
     ...mapState({ network: state => state.connection.network }),
     ...mapGetters([`committedDelegations`]),
     delegationsAddressList() {
       return Object.keys(this.committedDelegations)
     },
-    ...mapState({ validators: state => state.validators.validators })
+    ...mapState({
+      validators: state => {
+        return state.validators.validators.filter(v =>
+          state.delegates.delegates.find(
+            d => d.validator_address === v.operator_address
+          )
+        )
+      }
+    })
   },
   async mounted() {
     this.$store.dispatch(`getValidators`)
+    this.$store.dispatch("getDelegates")
   }
   // apollo: {
   //   validators: {

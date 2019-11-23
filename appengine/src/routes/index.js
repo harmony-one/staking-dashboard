@@ -33,7 +33,9 @@ module.exports = (app, db) => {
     app.get(
         "/delegations/:address",
         asyncHandler(async (req, res) => {
-            res.json(delegationsByDelegator(req.params.address));
+            const data = await delegationsByDelegator(req.params.address);
+
+            res.json(data);
         })
     );
 

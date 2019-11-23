@@ -23,7 +23,12 @@ export function fetchValidatorByAddress(address: string) {
 }
 
 export function fetchDelegationsByAddress(address: string) {
-  return axios.get(`${API_URL}/delegations/${address}`).then(rez => rez.data)
+  return axios.get(`${API_URL}/delegations/${address}`).then(rez =>
+    rez.data.map((d: any) => ({
+      ...d,
+      amount: d.amount / 1000000000000,
+    }))
+  )
 }
 
 // export function fetchAccount(address) {

@@ -3,6 +3,8 @@
 import Vue from "vue"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
+import { fetchDelegationsByAddress } from "@/mock-service"
+import * as crypto from "@harmony-js/crypto"
 
 const validator_sample = {
   operator_address: "cosmosvaloper16ddmnhsxkjh6xt4n2xk36d56pndvjxcn6gffpm",
@@ -29,7 +31,7 @@ const validator_sample = {
   min_self_delegation: "1"
 }
 
-type TValidator = typeof validator_sample;
+type TValidator = typeof validator_sample
 
 const emptyState = {
   delegates: [] as TValidator[],
@@ -46,17 +48,8 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     setDelegateLoading(state, loading) {
       state.loading = loading
     },
-    setDelegates(state, validators) {
-      validators.forEach((validator: TValidator) => {
-        upsertValidator(state, validator)
-      })
-      // filter not existing once out
-      state.delegates = state.delegates.filter(validator =>
-        validators.find(
-          ({ operator_address } : any) =>
-            validator.operator_address === operator_address
-        )
-      )
+    setDelegates(state, delegates) {
+      state.delegates = delegates
     },
     setSelfBond(state, { validator: { operator_address }, ratio }) {
       Vue.set(state.selfBond, operator_address, ratio)
@@ -64,27 +57,48 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
   },
   actions: {
     reconnected() {},
-    async getDelegates() {},
+    async getDelegates({ commit, rootState }) {
+      const delegatorAddressHex = crypto.getAddress(rootState.session.address).basicHex;
+
+      const data = await fetchDelegationsByAddress(delegatorAddressHex);
+
+      commit("setDelegates", data)
+    },
     async getSelfBond() {}
   }
 })
 
 // incrementally add the validator to the list or update it in place
 // "upsert": (computing, databases) An operation that inserts rows into a database table if they do not already exist, or updates them if they do.
-function upsertValidator(state: typeof emptyState, validator: TValidator) {
-  const oldValidatorIndex = state.delegates.findIndex(
-    oldValidator => oldValidator.operator_address === validator.operator_address
-  )
-  if (oldValidatorIndex === -1) {
-    state.delegates.push(validator)
-    return
-  }
-  Vue.set(
-    state.delegates,
-    oldValidatorIndex,
-    Object.assign({}, state.delegates[oldValidatorIndex], validator)
-  )
-}
+// function upsertValidator(state: typeof emptyState, validator: TValidator) {
+//   const oldValidatorIndex = state.delegates.findIndex(
+//     oldValidator => oldValidator.operator_address === validator.operator_address
+//   )
+//   if (oldValidatorIndex === -1) {
+//     state.delegates.push(validator)
+//     return
+//   }
+//   Vue.set(
+//     state.delegates,
+//     oldValidatorIndex,
+//     Object.assign({}, state.delegates[oldValidatorIndex], validator)
+//   )
+// }
+
+// committedDelegations
+
+// setDelegates(state, validators) {
+//   validators.forEach((validator: TValidator) => {
+//     upsertValidator(state, validator)
+//   })
+//   // filter not existing once out
+//   state.delegates = state.delegates.filter(validator =>
+//     validators.find(
+//       ({ operator_address } : any) =>
+//         validator.operator_address === operator_address
+//     )
+//   )
+// },
 
 // actions: {
 //   reconnected({ state, dispatch }) {

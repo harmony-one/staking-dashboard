@@ -11,8 +11,8 @@ const commitHash = require(`child_process`)
   .toString()
   .trim()
 
-// const DEFAULT_MOCK_API_URL = "http://localhost:8080"
-const DEFAULT_MOCK_API_URL = "https://staking-explorer.appspot.com"
+const DEFAULT_MOCK_API_URL = "http://localhost:8080"
+// const DEFAULT_MOCK_API_URL = "https://staking-explorer.appspot.com"
 
 module.exports = {
   publicPath: `/`,

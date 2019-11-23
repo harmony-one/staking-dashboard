@@ -114,15 +114,15 @@ setInterval(async () => {
   await update();
 }, 4000);
 
-const getDelegationAmount = (validatorAddress, delegatorAddress) => {
-  return cache[DELEGATIONS_BY_VALIDATOR][validatorAddress].reduce((sum, delegation) => {
-    if(delegation.delegator_address === delegatorAddress) {
-      return sum + delegation.amount;
-    } else {
-      return sum;
-    }
-  }, 0);
-}
+// const getDelegationAmount = (validatorAddress, delegatorAddress) => {
+//   return cache[DELEGATIONS_BY_VALIDATOR][validatorAddress].reduce((sum, delegation) => {
+//     if(delegation.delegator_address === delegatorAddress) {
+//       return sum + delegation.amount;
+//     } else {
+//       return sum;
+//     }
+//   }, 0);
+// }
 
 const validators = () => {
   return cache[VALIDATORS].map(address => {
@@ -136,10 +136,15 @@ const activeValidators = () => {
   })
 }
 
+const delegationsByDelegator = async (address) => {
+  return await getDelegationsByDelegatorData(address);
+}
+
 module.exports = {
   validators,
   activeValidators,
   validatorInfo: address => cache[VALIDATOR_INFO][address],
-  delegationsByDelegator: address => cache[DELEGATIONS_BY_DELEGATOR][address],
+  delegationsByDelegator,
+  // delegationsByDelegator: async address => cache[DELEGATIONS_BY_DELEGATOR][address],
   delegationsByValidator: address => cache[DELEGATIONS_BY_VALIDATOR][address]
 };

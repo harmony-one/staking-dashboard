@@ -1,19 +1,14 @@
 "use strict";
 
-// [START app]
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
+require("./src/services/sync");
 const routes = require("./src/routes");
 const DBService = require("./src/services/database");
 
 const app = express();
 app.use(cors());
-
-setInterval(() => {
-//  console.log("hello");
-  // pull data from blockchain into database
-}, 1000);
 
 app.get("/", (req, res) => {
   res.send("Hello from App Engine!");
@@ -26,9 +21,11 @@ const dbService = new DBService();
 routes(app, dbService);
 
 // send errors response
-app.use(function (err, req, res, next) {
-  if(err) {
-    res.status(err.status || 500).json({status: err.status, message: err.message})
+app.use(function(err, req, res, next) {
+  if (err) {
+    res
+      .status(err.status || 500)
+      .json({ status: err.status, message: err.message });
   } else {
     next();
   }

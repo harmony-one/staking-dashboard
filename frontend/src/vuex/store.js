@@ -35,6 +35,13 @@ export default (opts = {}) => {
     pending = storeUpdateHandler(mutation, state, pending)
   })
 
+  store.subscribe((mutation) => {
+    if(mutation.type === 'setConnected') {
+      store.dispatch("getDelegates");
+      store.dispatch('queryWalletBalances');
+    }
+  });
+
   return store
 }
 

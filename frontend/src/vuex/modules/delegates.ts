@@ -58,6 +58,8 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
   actions: {
     reconnected() {},
     async getDelegates({ commit, rootState }) {
+      if(!rootState.session.address) return;
+
       const delegatorAddressHex = crypto.getAddress(rootState.session.address).basicHex;
 
       const data = await fetchDelegationsByAddress(delegatorAddressHex);

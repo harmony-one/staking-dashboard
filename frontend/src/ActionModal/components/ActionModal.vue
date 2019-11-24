@@ -651,6 +651,7 @@ export default {
       const { txhash } = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
+      this.$store.dispatch(`getDelegates`)
 
       // this.includedHeight = blockNumbers[0]
       this.txHash = txhash

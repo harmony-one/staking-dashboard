@@ -66,7 +66,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
         const redelegations = await node.get.redelegations(address)
         const delegator = {
           delegations,
-          unbondingDelegations,
+          unbondingDelegations: [],
           redelegations
         }
         state.error = null

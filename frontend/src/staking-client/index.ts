@@ -4,10 +4,10 @@ import simulate, { TMsg } from "./simulate"
 import {
   MsgDelegate,
   // MsgDeposit,
-  // MsgRedelegate,
+  MsgRedelegate,
   MsgSend,
   // MsgSubmitProposal,
-  // MsgUndelegate,
+  MsgUndelegate,
   // MsgVote,
   MsgWithdrawDelegationReward,
   TMsgFuncConstructor
@@ -37,8 +37,8 @@ export default class Staking {
 
   MsgSend: TMsgFunc = this.createMessageFunc(MsgSend);
   MsgDelegate: TMsgFunc = this.createMessageFunc(MsgDelegate);
-  // MsgUndelegate: TMsgFunc = this.createMessageFunc(MsgUndelegate);
-  // MsgRedelegate: TMsgFunc = this.createMessageFunc(MsgRedelegate);
+  MsgUndelegate: TMsgFunc = this.createMessageFunc(MsgUndelegate);
+  MsgRedelegate: TMsgFunc = this.createMessageFunc(MsgRedelegate);
   // MsgSubmitProposal: TMsgFunc = this.createMessageFunc(
   //   MsgSubmitProposal
   // );

@@ -34,16 +34,48 @@ export default {
     TmDataMsg
   },
   data: () => ({
-    loading: false,
-    validators: []
+    loading: false
+    // validators: []
   }),
   computed: {
+    ...mapState(["delegates"]),
     ...mapState({ network: state => state.connection.network }),
     ...mapGetters([`committedDelegations`]),
     delegationsAddressList() {
       return Object.keys(this.committedDelegations)
-    }
+    },
+    ...mapState({
+      validators: state => {
+        return state.validators.validators.filter(v =>
+          state.delegates.delegates.find(
+            d => d.validator_address === v.operator_address
+          )
+        )
+      }
+    })
+  },
+  async mounted() {
+    this.$store.dispatch(`getValidators`)
+    this.$store.dispatch("getDelegates")
   }
+  // apollo: {
+  //   validators: {
+  //     query() {
+  //       /* istanbul ignore next */
+  //       return SomeValidators(this.network)
+  //     },
+  //     variables() {
+  //       /* istanbul ignore next */
+  //       return {
+  //         addressList: Object.keys(this.committedDelegations)
+  //       }
+  //     },
+  //     update(data) {
+  //       /* istanbul ignore next */
+  //       return AllValidatorsResult(this.network)(data)
+  //     }
+  //   }
+  // }
 }
 </script>
 <style scoped>

@@ -8,9 +8,26 @@ export default () => {
   }
 
   const actions = {
-    async getValidators({ commit }) {
-      const validators = await fetchValidators()
+    async getValidators({ commit, rootState }) {
+      let validators = await fetchValidators()
+
+      const { delegates } = rootState.delegates
+
+      // if (validators) {
+      //   validators = validators.map(validator => {
+      //     const delegation = delegates.find(
+      //       d => d.validator_address === validator.operator_address
+      //     )
+      //
+      //     return {
+      //       ...validator,
+      //       my_delegations: delegation ? delegation.amount : 0
+      //     }
+      //   })
+      // }
+
       commit("setLoaded", true)
+
       commit("setValidators", validators)
     }
   }

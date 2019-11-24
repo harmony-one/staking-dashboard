@@ -179,6 +179,7 @@ import Bech32 from "common/Bech32"
 import TmPage from "common/TmPage"
 import isEmpty from "lodash.isempty"
 import { fetchValidatorByAddress } from "../../mock-service"
+import * as crypto from "@harmony-js/crypto"
 
 export default {
   name: `page-validator`,
@@ -240,11 +241,17 @@ export default {
     },
     myBond() {
       if (!this.validator) return 0
+
+      const validatorHexAddress = crypto.getAddress(
+        this.validator.operator_address
+      ).basicHex
+
+      const delegator = this.delegates.delegates.find(
+        d => d.validator_address === validatorHexAddress
+      )
+
       return atoms(
-        calculateTokens(
-          this.validator,
-          this.committedDelegations[this.validator.operator_address] || 0
-        )
+        calculateTokens(this.validator, delegator ? delegator.amount : 0)
       )
     },
     myDelegation() {
@@ -341,6 +348,11 @@ export default {
       }
     }
   },
+
+  async mounted() {
+    this.validator = await fetchValidatorByAddress(this.$route.params.validator)
+    this.loading = false
+  },
   methods: {
     shortDecimals,
     atoms,
@@ -392,11 +404,6 @@ export default {
         }, [])
       return myWallet.concat(redelegationOptions)
     }
-  },
-
-  async mounted() {
-    this.validator = await fetchValidatorByAddress(this.$route.params.validator)
-    this.loading = false
   }
   // apollo: {
   //   validator: {

@@ -98,7 +98,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       dispatch("setNetwork", network || networks[0])
     },
 
-    async reconnect({ commit, state }) {
+    async reconnect({ commit, state, rootState }) {
       await node.get.initHarmony(
         state.networkConfig.rpc_url,
         state.networkConfig.chain_id
@@ -107,6 +107,8 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       setNetworkToExtension(state.networkConfig);
 
       commit("setConnected", true)
+
+      // store.dispatch("getDelegates");
     },
 
     // async connect({ commit, state }) {

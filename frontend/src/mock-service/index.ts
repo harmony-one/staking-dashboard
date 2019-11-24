@@ -1,4 +1,5 @@
 import axios from "axios"
+import { remapValidator } from "@/mock-service/validator-helpers"
 
 const API_URL = process.env.MOCK_API_URL
 
@@ -10,11 +11,24 @@ export function fetchNetworks() {
 }
 
 export function fetchValidators() {
-  return axios.get(`${API_URL}/validators`).then(rez => rez.data.validators)
+  return axios
+    .get(`${API_URL}/validators`)
+    .then(rez => rez.data.validators.map(remapValidator))
 }
 
-export function fetchValidatorByAddress(address) {
-  return axios.get(`${API_URL}/validators/${address}`).then(rez => rez.data)
+export function fetchValidatorByAddress(address: string) {
+  return axios
+    .get(`${API_URL}/validators/${address}`)
+    .then(rez => remapValidator(rez.data, true))
+}
+
+export function fetchDelegationsByAddress(address: string) {
+  return axios.get(`${API_URL}/delegations/${address}`).then(rez =>
+    rez.data.map((d: any) => ({
+      ...d,
+      amount: d.amount / 1000000000000,
+    }))
+  )
 }
 
 // export function fetchAccount(address) {
@@ -43,7 +57,7 @@ export function fetchValidatorByAddress(address) {
 // Endpoint returns estimated fee?
 // Example
 // { gas_estimate: "24341" }
-export function mockTransfer(data) {
+export function mockTransfer(data: any) {
   console.log("Data to send -> ", data)
   // return axios.get(`${API_URL}/accounts/${data.from_address}/transfers`).then(rez => rez.data)
   return { gas_estimate: "24341" }

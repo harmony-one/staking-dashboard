@@ -1,6 +1,8 @@
 import { IAccount } from "@/staking-client/interfaces"
 import { Harmony } from "@harmony-js/core"
 import { ChainType } from "@harmony-js/utils"
+import { fetchDelegationsByAddress } from "@/mock-service"
+import * as crypto from "@harmony-js/crypto"
 
 const RETRIES = 4
 
@@ -132,8 +134,11 @@ export default class Getters {
     )
   }
   // Get all delegations information from a delegator
-  delegations = (addr: string) => {
-    return this.get(`/staking/delegators/${addr}/delegations`)
+  delegations = async (addr: string) => {
+    const delegatorAddressHex = crypto.getAddress(addr).basicHex;
+
+    return await fetchDelegationsByAddress(delegatorAddressHex);
+    //return this.get(`/staking/delegators/${addr}/delegations`)
   }
   undelegations = (addr: string) => {
     return this.get(`/staking/delegators/${addr}/unbonding_delegations`, 1)

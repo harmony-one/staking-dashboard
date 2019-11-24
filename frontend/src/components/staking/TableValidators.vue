@@ -58,7 +58,7 @@ export default {
     rollingWindow: 10000 // param of slashing period
   }),
   computed: {
-    ...mapState([`distribution`, `pool`, `session`]),
+    ...mapState([`distribution`, `pool`, `session`, "delegates"]),
     ...mapState({
       annualProvision: state => state.minting.annualProvision
     }),
@@ -74,12 +74,17 @@ export default {
       } = this
     ) {
       return validators.map(v => {
+        const delegation = this.delegates.delegates.find(
+          d => d.validator_address === v.operator_address
+        )
+
         return Object.assign({}, v, {
           small_moniker: v.moniker.toLowerCase(),
-          my_delegations:
-            session.signedIn && committedDelegations[v.operator_address] > 0
-              ? committedDelegations[v.operator_address]
-              : 0,
+          my_delegations: delegation ? delegation.amount : 0,
+          // my_delegations:
+          //   session.signedIn && committedDelegations[v.operator_address] > 0
+          //     ? committedDelegations[v.operator_address]
+          //     : 0,
           rewards:
             session.signedIn && distribution.rewards[v.operator_address]
               ? distribution.rewards[v.operator_address][this.bondDenom]

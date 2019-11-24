@@ -36,9 +36,9 @@ const getActiveValidatorAddressesData = async () => {
       "id": 1
     }`
     );
-    cache[ACTIVE_VALIDATORS] = res.data;
+    cache[ACTIVE_VALIDATORS] = res.data.result;
     // console.log("getActiveValidatorAddressesData", res.data);
-    return res.data;
+    return res.data.result;
   } catch (err) {}
 };
 
@@ -52,9 +52,9 @@ const getAllValidatorAddressesData = async () => {
       "id": 1
     }`
   );
-  cache[VALIDATORS] = res.data;
+  cache[VALIDATORS] = res.data.result;
   // console.log("getAllValidatorAddressesData", res.data);
-  return res.data;
+  return res.data.result;
 };
 
 const getValidatorInfoData = async address => {
@@ -67,9 +67,9 @@ const getValidatorInfoData = async address => {
       "id": 1
     }`
   );
-  cache[VALIDATOR_INFO][address] = res.data;
+  cache[VALIDATOR_INFO][address] = res.data.result;
   // console.log("getAllValidatorInfoData ${address}", res.data);
-  return res.data;
+  return res.data.result;
 };
 
 const getDelegationsByDelegatorData = async address => {
@@ -77,9 +77,9 @@ const getDelegationsByDelegatorData = async address => {
     "/",
     `{"jsonrpc":"2.0","method":"hmy_getDelegationsByDelegator","params":["${address}"],"id":1}`
   );
-  cache[DELEGATIONS_BY_DELEGATOR][address] = res.data;
-  // console.log("getDelegationsByDelegatorData ${address}", res.data);
-  return res.data;
+  cache[DELEGATIONS_BY_DELEGATOR][address] = res.data.result;
+  // console.log("getDelegationsByDelegatorData ${address}", res.data.result);
+  return res.data.result;
 };
 
 const getDelegationsByValidatorData = async address => {
@@ -87,20 +87,20 @@ const getDelegationsByValidatorData = async address => {
     "/",
     `{"jsonrpc":"2.0","method":"hmy_getDelegationsByValidator","params":["${address}"],"id":1}`
   );
-  cache[DELEGATIONS_BY_VALIDATOR][address] = res.data;
-  // console.log("getDelegationsByValidatorData ${address}", res.data);
-  return res.data;
+  cache[DELEGATIONS_BY_VALIDATOR][address] = res.data.result;
+  // console.log("getDelegationsByValidatorData ${address}", res.data.result);
+  return res.data.result;
 };
 
 const update = async () => {
   try {
     await getActiveValidatorAddressesData();
-    cache[ACTIVE_VALIDATORS].result.forEach(async address => {
+    cache[ACTIVE_VALIDATORS].forEach(async address => {
       await getValidatorInfoData(address);
       await getDelegationsByValidatorData(address);
     });
     await getAllValidatorAddressesData();
-    cache[VALIDATORS].result.forEach(async address => {
+    cache[VALIDATORS].forEach(async address => {
       await getValidatorInfoData(address);
       await getDelegationsByValidatorData(address);
     });
@@ -112,12 +112,39 @@ const update = async () => {
 setInterval(async () => {
   console.log("--------- Updating ---------");
   await update();
-}, 8000);
+}, 4000);
+
+// const getDelegationAmount = (validatorAddress, delegatorAddress) => {
+//   return cache[DELEGATIONS_BY_VALIDATOR][validatorAddress].reduce((sum, delegation) => {
+//     if(delegation.delegator_address === delegatorAddress) {
+//       return sum + delegation.amount;
+//     } else {
+//       return sum;
+//     }
+//   }, 0);
+// }
+
+const validators = () => {
+  return cache[VALIDATORS].map(address => {
+    return { ...cache[VALIDATOR_INFO][address] };
+  })
+}
+
+const activeValidators = () => {
+  return cache[ACTIVE_VALIDATORS].map(address => {
+    return cache[VALIDATOR_INFO][address];
+  })
+}
+
+const delegationsByDelegator = async (address) => {
+  return await getDelegationsByDelegatorData(address);
+}
 
 module.exports = {
-  validators: () => cache[VALIDATORS],
-  activeValidators: () => cache[ACTIVE_VALIDATORS],
+  validators,
+  activeValidators,
   validatorInfo: address => cache[VALIDATOR_INFO][address],
-  delegationsByDelegator: address => cache[DELEGATIONS_BY_DELEGATOR][address],
+  delegationsByDelegator,
+  // delegationsByDelegator: async address => cache[DELEGATIONS_BY_DELEGATOR][address],
   delegationsByValidator: address => cache[DELEGATIONS_BY_VALIDATOR][address]
 };

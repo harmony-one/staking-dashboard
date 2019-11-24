@@ -502,16 +502,19 @@ export default {
       }
     },
     open() {
-      this.confirmModalOpen()
-      if (this.session.currrentModalOpen) {
-        return
-      }
+      // this.confirmModalOpen()
+      // if (this.session.currrentModalOpen) {
+      //   return
+      // }
 
-      this.$store.commit(`setCurrrentModalOpen`, this)
-      this.trackEvent(`event`, `modal`, this.title)
-      this.checkFeatureAvailable()
-      this.gasPrice = config.default_gas_price.toFixed(9)
       this.show = true
+      this.gasPrice = config.default_gas_price.toFixed(9)
+
+      // this.$store.commit(`setCurrrentModalOpen`, this)
+      // this.trackEvent(`event`, `modal`, this.title)
+      // this.checkFeatureAvailable()
+      // this.gasPrice = config.default_gas_price.toFixed(9)
+      // this.show = true
     },
     close() {
       this.$store.commit(`setCurrrentModalOpen`, false)
@@ -550,7 +553,7 @@ export default {
       }
     },
     async validateChangeStep() {
-      if (this.disabled) return
+      if (this.disabled) returnssssss
       // An ActionModal is only the prototype of a parent modal
       switch (this.step) {
         case defaultStep:

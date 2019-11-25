@@ -71,6 +71,7 @@
     "vuex": "^3.1.1"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "@ascendancyy/vue-cli-plugin-stylelint": "^1.1.2",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@capacitor/android": "1.1.1",

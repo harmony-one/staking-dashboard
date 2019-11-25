@@ -1,5 +1,6 @@
 const path = require(`path`)
 const webpack = require(`webpack`)
+require('dotenv').config();
 const CSPWebpackPlugin = require(`csp-webpack-plugin`)
 
 function resolve(dir) {

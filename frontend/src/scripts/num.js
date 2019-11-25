@@ -12,7 +12,7 @@ function truncate(number, digits) {
 }
 
 export const SMALLEST = 1e-6
-const language = window.navigator.userLanguage || window.navigator.language
+const language = 'en-US' // window.navigator.userLanguage || window.navigator.language
 
 function setDecimalLength(value, length) {
   return new Intl.NumberFormat(language, {

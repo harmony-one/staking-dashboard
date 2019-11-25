@@ -10,7 +10,7 @@ const dev = process.env.NODE_ENV === `development`
 // const stargate = `https://lcd.nylira.net`
 // const stargate  = `https://us-central1-staking-explorer-c9991.cloudfunctions.net/mocks`
 // const stargate = "http://localhost:8080"
-const stargate = "https://staking-explorer.appspot.com"
+const stargate = process.env.STARGATE || "https://staking-explorer.appspot.com"
 
 // const rpc = `https://rpc.nylira.net`
 const rpc = ``

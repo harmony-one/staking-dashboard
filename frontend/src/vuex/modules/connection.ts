@@ -5,6 +5,8 @@ import { Module } from "vuex"
 import { fetchNetworks } from "../../mock-service"
 import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 
+const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK;
+
 interface INetworkConfig {
   id: string
   chain_id: string
@@ -26,13 +28,9 @@ const state = {
   networkConfig: {} as INetworkConfig,
   network: "",
   connectionAttempts: 0,
-  nodeUrl: config.stargate,
-  rpcUrl: config.rpc,
   externals: {} as { config: typeof config; node: TNode },
   networks: Array<INetworkConfig>(),
 }
-
-const DEFAULT_NETWORK_ID = "harmony-testnet"
 
 export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   // get tendermint RPC client from basecoin client
@@ -91,7 +89,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       const networks: INetworkConfig[] = await fetchNetworks()
 
       const network = networks.find(
-        network => network.id === DEFAULT_NETWORK_ID
+        network => network.id === DEFAULT_NETWORK
       )
 
       commit('setNetworks', networks);

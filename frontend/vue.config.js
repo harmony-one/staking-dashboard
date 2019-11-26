@@ -1,6 +1,5 @@
 const path = require(`path`)
 const webpack = require(`webpack`)
-require('dotenv').config();
 const CSPWebpackPlugin = require(`csp-webpack-plugin`)
 
 function resolve(dir) {
@@ -12,8 +11,7 @@ const commitHash = require(`child_process`)
   .toString()
   .trim()
 
-const DEFAULT_MOCK_API_URL = "http://localhost:8080"
-// const DEFAULT_MOCK_API_URL = "https://staking-explorer.appspot.com"
+const DEFAULT_MOCK_API_URL = "http://localhost:6000"
 
 module.exports = {
   publicPath: `/`,
@@ -39,11 +37,12 @@ module.exports = {
         new webpack.DefinePlugin({
           "process.env": {
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-            RPC: JSON.stringify(process.env.RPC),
-            STARGATE: JSON.stringify(process.env.STARGATE),
             RELEASE: JSON.stringify(commitHash),
             MOCK_API_URL: JSON.stringify(
               process.env.MOCK_API_URL || DEFAULT_MOCK_API_URL
+            ),
+            DEFAULT_NETWORK: JSON.stringify(
+              process.env.DEFAULT_NETWORK
             ),
             GOOGLE_ANALYTICS_UID: JSON.stringify(
               process.env.GOOGLE_ANALYTICS_UID
@@ -63,21 +62,21 @@ module.exports = {
           "script-src": [`'self'`, `https://*.lunie.io`],
           "worker-src": `'none'`,
           "style-src": [`'self'`, `'unsafe-inline'`],
-          "connect-src": [
-            // third party tools
-            `https://api-iam.intercom.io`,
-            // mainnet
-            `https://stargate.lunie.io`,
-            `wss://rpc.lunie.io:26657`,
-            `https://stargate.cosmos.network`,
-            `wss://rpc.cosmos.network:26657`,
-            ...[process.env.STARGATE].filter(x => x !== undefined),
-            ...[process.env.RPC]
-              .filter(x => x !== undefined)
-              .map(x => x.replace("https", "wss"))
-          ],
-          "frame-src": [`'self'`, `https://api-iam.intercom.io`],
-          "img-src": [`'self'`, `https://www.google-analytics.com/`]
+          // "connect-src": [
+          //   // third party tools
+          //   //`https://api-iam.intercom.io`,
+          //   // mainnet
+          //   `https://stargate.lunie.io`,
+          //   `wss://rpc.lunie.io:26657`,
+          //   `https://stargate.cosmos.network`,
+          //   `wss://rpc.cosmos.network:26657`,
+          //   ...[process.env.STARGATE].filter(x => x !== undefined),
+          //   ...[process.env.RPC]
+          //     .filter(x => x !== undefined)
+          //     .map(x => x.replace("https", "wss"))
+          // ],
+          //"frame-src": [`'self'`, `https://api-iam.intercom.io`],
+          //"img-src": [`'self'`, `https://www.google-analytics.com/`]
         })
       )
     }

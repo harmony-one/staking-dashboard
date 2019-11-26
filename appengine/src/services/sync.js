@@ -7,6 +7,8 @@ const VALIDATOR_INFO = "VALIDATOR_INFO";
 const DELEGATIONS_BY_DELEGATOR = "DELEGATIONS_BY_DELEGATOR";
 const DELEGATIONS_BY_VALIDATOR = "DELEGATIONS_BY_VALIDATOR";
 
+const BLOCKCHAIN_SERVER = process.env.BLOCKCHAIN_SERVER || "http://localhost:9500";
+
 let cache = {
   VALIDATORS: {},
   ACTIVE_VALIDATORS: {},
@@ -15,9 +17,10 @@ let cache = {
   DELEGATIONS_BY_VALIDATOR: {}
 };
 
-console.log(process.env.SERVER);
+console.log('Blockchain server: ', BLOCKCHAIN_SERVER);
+
 const apiClient = axios.create({
-  baseURL: process.env.SERVER || "http://localhost:9500",
+  baseURL: BLOCKCHAIN_SERVER,
   // baseURL: process.env.SERVER,
   headers: {
     Accept: "application/json",

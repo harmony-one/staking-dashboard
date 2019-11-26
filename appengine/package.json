@@ -5,18 +5,18 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js",
+    "start": "NODE_ENV=development node server.js",
+    "prod": "NODE_ENV=production node server.js",
     "deploy": "gcloud app deploy",
     "lint": "samples lint",
     "pretest": "npm run lint",
-    "test": "samples test app"
+    "test": "samples test app",
+    "database": "node db.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/GoogleCloudPlatform/nodejs-docs-samples.git"
-  },
-  "engines": {
-    "node": "10.x.x"
   },
   "author": "Google Inc.",
   "license": "Apache-2.0",
@@ -24,6 +24,7 @@
     "axios": "^0.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "dotenv-expand": "^5.1.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.7.0"
   },

@@ -1,11 +1,13 @@
+const DATABASE_URL = process.env.DATABASE_URL;
+
 module.exports = function () {
     // Init admin
     const admin = require("firebase-admin");
-    var serviceAccount = require("./keys/staking_explorer.json");
+    var serviceAccount = require("../../keys/staking_explorer.json");
 
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        databaseURL: "https://staking-explorer.firebaseio.com"
+        databaseURL: DATABASE_URL
     });
 
     const db = admin.firestore();

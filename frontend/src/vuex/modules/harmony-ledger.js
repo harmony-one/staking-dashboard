@@ -16,6 +16,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+import {
+    arrayify, hexlify, stripZeros, encode,
+} from '@harmony-js/crypto';
+
+const { hexToNumber } = require('@harmony-js/utils');
 
 const CLA = 0xE0;
 const CHUNK_SIZE = 255;
@@ -37,14 +42,17 @@ const CMDS = {
 function hexToBytes(hex) {
     const bytes = [];
     for (let c = 0; c < hex.length; c += 2) {
-        bytes.push(parseInt(hex.substr(c, 2), 16));
+        if (hex.substr(c, 2) !== '0x') {
+            bytes.push(parseInt(hex.substr(c, 2), 16));
+        }
     }
     return bytes;
 }
 
 function processErrorResponse(response) {
     return {
-        return_code: response.statusCode,
+        signature: Buffer.from('0x0'),
+        return_code: response,
     };
 }
 
@@ -71,7 +79,7 @@ export default class HarmonyApp {
         try {
             resp = await this.transport.send(CLA, INS.GET_VERSION, 0, 0);
         } catch (err) {
-            processErrorResponse(resp);
+            return processErrorResponse(resp);
         }
         const errorCodeData = resp.slice(-2);
         const returnCode = errorCodeData[0] * 256 + errorCodeData[1];
@@ -85,12 +93,16 @@ export default class HarmonyApp {
         };
     }
 
-    async publicKey() {
+    async publicKey(silentMode) {
         let resp;
         try {
-            resp = await this.transport.send(CLA, INS.GET_PUBLIC_KEY, 0, 1);
+            if (silentMode) {
+                resp = await this.transport.send(CLA, INS.GET_PUBLIC_KEY, 0, 1);
+            } else {
+                resp = await this.transport.send(CLA, INS.GET_PUBLIC_KEY, 0, 0);
+            }
         } catch (err) {
-            processErrorResponse(resp);
+            return processErrorResponse(resp);
         }
         const errorCodeData = resp.slice(-2);
         const returnCode = errorCodeData[0] * 256 + errorCodeData[1];
@@ -106,7 +118,7 @@ export default class HarmonyApp {
         try {
             resp = await this.transport.send(CLA, INS.SIGN_TX, 0, 0, Buffer.from(p));
         } catch (err) {
-            processErrorResponse(resp);
+            return processErrorResponse(resp);
         }
         const errorCodeData = resp.slice(-2);
         const returnCode = errorCodeData[0] * 256 + errorCodeData[1];
@@ -137,7 +149,7 @@ export default class HarmonyApp {
                 resp = await this.transport.send(CLA, INS.SIGN_STAKING, p1, p2, chunks[i]);
             }
         } catch (err) {
-            processErrorResponse(resp);
+            return processErrorResponse(resp);
         }
         const errorCodeData = resp.slice(-2);
         const returnCode = errorCodeData[0] * 256 + errorCodeData[1];
@@ -145,5 +157,111 @@ export default class HarmonyApp {
             signature: Buffer.from(resp.slice(0, 65)),
             return_code: returnCode,
         };
+    }
+
+    static async getAccountShardNonce(address, shardID, messenger) {
+        const nonce = await messenger.send(
+            'hmy_getTransactionCount',
+            [address, 'latest'],
+            messenger.chainPrefix,
+            shardID,
+        );
+
+        if (nonce.isError()) {
+            throw nonce.error.message;
+        }
+        return Number.parseInt(hexToNumber(nonce.result), 10);
+    }
+
+    async signTransaction(txn, chainId, shardId, messenger) {
+        // get public address of ledger account
+        let response = await this.publicKey(true);
+        if (response.return_code !== 0x9000) {
+            this.log(`Error [${response.return_code}] ${response.error_message}`);
+            return;
+        }
+
+        // get nonce for the current account/shardID and set the transaction nonce
+        const address = response.one_address.toString();
+        const accountNonce = await HarmonyApp.getAccountShardNonce(
+            address, shardId, messenger,
+        );
+        txn.setParams({ ...txn.txParams, nonce: accountNonce });
+
+        // sign RLP encoded raw transaction using ledger private key
+        const [unsignedRawTransaction, raw] = txn.getRLPUnsigned();
+        response = await this.signTx(unsignedRawTransaction);
+
+        // update the signature r,s,v field in transaction
+        const bytes = response.signature;
+        const r = hexlify(bytes.slice(0, 32));
+        const s = hexlify(bytes.slice(32, 64));
+        let v = bytes[64];
+        if (v !== 27 && v !== 28) {
+            v = 27 + (v % 2);
+        }
+
+        // replace empty r,s,v with signature r,s,v
+        raw.pop();
+        raw.pop();
+        raw.pop();
+
+        v += chainId * 2 + 8;
+        raw.push(hexlify(v));
+        raw.push(stripZeros(arrayify(r) || []));
+        raw.push(stripZeros(arrayify(s) || []));
+
+        const encodedRaw = encode(raw);
+        txn.setParams({ ...txn.txParams, rawTransaction: encodedRaw });
+
+        return txn;
+    }
+
+    async signStakingTransaction(stakingTxn, chainId, shardId, messenger) {
+        // get public address of ledger account
+        let response = await this.publicKey(true);
+        if (response.return_code !== 0x9000) {
+            this.log(`Error [${response.return_code}] ${response.error_message}`);
+            return;
+        }
+
+        // get nonce for the current account/shardID and set the transaction nonce
+        const address = response.one_address.toString();
+        let accountNonce = await HarmonyApp.getAccountShardNonce(
+            address, shardId, messenger,
+        );
+
+        // special handling for 0 as accountNonce so that RLP encoding works
+        if (accountNonce === 0) {
+            accountNonce = '0x';
+        }
+
+        stakingTxn.setFromAddress(address);
+
+        const [unsignedRawTransaction, raw] = stakingTxn.encode();
+        stakingTxn.setUnsigned(unsignedRawTransaction);
+
+        response = await this.signStake(unsignedRawTransaction);
+
+        const bytes = response.signature;
+        const r = hexlify(bytes.slice(0, 32));
+        const s = hexlify(bytes.slice(32, 64));
+        let v = bytes[64];
+        if (v !== 27 && v !== 28) {
+            v = 27 + (v % 2);
+        }
+
+        // replace empty r,s,v with signature r,s,v
+        raw.pop();
+        raw.pop();
+        raw.pop();
+        v += chainId * 2 + 8;
+        raw.push(hexlify(v));
+        raw.push(stripZeros(arrayify(r) || []));
+        raw.push(stripZeros(arrayify(s) || []));
+        const encodedRaw = encode(raw);
+        stakingTxn.setRawTransaction(encodedRaw);
+
+        return stakingTxn;
     }
 }

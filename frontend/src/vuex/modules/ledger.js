@@ -14,7 +14,7 @@ export default () => {
     async connectLedgerApp({ state }) {
       const transport = await TransportWebUSB.create();
       const app = new HarmonyApp(transport);
-      const response = await app.publicKey();
+      const response = await app.publicKey(false);
       return response.one_address.toString();
     }
   }

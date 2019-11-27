@@ -23,20 +23,6 @@ export async function getSigner(
         publicKey: Buffer.from(wallet.publicKey, "hex")
       }
     }
-  } else if (submitType === `ledger`) {
-    // importing default here to be compatible with Jest
-    const { default: Ledger } = await import("@lunie/cosmos-ledger")
-
-    return async signMessage => {
-      const ledger = new Ledger(config)
-      const publicKey = await ledger.getPubKey()
-      const signature = await ledger.sign(signMessage)
-
-      return {
-        signature,
-        publicKey
-      }
-    }
   } else if (submitType === `extension`) {
     return signMessage => {
       return signWithExtension(signMessage, address, networkConfig)

@@ -5,7 +5,7 @@ import { Module } from "vuex"
 import { fetchNetworks } from "../../mock-service"
 import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 
-interface INetworkConfig {
+export interface INetworkConfig {
   id: string
   chain_id: string
   chain_title: string

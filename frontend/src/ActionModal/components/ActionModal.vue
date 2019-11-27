@@ -291,10 +291,10 @@ import { atoms, viewDenom, prettyInt } from "src/scripts/num"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { between, requiredIf } from "vuelidate/lib/validators"
 import { track } from "scripts/google-analytics"
-import { NetworkCapability, NetworkCapabilityResult } from "src/gql"
 import config from "src/config"
 
 import ActionManager from "../utils/ActionManager"
+import LedgerManager from "../utils/LedgerManager"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -390,6 +390,7 @@ export default {
     submissionError: null,
     show: false,
     actionManager: new ActionManager(),
+    ledgerManager: new LedgerManager(),
     txHash: null,
     defaultStep,
     feeStep,
@@ -462,7 +463,7 @@ export default {
       return prettyInt(this.includedHeight)
     },
     prettyTransactionHash() {
-      return this.txHash ? transactionToShortString(this.txHash) : '';
+      return this.txHash ? transactionToShortString(this.txHash) : ""
     },
     linkToTransaction() {
       return this.networkConfig.explorer_url + this.txHash
@@ -487,6 +488,8 @@ export default {
     ) {
       this.$refs.next.$el.focus()
     }
+
+    this.ledgerManager.setNetwork(this.connection.networkConfig)
   },
   methods: {
     confirmModalOpen() {
@@ -553,7 +556,7 @@ export default {
       }
     },
     async validateChangeStep() {
-      if (this.disabled) returnssssss
+      if (this.disabled) return
       // An ActionModal is only the prototype of a parent modal
       switch (this.step) {
         case defaultStep:
@@ -606,16 +609,6 @@ export default {
       this.submissionError = null
       // this.trackEvent(`event`, `submit`, this.title, this.selectedSignMethod)
 
-      if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
-        try {
-          await this.connectLedger()
-        } catch (error) {
-          this.submissionError = `${this.submissionErrorPrefix}: ${error.message}.`
-          this.sending = false
-          return
-        }
-      }
-
       const { type, memo, ...transactionProperties } = this.transactionData
 
       const gasPrice = {
@@ -631,21 +624,25 @@ export default {
       }
 
       try {
-        const { included, hash } = await this.actionManager.send(
-          memo,
-          feeProperties
-        )
+        let sendResponse
 
-        this.txHash = hash
+        if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
+          sendResponse = await this.ledgerManager.send(feeProperties, this.transactionData)
+        } else {
+          sendResponse = await this.actionManager.send(memo, feeProperties)
+        }
+
+        const { included } = sendResponse;
 
         await this.waitForInclusion(included)
 
         this.onTxIncluded(type, transactionProperties, feeProperties)
       } catch ({ message }) {
         console.log("[submit] error", message)
+
         this.onSendingFailed(message)
         this.txHash = null
-        this.session.currrentModalOpen.close();
+        this.session.currrentModalOpen.close()
       }
     },
     async waitForInclusion(includedFn) {
@@ -676,9 +673,6 @@ export default {
       this.step = signStep
       this.submissionError = `${this.submissionErrorPrefix}: ${message}.`
       this.trackEvent(`event`, `failed-submit`, this.title, message)
-    },
-    async connectLedger() {
-      await this.$store.dispatch(`connectLedgerApp`)
     },
     async checkFeatureAvailable() {
       return true // Temp

@@ -4,6 +4,7 @@ const { ChainID, ChainType } = require("@harmony-js/utils")
 // const { Delegate, StakingTransaction } = require("@harmony-js/staking")
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
 import HarmonyApp from "@/vuex/modules/harmony-ledger"
+import { Unit } from "@harmony-js/utils"
 
 // const URL_TESTNET = `https://api.s0.b.hmny.io`;
 const URL_MAINNET = `https://api.s0.t.hmny.io`
@@ -32,35 +33,21 @@ export default class LedgerManager {
     } as any)
   }
 
-  async connectLedgerApp() {
-    const transport = await TransportWebUSB.create()
-    const app = new HarmonyApp(transport)
-
-    const response: any = await app.publicKey(false)
-
-    return response.one_address.toString()
-  }
-
-  async send(feeProperties: any, transactionData: any) {
-    console.log(feeProperties, transactionData)
-
-    debugger;
-
+  async send(fee: any, transactionData: any) {
     const transport = await TransportWebUSB.create()
     const app = new HarmonyApp(transport)
 
     const shardId = 0
+    const value = transactionData.amounts[0].amount
+
     const txn = this.harmony.transactions.newTx({
-      //  token send to
       to: transactionData.toAddress,
-      nonce: 0,
-      // amount to send
-      value: "100000000000000000",
-      // gas limit, you can use string
-      gasLimit: "210000",
+      value: new Unit(value).asSzabo().toWei(),
+      gasLimit: fee.gasEstimate,
+      gasPrice: new Unit(fee.gasPrice.amount).asGwei().toWei(),
       shardID: shardId,
-      toShardID: 0,
-      gasPrice: new this.harmony.utils.Unit("100").asGwei().toWei()
+      toShardID: 0
+      //nonce: "0x"
     })
 
     const signedTxn = await app.signTransaction(
@@ -69,6 +56,8 @@ export default class LedgerManager {
       shardId,
       this.harmony.messenger
     )
+
+    const rawTransaction = signedTxn.getRawTransaction();
 
     const callbackFunc = async () => {
       // Frontend received back the signedTxn and do the followings to Send transaction.
@@ -89,7 +78,9 @@ export default class LedgerManager {
 
       // send the txn, get [Transaction, transactionHash] as result
 
-      const [sentTxn, txnHash] = await signedTxn.sendTransaction()
+      const recoverTransaction = this.harmony.transactions.recover(rawTransaction);
+
+      const [sentTxn, txnHash] = await recoverTransaction.sendTransaction()
 
       // to confirm the result if it is already there
 

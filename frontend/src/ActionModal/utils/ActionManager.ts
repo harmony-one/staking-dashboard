@@ -103,14 +103,10 @@ export default class ActionManager {
     this.readyCheck()
 
     const { gasEstimate, gasPrice, submitType, password } = txMetaData
-    const signer = await getSigner(
-      config,
-      submitType,
-      {
-        address: this.context.userAddress,
-        password
-      },
-    )
+    const signer: any = await getSigner(config, submitType, {
+      address: this.context.userAddress,
+      password
+    })
 
     // if (this.messageType === transaction.WITHDRAW) {
     //   this.message = this.createWithdrawTransaction()
@@ -128,18 +124,18 @@ export default class ActionManager {
       // )
 
       const fullMessage = {
-        msgs:[ this.message ],
+        msgs: [this.message],
         fee: {
           gas: String(gasEstimate),
           amount: convertCurrencyData([gasPrice])
         }
       }
 
-      await signer(JSON.stringify(fullMessage));
+      await signer(JSON.stringify(fullMessage))
 
-      const included = waitTransactionConfirm;
+      const included = waitTransactionConfirm
 
-      return { included, hash: '' }
+      return { included, hash: "" }
     } catch (err) {
       console.log("[ActionManager] send error", err)
     }

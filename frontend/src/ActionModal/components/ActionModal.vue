@@ -294,7 +294,6 @@ import { track } from "scripts/google-analytics"
 import config from "src/config"
 
 import ActionManager from "../utils/ActionManager"
-import LedgerManager from "../utils/LedgerManager"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -488,8 +487,6 @@ export default {
     ) {
       this.$refs.next.$el.focus()
     }
-
-    this.ledgerManager.setNetwork(this.connection.networkConfig)
   },
   methods: {
     confirmModalOpen() {
@@ -609,7 +606,7 @@ export default {
       this.submissionError = null
       // this.trackEvent(`event`, `submit`, this.title, this.selectedSignMethod)
 
-      const { type, memo, ...transactionProperties } = this.transactionData
+      const { type, memo, ...transactionProperties } = this.transactionData;
 
       const gasPrice = {
         amount: this.gasPrice,
@@ -623,11 +620,16 @@ export default {
         password: this.password
       }
 
+      const sendData = {
+        ...this.transactionData,
+        fee: feeProperties
+      }
+
       try {
         let sendResponse
 
         if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
-          sendResponse = await this.ledgerManager.send(feeProperties, this.transactionData)
+          sendResponse = await this.$store.dispatch(`signTransactionLeger`, sendData);
         } else {
           sendResponse = await this.actionManager.send(memo, feeProperties)
         }

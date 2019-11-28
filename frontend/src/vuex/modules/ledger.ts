@@ -3,6 +3,7 @@ import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
 import HarmonyApp from "./harmony-ledger"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
+import { ITransactionData } from "@/staking-client/Staking"
 
 export default ({ node }: { node: TNode }): Module<any, any> => ({
   state: {
@@ -15,33 +16,38 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
       const response: any = await app.publicKey(false)
       return response.one_address.toString()
     },
-    async signTransaction() {
+    async signTransactionLeger(params, transactionData: ITransactionData) {
       const transport = await TransportWebUSB.create()
       const app = new HarmonyApp(transport)
 
-      return app;
+      let txn,
+        shardId = 0
 
-      // const shardId = 0
-      // const value = transactionData.amounts[0].amount
-      //
-      // const txn = this.harmony.transactions.newTx({
-      //   to: transactionData.toAddress,
-      //   value: new Unit(value).asSzabo().toWei(),
-      //   gasLimit: fee.gasEstimate,
-      //   gasPrice: new Unit(fee.gasPrice.amount).asGwei().toWei(),
-      //   shardID: shardId,
-      //   toShardID: 0
-      //   //nonce: "0x"
-      // })
-      //
-      // const signedTxn = await app.signTransaction(
-      //   txn,
-      //   this.harmony.chainId,
-      //   shardId,
-      //   this.harmony.messenger
-      // )
-      //
-      // const rawTransaction = signedTxn.getRawTransaction();
+      switch (transactionData.type) {
+        case "MsgSend":
+          txn = node.staking.createTransaction(transactionData)
+          break
+        case "MsgDelegate":
+          txn = node.staking.createStakingTransaction(transactionData)
+          break
+        case "MsgUndelegate":
+          txn = node.staking.createUnStakingTransaction(transactionData)
+          break
+      }
+
+      const signedTxn = await app.signTransaction(
+        txn,
+        node.staking.harmony.chainId,
+        shardId,
+        node.staking.harmony.messenger
+      )
+
+      const rawTransaction = signedTxn.getRawTransaction()
+
+      const included = async () =>
+        await node.staking.sendTransaction(rawTransaction)
+
+      return { included }
     }
   }
 })

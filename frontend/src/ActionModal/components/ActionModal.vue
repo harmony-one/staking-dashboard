@@ -389,7 +389,6 @@ export default {
     submissionError: null,
     show: false,
     actionManager: new ActionManager(),
-    ledgerManager: new LedgerManager(),
     txHash: null,
     defaultStep,
     feeStep,

@@ -4,7 +4,6 @@ export async function getSigner(
   config,
   submitType = "",
   { address, password },
-  networkConfig,
 ) {
   if (submitType === `local`) {
     const { signWithPrivateKey, getStoredWallet } = await import(
@@ -24,8 +23,8 @@ export async function getSigner(
       }
     }
   } else if (submitType === `extension`) {
-    return signMessage => {
-      return signWithExtension(signMessage, address, networkConfig)
+    return async signMessage => {
+      return await signWithExtension(signMessage, address)
     }
   }
 }

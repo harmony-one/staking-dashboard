@@ -1,152 +1,285 @@
-import _Getters from "./getters"
-import send from "./send"
-import simulate, { TMsg } from "./simulate"
-import {
-  MsgDelegate,
-  // MsgDeposit,
-  MsgRedelegate,
-  MsgSend,
-  // MsgSubmitProposal,
-  MsgUndelegate,
-  // MsgVote,
-  MsgWithdrawDelegationReward,
-  TMsgFuncConstructor
-} from "./messages"
+import { IAccount } from "@/staking-client/interfaces"
+import { Harmony } from "@harmony-js/core"
+import { ChainType } from "@harmony-js/utils"
+import { fetchDelegationsByAddress } from "@/mock-service"
+import * as crypto from "@harmony-js/crypto"
 
-type TMsgFunc = (senderAddress: string, args: any) => {message: any, simulate: (params: { memo?: any }) => any, send: any};
+const RETRIES = 4
 
-export default class Staking {
+export default class Index {
   url: string
-  get: _Getters
-  accounts: any
-  chainId?: string
+  harmony?: Harmony
 
-  createMessageFunc = (func: TMsgFuncConstructor): TMsgFunc => {
-    return (senderAddress: string, args: any) => {
-      const message = func(senderAddress, args)
+  initHarmony = (rpc_url: string, chainId: string) => {
+    // 1. initialize the Harmony instance
+    this.harmony = new Harmony(
+      // rpc url
+      rpc_url,
+      {
+        chainType: ChainType.Harmony,
+        chainId
+      } as any // HarmonyConfig
+    )
+  }
 
-      return {
-        message,
-        simulate: ({ memo = undefined }) =>
-          this.simulate(senderAddress, { message, memo } as any),
-        send: ({ gas, gasPrices, memo = undefined }: any, signer: string) =>
-          this.send(senderAddress, { gas, gasPrices, memo }, message, signer)
+  constructor(cosmosRESTURL: string) {
+    this.url = cosmosRESTURL
+  }
+
+  // request and retry
+  get = (path: string, tries: number = RETRIES): any => {
+    while (tries) {
+      try {
+        return fetch(this.url + path).then(res => res.json())
+      } catch (err) {
+        if (--tries === 0) {
+          throw err
+        }
       }
     }
   }
 
-  MsgSend: TMsgFunc = this.createMessageFunc(MsgSend);
-  MsgDelegate: TMsgFunc = this.createMessageFunc(MsgDelegate);
-  MsgUndelegate: TMsgFunc = this.createMessageFunc(MsgUndelegate);
-  MsgRedelegate: TMsgFunc = this.createMessageFunc(MsgRedelegate);
-  // MsgSubmitProposal: TMsgFunc = this.createMessageFunc(
-  //   MsgSubmitProposal
-  // );
-  // MsgVote: TMsgFunc = this.createMessageFunc(MsgVote);
-  // MsgDeposit: TMsgFunc = this.createMessageFunc(MsgDeposit);
-  MsgWithdrawDelegationReward: TMsgFunc = this.createMessageFunc(
-    MsgWithdrawDelegationReward
-  );
-
-  constructor(cosmosRESTURL: string, chainId?: string) {
-    this.url = cosmosRESTURL
-    this.accounts = {} // storing sequence numbers to not send two transactions with the same sequence number
-    this.chainId = chainId
-
-    this.get = new _Getters(cosmosRESTURL)
+  // meta
+  connected = () => {
+    return this.nodeVersion().then(() => true, () => false)
   }
 
-  MultiMessage = (senderAddress: string, ...messageObjects: any) => {
-    const allMessageObjects = [].concat(...messageObjects)
-    const messages = allMessageObjects.map(({ message }) => message)
-    return {
-      messages,
-      simulate: ({ memo = undefined }) =>
-        this.simulate(senderAddress, { message: messages[0], memo }), // TODO include actual mutli message simulation
-      send: (params: any, signer: string) =>
-        this.send(senderAddress, params, messages, signer)
+  nodeVersion = () => fetch(this.url + `/node_version`).then(res => res.text())
+
+  // coins
+  account = (address: string): Promise<IAccount> => {
+    const emptyAccount: IAccount = {
+      coins: [],
+      sequence: `0`,
+      account_number: `0`,
+      address
     }
-  }
 
-  async setChainId(chainId = this.chainId) {
-    if (!chainId) {
-      const {
-        block_meta: {
-          header: { chain_id: latestChainId }
+    if (!this.harmony) {
+      console.error(`Harmony client is not initialize`)
+
+      return Promise.resolve(emptyAccount)
+    }
+
+    return this.harmony.blockchain
+      .getBalance({ address })
+      .then((res: any) => {
+        if (this.harmony) {
+          const amount = new this.harmony.utils.Unit(res.result)
+            .asWei()
+            .toSzabo()
+
+          emptyAccount.coins.push({ denom: "one", amount })
         }
-      } = await this.get.block("latest")
-      chainId = latestChainId
-    }
-    this.chainId = chainId
 
-    return chainId
+        return emptyAccount
+      })
+      .catch((err: any) => {
+        console.log(err)
+
+        return emptyAccount
+      })
   }
 
-  async getAccount(senderAddress: string) {
-    const { sequence, account_number: accountNumber } = await this.get.account(
-      senderAddress
-    )
-    this.accounts[senderAddress] = {
-      // prevent downgrading a sequence number as we assume we send a transaction that hasn't affected the remote sequence number yet
-      sequence:
-        this.accounts[senderAddress] &&
-        sequence < this.accounts[senderAddress].sequence
-          ? this.accounts[senderAddress].sequence
-          : sequence,
-      accountNumber
-    }
-
-    return this.accounts[senderAddress]
+  txs = (addr: string) => {
+    return Promise.all([
+      this.bankTxs(addr),
+      this.governanceTxs(addr),
+      this.distributionTxs(addr),
+      this.stakingTxs(addr)
+    ]).then(txs => [].concat(...txs))
   }
 
-  /*
-   * message: object
-   * signer: async (signMessage: string) => { signature: Buffer, publicKey: Buffer }
-   */
-  async send(
-    senderAddress: string,
-    sendParams: any,
-    messages: any,
-    signer: string
-  ) {
-    const chainId = await this.setChainId()
-    const { sequence, accountNumber } = await this.getAccount(senderAddress)
-
-    const { hash, included } = await send(
-      sendParams,
-      messages,
-      signer,
-      this.url,
-      chainId,
-      accountNumber,
-      sequence
-    )
-    this.accounts[senderAddress].sequence = (
-      parseInt(this.accounts[senderAddress].sequence) + 1
-    ).toString()
-
-    return {
-      hash,
-      sequence,
-      included
-    }
+  bankTxs = (addr: string) => {
+    return Promise.all([
+      this.get(`/txs?sender=${addr}`),
+      this.get(`/txs?recipient=${addr}`)
+    ]).then(([senderTxs, recipientTxs]) => [].concat(senderTxs, recipientTxs))
   }
 
-  async simulate(
-    senderAddress: string,
-    params: { message: TMsg; memo?: string }
-  ) {
-    const chainId = await this.setChainId()
-    const { sequence, accountNumber } = await this.getAccount(senderAddress)
+  txsByHeight = (height: string) => this.get(`/txs?tx.height=${height}`)
 
-    return simulate(
-      this.url,
-      senderAddress,
-      chainId,
-      params.message,
-      params.memo,
-      sequence,
-      accountNumber
+  // tx = (hash: string) => this.get(`/txs/${hash}`)
+
+  /* ============ STAKE ============ */
+  stakingTxs = async (address: string, valAddress: string = "") => {
+    return Promise.all([
+      this.get(
+        `/txs?action=create_validator&destination-validator=${valAddress}`
+      ),
+      this.get(
+        `/txs?action=edit_validator&destination-validator=${valAddress}`
+      ),
+      this.get(`/txs?action=delegate&delegator=${address}`),
+      this.get(`/txs?action=begin_redelegate&delegator=${address}`),
+      this.get(`/txs?action=begin_unbonding&delegator=${address}`),
+      this.get(`/txs?action=unjail&source-validator=${valAddress}`)
+    ]).then(
+      ([
+        createValidatorTxs,
+        editValidatorTxs,
+        delegationTxs,
+        redelegationTxs,
+        undelegationTxs,
+        unjailTxs
+      ]) =>
+        [].concat(
+          createValidatorTxs,
+          editValidatorTxs,
+          delegationTxs,
+          redelegationTxs,
+          undelegationTxs,
+          unjailTxs
+        )
     )
   }
+  // Get all delegations information from a delegator
+  delegations = async (addr: string) => {
+    const delegatorAddressHex = crypto.getAddress(addr).basicHex;
+
+    return await fetchDelegationsByAddress(delegatorAddressHex);
+    //return this.get(`/staking/delegators/${addr}/delegations`)
+  }
+  undelegations = (addr: string) => {
+    return this.get(`/staking/delegators/${addr}/unbonding_delegations`, 1)
+  }
+  redelegations = (addr: string) => {
+    return this.get(`/staking/redelegations?delegator=${addr}`)
+  }
+  // Query all validators that a delegator is bonded to
+  // delegatorValidators = (delegatorAddr: string) => {
+  //   return this.get(`/staking/delegators/${delegatorAddr}/validators`)
+  // }
+  // Get a list containing all the validator candidates
+  validators = () =>
+    Promise.all([
+      this.get(`/staking/validators?status=unbonding`),
+      this.get(`/staking/validators?status=bonded`),
+      this.get(`/staking/validators?status=unbonded`)
+    ]).then(validatorGroups => [].concat(...validatorGroups))
+  // Get information from a validator
+  validator = (addr: string) => {
+    return this.get(`/staking/validators/${addr}`)
+  }
+
+  // Get the list of the validators in the latest validator set
+  // validatorSet = () => this.get(`/validatorsets/latest`)
+
+  // Query a delegation between a delegator and a validator
+  delegation = (delegatorAddr: string, validatorAddr: string) => {
+    return this.get(
+      `/staking/delegators/${delegatorAddr}/delegations/${validatorAddr}`,
+      1
+    )
+  }
+  // unbondingDelegation = (delegatorAddr: string, validatorAddr: string) => {
+  //   return this.get(
+  //     `/staking/delegators/${delegatorAddr}/unbonding_delegations/${validatorAddr}`,
+  //     1
+  //   )
+  // }
+
+  pool = () => this.get(`/staking/pool`)
+
+  stakingParameters = () => this.get(`/staking/parameters`)
+
+  /* ============ Slashing ============ */
+
+  // validatorSigningInfo = (pubKey: string) => {
+  //   return this.get(`/slashing/validators/${pubKey}/signing_info`)
+  // }
+
+  /* ============ Governance ============ */
+
+  proposals = () => this.get(`/gov/proposals`)
+  proposal = (proposalId: string) => {
+    return this.get(`/gov/proposals/${proposalId}`)
+  }
+  proposalVotes = (proposalId: string) => {
+    return this.get(`/gov/proposals/${proposalId}/votes`)
+  }
+  // proposalVote = (proposalId: string, address: string) => {
+  //   return this.get(`/gov/proposals/${proposalId}/votes/${address}`)
+  // }
+  proposalDeposits = (proposalId: string) => {
+    return this.get(`/gov/proposals/${proposalId}/deposits`)
+  }
+  // proposalDeposit = (proposalId: string, address: string) => {
+  //   return this.get(`/gov/proposals/${proposalId}/deposits/${address}`, 1)
+  // }
+  proposalTally = (proposalId: string) => {
+    return this.get(`/gov/proposals/${proposalId}/tally`)
+  }
+  govDepositParameters = () => this.get(`/gov/parameters/deposit`)
+  govTallyingParameters = () => this.get(`/gov/parameters/tallying`)
+  govVotingParameters = () => this.get(`/gov/parameters/voting`)
+  governanceTxs = async (address: string) => {
+    return Promise.all([
+      this.get(`/txs?action=submit_proposal&proposer=${address}`),
+      this.get(`/txs?action=deposit&depositor=${address}`),
+      this.get(`/txs?action=vote&voter=${address}`)
+    ]).then(([submitProposalTxs, depositTxs, voteTxs]) =>
+      [].concat(submitProposalTxs, depositTxs, voteTxs)
+    )
+  }
+  /* ============ Explorer ============ */
+  block = (blockHeight: string) => {
+    return this.get(`/blocks/${blockHeight}`)
+  }
+  /* ============ Distribution ============ */
+  distributionTxs = async (address: string, valAddress: string = "") => {
+    return Promise.all([
+      this.get(`/txs?action=set_withdraw_address&delegator=${address}`),
+      this.get(`/txs?action=withdraw_delegator_reward&delegator=${address}`),
+      this.get(
+        `/txs?action=withdraw_validator_rewards_all&source-validator=${valAddress}`
+      )
+    ]).then(
+      ([
+        updateWithdrawAddressTxs,
+        withdrawDelegationRewardsTxs,
+        withdrawValidatorCommissionTxs
+      ]) =>
+        [].concat(
+          updateWithdrawAddressTxs,
+          withdrawDelegationRewardsTxs,
+          withdrawValidatorCommissionTxs
+        )
+    )
+  }
+  // delegatorRewards = (delegatorAddr: string) => {
+  //   return this.get(`/distribution/delegators/${delegatorAddr}/rewards`)
+  // }
+  delegatorRewardsFromValidator = async (
+    delegatorAddr: string,
+    validatorAddr: string
+  ) => {
+    return (
+      (await this.get(
+        `/distribution/delegators/${delegatorAddr}/rewards/${validatorAddr}`
+      )) || []
+    )
+  }
+  // validatorDistributionInformation = (validatorAddr: string) => {
+  //   return this.get(`/distribution/validators/${validatorAddr}`)
+  // }
+  // validatorRewards = (validatorAddr: string) => {
+  //   return this.get(`/distribution/validators/${validatorAddr}/rewards`)
+  // }
+  distributionParameters = () => {
+    return this.get(`/distribution/parameters`)
+  }
+  distributionOutstandingRewards = () => {
+    return this.get(`/distribution/outstanding_rewards`)
+  }
+
+  annualProvisionedTokens = () => {
+    return this.get(`/minting/annual-provisions`)
+  }
+  // inflation = () => {
+  //   return this.get(`/minting/inflation`)
+  // }
+  // mintingParameters = () => {
+  //   return this.get(`/minting/parameters`)
+  // }
 }

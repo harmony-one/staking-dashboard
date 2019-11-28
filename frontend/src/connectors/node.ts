@@ -1,12 +1,15 @@
 import Tendermint from "./tendermint"
 import Staking from "@/staking-client"
 
-export type TNode = Staking & { tendermint: Tendermint };
+export type TNode = { tendermint: Tendermint, get: Staking };
 
-export default function Connector(stargateUrl: string): TNode {
-  const stakingClient = new Staking(stargateUrl, "no_address");
+export default function Connector(apiUrl: string): TNode {
+  const stakingClient = new Staking(apiUrl);
 
-  const tendermint = new Tendermint(stargateUrl);
+  const tendermint = new Tendermint(apiUrl);
 
-  return Object.assign(stakingClient, { tendermint });
+  return Object.assign({
+    get: stakingClient,
+    tendermint,
+  });
 }

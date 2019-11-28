@@ -11,11 +11,12 @@ export interface ITransactionData {
   type: "MsgDelegate" | "MsgSend" | "MsgUndelegate"
   toAddress: string
   fromAddress: string
+  amount: number
   amounts: Array<{ amount: number }>
   fee: {
     gasEstimate: string
-    gasPrice: { amount: number }
-  }
+  };
+  gasPrice: number;
 }
 
 export default class Staking {
@@ -78,7 +79,7 @@ export default class Staking {
       to: transactionData.toAddress,
       value: new Unit(value).asSzabo().toWei(),
       gasLimit: transactionData.fee.gasEstimate,
-      gasPrice: new Unit(transactionData.fee.gasPrice.amount).asGwei().toWei(),
+      gasPrice: new Unit(transactionData.gasPrice).asGwei().toWei(),
       shardID: shardId,
       toShardID: 0
       //nonce: "0x"
@@ -89,7 +90,7 @@ export default class Staking {
     transactionData: ITransactionData,
     magicHex = "0x2"
   ) {
-    const value = transactionData.amounts[0].amount
+    const value = transactionData.amount
 
     const delegateMsg = new Delegate(
       transactionData.fromAddress,

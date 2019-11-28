@@ -608,7 +608,7 @@ export default {
       const { type, memo, ...transactionProperties } = this.transactionData;
 
       const gasPrice = {
-        amount: this.gasPrice * 1000,
+        amount: this.gasPrice,
         denom: this.bondDenom
       }
 
@@ -621,7 +621,8 @@ export default {
 
       const sendData = {
         ...this.transactionData,
-        fee: feeProperties
+        fee: feeProperties,
+        gasPrice: this.gasPrice,
       }
 
       try {

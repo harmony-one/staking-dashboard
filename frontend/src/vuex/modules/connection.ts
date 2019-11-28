@@ -99,7 +99,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
 
     async reconnect({ commit, state, rootState }) {
-      await node.get.initHarmony(
+      await node.staking.initHarmony(
         state.networkConfig.rpc_url,
         state.networkConfig.chain_id
       )

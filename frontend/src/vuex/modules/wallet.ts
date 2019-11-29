@@ -68,7 +68,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       if (!rootState.connection.connected) return
 
       try {
-        const res = await node.get.account(state.address);
+        const res = await node.staking.account(state.address);
 
         state.error = null
         const { coins, account_number } = res || {} as any;

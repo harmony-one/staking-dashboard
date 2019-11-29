@@ -92,7 +92,7 @@ export default class Staking {
     this.harmony.shardingStructures(res.result)
   }
 
-  createStakingTransaction(
+  createDelegateTransaction(
     transactionData: ITransactionData
   ): StakingTransaction {
     const value = transactionData.amount
@@ -104,17 +104,16 @@ export default class Staking {
         amount: new Unit(value).asSzabo().toHex() as any
       })
       .setTxParams({
-        nonce: "0x",
         gasPrice: new Unit(transactionData.gasPrice).asGwei().toHex(),
         gasLimit: "0x0927c0",
         chainId: this.harmony.chainId
       } as any)
       .build()
 
-    return stakingTxn;
+    return stakingTxn
   }
 
-  createUnStakingTransaction(
+  createUndelegateTransaction(
     transactionData: ITransactionData
   ): StakingTransaction {
     const value = transactionData.amount
@@ -126,14 +125,13 @@ export default class Staking {
         amount: new Unit(value).asSzabo().toHex() as any
       })
       .setTxParams({
-        nonce: "0x",
         gasPrice: new Unit(transactionData.gasPrice).asGwei().toHex(),
         gasLimit: "0x0927c0",
         chainId: this.harmony.chainId
       } as any)
       .build()
 
-    return stakingTxn;
+    return stakingTxn
   }
 
   async sendTransaction(signedTransaction: Transaction | StakingTransaction) {
@@ -147,7 +145,7 @@ export default class Staking {
 
     // to confirm the result if it is already there
 
-    await sentTxn.confirm(txnHash);
+    await sentTxn.confirm(txnHash)
 
     return { txhash: txnHash }
   }

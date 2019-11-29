@@ -236,6 +236,7 @@ export default class HarmonyApp {
             accountNonce = '0x';
         }
 
+        stakingTxn.setNonce(accountNonce);
         stakingTxn.setFromAddress(address);
 
         const [unsignedRawTransaction, raw] = stakingTxn.encode();

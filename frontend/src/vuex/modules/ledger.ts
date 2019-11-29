@@ -48,16 +48,16 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
           signedTxn = await signTransaction(txn)
           break
         case "MsgDelegate":
-          node.staking.setSharding()
+          await node.staking.setSharding()
 
-          txn = node.staking.createStakingTransaction(transactionData)
+          txn = node.staking.createDelegateTransaction(transactionData)
           signedTxn = await signStakingTransaction(txn)
           signedTxn.setMessenger(node.staking.harmony.messenger)
           break
         case "MsgUndelegate":
-          node.staking.setSharding()
+          await node.staking.setSharding()
 
-          txn = node.staking.createUnStakingTransaction(transactionData)
+          txn = node.staking.createUndelegateTransaction(transactionData)
           signedTxn = await signStakingTransaction(txn)
           signedTxn.setMessenger(node.staking.harmony.messenger)
           break

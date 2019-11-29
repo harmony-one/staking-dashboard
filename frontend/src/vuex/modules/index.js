@@ -17,12 +17,12 @@ export default opts => ({
   stakingParameters: require(`./parameters.ts`).default(opts),
   pool: require(`./pool.ts`).default(opts),
   minting: require(`./minting.ts`).default(opts),
+  ledger: require(`./ledger.ts`).default(opts),
 
   // not use Node
   extension: require(`./extension.js`).default(opts),
   session: require(`./session.js`).default(opts),
   keystore: require(`./keystore.js`).default(opts),
   notifications: require(`./notifications.js`).default(opts),
-  ledger: require(`./ledger.js`).default(opts),
   validators: require(`./validators.js`).default(opts),
 })

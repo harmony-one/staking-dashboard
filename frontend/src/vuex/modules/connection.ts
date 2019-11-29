@@ -7,7 +7,7 @@ import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 
 const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK;
 
-interface INetworkConfig {
+export interface INetworkConfig {
   id: string
   chain_id: string
   chain_title: string
@@ -97,7 +97,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
 
     async reconnect({ commit, state, rootState }) {
-      await node.get.initHarmony(
+      await node.staking.initHarmony(
         state.networkConfig.rpc_url,
         state.networkConfig.chain_id
       )

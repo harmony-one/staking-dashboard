@@ -1,22 +1,23 @@
 import { IAccount } from "@/staking-client/interfaces"
 import { Harmony } from "@harmony-js/core"
 import { ChainID, ChainType } from "@harmony-js/utils"
-const { Delegate, StakingTransaction } = require("@harmony-js/staking")
 import { Unit } from "@harmony-js/utils"
-// import * as crypto from "@harmony-js/crypto"
+import { Transaction } from "@harmony-js/transaction"
+import { StakingFactory, StakingTransaction } from "@harmony-js/staking"
 
 const URL_MAINNET = `https://api.s0.t.hmny.io`
 
 export interface ITransactionData {
   type: "MsgDelegate" | "MsgSend" | "MsgUndelegate"
   toAddress: string
-  fromAddress: string
+  delegatorAddress: string
+  validatorAddress: string
   amount: number
   amounts: Array<{ amount: number }>
   fee: {
     gasEstimate: string
-  };
-  gasPrice: number;
+  }
+  gasPrice: number
 }
 
 export default class Staking {
@@ -71,7 +72,7 @@ export default class Staking {
       })
   }
 
-  createTransaction(transactionData: ITransactionData) {
+  createTransaction(transactionData: ITransactionData): Transaction {
     const shardId = 0
     const value = transactionData.amounts[0].amount
 
@@ -86,52 +87,57 @@ export default class Staking {
     })
   }
 
+  async setSharding() {
+    const res = await this.harmony.blockchain.getShardingStructure()
+    this.harmony.shardingStructures(res.result)
+  }
+
   createStakingTransaction(
-    transactionData: ITransactionData,
-    magicHex = "0x2"
-  ) {
+    transactionData: ITransactionData
+  ): StakingTransaction {
     const value = transactionData.amount
 
-    const delegateMsg = new Delegate(
-      transactionData.fromAddress,
-      transactionData.toAddress,
-      new Unit(value).asSzabo().toHex()
-    )
+    const stakingTxn = new StakingFactory(this.harmony.messenger)
+      .delegate({
+        delegatorAddress: transactionData.delegatorAddress,
+        validatorAddress: transactionData.validatorAddress,
+        amount: new Unit(value).asSzabo().toHex() as any
+      })
+      .setTxParams({
+        nonce: "0x",
+        gasPrice: new Unit(transactionData.gasPrice).asGwei().toHex(),
+        gasLimit: "0x0927c0",
+        chainId: this.harmony.chainId
+      } as any)
+      .build()
 
-    // console.log(1, new Unit(this.transactionDetails.gas).toHex()) // private gasLimit;
-    // console.log(2, new Unit(this.transactionDetails.fee).asMwei().toHex()) // private gasPrice)
-
-    // return new StakingTransaction(
-    //   '0x', // private directive;
-    //   delegateMsg, // private stakeMsg;
-    //   '0x2', // private nonce;
-    //   new Unit(this.transactionDetails.gas).toHex(), // private gasLimit;
-    //   new Unit(this.transactionDetails.fee).asMwei().toHex(), // private gasPrice
-    //   this.networkConfig.chain_id, // private chainId;
-    //   2, // private rawTransaction;
-    //   '', // private unsignedRawTransaction;
-    //   ''// private signature;
-    // );
-
-    return new StakingTransaction(
-      magicHex,
-      delegateMsg,
-      "0x2",
-      "0x",
-      "0x0927c0",
-      2,
-      2,
-      "",
-      ""
-    )
+    return stakingTxn;
   }
 
-  createUnStakingTransaction(transactionData: ITransactionData) {
-    return this.createStakingTransaction(transactionData, "0x3")
+  createUnStakingTransaction(
+    transactionData: ITransactionData
+  ): StakingTransaction {
+    const value = transactionData.amount
+
+    const stakingTxn = new StakingFactory(this.harmony.messenger)
+      .undelegate({
+        delegatorAddress: transactionData.delegatorAddress,
+        validatorAddress: transactionData.validatorAddress,
+        amount: new Unit(value).asSzabo().toHex() as any
+      })
+      .setTxParams({
+        nonce: "0x",
+        gasPrice: new Unit(transactionData.gasPrice).asGwei().toHex(),
+        gasLimit: "0x0927c0",
+        chainId: this.harmony.chainId
+      } as any)
+      .build()
+
+    return stakingTxn;
   }
 
-  async sendTransaction(rawTransaction: string) {
-    const signedTransaction = this.harmony.transactions.recover(rawTransaction)
+  async sendTransaction(signedTransaction: Transaction | StakingTransaction) {
+    // const signedTransaction = this.harmony.transactions.recover(rawTransaction)
 
     signedTransaction.observed().on("error", error => {
       console.log(error)
@@ -141,18 +147,7 @@ export default class Staking {
 
     // to confirm the result if it is already there
 
-    const confiremdTxn: any = await sentTxn.confirm(txnHash)
-
-    if (!confiremdTxn.isCrossShard()) {
-      if (confiremdTxn.isConfirmed()) {
-        console.log("Normal transaction")
-        console.log(`${txnHash} is confirmed`)
-      }
-    }
-    if (confiremdTxn.isConfirmed() && confiremdTxn.isCxConfirmed()) {
-      console.log("Cross-Shard transaction")
-      console.log(`${txnHash} is confirmed`)
-    }
+    await sentTxn.confirm(txnHash);
 
     return { txhash: txnHash }
   }

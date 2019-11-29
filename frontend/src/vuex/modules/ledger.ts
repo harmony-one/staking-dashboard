@@ -4,6 +4,8 @@ import HarmonyApp from "./harmony-ledger"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 import { ITransactionData } from "@/staking-client/Staking"
+import { Transaction } from "@harmony-js/transaction"
+import { StakingTransaction } from "@harmony-js/staking"
 
 export default ({ node }: { node: TNode }): Module<any, any> => ({
   state: {
@@ -20,32 +22,50 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
       const transport = await TransportWebUSB.create()
       const app = new HarmonyApp(transport)
 
-      let txn,
+      let signedTxn: Transaction | StakingTransaction,
+        txn,
         shardId = 0
+
+      const signTransaction = async (txn: Transaction) =>
+        await app.signTransaction(
+          txn,
+          node.staking.harmony.chainId,
+          shardId,
+          node.staking.harmony.messenger
+        )
+
+      const signStakingTransaction = async (txn: StakingTransaction) =>
+        await app.signStakingTransaction(
+          txn,
+          node.staking.harmony.chainId,
+          shardId,
+          node.staking.harmony.messenger
+        )
 
       switch (transactionData.type) {
         case "MsgSend":
           txn = node.staking.createTransaction(transactionData)
+          signedTxn = await signTransaction(txn)
           break
         case "MsgDelegate":
+          node.staking.setSharding()
+
           txn = node.staking.createStakingTransaction(transactionData)
+          signedTxn = await signStakingTransaction(txn)
+          signedTxn.setMessenger(node.staking.harmony.messenger)
           break
         case "MsgUndelegate":
+          node.staking.setSharding()
+
           txn = node.staking.createUnStakingTransaction(transactionData)
+          signedTxn = await signStakingTransaction(txn)
+          signedTxn.setMessenger(node.staking.harmony.messenger)
           break
       }
 
-      const signedTxn = await app.signTransaction(
-        txn,
-        node.staking.harmony.chainId,
-        shardId,
-        node.staking.harmony.messenger
-      )
+      // const rawTransaction = signedTxn.getRawTransaction()
 
-      const rawTransaction = signedTxn.getRawTransaction()
-
-      const included = async () =>
-        await node.staking.sendTransaction(rawTransaction)
+      const included = async () => await node.staking.sendTransaction(signedTxn)
 
       return { included }
     }

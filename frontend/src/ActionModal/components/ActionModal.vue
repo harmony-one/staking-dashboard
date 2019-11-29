@@ -399,7 +399,7 @@ export default {
     featureAvailable: true
   }),
   computed: {
-    ...mapState([`extension`, `session`, `connection`]),
+    ...mapState([`extension`, `session`, `connection`, "wallet"]),
     ...mapState({
       network: state => state.connection.network,
       networkConfig: state => state.connection.networkConfig
@@ -605,7 +605,7 @@ export default {
       this.submissionError = null
       // this.trackEvent(`event`, `submit`, this.title, this.selectedSignMethod)
 
-      const { type, memo, ...transactionProperties } = this.transactionData;
+      const { type, memo, ...transactionProperties } = this.transactionData
 
       const gasPrice = {
         amount: this.gasPrice,
@@ -623,18 +623,22 @@ export default {
         ...this.transactionData,
         fee: feeProperties,
         gasPrice: this.gasPrice,
+        delegatorAddress: this.wallet.address
       }
 
       try {
         let sendResponse
 
         if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
-          sendResponse = await this.$store.dispatch(`signTransactionLeger`, sendData);
+          sendResponse = await this.$store.dispatch(
+            `signTransactionLeger`,
+            sendData
+          )
         } else {
           sendResponse = await this.actionManager.send(memo, feeProperties)
         }
 
-        const { included } = sendResponse;
+        const { included } = sendResponse
 
         await this.waitForInclusion(included)
 

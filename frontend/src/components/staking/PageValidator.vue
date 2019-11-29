@@ -126,7 +126,7 @@
           </li>
           <li>
             <h4>Last Commission Change</h4>
-            <span>{{ validator.update_height }}</span>
+            <span> Block #{{{ validator.update_height }}</span>
           </li>
         </ul>
       </div>

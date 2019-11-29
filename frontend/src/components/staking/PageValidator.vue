@@ -90,16 +90,10 @@
 
         <ul class="row">
           <li>
-            <h4>Rewards</h4>
-            <span id="page-profile__rewards">
-              {{ returns | percent }}
-            </span>
-          </li>
-          <li>
             <h4>Voting Power / Total Stake</h4>
             <span id="page-profile__power">
-              {{ validator.voting_power | percent }} /
-              {{ validator.tokens | atoms | shortDecimals }}
+              {{ validator.avg_voting_power | percent }} /
+              {{ validator.total_effective_stake / 1000000000 | shortDecimals }}
             </span>
           </li>
           <li>
@@ -110,7 +104,7 @@
           </li>
           <li>
             <h4>Validator Since</h4>
-            <span> Block #{{ validator.start_height }} </span>
+            <span> Block #{{ validator.creation_height }} </span>
           </li>
           <li>
             <h4>Uptime</h4>
@@ -132,7 +126,7 @@
           </li>
           <li>
             <h4>Last Commission Change</h4>
-            <span>{{ lastCommissionChange }}</span>
+            <span>{{ validator.update_height }}</span>
           </li>
         </ul>
       </div>
@@ -259,15 +253,6 @@ export default {
       const myDelegation = shortDecimals(myBond)
       const myDelegationString = `${myDelegation} ${viewDenom(bondDenom)}`
       return Number(myBond) === 0 ? null : myDelegationString
-    },
-    lastCommissionChange() {
-      const updateTime = this.validator.update_time
-      const dateTime = new Date(updateTime)
-      const neverHappened = dateTime.getTime() === 0
-
-      return neverHappened || updateTime === `0001-01-01T00:00:00Z`
-        ? `--`
-        : moment(dateTime).fromNow()
     },
     returns() {
       return expectedReturns(

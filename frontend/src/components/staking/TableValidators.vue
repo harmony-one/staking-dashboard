@@ -117,13 +117,13 @@ export default {
           tooltip: `The validator's moniker`
         },
         {
-          title: `Rewards`,
-          value: `expectedReturns`,
-          tooltip: `Approximate annualized reward`
+          title: `Current Commission Rate`,
+          value: `rate`,
+          tooltip: `Current Commission Rate`
         },
         {
           title: `Voting Power`,
-          value: `voting_power`,
+          value: `avg_voting_power`,
           tooltip: `Percentage of voting shares`
         }
       ]

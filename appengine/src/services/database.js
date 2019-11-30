@@ -1,4 +1,4 @@
-const DATABASE_URL = process.env.DATABASE_URL
+const DATABASE_URL = process.env.DATABASE_URL || 'https://staking-explorer.firebaseio.com'
 
 module.exports = function () {
   // Init admin

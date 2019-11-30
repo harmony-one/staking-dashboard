@@ -9,7 +9,7 @@ export default () => {
 
   const actions = {
     async getValidators({ commit, rootState }) {
-      let validators = await fetchValidators()
+      let validators = await fetchValidators(rootState.connection.networkConfig.id)
 
       const { delegates } = rootState.delegates
 

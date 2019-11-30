@@ -1,150 +1,138 @@
-require("dotenv").config();
-const axios = require("axios");
+const axios = require('axios')
+const { isNotEmpty, bodyParams } = require('./helpers')
 
-const VALIDATORS = "VALIDATORS";
-const ACTIVE_VALIDATORS = "ACTIVE_VALIDATORS";
-const VALIDATOR_INFO = "VALIDATOR_INFO";
-const DELEGATIONS_BY_DELEGATOR = "DELEGATIONS_BY_DELEGATOR";
-const DELEGATIONS_BY_VALIDATOR = "DELEGATIONS_BY_VALIDATOR";
+const VALIDATORS = 'VALIDATORS'
+const ACTIVE_VALIDATORS = 'ACTIVE_VALIDATORS'
+const VALIDATOR_INFO = 'VALIDATOR_INFO'
+const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
+const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 
-let cache = {
-  VALIDATORS: {},
-  ACTIVE_VALIDATORS: {},
-  VALIDATOR_INFO: {},
-  DELEGATIONS_BY_DELEGATOR: {},
-  DELEGATIONS_BY_VALIDATOR: {}
-};
-
-console.log(process.env.SERVER);
-const apiClient = axios.create({
-  baseURL: process.env.SERVER || "http://localhost:9500",
-  // baseURL: process.env.SERVER,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json"
+module.exports = function (BLOCKCHAIN_SERVER) {
+  const cache = {
+    VALIDATORS: [],
+    ACTIVE_VALIDATORS: [],
+    VALIDATOR_INFO: {},
+    DELEGATIONS_BY_DELEGATOR: {},
+    DELEGATIONS_BY_VALIDATOR: {}
   }
-});
 
-const getActiveValidatorAddressesData = async () => {
-  try {
-    const res = await apiClient.post(
-      "/",
-      `{
-      "jsonrpc": "2.0",
-      "method": "hmy_getActiveValidatorAddresses",
-      "params": [],
-      "id": 1
-    }`
-    );
-    cache[ACTIVE_VALIDATORS] = res.data.result;
+  console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
+
+  const apiClient = axios.create({
+    baseURL: BLOCKCHAIN_SERVER,
+    // baseURL: process.env.SERVER,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+
+  const getActiveValidatorAddressesData = async () => {
+    const res = await apiClient.post('/', bodyParams('hmy_getActiveValidatorAddresses'))
+
+    if (Array.isArray(res.data.result)) {
+      cache[ACTIVE_VALIDATORS] = res.data.result
+    }
     // console.log("getActiveValidatorAddressesData", res.data);
-    return res.data.result;
-  } catch (err) {}
-};
-
-const getAllValidatorAddressesData = async () => {
-  const res = await apiClient.post(
-    "/",
-    `{
-      "jsonrpc": "2.0",
-      "method": "hmy_getAllValidatorAddresses",
-      "params": [],
-      "id": 1
-    }`
-  );
-  cache[VALIDATORS] = res.data.result;
-  // console.log("getAllValidatorAddressesData", res.data);
-  return res.data.result;
-};
-
-const getValidatorInfoData = async address => {
-  const res = await apiClient.post(
-    "/",
-    `{
-      "jsonrpc": "2.0",
-      "method": "hmy_getValidatorInfo",
-      "params": ["${address}"],
-      "id": 1
-    }`
-  );
-  cache[VALIDATOR_INFO][address] = res.data.result;
-  // console.log("getAllValidatorInfoData ${address}", res.data);
-  return res.data.result;
-};
-
-const getDelegationsByDelegatorData = async address => {
-  const res = await apiClient.post(
-    "/",
-    `{"jsonrpc":"2.0","method":"hmy_getDelegationsByDelegator","params":["${address}"],"id":1}`
-  );
-  cache[DELEGATIONS_BY_DELEGATOR][address] = res.data.result;
-  // console.log("getDelegationsByDelegatorData ${address}", res.data.result);
-  return res.data.result;
-};
-
-const getDelegationsByValidatorData = async address => {
-  const res = await apiClient.post(
-    "/",
-    `{"jsonrpc":"2.0","method":"hmy_getDelegationsByValidator","params":["${address}"],"id":1}`
-  );
-  cache[DELEGATIONS_BY_VALIDATOR][address] = res.data.result;
-  // console.log("getDelegationsByValidatorData ${address}", res.data.result);
-  return res.data.result;
-};
-
-const update = async () => {
-  try {
-    await getActiveValidatorAddressesData();
-    cache[ACTIVE_VALIDATORS].forEach(async address => {
-      await getValidatorInfoData(address);
-      await getDelegationsByValidatorData(address);
-    });
-    await getAllValidatorAddressesData();
-    cache[VALIDATORS].forEach(async address => {
-      await getValidatorInfoData(address);
-      await getDelegationsByValidatorData(address);
-    });
-  } catch (err) {
-    console.log("minh", err);
+    return res.data.result
   }
-};
 
-setInterval(async () => {
-  console.log("--------- Updating ---------");
-  await update();
-}, 4000);
+  const getAllValidatorAddressesData = async () => {
+    const res = await apiClient.post('/', bodyParams('hmy_getAllValidatorAddresses'))
 
-// const getDelegationAmount = (validatorAddress, delegatorAddress) => {
-//   return cache[DELEGATIONS_BY_VALIDATOR][validatorAddress].reduce((sum, delegation) => {
-//     if(delegation.delegator_address === delegatorAddress) {
-//       return sum + delegation.amount;
-//     } else {
-//       return sum;
-//     }
-//   }, 0);
-// }
+    if (Array.isArray(res.data.result)) {
+      cache[VALIDATORS] = res.data.result
+    }
+    // console.log("getAllValidatorAddressesData", res.data);
+    return res.data.result
+  }
 
-const validators = () => {
-  return cache[VALIDATORS].map(address => {
-    return { ...cache[VALIDATOR_INFO][address] };
-  })
+  const getValidatorInfoData = async address => {
+    const res = await apiClient.post('/', bodyParams('hmy_getValidatorInformation', address))
+
+    if (isNotEmpty(res.data.result)) {
+      cache[VALIDATOR_INFO][address] = res.data.result
+    }
+    // console.log("getAllValidatorInfoData ${address}", res.data);
+    return res.data.result
+  }
+
+  const getDelegationsByDelegatorData = async address => {
+    const res = await apiClient.post('/', bodyParams('hmy_getDelegationsByDelegator', address))
+
+    if (isNotEmpty(res.data.result)) {
+      cache[DELEGATIONS_BY_DELEGATOR][address] = res.data.result
+    }
+    // console.log("getDelegationsByDelegatorData ${address}", res.data.result);
+    return res.data.result
+  }
+
+  const getDelegationsByValidatorData = async address => {
+    const res = await apiClient.post('/', bodyParams('hmy_getDelegationsByValidator', address))
+
+    if (isNotEmpty(res.data.result)) {
+      cache[DELEGATIONS_BY_VALIDATOR][address] = res.data.result
+    }
+    // console.log("getDelegationsByValidatorData ${address}", res.data.result);
+    return res.data.result
+  }
+
+  const update = async () => {
+    try {
+      await getActiveValidatorAddressesData()
+
+      if (cache[ACTIVE_VALIDATORS]) {
+        cache[ACTIVE_VALIDATORS].forEach(async address => {
+          await getValidatorInfoData(address)
+          await getDelegationsByValidatorData(address)
+        })
+      }
+
+      await getAllValidatorAddressesData()
+
+      if (cache[VALIDATORS]) {
+        cache[VALIDATORS].forEach(async address => {
+          await getValidatorInfoData(address)
+          await getDelegationsByValidatorData(address)
+        })
+      }
+    } catch (err) {
+      console.log('Error: ', err.message)
+    }
+  }
+
+  setInterval(async () => {
+    console.log('--------- Updating ---------', BLOCKCHAIN_SERVER)
+    await update()
+  }, 4000)
+
+  const getValidators = () => {
+    if (!cache[VALIDATORS]) {
+      return []
+    }
+
+    return cache[VALIDATORS].map(address => {
+      return { ...cache[VALIDATOR_INFO][address] }
+    }).filter(isNotEmpty)
+  }
+
+  const getActiveValidators = () => {
+    if (!cache[ACTIVE_VALIDATORS]) {
+      return []
+    }
+
+    return cache[ACTIVE_VALIDATORS].map(address => {
+      return cache[VALIDATOR_INFO][address]
+    }).filter(isNotEmpty)
+  }
+
+  const getDelegationsByDelegator = async (address) => await getDelegationsByDelegatorData(address)
+
+  return {
+    getValidators,
+    getActiveValidators,
+    getValidatorInfo: address => cache[VALIDATOR_INFO][address],
+    getDelegationsByDelegator,
+    getDelegationsByValidator: address => cache[DELEGATIONS_BY_VALIDATOR][address]
+  }
 }
-
-const activeValidators = () => {
-  return cache[ACTIVE_VALIDATORS].map(address => {
-    return cache[VALIDATOR_INFO][address];
-  })
-}
-
-const delegationsByDelegator = async (address) => {
-  return await getDelegationsByDelegatorData(address);
-}
-
-module.exports = {
-  validators,
-  activeValidators,
-  validatorInfo: address => cache[VALIDATOR_INFO][address],
-  delegationsByDelegator,
-  // delegationsByDelegator: async address => cache[DELEGATIONS_BY_DELEGATOR][address],
-  delegationsByValidator: address => cache[DELEGATIONS_BY_VALIDATOR][address]
-};

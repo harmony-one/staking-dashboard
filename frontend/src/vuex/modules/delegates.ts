@@ -62,7 +62,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
 
       const delegatorAddressHex = crypto.getAddress(rootState.session.address).basicHex;
 
-      const data = await fetchDelegationsByAddress(delegatorAddressHex);
+      const data = await fetchDelegationsByAddress(rootState.connection.networkConfig.id, delegatorAddressHex);
 
       commit("setDelegates", data)
     },

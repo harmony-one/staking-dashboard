@@ -1,17 +1,17 @@
 const asyncHandler = fn => (req, res, next) => {
-    return Promise
-        .resolve(fn(req, res, next))
-        .catch(next);
-};
+  return Promise
+    .resolve(fn(req, res, next))
+    .catch(next)
+}
 
 const createError = (status, message) => {
-    const error = new Error(message);
-    error.status = status;
+  const error = new Error(message)
+  error.status = status
 
-    return error;
-};
+  return error
+}
 
 module.exports = {
-    asyncHandler,
-    createError
-};
+  asyncHandler,
+  createError
+}

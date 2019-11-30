@@ -25,11 +25,11 @@ function setOptions(urlParams, store) {
 
 export default function init(urlParams, env = process.env) {
   // add error handlers in production
-  if (env.NODE_ENV === `production`) {
-    enableGoogleAnalytics(config.google_analytics_uid)
-  }
+  // if (env.NODE_ENV === `production`) {
+  //   enableGoogleAnalytics(config.google_analytics_uid)
+  // }
 
-  const stargate = urlParams.stargate || config.stargate
+  const stargate = urlParams.stargate || process.env.MOCK_API_URL
   console.log(`Expecting stargate at: ${stargate}`)
 
   const apolloProvider = createApolloProvider(urlParams)
@@ -48,8 +48,6 @@ export default function init(urlParams, env = process.env) {
   setOptions(urlParams, store)
 
 
-
-
   // store.dispatch(`loadLocalPreferences`)
 
 
@@ -60,6 +58,7 @@ export default function init(urlParams, env = process.env) {
       store.dispatch(`checkForPersistedSession`)
       store.dispatch(`checkForPersistedAddresses`)
       store.dispatch("getDelegates")
+      store.dispatch("getValidators")
       store.dispatch(`getPool`)
       store.dispatch(`getMintingParameters`)
     })

@@ -10,25 +10,27 @@ export function fetchNetworks() {
   return axios.get(`${API_URL}/networks`).then(rez => rez.data)
 }
 
-export function fetchValidators() {
+export function fetchValidators(networkId: string) {
   return axios
-    .get(`${API_URL}/validators`)
+    .get(`${API_URL}/networks/${networkId}/validators`)
     .then(rez => rez.data.validators.map(remapValidator))
 }
 
-export function fetchValidatorByAddress(address: string) {
+export function fetchValidatorByAddress(networkId: string, address: string) {
   return axios
-    .get(`${API_URL}/validators/${address}`)
+    .get(`${API_URL}/networks/${networkId}/validators/${address}`)
     .then(rez => remapValidator(rez.data, true))
 }
 
-export function fetchDelegationsByAddress(address: string) {
-  return axios.get(`${API_URL}/delegations/${address}`).then(rez =>
-    rez.data.map((d: any) => ({
-      ...d,
-      amount: d.amount / 1000000000000,
-    }))
-  )
+export function fetchDelegationsByAddress(networkId: string, address: string) {
+  return axios
+    .get(`${API_URL}/networks/${networkId}/delegations/${address}`)
+    .then(rez =>
+      rez.data.map((d: any) => ({
+        ...d,
+        amount: d.amount / 1000000000000
+      }))
+    )
 }
 
 // export function fetchAccount(address) {

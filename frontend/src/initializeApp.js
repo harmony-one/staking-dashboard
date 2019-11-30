@@ -58,6 +58,7 @@ export default function init(urlParams, env = process.env) {
       store.dispatch(`checkForPersistedSession`)
       store.dispatch(`checkForPersistedAddresses`)
       store.dispatch("getDelegates")
+      store.dispatch("getValidators")
       store.dispatch(`getPool`)
       store.dispatch(`getMintingParameters`)
     })

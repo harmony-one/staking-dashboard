@@ -1,6 +1,3 @@
-import { fetchDelegationsByAddress } from "@/mock-service"
-import * as crypto from "@harmony-js/crypto"
-
 const RETRIES = 4
 
 export default class Legacy {
@@ -84,10 +81,10 @@ export default class Legacy {
   }
   // Get all delegations information from a delegator
   delegations = async (addr: string) => {
-    const delegatorAddressHex = crypto.getAddress(addr).basicHex
+    // const delegatorAddressHex = crypto.getAddress(addr).basicHex
 
-    return await fetchDelegationsByAddress(delegatorAddressHex)
-    //return this.get(`/staking/delegators/${addr}/delegations`)
+    // return await fetchDelegationsByAddress(delegatorAddressHex)
+    return this.get(`/staking/delegators/${addr}/delegations`)
   }
   undelegations = (addr: string) => {
     return this.get(`/staking/delegators/${addr}/unbonding_delegations`, 1)

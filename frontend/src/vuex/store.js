@@ -39,6 +39,7 @@ export default (opts = {}) => {
     if(mutation.type === 'setConnected') {
       store.dispatch("getDelegates");
       store.dispatch('queryWalletBalances');
+      store.dispatch('getValidators');
     }
   });
 

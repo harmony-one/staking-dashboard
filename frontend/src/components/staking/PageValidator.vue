@@ -126,7 +126,7 @@
           </li>
           <li>
             <h4>Last Commission Change</h4>
-            <span> Block #{{{ validator.update_height }}</span>
+            <span> Block #{{ validator.update_height }}</span>
           </li>
         </ul>
       </div>
@@ -335,7 +335,7 @@ export default {
   },
 
   async mounted() {
-    this.validator = await fetchValidatorByAddress(this.$route.params.validator)
+    this.validator = await fetchValidatorByAddress(this.connection.networkConfig.id, this.$route.params.validator)
     this.loading = false
   },
   methods: {

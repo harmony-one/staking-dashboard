@@ -10,11 +10,11 @@
       </router-link>
 
       <h2 class="session-title">
-        Welcome to Lunie
+        Welcome to Harmony
       </h2>
 
       <p class="session-paragraph">
-        The easiest way to send, stake, and vote on the Cosmos Hub.
+        The easiest way to send, stake, and vote on the One Blockchain.
       </p>
 
       <div class="session-list">
@@ -33,7 +33,7 @@
       </div>
 
       <p class="footnote">
-        By using Lunie, you accept our
+        By using Harmony, you accept our
         <router-link to="/terms" class="link">
           Terms of Service
         </router-link>

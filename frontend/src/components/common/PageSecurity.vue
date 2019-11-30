@@ -21,7 +21,7 @@
         </li>
         <li class="c6 c7">
           <span class="c1"
-            >Demonstrate good faith by not disrupting or degrading Lunie&rsquo;s
+            >Demonstrate good faith by not disrupting or degrading Harmony&rsquo;s
             data or services.</span
           >
         </li>
@@ -40,13 +40,13 @@
         Vulnerability Disclosure Process
       </h2>
       <p>
-        Once we receive a vulnerability report, the Lunie will take these steps
+        Once we receive a vulnerability report, the Harmony will take these steps
         to address it:
       </p>
       <ol class="c10 lst-kix_ufr4rr5dyt1a-0 start" start="1">
         <li class="c6 c7">
           <span class="c1"
-            >Lunie will confirm receipt of the vulnerability report within 3
+            >Harmony will confirm receipt of the vulnerability report within 3
             business days. The timing of our response may depend on when a
             report is submitted. Our daily operations are distributed in time
             zones across the globe, and response times may vary. If you have not
@@ -59,7 +59,7 @@
         </li>
         <li class="c6 c7">
           <span class="c1"
-            >Lunie will investigate and validate the security issue submitted to
+            >Harmony will investigate and validate the security issue submitted to
             us as quickly as we can, usually within 7 business days of receipt.
             Submitting a thorough report with clear steps to recreate the
             vulnerability and/or a proof-of-concept will move the process along
@@ -68,7 +68,7 @@
         </li>
         <li class="c6 c7">
           <span class="c1"
-            >If valid, Lunie will acknowledge the bug, and make the necessary
+            >If valid, Harmony will acknowledge the bug, and make the necessary
             code changes to patch it. Some issues may require more time than
             others to patch, but we will strive to patch each vulnerability as
             quickly as our resources and development process allows.</span
@@ -76,7 +76,7 @@
         </li>
         <li class="c6 c7">
           <span class="c1"
-            >Lunie will publicly release the security patch for the
+            >Harmony will publicly release the security patch for the
             vulnerability, and acknowledge the security fix in the release
             notes. Public release notes may reference the person or people who
             reported the vulnerability, unless the reporters choose to be

@@ -2,11 +2,11 @@
   <SessionFrame>
     <div class="session-container">
       <h2 class="session-title">
-        Use Lunie Browser Extension
+        Use Harmony Browser Extension
       </h2>
       <div v-if="!extension.enabled" class="session-main">
         <p>
-          Looks like you don't have the Lunie browser extension installed yet.
+          Looks like you don't have the Harmony browser extension installed yet.
           Head over to the
           <a
             href="http://bit.ly/lunie-ext"
@@ -20,7 +20,7 @@
 
       <div v-else class="session-main">
         <p class="extension-message">
-          Below is a list of accounts we've received from the Lunie browser
+          Below is a list of accounts we've received from the Harmony browser
           extension.
         </p>
         <AccountList

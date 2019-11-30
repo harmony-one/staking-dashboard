@@ -23,7 +23,7 @@
           v-if="!isMobileApp"
           id="use-extension"
           icon="laptop"
-          title="Use Lunie Browser Extension"
+          title="Use Harmony Browser Extension"
           route="extension"
         >
         </LiSession>

@@ -8,7 +8,7 @@
       <p class="c3">
         These Terms of Service (the &ldquo;Terms&rdquo; or this
         &ldquo;Agreement&rdquo;) apply to the &ldquo;universal wallet&rdquo;
-        service Lunie.io (&ldquo;Lunie&rdquo; or the &ldquo;App&rdquo;) and
+        service Harmony.io (&ldquo;Harmony&rdquo; or the &ldquo;App&rdquo;) and
         other digital services offered on behalf of Lunie International Software
         Systems Inc. (&ldquo;Lunie&rdquo;). Lunie is a corporation organized
         under the laws of Ontario, Canada. The &ldquo;universal wallet&rdquo;

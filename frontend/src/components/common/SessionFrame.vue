@@ -14,7 +14,7 @@
       </div>
       <TmBtn
         class="session-close"
-        value="Back to Lunie"
+        value="Back to Harmony"
         color="secondary"
         @click.native="$router.push(`/`)"
       />

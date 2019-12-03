@@ -46,6 +46,16 @@ export default (opts = {}) => {
     }
   })
 
+  store.subscribe(mutation => {
+    if (mutation.type === "setUserAddress") {
+      store.dispatch("resetRewards")
+
+      store
+        .dispatch("getDelegates")
+        .then(() => store.dispatch("getRewardsFromMyValidators"))
+    }
+  })
+
   return store
 }
 

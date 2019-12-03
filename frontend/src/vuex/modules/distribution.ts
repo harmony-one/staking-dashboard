@@ -72,6 +72,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
         dispatch(`getAllTxs`)
       ])
     },
+    resetRewards({ commit }) {
+      commit(`resetDelegationRewards`)
+    },
     async getRewardsFromMyValidators({ state, commit, rootState }) {
       state.loading = true
 

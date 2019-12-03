@@ -14,7 +14,7 @@
       <p>
         Lunie is a user interface for sending and receiving Cosmos tokens,
         viewing your transaction history, delegating your ONEs, and
-        participating in governance on the Cosmos Hub.
+        participating in governance on the One Blockchain.
       </p>
       <p>
         Over the coming months we will be announcing a number of new products

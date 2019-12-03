@@ -6,7 +6,7 @@
         Our Mission
       </h2>
       <p>
-        Starting with Cosmos and the Cosmos Hub, we are on a mission to simplify
+        Starting with Harmony and the One Blockchain, we are on a mission to simplify
         the user experience for new multi-stakeholder participant owned
         networks.
       </p>

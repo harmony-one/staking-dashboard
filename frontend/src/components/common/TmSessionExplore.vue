@@ -135,7 +135,7 @@ export default {
     getAddressTypeDescription(addressType) {
       if (addressType === "explore") return `Explore Mode`
       if (addressType === "ledger") return `Ledger Nano S`
-      if (addressType === "extension") return `Lunie Browser Extension`
+      if (addressType === "extension") return `Harmony Browser Extension`
     },
     exploreWith(address) {
       this.address = address

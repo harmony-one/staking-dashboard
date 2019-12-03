@@ -65,6 +65,8 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       const data = await fetchDelegationsByAddress(rootState.connection.networkConfig.id, delegatorAddressHex);
 
       commit("setDelegates", data)
+
+      return data;
     },
     async getSelfBond() {}
   }

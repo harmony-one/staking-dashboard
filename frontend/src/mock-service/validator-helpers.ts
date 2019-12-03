@@ -73,12 +73,12 @@ export type TFrontendValidator = typeof frontendValidator
 
 export const remapValidator = (
   validator: TBlockchainValidator,
-  converAddress = false
+  convertAddress = false
 ): TFrontendValidator => {
   return {
     userName: validator.description.name,
 
-    operator_address: converAddress
+    operator_address: convertAddress
       ? crypto.getAddress(validator.address).bech32
       : validator.address,
 

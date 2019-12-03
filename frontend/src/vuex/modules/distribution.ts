@@ -40,6 +40,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     setDelegationRewards(state, { validatorAddr, rewards }) {
       Vue.set(state.rewards, validatorAddr, rewards)
     },
+    resetDelegationRewards(state) {
+      state.rewards = {}
+    },
     setDistributionParameters(state, parameters) {
       state.parameters = parameters
     },
@@ -69,8 +72,13 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
         dispatch(`getAllTxs`)
       ])
     },
+    resetRewards({ commit }) {
+      commit(`resetDelegationRewards`)
+    },
     async getRewardsFromMyValidators({ state, commit, rootState }) {
       state.loading = true
+
+      commit(`resetDelegationRewards`)
 
       rootState.delegates.delegates.forEach((d: any) =>
         commit(`setDelegationRewards`, {

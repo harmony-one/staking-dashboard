@@ -29,6 +29,8 @@ export default () => {
       commit("setLoaded", true)
 
       commit("setValidators", validators)
+
+      return validators;
     }
   }
 

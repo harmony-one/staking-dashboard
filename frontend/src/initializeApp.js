@@ -47,9 +47,7 @@ export default function init(urlParams, env = process.env) {
 
   setOptions(urlParams, store)
 
-
   // store.dispatch(`loadLocalPreferences`)
-
 
   store
     .dispatch(`init`)
@@ -57,8 +55,10 @@ export default function init(urlParams, env = process.env) {
     .then(() => {
       store.dispatch(`checkForPersistedSession`)
       store.dispatch(`checkForPersistedAddresses`)
-      store.dispatch("getDelegates")
-      store.dispatch("getValidators")
+      Promise.all([
+        store.dispatch("getDelegates"),
+        store.dispatch("getValidators")
+      ]).then(() => store.dispatch("getRewardsFromMyValidators"))
       store.dispatch(`getPool`)
       store.dispatch(`getMintingParameters`)
     })

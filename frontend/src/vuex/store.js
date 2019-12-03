@@ -35,13 +35,26 @@ export default (opts = {}) => {
     pending = storeUpdateHandler(mutation, state, pending)
   })
 
-  store.subscribe((mutation) => {
-    if(mutation.type === 'setConnected') {
-      store.dispatch("getDelegates");
-      store.dispatch('queryWalletBalances');
-      store.dispatch('getValidators');
+  store.subscribe(mutation => {
+    if (mutation.type === "setConnected") {
+      store.dispatch("queryWalletBalances")
+
+      Promise.all([
+        store.dispatch("getDelegates"),
+        store.dispatch("getValidators")
+      ]).then(() => store.dispatch("getRewardsFromMyValidators"))
     }
-  });
+  })
+
+  store.subscribe(mutation => {
+    if (mutation.type === "setUserAddress") {
+      store.dispatch("resetRewards")
+
+      store
+        .dispatch("getDelegates")
+        .then(() => store.dispatch("getRewardsFromMyValidators"))
+    }
+  })
 
   return store
 }

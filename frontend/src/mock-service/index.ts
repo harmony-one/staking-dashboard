@@ -1,5 +1,8 @@
 import axios from "axios"
-import { remapValidator } from "@/mock-service/validator-helpers"
+import {
+  remapValidator,
+  TBlockchainValidator
+} from "@/mock-service/validator-helpers"
 
 const API_URL = process.env.MOCK_API_URL
 
@@ -13,7 +16,11 @@ export function fetchNetworks() {
 export function fetchValidators(networkId: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/validators`)
-    .then(rez => rez.data.validators.map(remapValidator))
+    .then(rez =>
+      rez.data.validators.map((v: TBlockchainValidator) =>
+        remapValidator(v, false)
+      )
+    )
 }
 
 export function fetchValidatorByAddress(networkId: string, address: string) {

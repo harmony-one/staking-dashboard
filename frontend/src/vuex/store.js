@@ -39,11 +39,10 @@ export default (opts = {}) => {
     if (mutation.type === "setConnected") {
       store.dispatch("queryWalletBalances")
 
-      Promise.all(
-        [store.dispatch("getDelegates"), store.dispatch("getValidators")].then(
-          () => store.dispatch("getRewardsFromMyValidators")
-        )
-      )
+      Promise.all([
+        store.dispatch("getDelegates"),
+        store.dispatch("getValidators")
+      ]).then(() => store.dispatch("getRewardsFromMyValidators"))
     }
   })
 

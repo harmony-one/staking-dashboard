@@ -648,7 +648,8 @@ export default {
 
         this.onSendingFailed(message)
         this.txHash = null
-        this.session.currrentModalOpen.close()
+        // this.session.currrentModalOpen.close()
+        this.close();
       }
     },
     async waitForInclusion(includedFn) {

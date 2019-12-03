@@ -144,15 +144,15 @@
             :loading="!!sending"
           >
             <div v-if="extension.enabled && !sending">
-              Please send the transaction to be signed in the Lunie Browser
+              Please send the transaction to be signed in the Harmony Browser
               Extension.
             </div>
             <div v-if="extension.enabled && sending">
-              Please open the Lunie Browser Extension, review the details, and
+              Please open the Harmony Browser Extension, review the details, and
               approve the transaction.
             </div>
             <div v-if="!extension.enabled">
-              Please install the Lunie Browser Extension from the
+              Please install the Harmony Browser Extension from the
               <a
                 href="https://chrome.google.com/webstore/category/extensions"
                 target="_blank"
@@ -313,7 +313,7 @@ const signMethodOptions = {
     value: SIGN_METHODS.LEDGER
   },
   EXTENSION: {
-    key: `Lunie Browser Extension`,
+    key: `Harmony Browser Extension`,
     value: SIGN_METHODS.EXTENSION
   },
   LOCAL: {
@@ -648,7 +648,8 @@ export default {
 
         this.onSendingFailed(message)
         this.txHash = null
-        this.session.currrentModalOpen.close()
+        // this.session.currrentModalOpen.close()
+        this.close();
       }
     },
     async waitForInclusion(includedFn) {

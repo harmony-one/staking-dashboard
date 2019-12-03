@@ -61,6 +61,14 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
           signedTxn = await signStakingTransaction(txn)
           signedTxn.setMessenger(node.staking.harmony.messenger)
           break
+
+        case "MsgWithdrawDelegationReward":
+          await node.staking.setSharding()
+
+          txn = node.staking.createRewards(transactionData)
+          signedTxn = await signStakingTransaction(txn)
+          signedTxn.setMessenger(node.staking.harmony.messenger)
+          break
       }
 
       // const rawTransaction = signedTxn.getRawTransaction()

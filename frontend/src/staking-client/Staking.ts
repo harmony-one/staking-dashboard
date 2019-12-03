@@ -8,7 +8,11 @@ import { StakingFactory, StakingTransaction } from "@harmony-js/staking"
 const URL_MAINNET = `https://api.s0.t.hmny.io`
 
 export interface ITransactionData {
-  type: "MsgDelegate" | "MsgSend" | "MsgUndelegate"
+  type:
+    | "MsgDelegate"
+    | "MsgSend"
+    | "MsgUndelegate"
+    | "MsgWithdrawDelegationReward"
   toAddress: string
   delegatorAddress: string
   validatorAddress: string
@@ -132,6 +136,24 @@ export default class Staking {
       .build()
 
     return stakingTxn
+  }
+
+  createRewards(transactionData: ITransactionData) {
+    const stakingTx = this.harmony.stakings
+      .collectRewards({
+        delegatorAddress: transactionData.delegatorAddress
+      })
+      .setTxParams({
+        nonce: "0x2",
+        gasPrice: "0x",
+        gasLimit: "0x0927c0",
+        // gasPrice: new Unit(this.transactionDetails.fee).asMwei().toWei(),
+        // gasLimit: this.transactionDetails.gas,
+        chainId: this.harmony.chainId
+      } as any)
+      .build()
+
+    return stakingTx
   }
 
   async sendTransaction(signedTransaction: Transaction | StakingTransaction) {

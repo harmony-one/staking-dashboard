@@ -6,9 +6,18 @@ import { mockTransfer } from "../../mock-service"
 // import Staking from "@/staking-client"
 import { waitTransactionConfirm } from "src/scripts/extension-utils"
 
-import { MsgDelegate, MsgSend, MsgUndelegate } from "./messages"
+import {
+  MsgDelegate,
+  MsgSend,
+  MsgUndelegate,
+  MsgWithdrawDelegationReward
+} from "./messages"
 
-type TMessage = "MsgDelegate" | "MsgSend" | "MsgUndelegate"
+type TMessage =
+  | "MsgDelegate"
+  | "MsgSend"
+  | "MsgUndelegate"
+  | "MsgWithdrawDelegationReward"
 
 export default class ActionManager {
   context: any
@@ -64,6 +73,13 @@ export default class ActionManager {
 
       case "MsgUndelegate":
         this.message = MsgUndelegate(
+          this.context.userAddress,
+          transactionProperties
+        )
+        break
+
+      case "MsgWithdrawDelegationReward":
+        this.message = MsgWithdrawDelegationReward(
           this.context.userAddress,
           transactionProperties
         )

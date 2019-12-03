@@ -1,15 +1,5 @@
 import * as crypto from "@harmony-js/crypto"
 
-// Voting Power / Total Stake	3.15% / 5,706,991.464	we should change to
-// voting power/effective stake/total stake	voting_power = avg_voting_power / effective = total_effective_stake / total = total sum of amount in delegations by validator
-// Self Stake	0.00% / 0	get the amount of self delegation dvidied by total sum
-// Validator Since	Block #0	creation_height
-// Uptime	0.00%	uptime
-// Current Commission Rate	20.00%	rate
-// Max Commission Rate	100.00%	max_rate
-// Max Daily Commission Change	5.00%	should be Max Epoch Commission Change - take from max_change_rate below
-// Last Commission Change	9 months ago	update_height
-
 const blockchainValidator = {
   address: "0x7c41e0668b551f4f902cfaec05b5bdca68b124ce",
   slot_pub_keys: [

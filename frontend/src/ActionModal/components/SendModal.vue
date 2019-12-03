@@ -126,7 +126,7 @@
         id="memo"
         v-model="memo"
         type="text"
-        placeholder="Let everyone know how much you love Lunie"
+        placeholder="Let everyone know how much you love Harmony"
         @keyup.enter.native="enterPressed"
       />
       <TmFormMsg

@@ -2,7 +2,9 @@
 
 const BN = require(`bignumber.js`).BigNumber
 
-export const coinsToObject = function(coinArray) {
+export const coinsToObject = (
+  coinArray: Array<{ denom: string; amount: number }>
+): Record<string, number> => {
   return (
     coinArray &&
     coinArray.reduce(
@@ -16,7 +18,7 @@ export const coinsToObject = function(coinArray) {
 }
 
 // could be used in optimistic update PR, pls uncomment or delete when addressed
-export const calculateShares = function(validator, tokens) {
+export const calculateShares = function(validator: any, tokens: any) {
   const myTokens = new BN(tokens || 0)
 
   const totalShares = new BN(validator.delegator_shares)
@@ -26,7 +28,7 @@ export const calculateShares = function(validator, tokens) {
   return myTokens.times(totalShares).div(totalTokens)
 }
 
-export const calculateTokens = function(validator, shares) {
+export const calculateTokens = function(validator: any, shares: any) {
   // this is the based on the idea that tokens should equal
   // (myShares / totalShares) * totalTokens where totalShares
   // and totalTokens are both represented as fractions
@@ -38,7 +40,7 @@ export const calculateTokens = function(validator, shares) {
   return myShares.times(totalTokens).div(totalShares)
 }
 
-export const sleep = function(amount) {
+export const sleep = function(amount: any) {
   return new Promise(resolve => {
     setTimeout(resolve, amount)
   })

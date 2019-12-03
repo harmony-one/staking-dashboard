@@ -649,7 +649,7 @@ export default {
         this.onSendingFailed(message)
         this.txHash = null
         // this.session.currrentModalOpen.close()
-        this.close();
+        this.close()
       }
     },
     async waitForInclusion(includedFn) {
@@ -658,7 +658,9 @@ export default {
       const { txhash } = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
-      this.$store.dispatch(`getDelegates`)
+      this.$store
+        .dispatch(`getDelegates`)
+        .then(() => this.$store.dispatch(`getRewardsFromMyValidators`))
 
       // this.includedHeight = blockNumbers[0]
       this.txHash = txhash

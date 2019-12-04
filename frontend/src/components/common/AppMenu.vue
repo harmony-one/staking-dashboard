@@ -26,9 +26,7 @@
         title="Portfolio"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Portfolio
-        </h2>
+        <h2 class="app-menu-title">Portfolio</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
       <router-link
@@ -37,13 +35,11 @@
         title="Validators"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Validators
-        </h2>
+        <h2 class="app-menu-title">Validators</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
 
-      <router-link
+      <!-- <router-link
         class="app-menu-item hide-xs"
         to="/proposals"
         title="Proposals"
@@ -53,20 +49,18 @@
           Proposals
         </h2>
         <i class="material-icons">chevron_right</i>
-      </router-link>
+      </router-link>-->
 
-      <router-link
+      <!-- <router-link
         class="app-menu-item hide-xs"
         to="/transactions"
         exact="exact"
         title="Transactions"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Activity
-        </h2>
+        <h2 class="app-menu-title">Activity</h2>
         <i class="material-icons">chevron_right</i>
-      </router-link>
+      </router-link>-->
 
       <router-link
         class="app-menu-item"
@@ -75,9 +69,7 @@
         title="Networks"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Networks
-        </h2>
+        <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
 
@@ -88,9 +80,7 @@
         title="About"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          About
-        </h2>
+        <h2 class="app-menu-title">About</h2>
       </router-link>
 
       <router-link
@@ -100,9 +90,7 @@
         title="Careers"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Careers
-        </h2>
+        <h2 class="app-menu-title">Careers</h2>
       </router-link>
 
       <router-link
@@ -112,9 +100,7 @@
         title="Security"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Security
-        </h2>
+        <h2 class="app-menu-title">Security</h2>
       </router-link>
 
       <router-link
@@ -124,9 +110,7 @@
         title="Terms"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Terms of Service
-        </h2>
+        <h2 class="app-menu-title">Terms of Service</h2>
       </router-link>
 
       <router-link
@@ -136,9 +120,7 @@
         title="Privacy"
         @click.native="close"
       >
-        <h2 class="app-menu-title">
-          Privacy Policy
-        </h2>
+        <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
     </div>
     <ConnectedNetwork />

@@ -2,7 +2,7 @@
   <nav class="app-header" :class="{ mobile: !desktop }">
     <div class="container">
       <div class="header-item" :class="{ open: open }">
-        <a href="https://lunie.io">
+        <a href="https://staking-explorer.firebaseapp.com">
           <img
             class="header-item-logo"
             src="~assets/images/harmony-logo-white.svg"

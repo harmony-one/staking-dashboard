@@ -57,12 +57,20 @@ export default {
   },
   data: () => ({
     searchTerm: "",
-    activeOnly: true
+    activeOnly: false
   }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
-    ...mapState({ validators: state => state.validators.validators })
-
+    ...mapState({ allValidators: state => state.validators.validators }),
+    validators: state => {
+      return state.allValidators
+        .filter(
+          v =>
+            !state.searchTerm ||
+            v.moniker.toLowerCase().includes(state.searchTerm.toLowerCase())
+        )
+        .filter(v => !state.activeOnly || v.active === true)
+    }
   },
   async mounted() {
     this.$store.dispatch(`getValidators`)

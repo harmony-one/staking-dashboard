@@ -598,7 +598,7 @@ export default {
       // limit fees to the maximum the user has
       if (this.invoiceTotal > this.balanceInAtoms) {
         this.gasPrice =
-          (this.balanceInAtoms - Number(this.amount)) / this.gasEstimate
+          (this.invoiceTotal - Number(this.amount)) / this.gasEstimate
       }
     },
     async submit() {

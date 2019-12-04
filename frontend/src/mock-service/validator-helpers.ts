@@ -65,7 +65,9 @@ const frontendValidator = {
   update_height: 121,
   creation_height: 212,
   avg_voting_power: "0.500000000000000000",
-  total_effective_stake: "171000000000000000000.000000000000000000"
+  total_effective_stake: "171000000000000000000.000000000000000000",
+  active: false,
+  max_total_delegation: 11,
 }
 
 export type TBlockchainValidator = typeof blockchainValidator
@@ -86,6 +88,7 @@ export const remapValidator = (
     max_rate: validator.commission.commission_rates.max_rate,
     max_change_rate: validator.commission.commission_rates.max_change_rate,
     max_total_delegation: validator.max_total_delegation,
+    min_self_delegation: String(validator.min_self_delegation),
     uptime_percentage: validator.uptime,
     website: validator.description.website,
     consensus_pubkey: validator.slot_pub_keys[0],
@@ -98,6 +101,8 @@ export const remapValidator = (
     avg_voting_power: validator.avg_voting_power,
     total_effective_stake: validator.total_effective_stake,
 
+    active: validator.active,
+
     customized: false,
     identity: "DCB176E79AE7D51F",
     update_time: "2019-03-13T23:00:00Z",
@@ -109,7 +114,6 @@ export const remapValidator = (
       "https://s3.amazonaws.com/keybase_processed_uploads/5dacfc1ad84eecdb4a01fd893d479805_360_360.jpeg",
     start_height: "0",
     voting_power: "0.0315",
-    min_self_delegation: validator.min_self_delegation,
     tokens: "5706991464569",
     unbonding_height: 0,
     keybaseId: "DCB176E79AE7D51F",

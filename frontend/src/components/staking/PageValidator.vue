@@ -11,8 +11,12 @@
   >
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="status-container">
-        <span :class="status | toLower" class="validator-status">{{ status }}</span>
-        <span v-if="status_detailed" class="validator-status-detailed">{{ status_detailed }}</span>
+        <span :class="status | toLower" class="validator-status">{{
+          status
+        }}</span>
+        <span v-if="status_detailed" class="validator-status-detailed">{{
+          status_detailed
+        }}</span>
       </div>
       <tr class="li-validator">
         <td class="data-table__row__info">
@@ -63,7 +67,8 @@
                 :href="website"
                 target="_blank"
                 rel="nofollow noreferrer noopener"
-              >{{ website }}</a>
+                >{{ website }}</a
+              >
             </span>
             <span v-else id="validator-website">{{ website | noBlanks }}</span>
           </li>
@@ -80,24 +85,26 @@
             <h4>Voting Power / Total Stake</h4>
             <span id="page-profile__power">
               {{ validator.avg_voting_power | percent }} /
-              {{ validator.total_effective_stake / 1e18 | shortDecimals }}
+              {{ (validator.total_effective_stake / 1e18) | shortDecimals }}
             </span>
           </li>
           <li>
             <h4>Self Stake</h4>
-            <span id="page-profile__self-bond">{{ selfBond }} / {{ selfBondAmount }}</span>
+            <span id="page-profile__self-bond"
+              >{{ selfBond }} / {{ selfBondAmount }}</span
+            >
           </li>
           <li>
             <h4>Min Self Delegation</h4>
-            <span
-              id="page-profile__min_self_delegation"
-            >{{ validator.min_self_delegation / 1e18 | shortDecimals }}</span>
+            <span id="page-profile__min_self_delegation">{{
+              (validator.min_self_delegation / 1e18) | shortDecimals
+            }}</span>
           </li>
           <li>
             <h4>Max Total Delegation</h4>
-            <span
-              id="page-profile__max_total_delegation"
-            >{{ validator.max_total_delegation / 1e18 | shortDecimals }}</span>
+            <span id="page-profile__max_total_delegation">{{
+              (validator.max_total_delegation / 1e18) | shortDecimals
+            }}</span>
           </li>
           <li>
             <h4>Validator Since</h4>
@@ -105,7 +112,9 @@
           </li>
           <li>
             <h4>Uptime</h4>
-            <span id="page-profile__uptime">{{ validator.uptime_percentage | percent }}</span>
+            <span id="page-profile__uptime">{{
+              validator.uptime_percentage | percent
+            }}</span>
           </li>
           <li>
             <h4>Current Commission Rate</h4>
@@ -146,8 +155,8 @@
       <div slot="title">Validator Not Found</div>
       <div slot="subtitle">
         Please visit the
-        <router-link to="/validators/">Validators</router-link>page to view
-        all validators
+        <router-link to="/validators/">Validators</router-link>page to view all
+        validators
       </div>
     </template>
   </TmPage>
@@ -220,6 +229,9 @@ export default {
       `liquidAtoms`,
       `connected`
     ]),
+    networkId() {
+      return this.connection.networkConfig.id;
+    },
     selfBond() {
       return percent(this.delegates.selfBond[this.validator.operator_address])
     },
@@ -229,7 +241,7 @@ export default {
       )
     },
     myBond() {
-      if (!this.validator) return 0
+      if (!this.validator.operator_address) return 0
 
       const validatorHexAddress = crypto.getAddress(
         this.validator.operator_address
@@ -260,7 +272,8 @@ export default {
       if (
         this.validator.jailed ||
         this.validator.tombstoned ||
-        this.validator.status === 0
+        this.validator.status === 0 ||
+        this.validator.active === false
       )
         return `Inactive`
       return `Active`
@@ -292,13 +305,22 @@ export default {
     }
   },
   watch: {
+    networkId: async function() {
+      this.loading = true;
+
+      if (this.connection.networkConfig.id) {
+        this.validator = await fetchValidatorByAddress(this.connection.networkConfig.id, this.$route.params.validator);
+      }
+
+      this.loading = false;
+    },
     myBond: {
       handler(myBond) {
         if (myBond > 0) {
-          this.$store.dispatch(
-            `getRewardsFromValidator`,
-            this.$route.params.validator
-          )
+          // this.$store.dispatch(
+          //   `getRewardsFromValidator`,
+          //   this.$route.params.validator
+          // )
         }
       }
     },
@@ -320,25 +342,29 @@ export default {
           this.delegation.loaded &&
           Number(this.myBond) > 0
         ) {
-          this.$store.dispatch(
-            `getRewardsFromValidator`,
-            this.$route.params.validator
-          )
+          // this.$store.dispatch(
+          //   `getRewardsFromValidator`,
+          //   this.$route.params.validator
+          // )
         }
       }
     }
   },
 
   async mounted() {
-    this.validator = await fetchValidatorByAddress(
-      this.connection.networkConfig.id,
-      this.$route.params.validator
-    )
-    console.log(
-      "minh max_total_delegation: ",
-      this.validator.max_total_delegation
-    )
-    this.loading = false
+    if (this.connection.networkConfig.id) {
+      this.validator = await fetchValidatorByAddress(
+        this.connection.networkConfig.id,
+        this.$route.params.validator
+      )
+
+      console.log(
+        "minh max_total_delegation: ",
+        this.validator.max_total_delegation
+      )
+
+      this.loading = false
+    }
   },
   methods: {
     shortDecimals,
@@ -489,8 +515,8 @@ span {
 }
 
 .validator-status.inactive {
-  color: var(--warning);
-  border-color: var(--warning);
+  color: red;
+  border-color: red;
 }
 
 .validator-status.active {

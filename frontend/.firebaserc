@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "staking-explorer"
+  },
+  "targets": {
+    "staking-explorer": {
+      "hosting": {
+        "dev": [
+          "staking-explorer"
+        ],
+        "prod": [
+          "staking"
+        ]
+      }
+    }
   }
 }

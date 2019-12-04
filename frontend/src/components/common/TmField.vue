@@ -222,7 +222,7 @@ input[type="checkbox"] {
 }
 
 .tm-field::placeholder {
-  color: var(--dim-black);
+  color: #dfdfdf;
 }
 
 .tm-field:disabled {

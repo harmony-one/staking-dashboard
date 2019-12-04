@@ -11,12 +11,8 @@
   >
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="status-container">
-        <span :class="status | toLower" class="validator-status">
-          {{ status }}
-        </span>
-        <span v-if="status_detailed" class="validator-status-detailed">
-          {{ status_detailed }}
-        </span>
+        <span :class="status | toLower" class="validator-status">{{ status }}</span>
+        <span v-if="status_detailed" class="validator-status-detailed">{{ status_detailed }}</span>
       </div>
       <tr class="li-validator">
         <td class="data-table__row__info">
@@ -33,14 +29,10 @@
             class="li-validator-image"
           />
           <div class="validator-info">
-            <h3 class="li-validator-name">
-              {{ validator.moniker }}
-            </h3>
+            <h3 class="li-validator-name">{{ validator.moniker }}</h3>
             <div v-if="myDelegation">
               <h4>{{ myDelegation }}</h4>
-              <h5 v-if="rewards">
-                {{ 0 | atoms | shortDecimals | noBlanks }}
-              </h5>
+              <h5 v-if="rewards">{{ 0 | atoms | shortDecimals | noBlanks }}</h5>
             </div>
           </div>
         </td>
@@ -61,9 +53,7 @@
         <ul class="row">
           <li class="column">
             <h4>Description</h4>
-            <span>
-              {{ validator.details | noBlanks }}
-            </span>
+            <span>{{ validator.details | noBlanks }}</span>
           </li>
           <li class="column">
             <h4>Website</h4>
@@ -73,12 +63,9 @@
                 :href="website"
                 target="_blank"
                 rel="nofollow noreferrer noopener"
-                >{{ website }}</a
-              >
+              >{{ website }}</a>
             </span>
-            <span v-else id="validator-website">
-              {{ website | noBlanks }}
-            </span>
+            <span v-else id="validator-website">{{ website | noBlanks }}</span>
           </li>
           <li class="column">
             <h4>Validator Address</h4>
@@ -93,24 +80,32 @@
             <h4>Voting Power / Total Stake</h4>
             <span id="page-profile__power">
               {{ validator.avg_voting_power | percent }} /
-              {{ validator.total_effective_stake / 1000000000 | shortDecimals }}
+              {{ validator.total_effective_stake / 1e18 | shortDecimals }}
             </span>
           </li>
           <li>
             <h4>Self Stake</h4>
-            <span id="page-profile__self-bond">
-              {{ selfBond }} / {{ selfBondAmount }}
-            </span>
+            <span id="page-profile__self-bond">{{ selfBond }} / {{ selfBondAmount }}</span>
+          </li>
+          <li>
+            <h4>Min Self Delegation</h4>
+            <span
+              id="page-profile__min_self_delegation"
+            >{{ validator.min_self_delegation / 1e18 | shortDecimals }}</span>
+          </li>
+          <li>
+            <h4>Max Total Delegation</h4>
+            <span
+              id="page-profile__max_total_delegation"
+            >{{ validator.max_total_delegation / 1e18 | shortDecimals }}</span>
           </li>
           <li>
             <h4>Validator Since</h4>
-            <span> Block #{{ validator.creation_height }} </span>
+            <span>Block #{{ validator.creation_height }}</span>
           </li>
           <li>
             <h4>Uptime</h4>
-            <span id="page-profile__uptime">
-              {{ validator.uptime_percentage | percent }}
-            </span>
+            <span id="page-profile__uptime">{{ validator.uptime_percentage | percent }}</span>
           </li>
           <li>
             <h4>Current Commission Rate</h4>
@@ -126,7 +121,7 @@
           </li>
           <li>
             <h4>Last Commission Change</h4>
-            <span> Block #{{ validator.update_height }}</span>
+            <span>Block #{{ validator.update_height }}</span>
           </li>
         </ul>
       </div>
@@ -151,7 +146,7 @@
       <div slot="title">Validator Not Found</div>
       <div slot="subtitle">
         Please visit the
-        <router-link to="/validators/"> Validators </router-link>page to view
+        <router-link to="/validators/">Validators</router-link>page to view
         all validators
       </div>
     </template>
@@ -335,7 +330,14 @@ export default {
   },
 
   async mounted() {
-    this.validator = await fetchValidatorByAddress(this.connection.networkConfig.id, this.$route.params.validator)
+    this.validator = await fetchValidatorByAddress(
+      this.connection.networkConfig.id,
+      this.$route.params.validator
+    )
+    console.log(
+      "minh max_total_delegation: ",
+      this.validator.max_total_delegation
+    )
     this.loading = false
   },
   methods: {

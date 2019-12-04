@@ -37,7 +37,7 @@ module.exports = function(BLOCKCHAIN_SERVER) {
       if (Array.isArray(res.data.result)) {
         cache[ACTIVE_VALIDATORS] = res.data.result
       }
-      console.log("hmy_getActiveValidatorAddresses", res.data)
+      // console.log("hmy_getActiveValidatorAddresses", res.data)
       return res.data.result
     } catch (err) {
       // console.log(err)
@@ -54,7 +54,7 @@ module.exports = function(BLOCKCHAIN_SERVER) {
       if (Array.isArray(res.data.result)) {
         cache[VALIDATORS] = res.data.result
       }
-      console.log("getAllValidatorAddressesData", res.data)
+      // console.log("getAllValidatorAddressesData", res.data)
       return res.data.result
     } catch (err) {
       // console.log(err)
@@ -131,13 +131,19 @@ module.exports = function(BLOCKCHAIN_SERVER) {
   }, 4000)
 
   const getValidators = () => {
-    if (!cache[VALIDATORS]) {
-      return []
-    }
+    let validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]
+    let activeValidators = !cache[ACTIVE_VALIDATORS]
+      ? []
+      : cache[ACTIVE_VALIDATORS]
 
-    return cache[VALIDATORS].map(address => {
-      return { ...cache[VALIDATOR_INFO][address] }
-    }).filter(isNotEmpty)
+    return validators
+      .map(address => {
+        return {
+          ...cache[VALIDATOR_INFO][address],
+          active: !!activeValidators.includes(address)
+        }
+      })
+      .filter(isNotEmpty)
   }
 
   const getActiveValidators = () => {

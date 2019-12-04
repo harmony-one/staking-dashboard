@@ -94,7 +94,8 @@ export default {
       if (
         this.validator.jailed ||
         this.validator.tombstoned ||
-        this.validator.status === 0
+        this.validator.status === 0 ||
+        this.validator.active === false
       )
         return `Inactive`
       return `Active`
@@ -172,8 +173,8 @@ export default {
 }
 
 .validator-status.inactive {
-  color: var(--warning);
-  border-color: var(--warning);
+  color: red;
+  border-color: red;
 }
 
 .validator-status.active {

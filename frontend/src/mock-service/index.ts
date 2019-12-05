@@ -18,13 +18,13 @@ export function fetchValidators(networkId: string) {
     return []
   }
 
-  return axios
-    .get(`${API_URL}/networks/${networkId}/validators`)
-    .then(rez =>
-      rez.data.validators.map((v: TBlockchainValidator) =>
-        remapValidator(v, false)
-      )
-    )
+  return axios.get(`${API_URL}/networks/${networkId}/validators`).then(rez => {
+    const validators: TBlockchainValidator[] = rez.data.validators
+
+    return validators
+      .filter(v => v.description)
+      .map(v => remapValidator(v, false))
+  })
 }
 
 export function fetchValidatorByAddress(networkId: string, address: string) {

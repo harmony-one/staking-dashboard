@@ -91,7 +91,7 @@
           <li>
             <h4>Self Stake</h4>
             <span id="page-profile__self-bond"
-              >{{ selfBond }} / {{ selfBondAmount }}</span
+              >{{ selfBondPercent }} / {{ selfBondAmount }}</span
             >
           </li>
           <li>
@@ -177,7 +177,6 @@ import Bech32 from "common/Bech32"
 import TmPage from "common/TmPage"
 import isEmpty from "lodash.isempty"
 import { fetchValidatorByAddress } from "../../mock-service"
-import * as crypto from "@harmony-js/crypto"
 
 export default {
   name: `page-validator`,
@@ -232,13 +231,13 @@ export default {
     networkId() {
       return this.connection.networkConfig.id
     },
-    selfBond() {
-      return percent(this.delegates.selfBond[this.validator.operator_address])
+    selfBondPercent() {
+      return percent(
+        this.validator.self_stake / this.validator.total_effective_stake
+      )
     },
     selfBondAmount() {
-      return shortDecimals(
-        uatoms(this.delegates.selfBond[this.validator.operator_address])
-      )
+      return shortDecimals(this.validator.self_stake / 1e18)
     },
     myBond() {
       if (!this.validator.operator_address) return 0

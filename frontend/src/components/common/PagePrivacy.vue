@@ -8,7 +8,7 @@
       <p><span class="c5">When this Privacy Policy Applies</span></p>
       <p>
         <span class="c0"
-          >This Privacy Policy applies to the use of Lunie.io, the Lunie
+          >This Privacy Policy applies to the use of Lunie.io, the Lunie fdfd
           Universal Wallet (&ldquo;App&rdquo;) and the use and/or access of any
           of the products, services or content provided by or on behalf of Lunie
           International Software Systems Inc. (&ldquo;Lunie&rdquo;) in

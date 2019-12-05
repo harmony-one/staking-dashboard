@@ -68,7 +68,23 @@ module.exports = function (BLOCKCHAIN_SERVER) {
     )
 
     if (isNotEmpty(res.data.result)) {
-      cache[VALIDATOR_INFO][address] = res.data.result
+      let selfStake = 0
+      if (cache[DELEGATIONS_BY_VALIDATOR][address]) {
+        const elem = cache[DELEGATIONS_BY_VALIDATOR][address].find(
+          e => e.validator_address === e.delegator_address
+        )
+        if (elem) {
+          selfStake = elem.amount
+        }
+      }
+
+      const validatorInfo = {
+        ...res.data.result,
+        active: !!cache[ACTIVE_VALIDATORS].includes(address),
+        self_stake: selfStake
+      }
+
+      cache[VALIDATOR_INFO][address] = validatorInfo
     }
     // console.log("getAllValidatorInfoData ${address}", res.data);
     return res.data.result
@@ -132,27 +148,10 @@ module.exports = function (BLOCKCHAIN_SERVER) {
 
   const getValidators = () => {
     const validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]
-    const activeValidators = !cache[ACTIVE_VALIDATORS]
-      ? []
-      : cache[ACTIVE_VALIDATORS]
 
     return validators
       .map(address => {
-        let self_stake = 0
-        if (cache[DELEGATIONS_BY_VALIDATOR][address]) {
-          const elem = cache[DELEGATIONS_BY_VALIDATOR][address].find(
-            e => e.validator_address === e.delegator_address
-          )
-          if (elem) {
-            self_stake = elem.amount
-          }
-        }
-
-        return {
-          ...cache[VALIDATOR_INFO][address],
-          active: !!activeValidators.includes(address),
-          self_stake: self_stake / 1e18
-        }
+        return { ...cache[VALIDATOR_INFO][address] }
       })
       .filter(isNotEmpty)
   }

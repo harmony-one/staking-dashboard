@@ -14,6 +14,10 @@ export function fetchNetworks() {
 }
 
 export function fetchValidators(networkId: string) {
+  if (!networkId) {
+    return []
+  }
+
   return axios
     .get(`${API_URL}/networks/${networkId}/validators`)
     .then(rez =>

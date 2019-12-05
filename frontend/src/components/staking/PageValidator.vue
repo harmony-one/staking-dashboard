@@ -230,7 +230,7 @@ export default {
       `connected`
     ]),
     networkId() {
-      return this.connection.networkConfig.id;
+      return this.connection.networkConfig.id
     },
     selfBond() {
       return percent(this.delegates.selfBond[this.validator.operator_address])
@@ -243,12 +243,8 @@ export default {
     myBond() {
       if (!this.validator.operator_address) return 0
 
-      const validatorHexAddress = crypto.getAddress(
-        this.validator.operator_address
-      ).basicHex
-
       const delegator = this.delegates.delegates.find(
-        d => d.validator_address === validatorHexAddress
+        d => d.validator_address === this.validator.operator_address
       )
 
       return atoms(
@@ -306,13 +302,16 @@ export default {
   },
   watch: {
     networkId: async function() {
-      this.loading = true;
+      this.loading = true
 
       if (this.connection.networkConfig.id) {
-        this.validator = await fetchValidatorByAddress(this.connection.networkConfig.id, this.$route.params.validator);
+        this.validator = await fetchValidatorByAddress(
+          this.connection.networkConfig.id,
+          this.$route.params.validator
+        )
       }
 
-      this.loading = false;
+      this.loading = false
     },
     myBond: {
       handler(myBond) {

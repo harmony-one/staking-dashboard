@@ -38,6 +38,7 @@ module.exports = {
           "process.env": {
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),
             RELEASE: JSON.stringify(commitHash),
+            MAX_ATTEMPTS: JSON.stringify(process.env.MAX_ATTEMPTS),
             MOCK_API_URL: JSON.stringify(
               process.env.MOCK_API_URL || DEFAULT_MOCK_API_URL
             ),

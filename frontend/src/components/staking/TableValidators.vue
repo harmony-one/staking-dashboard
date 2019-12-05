@@ -123,7 +123,7 @@ export default {
           tooltip: `Remaining Stake`
         },
         {
-          title: `Current Commission Rate`,
+          title: `Cur. Commission Rate`,
           value: `rate`,
           tooltip: `Current Commission Rate`
         },

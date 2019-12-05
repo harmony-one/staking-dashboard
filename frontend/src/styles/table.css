@@ -15,8 +15,9 @@
 }
 
 .data-table th {
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 0.5rem;
   text-align: left;
+  vertical-align: bottom;
 }
 
 .data-table th:first-child {
@@ -32,11 +33,15 @@
 }
 
 .data-table th:nth-child(3) {
-  width: 35%;
+  width: 25%;
+}
+
+.data-table th:nth-child(6) {
+  width: 16%;
 }
 
 .data-table td {
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 0.5rem;
   position: relative;
   vertical-align: middle;
   width: 100%;

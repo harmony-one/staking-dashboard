@@ -16,9 +16,7 @@
           :class="status | toLower"
           class="validator-status"
           :title="status_detailed"
-        >
-          {{ status }}
-        </span>
+        >{{ status }}</span>
       </div>
     </td>
     <td class="data-table__row__info">
@@ -35,27 +33,27 @@
         :alt="`validator logo for ` + validator.moniker"
       />
       <div class="validator-info">
-        <h3 class="li-validator-name">
-          {{ validator.moniker }}
-        </h3>
+        <h3 class="li-validator-name">{{ validator.moniker }}</h3>
         <div v-if="validator.my_delegations > 0">
-          <h4>
-            {{ validator.my_delegations | atoms | shortDecimals }}
-          </h4>
-          <h5 v-if="validator.rewards > 0">
-            +{{ validator.rewards | atoms | shortDecimals }}
-          </h5>
+          <h4>{{ validator.my_delegations | atoms | shortDecimals }}</h4>
+          <h5 v-if="validator.rewards > 0">+{{ validator.rewards | atoms | shortDecimals }}</h5>
         </div>
       </div>
     </td>
+    <td
+      :class="{ 'hide-xs': showOnMobile !== 'voting-power' }"
+    >{{ validator.remainder / 1e18 | shortDecimals }}</td>
+    <td
+      :class="{ 'hide-xs': showOnMobile !== 'voting-power' }"
+    >{{ validator.average_stake / 1e18 | shortDecimals}}</td>
     <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{
-        validator.rate ? percent(validator.rate) : `--`
+      validator.rate ? percent(validator.rate) : `--`
       }}
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'voting-power' }">
-      {{ validator.avg_voting_power | percent }}
-    </td>
+    <td
+      :class="{ 'hide-xs': showOnMobile !== 'voting-power' }"
+    >{{ validator.avg_voting_power | percent }}</td>
   </tr>
 </template>
 

@@ -2,11 +2,7 @@
   <div>
     <table class="data-table card-white">
       <thead>
-        <PanelSort
-          :sort="sort"
-          :properties="properties"
-          :show-on-mobile="showOnMobile"
-        />
+        <PanelSort :sort="sort" :properties="properties" :show-on-mobile="showOnMobile" />
       </thead>
       <tbody
         is="transition-group"
@@ -115,6 +111,16 @@ export default {
           title: `Name`,
           value: `small_moniker`,
           tooltip: `The validator's moniker`
+        },
+        {
+          title: `Remaining Stake`,
+          value: `remainder`,
+          tooltip: `Remaining Stake`
+        },
+        {
+          title: `Average Stake`,
+          value: `average_stake`,
+          tooltip: `Remaining Stake`
         },
         {
           title: `Current Commission Rate`,

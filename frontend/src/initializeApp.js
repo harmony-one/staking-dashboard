@@ -1,6 +1,6 @@
 /* istanbul ignore file: really just integrations */
 
-import { listenToExtensionMessages } from "scripts/extension-utils"
+import { listenToExtensionMessages, getExtensionSession } from "scripts/extension-utils"
 import {
   enableGoogleAnalytics,
   setGoogleAnalyticsPage
@@ -64,6 +64,8 @@ export default function init(urlParams, env = process.env) {
     })
 
   listenToExtensionMessages(store)
+
+  setTimeout(() => getExtensionSession(), 1000);
 
   return { store, router, apolloProvider }
 }

@@ -294,6 +294,7 @@ import { track } from "scripts/google-analytics"
 import config from "src/config"
 
 import ActionManager from "../utils/ActionManager"
+import { closeExtensionSession } from "scripts/extension-utils"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -404,7 +405,13 @@ export default {
       network: state => state.connection.network,
       networkConfig: state => state.connection.networkConfig
     }),
-    ...mapGetters([`connected`, `bondDenom`, `liquidAtoms`, `modalContext`]),
+    ...mapGetters([
+      `connected`,
+      `bondDenom`,
+      `liquidAtoms`,
+      `modalContext`,
+      "currrentModalOpen"
+    ]),
     requiresSignIn() {
       return !this.session.signedIn
     },
@@ -495,28 +502,30 @@ export default {
           "You are in the middle of creating a transaction already. Are you sure you want to cancel this action?"
         )
         if (confirmResult) {
-          this.session.currrentModalOpen.close()
-          this.$store.commit(`setCurrrentModalOpen`, false)
+          this.close()
         }
       }
     },
     open() {
-      // this.confirmModalOpen()
-      // if (this.session.currrentModalOpen) {
-      //   return
-      // }
+      this.confirmModalOpen()
+
+      if (this.session.currrentModalOpen) {
+        return
+      }
 
       this.show = true
       this.gasPrice = config.default_gas_price.toFixed(9)
 
-      // this.$store.commit(`setCurrrentModalOpen`, this)
       // this.trackEvent(`event`, `modal`, this.title)
       // this.checkFeatureAvailable()
       // this.gasPrice = config.default_gas_price.toFixed(9)
       // this.show = true
     },
     close() {
-      this.$store.commit(`setCurrrentModalOpen`, false)
+      if (this.session.currrentModalOpen) {
+        closeExtensionSession()
+        this.$store.commit(`setCurrrentModalOpen`, false)
+      }
       this.submissionError = null
       this.password = null
       this.step = defaultStep
@@ -635,6 +644,8 @@ export default {
             sendData
           )
         } else {
+          this.$store.commit(`setCurrrentModalOpen`, true)
+
           sendResponse = await this.actionManager.send(memo, feeProperties)
         }
 

@@ -7,6 +7,9 @@ import { StakingFactory, StakingTransaction } from "@harmony-js/staking"
 
 const URL_MAINNET = `https://api.s0.t.hmny.io`
 
+const MAX_ATTEMPTS = process.env.MAX_ATTEMPTS
+const maxAttempts = Number(MAX_ATTEMPTS)
+
 export interface ITransactionData {
   type:
     | "MsgDelegate"
@@ -167,7 +170,7 @@ export default class Staking {
 
     // to confirm the result if it is already there
 
-    await sentTxn.confirm(txnHash)
+    await sentTxn.confirm(txnHash, maxAttempts)
 
     return { txhash: txnHash }
   }

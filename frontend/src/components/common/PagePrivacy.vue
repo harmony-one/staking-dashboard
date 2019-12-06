@@ -3,19 +3,13 @@
     <div class="card">
       <h1>Privacy Policy</h1>
       <p class="c3">
-        Effective Date: March 28, 2019
+        Effective Date: December 5, 2019
       </p>
       <p><span class="c5">When this Privacy Policy Applies</span></p>
       <p>
         <span class="c0"
-          >This Privacy Policy applies to the use of Lunie.io, the Lunie fdfd
-          Universal Wallet (&ldquo;App&rdquo;) and the use and/or access of any
-          of the products, services or content provided by or on behalf of Lunie
-          International Software Systems Inc. (&ldquo;Lunie&rdquo;) in
-          connection with this Privacy Policy is linked or posted together
-          referred to as the &ldquo;Services&rdquo;. &nbsp;Please read this
-          &nbsp;Privacy Policy before using the Services because it tells you
-          how we collect, use and disclose your personal information.
+          >	
+          This Privacy Policy applies to the use of https://staking.harmony.one/ (the “App”) and the use and/or access of any of the products, services or content provided by or on behalf of Simple Rules Company (“SRC”) in connection with this Privacy Policy is linked or posted together referred to as the “Services”.  Please read this Privacy Policy before using the Services because it tells you how we collect, use and disclose your personal information.
         </span>
       </p>
       <p>
@@ -29,16 +23,8 @@
         >
       </p>
       <p>
-        <span class="c0"
-          >&ldquo;Lunie&rdquo;, &ldquo;the Lunie App&rdquo;, &ldquo;the Lunie
-          Services&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;,
-          &ldquo;ours&rdquo; and similar terms refers to Lunie International
-          Software Systems Inc. in this Privacy Policy. &nbsp;</span
-        >
-      </p>
-      <p>
         <span
-          >This Privacy Policy does not apply to (i) any Lunie services that has
+          >This Privacy Policy does not apply to (i) any SRC services that has
           its own privacy policy or a different privacy policy, in which case
           that privacy policy, not this privacy policy will apply and (ii) to
           information that is collected offline or by any third-party website or
@@ -223,7 +209,7 @@
             >Device-specific settings and other hardware settings, including
             operating system and other software settings, browser type, browser
             language, time zones, and certain cookies or other technologies that
-            may associate your device information with your Lunie account;</span
+            may associate your device information with your SRC account;</span
           >
         </li>
         <li class="c1">
@@ -448,7 +434,7 @@
           >Moreover, if you access third-party websites through the App or the
           Services you may encounter third-party advertising. &nbsp;If you
           click-through to a third-party website, you are no longer on a site
-          hosted by Lunie and activity on the third-party site will be governed
+          hosted by SRC and activity on the third-party site will be governed
           by the third-party&rsquo;s privacy policy. &nbsp;You should review
           this privacy policy to understand what information will be collected
           and what technology the third-party uses to collect this information.
@@ -674,7 +660,7 @@
           except in connection with providing services.</span
         >
       </p>
-      <p><span class="c4">Protection of Lunie and Others</span></p>
+      <p><span class="c4">Protection of SRC and Others</span></p>
       <p>
         <span class="c0"
           >We and our third party service providers may disclose and otherwise
@@ -713,7 +699,7 @@
         </li>
         <li class="c1">
           <span class="c0"
-            >Protect the rights or property of Lunie, its users or the public as
+            >Protect the rights or property of SRC, its users or the public as
             required or permitted by law</span
           >
         </li>
@@ -733,7 +719,7 @@
       <p>
         <span class="c0"
           >We may share your information if (i) disclosure could mitigate
-          Lunie&rsquo;s liability in an actual or threatened lawsuit, (ii) as
+          SRC&rsquo;s liability in an actual or threatened lawsuit, (ii) as
           necessary to protect legal rights of our users, customers, business
           partners or other interested parties, (iii) to pursue available
           remedies or limit the damages, (iv) to enforce our agreements
@@ -871,7 +857,7 @@
         </li>
         <li class="c1">
           <span class="c0"
-            >Contact us at privacy@lunie.io with your request.
+            >Contact us at hello@harmony.one with your request.
           </span>
         </li>
       </ul>
@@ -914,7 +900,7 @@
       <p>
         <span class="c0"
           >If you are an EEA resident, you have the right to lodge a complaint
-          with the data protection authority privacy@lunie.io about how we
+          with the data protection authority hello@harmony.one about how we
           process your personal information,</span
         >
       </p>
@@ -924,7 +910,7 @@
           1798.83 permits individual California residents to request certain
           information regarding our disclosure of personal information to third
           parties for their direct marketing purposes. &nbsp;To make such a
-          request, please contact us at privacy@lunie.io.</span
+          request, please contact us at hello@harmony.one.</span
         >
       </p>
       <p><span class="c5">Children Privacy</span></p>
@@ -951,7 +937,7 @@
         <span class="c0"
           >Parents or legal guardians who are concerned about the transfer of
           personal information from their children may contact us at
-          privacy@lunie.io.</span
+          hello@harmony.one.</span
         >
       </p>
       <p>
@@ -1037,7 +1023,7 @@
       <p>
         <span class="c0"
           >If you have any questions, comments or concerns regarding our Privacy
-          Policy or practices, please contact us at privacy@lunie.io.
+          Policy or practices, please contact us at hello@harmony.one.
         </span>
       </p>
     </div>

@@ -76,8 +76,10 @@ module.exports = function (BLOCKCHAIN_SERVER) {
 
       const res2 = await apiClient.post('/', bodyParams('hmy_latestHeader'))
       if (res2.data.result) {
-        cache[STAKING_NETWORK_INFO].blockNumber = res2.data.result.blockNumber
-        cache[STAKING_NETWORK_INFO].blockHash = res2.data.result.blockHash
+        cache[STAKING_NETWORK_INFO].current_block_number =
+          res2.data.result.blockNumber
+        cache[STAKING_NETWORK_INFO].current_block_hash =
+          res2.data.result.blockHash
       }
       // console.log("getAllValidatorAddressesData", res.data)
       return cache[STAKING_NETWORK_INFO]
@@ -108,11 +110,13 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       // * total_one_staked
 
       const validatorInfo = {
-        ...res.data.result,
         active: !!cache[ACTIVE_VALIDATORS].includes(address),
         self_stake: selfStake,
         // TODO(minh) fix it.
-        total_one_staked: 4
+        signed_blocks: 50,
+        blocks_should_sign: 100,
+        total_one_staked: 4,
+        ...res.data.result
       }
 
       cache[VALIDATOR_INFO][address] = validatorInfo

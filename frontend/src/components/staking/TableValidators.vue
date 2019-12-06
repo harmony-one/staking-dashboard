@@ -116,11 +116,11 @@ export default {
           value: `small_moniker`,
           tooltip: `The validator's moniker`
         },
-        {
-          title: `Current Commission Rate`,
-          value: `rate`,
-          tooltip: `Current Commission Rate`
-        },
+        // {
+        //   title: `Current Commission Rate`,
+        //   value: `rate`,
+        //   tooltip: `Current Commission Rate`
+        // },
         {
           title: `Voting Power`,
           value: `avg_voting_power`,

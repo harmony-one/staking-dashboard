@@ -48,11 +48,11 @@
         </div>
       </div>
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{
-        validator.rate ? percent(validator.rate) : `--`
-      }}
-    </td>
+<!--    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">-->
+<!--      {{-->
+<!--        validator.rate ? percent(validator.rate) : `&#45;&#45;`-->
+<!--      }}-->
+<!--    </td>-->
     <td :class="{ 'hide-xs': showOnMobile !== 'voting-power' }">
       {{ validator.avg_voting_power | percent }}
     </td>

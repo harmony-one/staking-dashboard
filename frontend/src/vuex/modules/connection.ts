@@ -2,10 +2,10 @@ import Vue from "vue"
 import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
-import { fetchNetworks } from "../../mock-service"
+import { fetchNetworks, fetchNetworkInfo } from "../../mock-service"
 import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 
-const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK;
+const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK
 
 export interface INetworkConfig {
   id: string
@@ -16,6 +16,13 @@ export interface INetworkConfig {
   rpc_url: string
   explorer_url: string
   __typename: string
+}
+
+export interface INetworkInfo {
+  effective_median_stake: number
+  current_block_number: number
+  current_block_hash: string
+  total_one_staked: number
 }
 
 const state = {
@@ -30,6 +37,7 @@ const state = {
   connectionAttempts: 0,
   externals: {} as { config: typeof config; node: TNode },
   networks: Array<INetworkConfig>(),
+  networkInfo: {} as INetworkInfo
 }
 
 export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
@@ -78,8 +86,11 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       Vue.set(state, `connected`, connected)
     },
     setNetworks(state, networks: INetworkConfig[]) {
-      state.networks = networks;
+      state.networks = networks
     },
+    setNetworkInfo(state, networkInfo: INetworkInfo) {
+      state.networkInfo = networkInfo
+    }
   },
 
   actions: {
@@ -88,11 +99,9 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     async init({ dispatch, commit }) {
       const networks: INetworkConfig[] = await fetchNetworks()
 
-      const network = networks.find(
-        network => network.id === DEFAULT_NETWORK
-      )
+      const network = networks.find(network => network.id === DEFAULT_NETWORK)
 
-      commit('setNetworks', networks);
+      commit("setNetworks", networks)
       dispatch("setNetwork", network || networks[0])
     },
 
@@ -102,9 +111,13 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         state.networkConfig.chain_id
       )
 
-      setNetworkToExtension(state.networkConfig);
+      setNetworkToExtension(state.networkConfig)
 
       commit("setConnected", true)
+
+      const networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+
+      commit("setNetworkInfo", networkInfo)
 
       // store.dispatch("getDelegates");
     },

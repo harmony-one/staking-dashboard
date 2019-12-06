@@ -31,14 +31,14 @@
             :number="allValidators.length"
             class="btn-radio secondary"
             :type="!activeOnly ? `active` : `secondary`"
-            @click.native="activeOnly = !activeOnly"
+            @click.native="activeOnly = false"
           />
           <TmBtn
             value="Active"
             :number="activeValidators.length"
             class="btn-radio secondary"
             :type="activeOnly ? `active` : `secondary`"
-            @click.native="activeOnly = !activeOnly"
+            @click.native="activeOnly = true"
           />
         </div>
       </div>

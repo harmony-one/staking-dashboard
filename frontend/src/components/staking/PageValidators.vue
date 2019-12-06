@@ -5,6 +5,26 @@
     hide-header
   >
     <template slot="managed-body">
+      <div class="networkInfo">
+        <div class="item">
+          <h4>Effective median stake:</h4> {{ networkInfo.effective_median_stake }} ONE
+        </div>
+        <div class="item">
+          <h4>Current block number:</h4>
+          <a :href="linkToTransaction" target="_blank">
+            #{{ networkInfo.current_block_number }}
+          </a>
+        </div>
+        <div class="item">
+          <h4>Total staked:</h4> {{ networkInfo.total_one_staked }} ONE
+        </div>
+<!--        <div class="item">-->
+<!--          <h4>Current block hash:</h4>-->
+<!--          <a :href="linkToTransaction" target="_blank">-->
+<!--            {{ prettyTransactionHash }}-->
+<!--          </a>-->
+<!--        </div>-->
+      </div>
       <div class="filterOptions">
         <TmField
           v-model="searchTerm"
@@ -46,6 +66,7 @@ import TableValidators from "staking/TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
+import { transactionToShortString } from "src/scripts/transaction-utils"
 
 export default {
   name: `tab-validators`,
@@ -61,6 +82,8 @@ export default {
   }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
+    ...mapState({ networkConfig: state => state.connection.networkConfig }),
+    ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({ allValidators: state => state.validators.validators }),
     validators: state => {
       return state.allValidators
@@ -70,11 +93,23 @@ export default {
             v.moniker.toLowerCase().includes(state.searchTerm.toLowerCase())
         )
         .filter(v => !state.activeOnly || v.active === true)
+    },
+    prettyTransactionHash() {
+      return this.networkInfo.current_block_hash
+        ? transactionToShortString(this.networkInfo.current_block_hash)
+        : ""
+    },
+    linkToTransaction() {
+      return (
+        this.networkConfig.explorer_url + this.networkInfo.current_block_hash
+      )
     }
   },
   async mounted() {
     this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
+
+    console.log(this)
   }
 }
 </script>
@@ -137,4 +172,32 @@ export default {
   margin: 3rem;
   color: var(--dim);
 }
+
+.networkInfo {
+  display: flex;
+  margin: 1rem 0 1.8rem;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--bc-dim);
+  border-top: 1px solid var(--bc-dim);
+  padding: 0.5rem 2rem;
+
+  .item {
+    // margin-right: 20px;
+    align-items: center;
+    justify-content: center;
+    // text-align: center;
+  }
+
+  h4 {
+    font-size: 16px;
+    display: inline-block;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .networkInfo {
+    flex-direction: column;
+  }
+}
+
 </style>

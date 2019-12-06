@@ -51,6 +51,7 @@ export const liquidAtoms = state => {
 export const totalAtoms = (state, getters) => {
   return new BN(getters.liquidAtoms)
     .plus(getters.oldBondedAtoms)
+    .plus(getters.totalRewards)
     .plus(getters.oldUnbondingAtoms)
     .toString()
 }

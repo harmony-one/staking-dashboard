@@ -7,6 +7,8 @@ import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 
 const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK
 
+const POLLING_TIMEOUT = 5 * 1000
+
 export interface INetworkConfig {
   id: string
   chain_id: string
@@ -39,6 +41,8 @@ const state = {
   networks: Array<INetworkConfig>(),
   networkInfo: {} as INetworkInfo
 }
+
+let interval: any
 
 export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   // get tendermint RPC client from basecoin client
@@ -101,8 +105,16 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
 
       const network = networks.find(network => network.id === DEFAULT_NETWORK)
 
+      if (!interval) {
+        interval = setInterval(
+          () => dispatch("loadNetworkInfo"),
+          POLLING_TIMEOUT
+        )
+      }
+
       commit("setNetworks", networks)
       dispatch("setNetwork", network || networks[0])
+      dispatch("loadNetworkInfo");
     },
 
     async reconnect({ commit, state, rootState }) {
@@ -115,11 +127,13 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
 
       commit("setConnected", true)
 
+      // store.dispatch("getDelegates");
+    },
+
+    async loadNetworkInfo({ commit, state }) {
       const networkInfo = await fetchNetworkInfo(state.networkConfig.id)
 
       commit("setNetworkInfo", networkInfo)
-
-      // store.dispatch("getDelegates");
     },
 
     // async connect({ commit, state }) {

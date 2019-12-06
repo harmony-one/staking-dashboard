@@ -15,9 +15,6 @@
             #{{ networkInfo.current_block_number }}
           </a>
         </div>
-        <div class="item">
-          <h4>Total staked:</h4> {{ networkInfo.total_one_staked }} ONE
-        </div>
       </div>
       <div class="filterOptions">
         <TmField

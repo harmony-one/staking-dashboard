@@ -48,12 +48,12 @@ module.exports = (app, db, syncServices) => {
     '/networks/:networkId/staking_network_info',
     asyncHandler(async (req, res) => {
       const data = {
-        effective_median_stake: 100,
-        total_one_staked: 10,
-        current_block_number: 10,
-        current_block_hash:
-          '0xaa7c3439771d5a329c2ee6407ba6dbdc6d88b43c0c2e5669c9c260fec62ff185',
-        total_one_staked: 4
+        ...syncServices[req.params.networkId].getStakingNetworkInfo()
+        // effective_median_stake: 100,
+        // total_one_staked: 10,
+        // current_block_number: 10,
+        // current_block_hash: '0xaa7c3439771d5a329c2ee6407ba6dbdc6d88b43c0c2e5669c9c260fec62ff185',
+        // total_one_staked: 4
       }
       res.json(data)
     })

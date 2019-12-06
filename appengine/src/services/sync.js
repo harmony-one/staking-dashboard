@@ -220,6 +220,3 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       cache[DELEGATIONS_BY_VALIDATOR][address]
   }
 }
-// current_block_number: 10,
-// current_block_hash: '0xaa7c3439771d5a329c2ee6407ba6dbdc6d88b43c0c2e5669c9c260fec62ff185',
-// total_one_staked: 4

@@ -44,6 +44,12 @@ export function fetchDelegationsByAddress(networkId: string, address: string) {
     )
 }
 
+export function fetchNetworkInfo(networkId: string) {
+  return axios
+    .get(`${API_URL}/networks/${networkId}/staking_network_info`)
+    .then(rez => rez.data)
+}
+
 // export function fetchAccount(address) {
 //   console.log("Fetching account data for ", address)
 //   return axios.get(`${API_URL}/account`).then(rez => rez.data)

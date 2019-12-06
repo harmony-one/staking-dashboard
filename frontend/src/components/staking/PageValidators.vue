@@ -18,12 +18,6 @@
         <div class="item">
           <h4>Total staked:</h4> {{ networkInfo.total_one_staked }} ONE
         </div>
-<!--        <div class="item">-->
-<!--          <h4>Current block hash:</h4>-->
-<!--          <a :href="linkToTransaction" target="_blank">-->
-<!--            {{ prettyTransactionHash }}-->
-<!--          </a>-->
-<!--        </div>-->
       </div>
       <div class="filterOptions">
         <TmField

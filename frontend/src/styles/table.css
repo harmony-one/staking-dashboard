@@ -32,7 +32,17 @@
 }
 
 .data-table th:nth-child(3) {
-  width: 67%;
+    width: 50%;
+}
+
+.data-table th:nth-last-child(-n+1) {
+    width: 150px;
+    text-align: right;
+    padding-right: 1.5rem;
+}
+
+.data-table td:nth-last-child(-n+1) {
+    text-align: right;
 }
 
 .data-table td {

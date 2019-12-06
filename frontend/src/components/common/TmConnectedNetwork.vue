@@ -87,7 +87,7 @@ export default {
   computed: {
     ...mapState([`connection`]),
     networkTooltip() {
-      return `You're connected to ${this.connection.lastHeader.chain_title} via ${this.connection.networkConfig.rpc_url}`
+      return `You're connected to ${this.connection.lastHeader.chain_title}`
     }
   }
 }

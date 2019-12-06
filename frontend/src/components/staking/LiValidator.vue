@@ -39,20 +39,18 @@
           {{ validator.moniker }}
         </h3>
         <div v-if="validator.my_delegations > 0">
-          <h4>
-            {{ validator.my_delegations | atoms | shortDecimals }}
-          </h4>
+<!--          <h4>-->
+<!--            {{ validator.my_delegations | atoms | shortDecimals }}-->
+<!--          </h4>-->
           <h5 v-if="validator.rewards > 0">
             +{{ validator.rewards | atoms | shortDecimals }}
           </h5>
         </div>
       </div>
     </td>
-<!--    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">-->
-<!--      {{-->
-<!--        validator.rate ? percent(validator.rate) : `&#45;&#45;`-->
-<!--      }}-->
-<!--    </td>-->
+    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
+      {{ validator.my_delegations | atoms | shortDecimals }}
+    </td>
     <td :class="{ 'hide-xs': showOnMobile !== 'voting-power' }">
       {{ validator.avg_voting_power | percent }}
     </td>

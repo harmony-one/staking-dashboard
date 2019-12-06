@@ -8,7 +8,7 @@
     }"
     :disabled="disabled"
   >
-    {{ value }}
+    {{ value }} <div v-if="number >= 0" class="number-circle">{{ number }}</div>
   </button>
 </template>
 
@@ -31,6 +31,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    number: {
+      type: Number,
+      default: -1
     }
   }
 }
@@ -142,5 +146,16 @@ export default {
 .addon-max:disabled:hover {
   background: var(--primary-dark);
   border-color: var(--bc-dim);
+}
+
+.number-circle{
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  border-radius: 50%;
+  padding-top: 5px;
+  text-align: center;
+  margin-left: 10px;
+  background: rgba(255, 255, 255, 0.4);
 }
 </style>

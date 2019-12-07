@@ -95,7 +95,7 @@ export function storeUpdateHandler(mutation, state, pending) {
   }
   return setTimeout(() => {
     persistState(state)
-  }, 5000)
+  }, 3000)
 }
 
 /**
@@ -119,6 +119,9 @@ function persistState(state) {
     delegates: {
       delegates: state.delegates.delegates
     },
+    connection: {
+      network: state.connection.network
+    },
     stakingParameters: state.stakingParameters,
     pool: state.pool,
     proposals: state.proposals,
@@ -141,7 +144,9 @@ function persistState(state) {
 export function getStorageKey(state) {
   const chainId = state.connection.lastHeader.chain_id
   const address = state.session.address
-  return `store_${chainId}_${address}`
+
+  // return `store_${chainId}_${address}`
+  return `store_account_settings`
 }
 
 /**
@@ -150,11 +155,12 @@ export function getStorageKey(state) {
  * @param commit
  */
 export async function loadPersistedState({ state, dispatch }) {
-  if (!state.connection.lastHeader || !state.connection.lastHeader.chain_id) {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    dispatch(`loadPersistedState`)
-    return
-  }
+  // if (!state.connection.lastHeader || !state.connection.lastHeader.chain_id) {
+  //   await new Promise(resolve => setTimeout(resolve, 500))
+  //   dispatch(`loadPersistedState`)
+  //   return
+  // }
+
   const storageKey = getStorageKey(state)
   let cachedState
   try {

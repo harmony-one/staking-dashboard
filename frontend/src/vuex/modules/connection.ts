@@ -35,7 +35,7 @@ const state = {
     chain_id: `1`
   },
   networkConfig: {} as INetworkConfig,
-  network: "",
+  network: DEFAULT_NETWORK,
   connectionAttempts: 0,
   externals: {} as { config: typeof config; node: TNode },
   networks: Array<INetworkConfig>(),
@@ -100,10 +100,10 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   actions: {
     async setLastHeader() {},
 
-    async init({ dispatch, commit }) {
+    async init({ state, dispatch, commit }) {
       const networks: INetworkConfig[] = await fetchNetworks()
 
-      const network = networks.find(network => network.id === DEFAULT_NETWORK)
+      const network = networks.find(network => network.id === state.network)
 
       if (!interval) {
         interval = setInterval(

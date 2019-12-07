@@ -27,6 +27,7 @@ const blockchainValidator = {
   },
   creation_height: 1251,
   self_stake: 1251,
+  total_stake: 0,
   uptime: "0.000000000000000000",
   avg_voting_power: "0.500000000000000000",
   total_effective_stake: "171000000000000000000.000000000000000000"
@@ -69,7 +70,8 @@ const frontendValidator = {
   total_effective_stake: "171000000000000000000.000000000000000000",
   active: false,
   max_total_delegation: 11,
-  self_stake: 11
+  self_stake: 11,
+  total_stake: 0
 }
 
 export type TBlockchainValidator = typeof blockchainValidator
@@ -105,6 +107,7 @@ export const remapValidator = (
 
     active: validator.active,
     self_stake: validator.self_stake,
+    total_stake: validator.total_stake,
 
     customized: false,
     identity: "DCB176E79AE7D51F",

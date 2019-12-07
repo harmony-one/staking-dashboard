@@ -95,6 +95,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
 
     if (isNotEmpty(res.data.result)) {
       let selfStake = 0
+      let totalStake = 0
       if (cache[DELEGATIONS_BY_VALIDATOR][address]) {
         const elem = cache[DELEGATIONS_BY_VALIDATOR][address].find(
           e => e.validator_address === e.delegator_address
@@ -102,6 +103,10 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         if (elem) {
           selfStake = elem.amount
         }
+        totalStake = cache[DELEGATIONS_BY_VALIDATOR][address].reduce(
+          (acc, val) => acc + val.amount,
+          0
+        )
       }
 
       // fields below are included in the validator.
@@ -112,6 +117,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       const validatorInfo = {
         active: !!cache[ACTIVE_VALIDATORS].includes(address),
         self_stake: selfStake,
+        total_stake: totalStake,
         // TODO(minh) fix it.
         signed_blocks: 50,
         blocks_should_sign: 100,

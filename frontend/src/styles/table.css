@@ -15,9 +15,8 @@
 }
 
 .data-table th {
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 2rem;
   text-align: left;
-  vertical-align: bottom;
 }
 
 .data-table th:first-child {
@@ -33,15 +32,21 @@
 }
 
 .data-table th:nth-child(3) {
-  width: 25%;
+    width: 50%;
 }
 
-.data-table th:nth-child(6) {
-  width: 16%;
+.data-table th:nth-last-child(-n+1) {
+    width: 150px;
+    text-align: right;
+    padding-right: 1.5rem;
+}
+
+.data-table td:nth-last-child(-n+1) {
+    text-align: right;
 }
 
 .data-table td {
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 2rem;
   position: relative;
   vertical-align: middle;
   width: 100%;

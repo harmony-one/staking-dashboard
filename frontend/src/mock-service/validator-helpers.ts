@@ -27,6 +27,7 @@ const blockchainValidator = {
   },
   creation_height: 1251,
   self_stake: 1251,
+  total_stake: 0,
   remainder: 0,
   average_stake: 0,
   uptime: "0.000000000000000000",
@@ -72,6 +73,7 @@ const frontendValidator = {
   active: false,
   max_total_delegation: 11,
   self_stake: 11,
+  total_stake: 0,
   average_stake: 0,
   remainder: 0
 }
@@ -109,6 +111,7 @@ export const remapValidator = (
 
     active: validator.active,
     self_stake: validator.self_stake,
+    total_stake: validator.total_stake,
     average_stake: validator.average_stake,
     remainder: validator.remainder,
 

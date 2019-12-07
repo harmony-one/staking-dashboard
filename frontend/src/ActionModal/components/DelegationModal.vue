@@ -88,6 +88,11 @@
         {{ getFromBalance() }}
         {{ denom | viewDenom }}s
       </span>
+      <div v-if="!isRedelegation()" class="form-message">
+        Remaining available stakes
+        {{ (validator.remainder / 1e18) | shortDecimals }}
+        {{ denom | viewDenom }}s
+      </div>
       <span v-else-if="isRedelegation()" class="form-message">
         Available to Redelegate:
         {{ getFromBalance() }}
@@ -129,7 +134,7 @@
 <script>
 import { mapState, mapGetters } from "vuex"
 import { between, decimal } from "vuelidate/lib/validators"
-import { uatoms, atoms, viewDenom, SMALLEST } from "src/scripts/num"
+import { uatoms, atoms, viewDenom, shortDecimals, SMALLEST } from "src/scripts/num"
 import TmField from "src/components/common/TmField"
 import TmFieldGroup from "src/components/common/TmFieldGroup"
 import TmBtn from "src/components/common/TmBtn"
@@ -149,7 +154,8 @@ export default {
     ActionModal
   },
   filters: {
-    viewDenom
+    viewDenom,
+    shortDecimals
   },
   props: {
     fromOptions: {
@@ -282,7 +288,7 @@ export default {
       amount: {
         required: x => !!x && x !== `0`,
         decimal,
-        between: between(SMALLEST, atoms(this.balance))
+        between: between(SMALLEST, Math.min(atoms(this.balance), this.validator.remainder / 1e18))
       }
     }
   }

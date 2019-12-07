@@ -12,14 +12,10 @@
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="status-container">
         <span :class="status | toLower" class="validator-status">
-          {{
-          status
-          }}
+          {{ status }}
         </span>
         <span v-if="status_detailed" class="validator-status-detailed">
-          {{
-          status_detailed
-          }}
+          {{ status_detailed }}
         </span>
       </div>
       <tr class="li-validator">
@@ -47,7 +43,12 @@
       </tr>
 
       <div class="button-container">
-        <TmBtn id="delegation-btn" value="Stake" @click.native="onDelegation" />
+        <TmBtn
+          id="delegation-btn"
+          value="Stake"
+          :disabled="validator.remainder === 0"
+          @click.native="onDelegation"
+        />
         <TmBtn
           id="undelegation-btn"
           :disabled="!myDelegation"
@@ -71,7 +72,8 @@
                 :href="website"
                 target="_blank"
                 rel="nofollow noreferrer noopener"
-              >{{ website }}</a>
+                >{{ website }}</a
+              >
             </span>
             <span v-else id="validator-website">{{ website | noBlanks }}</span>
           </li>
@@ -93,22 +95,26 @@
           </li>
           <li>
             <h4>Self Stake</h4>
-            <span id="page-profile__self-bond">{{ selfBondPercent }} / {{ selfBondAmount }}</span>
+            <span id="page-profile__self-bond"
+              >{{ selfBondPercent }} / {{ selfBondAmount }}</span
+            >
+          </li>
+          <li>
+            <h4>Remaining available stakes</h4>
+            <span id="page-profile__remainder">
+              {{ (validator.remainder / 1e18) | shortDecimals }}
+            </span>
           </li>
           <li>
             <h4>Min Self Delegation</h4>
             <span id="page-profile__min_self_delegation">
-              {{
-              (validator.min_self_delegation / 1e18) | shortDecimals
-              }}
+              {{ (validator.min_self_delegation / 1e18) | shortDecimals }}
             </span>
           </li>
           <li>
             <h4>Max Total Delegation</h4>
             <span id="page-profile__max_total_delegation">
-              {{
-              (validator.max_total_delegation / 1e18) | shortDecimals
-              }}
+              {{ (validator.max_total_delegation / 1e18) | shortDecimals }}
             </span>
           </li>
           <li>
@@ -118,9 +124,7 @@
           <li>
             <h4>Uptime</h4>
             <span id="page-profile__uptime">
-              {{
-              validator.uptime_percentage | percent
-              }}
+              {{ validator.uptime_percentage | percent }}
             </span>
           </li>
           <li>
@@ -317,14 +321,12 @@ export default {
 
       this.loading = false
     },
-    myBond: {
-      handler(myBond) {
-        if (myBond > 0) {
-          // this.$store.dispatch(
-          //   `getRewardsFromValidator`,
-          //   this.$route.params.validator
-          // )
-        }
+    myDelegation: async function() {
+      if (this.connection.networkConfig.id) {
+        this.validator = await fetchValidatorByAddress(
+          this.connection.networkConfig.id,
+          this.$route.params.validator
+        )
       }
     },
     "validator.operator_address": {

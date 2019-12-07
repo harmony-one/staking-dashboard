@@ -137,7 +137,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         blocks_should_sign: 100,
         total_one_staked: 4,
         average_stake,
-        remainder
+        remainder,
         ...res.data.result
       }
 

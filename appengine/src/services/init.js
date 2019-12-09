@@ -1,9 +1,7 @@
-const DBService = require('./database')
+const dbService = require('./database')
 const SyncService = require('./sync')
 
 module.exports = async function () {
-  const dbService = new DBService()
-
   const syncServices = {}
 
   const networks = await dbService.getCollectionData('networks')

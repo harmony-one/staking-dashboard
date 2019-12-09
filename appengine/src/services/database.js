@@ -1,6 +1,6 @@
 const DATABASE_URL = process.env.DATABASE_URL || 'https://staking-explorer.firebaseio.com'
 
-module.exports = function () {
+function InitDB () {
   // Init admin
   const admin = require('firebase-admin')
   var serviceAccount = require('../../keys/staking_explorer.json')
@@ -22,3 +22,7 @@ module.exports = function () {
     getCollectionData
   }
 }
+
+const db = new InitDB()
+
+module.exports = db

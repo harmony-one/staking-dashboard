@@ -1,5 +1,7 @@
 const { asyncHandler, createError } = require("./helpers")
 
+const networks = require('../services/networks')
+
 module.exports = (app, db, syncServices) => {
   app.get(
     "/networks/:networkId/validators",
@@ -75,7 +77,9 @@ module.exports = (app, db, syncServices) => {
   app.get(
     "/networks",
     asyncHandler(async (req, res) => {
-      const data = await db.getCollectionData("networks")
+      // const data = await db.getCollectionData("networks")
+
+        const data = networks;
 
       if (!data) {
         throw createError(400, "Not found")

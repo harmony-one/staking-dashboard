@@ -6,37 +6,34 @@ const cors = require('cors')
 const routes = require('./src/routes')
 const InitServices = require('./src/services/init')
 
-const startServer = async () => {
-  const app = express()
 
-  app.use(cors())
+const app = express()
 
-  app.get('/', (req, res) => {
-    res.send('Hello from App Engine!')
-  })
+app.use(cors())
 
-  // Init services
-  const services = await InitServices()
+app.get('/', (req, res) => {
+  res.send('Hello from App Engine!')
+})
 
-  // Init routes
-  routes(app, services.dbService, services.syncServices)
+// Init services
+const services = InitServices()
 
-  // send errors response
-  app.use(function (err, req, res, next) {
-    if (err) {
-      res
-        .status(err.status || 500)
-        .json({ status: err.status, message: err.message })
-    } else {
-      next()
-    }
-  })
+// Init routes
+routes(app, services.dbService, services.syncServices)
 
-  // Listen to the App Engine-specified port, or 8080 otherwise
-  const PORT = process.env.PORT || 8080
-  app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}...`)
-  })
-}
+// send errors response
+app.use(function (err, req, res, next) {
+  if (err) {
+    res
+      .status(err.status || 500)
+      .json({ status: err.status, message: err.message })
+  } else {
+    next()
+  }
+})
 
-startServer()
+// Listen to the App Engine-specified port, or 8080 otherwise
+const PORT = process.env.PORT || 8080
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`)
+})

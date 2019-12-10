@@ -42,7 +42,8 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       // console.log("hmy_getActiveValidatorAddresses", res.data)
       return res.data.result
     } catch (err) {
-      // console.log(err)
+      // console.log(err.message)
+      console.log('getActiveValidatorAddressesData Load ERROR', err.message)
     }
   }
 
@@ -53,13 +54,15 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         bodyParams('hmy_getAllValidatorAddresses')
       )
 
+      console.log(Array.isArray(res.data.result));
+
       if (Array.isArray(res.data.result)) {
         cache[VALIDATORS] = res.data.result
       }
       // console.log("getAllValidatorAddressesData", res.data)
       return res.data.result
     } catch (err) {
-      // console.log(err)
+      console.log('getAllValidatorAddressesData Load ERROR', err.message)
     }
   }
 
@@ -71,6 +74,8 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       )
 
       if (res.data.result) {
+        console.log('hmy_getStakingNetworkInfo OK!');
+
         cache[STAKING_NETWORK_INFO] = res.data.result
       }
 
@@ -159,17 +164,19 @@ module.exports = function (BLOCKCHAIN_SERVER) {
 
   const update = async () => {
     try {
-      await getActiveValidatorAddressesData()
 
-      if (cache[ACTIVE_VALIDATORS]) {
-        cache[ACTIVE_VALIDATORS].forEach(async address => {
-          await getValidatorInfoData(address)
-          await getDelegationsByValidatorData(address)
-        })
-      }
+      await syncStakingNetworkInfo()
+      // if (cache[ACTIVE_VALIDATORS]) {
+      //   cache[ACTIVE_VALIDATORS].forEach(async address => {
+      //     await getValidatorInfoData(address)
+      //     await getDelegationsByValidatorData(address)
+      //   })
+      // }
 
       // TODO: currently only fetch active validators.
       await getAllValidatorAddressesData()
+
+      await getActiveValidatorAddressesData()
 
       if (cache[VALIDATORS]) {
         cache[VALIDATORS].forEach(async address => {
@@ -177,8 +184,6 @@ module.exports = function (BLOCKCHAIN_SERVER) {
           await getDelegationsByValidatorData(address)
         })
       }
-
-      await syncStakingNetworkInfo()
     } catch (err) {
       console.log('Error: ', err.message)
     }
@@ -187,7 +192,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
   setInterval(async () => {
     console.log('--------- Updating ---------', BLOCKCHAIN_SERVER)
     await update()
-  }, 4000)
+  }, 5000)
 
   const getStakingNetworkInfo = () => {
     const stakingNetworkInfo = !cache[STAKING_NETWORK_INFO]

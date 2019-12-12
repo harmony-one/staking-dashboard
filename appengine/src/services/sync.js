@@ -54,8 +54,6 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         bodyParams('hmy_getAllValidatorAddresses')
       )
 
-      console.log(Array.isArray(res.data.result));
-
       if (Array.isArray(res.data.result)) {
         cache[VALIDATORS] = res.data.result
       }
@@ -74,7 +72,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       )
 
       if (res.data.result) {
-        console.log('hmy_getStakingNetworkInfo OK!');
+        // console.log('hmy_getStakingNetworkInfo OK!');
 
         cache[STAKING_NETWORK_INFO] = res.data.result
       }

@@ -11,12 +11,9 @@ const blockchainValidator = {
   max_total_delegation: 1000000000000000000000,
   active: false,
   commission: {
-    commission_rates: {
-      rate: "0.200000000000000000",
-      max_rate: "1.000000000000000000",
-      max_change_rate: "0.050000000000000000"
-    },
-    update_height: 1251
+    rate: "0.200000000000000000",
+    max_rate: "1.000000000000000000",
+    max_change_rate: "0.050000000000000000"
   },
   description: {
     name: "SuperHero",
@@ -64,7 +61,6 @@ const frontendValidator = {
   profileUrl: "https://keybase.io/iqlusion",
   id: "16a9a8ae-1568-42a5-b4a6-59735c655dca",
   delegator_shares: "5706991464569.000000000000000000",
-  update_height: 121,
   creation_height: 212,
   avg_voting_power: "0.500000000000000000",
   total_effective_stake: "171000000000000000000.000000000000000000",
@@ -88,9 +84,9 @@ export const remapValidator = (
       ? crypto.getAddress(validator.address).bech32
       : validator.address,
 
-    rate: validator.commission.commission_rates.rate,
-    max_rate: validator.commission.commission_rates.max_rate,
-    max_change_rate: validator.commission.commission_rates.max_change_rate,
+    rate: validator.commission.rate,
+    max_rate: validator.commission.max_rate,
+    max_change_rate: validator.commission.max_change_rate,
     max_total_delegation: validator.max_total_delegation,
     min_self_delegation: String(validator.min_self_delegation),
     uptime_percentage: validator.uptime,
@@ -99,7 +95,6 @@ export const remapValidator = (
     details: validator.description.details,
     moniker: validator.description.name,
 
-    update_height: validator.commission.update_height,
     creation_height: validator.creation_height,
 
     avg_voting_power: validator.avg_voting_power,

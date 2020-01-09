@@ -30,7 +30,7 @@ const INS = {
     SIGN_STAKING: 0x04,
     SIGN_TX: 0x08,
 };
-
+const SW_ERR = 0x6985;
 const CMDS = {
     P1_FIRST: 0x0,
     P1_MORE: 0x80,
@@ -52,7 +52,7 @@ function hexToBytes(hex) {
 function processErrorResponse(response) {
     return {
         signature: Buffer.from('0x0'),
-        return_code: response,
+        return_code: SW_ERR,
     };
 }
 
@@ -192,6 +192,10 @@ export default class HarmonyApp {
         const [unsignedRawTransaction, raw] = txn.getRLPUnsigned();
         response = await this.signTx(unsignedRawTransaction);
 
+        if (response.return_code == SW_ERR) {
+            return null;
+        }
+
         // update the signature r,s,v field in transaction
         const bytes = response.signature;
         const r = hexlify(bytes.slice(0, 32));
@@ -243,6 +247,10 @@ export default class HarmonyApp {
         stakingTxn.setUnsigned(unsignedRawTransaction);
 
         response = await this.signStake(unsignedRawTransaction);
+
+        if (response.return_code == SW_ERR) {
+            return null;
+        }
 
         const bytes = response.signature;
         const r = hexlify(bytes.slice(0, 32));

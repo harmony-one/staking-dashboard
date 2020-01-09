@@ -193,7 +193,7 @@ export default class HarmonyApp {
         response = await this.signTx(unsignedRawTransaction);
 
         if (response.return_code == SW_ERR) {
-            return null;
+            throw new Error('Reject by Leger');
         }
 
         // update the signature r,s,v field in transaction
@@ -249,7 +249,7 @@ export default class HarmonyApp {
         response = await this.signStake(unsignedRawTransaction);
 
         if (response.return_code == SW_ERR) {
-            return null;
+            throw new Error('Reject by Leger');
         }
 
         const bytes = response.signature;

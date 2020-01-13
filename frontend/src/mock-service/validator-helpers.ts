@@ -1,36 +1,35 @@
 import * as crypto from "@harmony-js/crypto"
 
 const blockchainValidator = {
-  address: "0x7c41e0668b551f4f902cfaec05b5bdca68b124ce",
-  slot_pub_keys: [
-    "678ec9670899bf6af85b877058bea4fc1301a5a3a376987e826e3ca150b80e3eaadffedad0fedfa111576fa76ded980c"
+  active: true,
+  self_stake: 10000000000000000000,
+  total_stake: 10000000000000000000,
+  signed_blocks: 50,
+  blocks_should_sign: 100,
+  total_one_staked: 4,
+  "one-address": "one1pdv9lrdwl0rg5vglh4xtyrv3wjk3wsqket7zxy",
+  "bls-public-keys": [
+    "65f55eb3052f9e9f632b2923be594ba77c55543f5c58ee1454b9cfd658d25e06373b0f7d42a19c84768139ea294f6204"
   ],
-  slot_shard_ids: [0],
-  unbonding_height: 0,
-  min_self_delegation: 1000000000000000000,
-  max_total_delegation: 1000000000000000000000,
-  active: false,
+  "min-self-delegation": 2000000000000000000,
+  "max-total-delegation": 3106511852580897000,
   commission: {
-    commission_rates: {
-      rate: "0.200000000000000000",
-      max_rate: "1.000000000000000000",
-      max_change_rate: "0.050000000000000000"
-    },
-    update_height: 1251
+    rate: "0.150000000000000000",
+    "max-rate": "0.900000000000000000",
+    "max-change-rate": "0.050000000000000000"
   },
   description: {
-    name: "SuperHero",
-    identity: "YouWouldNotKnow",
-    website: "Secret Website",
-    security_contact: "Mr.DoubleZeroSeven",
-    details: "blah blah blah"
+    name: "Ganesh",
+    identity: "ganesh",
+    website: "ganesha@harmony.one",
+    security_contact: "Leo",
+    details: "This is Ganesha@harmony.one"
   },
-  creation_height: 1251,
-  self_stake: 1251,
-  total_stake: 0,
-  uptime: "0.000000000000000000",
-  avg_voting_power: "0.500000000000000000",
-  total_effective_stake: "171000000000000000000.000000000000000000"
+  "creation-height": 394472,
+
+  uptime: 'didnt response!',
+  avg_voting_power: 'didnt response!',
+  total_effective_stake: 'didnt response!',
 }
 
 const frontendValidator = {
@@ -56,22 +55,20 @@ const frontendValidator = {
   min_self_delegation: "100000000000",
   tokens: "5706991464569",
   unbonding_height: 0,
-  consensus_pubkey:
-    "cosmosvalconspub1zcjduepqdgvppnyr5c9pulsrmzr9e9rp7qpgm9jwp5yu8g3aumekgjugxacq8a9p2c",
   details: "",
   keybaseId: "DCB176E79AE7D51F",
   lastUpdated: "2019-08-15T16:03:35.144214+00:00",
   profileUrl: "https://keybase.io/iqlusion",
   id: "16a9a8ae-1568-42a5-b4a6-59735c655dca",
   delegator_shares: "5706991464569.000000000000000000",
-  update_height: 121,
   creation_height: 212,
   avg_voting_power: "0.500000000000000000",
   total_effective_stake: "171000000000000000000.000000000000000000",
   active: false,
   max_total_delegation: 11,
   self_stake: 11,
-  total_stake: 0
+  total_stake: 0,
+  total_one_staked: 0,
 }
 
 export type TBlockchainValidator = typeof blockchainValidator
@@ -85,29 +82,29 @@ export const remapValidator = (
     userName: validator.description.name,
 
     operator_address: convertAddress
-      ? crypto.getAddress(validator.address).bech32
-      : validator.address,
+      ? crypto.getAddress(validator["one-address"]).bech32
+      : validator["one-address"],
 
-    rate: validator.commission.commission_rates.rate,
-    max_rate: validator.commission.commission_rates.max_rate,
-    max_change_rate: validator.commission.commission_rates.max_change_rate,
-    max_total_delegation: validator.max_total_delegation,
-    min_self_delegation: String(validator.min_self_delegation),
-    uptime_percentage: validator.uptime,
+    rate: validator.commission.rate,
+    max_rate: validator.commission["max-rate"],
+    max_change_rate: validator.commission["max-change-rate"],
+    max_total_delegation: validator["max-total-delegation"],
+    min_self_delegation: String(validator["min-self-delegation"]),
     website: validator.description.website,
-    consensus_pubkey: validator.slot_pub_keys[0],
+    // consensus_pubkey: validator.slot_pub_keys[0],
     details: validator.description.details,
     moniker: validator.description.name,
 
-    update_height: validator.commission.update_height,
-    creation_height: validator.creation_height,
+    creation_height: validator["creation-height"],
 
+    uptime_percentage: validator.uptime,
     avg_voting_power: validator.avg_voting_power,
     total_effective_stake: validator.total_effective_stake,
 
     active: validator.active,
     self_stake: validator.self_stake,
     total_stake: validator.total_stake,
+    total_one_staked: validator.total_one_staked,
 
     customized: false,
     identity: "DCB176E79AE7D51F",

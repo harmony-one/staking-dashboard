@@ -6,9 +6,9 @@
           <img
             class="header-item-logo"
             src="~assets/images/harmony-logo-white.svg"
-            alt="Lunie spaceship accelerating into a colourful space sky"
+            alt="Harmony Staking spaceship accelerating into a colourful space sky"
           />
-          Lunie
+          Harmony Staking
         </a>
         <template v-if="!desktop">
           <div v-if="open" class="close-menu" @click="close()">

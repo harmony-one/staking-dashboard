@@ -152,7 +152,7 @@ import TmFormMsg from "src/components/common/TmFormMsg"
 import ActionModal from "./ActionModal"
 import transaction from "../utils/transactionTypes"
 
-const defaultMemo = "(Sent via Lunie)"
+const defaultMemo = "(Sent via Harmony Staking)"
 
 export default {
   name: `send-modal`,

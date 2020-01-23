@@ -3,8 +3,8 @@
     <div slot="title">{{ feature }} not yet available</div>
     <div slot="subtitle">
       ¯\_(ツ)_/¯<br />
-      This feature is not supported in Lunie yet. Reach out if you'd like to see
-      support for this feature added to Lunie soon.
+      This feature is not supported in Harmony Staking yet. Reach out if you'd like to see
+      support for this feature added to Harmony Staking soon.
     </div>
   </TmDataMsg>
 </template>

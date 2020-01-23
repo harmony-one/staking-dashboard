@@ -9,10 +9,10 @@
         </router-link>
       </p>
       <h2 class="c5">
-        What is Lunie?
+        What is Harmony Staking?
       </h2>
       <p>
-        Lunie is a user interface for sending and receiving Cosmos tokens,
+        Harmony Staking is a user interface for sending and receiving One tokens,
         viewing your transaction history, delegating your ONEs, and
         participating in governance on the One Blockchain.
       </p>
@@ -22,7 +22,7 @@
         and more enjoyable.
       </p>
       <p>
-        This software is developed by the team at Lunie International Software
+        This software is developed by the team at Harmony Staking International Software
         Systems Inc. We're
         <a
           href="https://github.com/luniehq/lunie"
@@ -40,17 +40,17 @@
         Security
       </h2>
       <p>
-        Lunie is non-custodial. We believe that maintaining ownership over your
+        Harmony Staking is non-custodial. We believe that maintaining ownership over your
         keys is an important part of participating in these networks.
       </p>
       <p>
         <b>
-          For your safety and security, Lunie will not ask for or store your
+          For your safety and security, Harmony Staking will not ask for or store your
           private keys or seed phrases.</b
         >
       </p>
       <p>
-        To send transactions with Lunie, you'll have to sign them with your
+        To send transactions with Harmony Staking, you'll have to sign them with your
         Ledger Nano. If you don't have a Ledger Nano, you can
         <a
           href="https://shop.ledger.com/?r=3dd204ef7508"
@@ -60,7 +60,7 @@
         >.
       </p>
       <p>
-        To learn more about our security policies on Lunie.io, please visit our
+        To learn more about our security policies on Harmony Staking, please visit our
         <router-link to="security"> security page </router-link>.
       </p>
     </div>

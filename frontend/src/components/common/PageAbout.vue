@@ -12,7 +12,7 @@
         What is Lunie?
       </h2>
       <p>
-        Lunie is a user interface for sending and receiving Cosmos tokens,
+        Harmony is a user interface for sending and receiving One tokens,
         viewing your transaction history, delegating your ONEs, and
         participating in governance on the One Blockchain.
       </p>

@@ -107,35 +107,35 @@
         class="tm-form-msg--desc max-message"
       />
     </TmFormGroup>
-    <TmBtn
-      v-if="editMemo === false"
-      id="edit-memo-btn"
-      value="Edit Memo"
-      type="secondary"
-      @click.native="showMemo()"
-    />
-    <TmFormGroup
-      v-else
-      id="memo"
-      :error="$v.memo.$error && $v.memo.$invalid"
-      class="action-modal-group"
-      field-id="memo"
-      field-label="Memo"
-    >
-      <TmField
-        id="memo"
-        v-model="memo"
-        type="text"
-        placeholder="Let everyone know how much you love Harmony"
-        @keyup.enter.native="enterPressed"
-      />
-      <TmFormMsg
-        v-if="$v.memo.$error && !$v.memo.maxLength"
-        name="Memo"
-        type="maxLength"
-        :max="max_memo_characters"
-      />
-    </TmFormGroup>
+<!--    <TmBtn-->
+<!--      v-if="editMemo === false"-->
+<!--      id="edit-memo-btn"-->
+<!--      value="Edit Memo"-->
+<!--      type="secondary"-->
+<!--      @click.native="showMemo()"-->
+<!--    />-->
+<!--    <TmFormGroup-->
+<!--      v-else-->
+<!--      id="memo"-->
+<!--      :error="$v.memo.$error && $v.memo.$invalid"-->
+<!--      class="action-modal-group"-->
+<!--      field-id="memo"-->
+<!--      field-label="Memo"-->
+<!--    >-->
+<!--      <TmField-->
+<!--        id="memo"-->
+<!--        v-model="memo"-->
+<!--        type="text"-->
+<!--        placeholder="Let everyone know how much you love Harmony"-->
+<!--        @keyup.enter.native="enterPressed"-->
+<!--      />-->
+<!--      <TmFormMsg-->
+<!--        v-if="$v.memo.$error && !$v.memo.maxLength"-->
+<!--        name="Memo"-->
+<!--        type="maxLength"-->
+<!--        :max="max_memo_characters"-->
+<!--      />-->
+<!--    </TmFormGroup>-->
   </ActionModal>
 </template>
 

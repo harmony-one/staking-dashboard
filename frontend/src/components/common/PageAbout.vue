@@ -12,7 +12,7 @@
         What is Harmony Staking?
       </h2>
       <p>
-        Harmony is a user interface for sending and receiving One tokens,
+        Harmony Staking is a user interface for sending and receiving One tokens,
         viewing your transaction history, delegating your ONEs, and
         participating in governance on the One Blockchain.
       </p>

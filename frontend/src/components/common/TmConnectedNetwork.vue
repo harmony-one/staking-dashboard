@@ -1,12 +1,17 @@
 <template>
   <div class="sidebar-bottom">
-    <TmBtn
-      id="intercom-button"
-      class="intercom-button"
-      value="Help / Feedback"
-      type="secondary"
-      size="small"
-    />
+    <a
+      href="https://docs.google.com/forms/d/1OUALlRVgA6-AQdUf4jaPFx_TaStKALBRTX97xNmDBDY/"
+      target="_blank"
+    >
+      <TmBtn
+        id="intercom-button"
+        class="intercom-button"
+        value="Help / Feedback"
+        type="secondary"
+        size="small"
+      />
+    </a>
     <div
       v-if="connection.connected"
       id="tm-connected-network"
@@ -28,21 +33,21 @@
           </span>
         </div>
       </div>
-      <div
-        id="tm-connected-network__block"
-        class="tm-connected-network__string"
-      >
-        <span>
-          <router-link
-            :to="{
-              name: `block`,
-              params: { height: connection.lastHeader.height }
-            }"
-          >
-            #{{ connection.lastHeader.height | prettyInt }}
-          </router-link>
-        </span>
-      </div>
+<!--      <div-->
+<!--        id="tm-connected-network__block"-->
+<!--        class="tm-connected-network__string"-->
+<!--      >-->
+<!--        <span>-->
+<!--          <router-link-->
+<!--            :to="{-->
+<!--              name: `block`,-->
+<!--              params: { height: connection.lastHeader.height }-->
+<!--            }"-->
+<!--          >-->
+<!--            #{{ connection.lastHeader.height | prettyInt }}-->
+<!--          </router-link>-->
+<!--        </span>-->
+<!--      </div>-->
     </div>
     <div
       v-else
@@ -82,7 +87,7 @@ export default {
   computed: {
     ...mapState([`connection`]),
     networkTooltip() {
-      return `You're connected to ${this.connection.lastHeader.chain_title} via ${this.connection.networkConfig.rpc_url}`
+      return `You're connected to ${this.connection.lastHeader.chain_title}`
     }
   }
 }

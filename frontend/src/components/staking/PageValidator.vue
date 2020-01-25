@@ -11,12 +11,16 @@
   >
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="status-container">
-        <span :class="status | toLower" class="validator-status">{{
+        <span :class="status | toLower" class="validator-status">
+          {{
           status
-        }}</span>
-        <span v-if="status_detailed" class="validator-status-detailed">{{
+          }}
+        </span>
+        <span v-if="status_detailed" class="validator-status-detailed">
+          {{
           status_detailed
-        }}</span>
+          }}
+        </span>
       </div>
       <tr class="li-validator">
         <td class="data-table__row__info">
@@ -67,8 +71,7 @@
                 :href="website"
                 target="_blank"
                 rel="nofollow noreferrer noopener"
-                >{{ website }}</a
-              >
+              >{{ website }}</a>
             </span>
             <span v-else id="validator-website">{{ website | noBlanks }}</span>
           </li>
@@ -90,21 +93,23 @@
           </li>
           <li>
             <h4>Self Stake</h4>
-            <span id="page-profile__self-bond"
-              >{{ selfBondPercent }} / {{ selfBondAmount }}</span
-            >
+            <span id="page-profile__self-bond">{{ selfBondPercent }} / {{ selfBondAmount }}</span>
           </li>
           <li>
             <h4>Min Self Delegation</h4>
-            <span id="page-profile__min_self_delegation">{{
+            <span id="page-profile__min_self_delegation">
+              {{
               (validator.min_self_delegation / 1e18) | shortDecimals
-            }}</span>
+              }}
+            </span>
           </li>
           <li>
             <h4>Max Total Delegation</h4>
-            <span id="page-profile__max_total_delegation">{{
+            <span id="page-profile__max_total_delegation">
+              {{
               (validator.max_total_delegation / 1e18) | shortDecimals
-            }}</span>
+              }}
+            </span>
           </li>
           <li>
             <h4>Validator Since</h4>
@@ -112,9 +117,11 @@
           </li>
           <li>
             <h4>Uptime</h4>
-            <span id="page-profile__uptime">{{
+            <span id="page-profile__uptime">
+              {{
               validator.uptime_percentage | percent
-            }}</span>
+              }}
+            </span>
           </li>
           <li>
             <h4>Current Commission Rate</h4>
@@ -232,9 +239,7 @@ export default {
       return this.connection.networkConfig.id
     },
     selfBondPercent() {
-      return percent(
-        this.validator.self_stake / this.validator.total_effective_stake
-      )
+      return percent(this.validator.self_stake / this.validator.total_stake)
     },
     selfBondAmount() {
       return shortDecimals(this.validator.self_stake / 1e18)
@@ -354,11 +359,6 @@ export default {
       this.validator = await fetchValidatorByAddress(
         this.connection.networkConfig.id,
         this.$route.params.validator
-      )
-
-      console.log(
-        "minh max_total_delegation: ",
-        this.validator.max_total_delegation
       )
 
       this.loading = false

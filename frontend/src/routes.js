@@ -11,33 +11,33 @@ export default [
     path: `/`,
     redirect: `/portfolio`
   },
-  {
-    path: `/proposals`,
-    name: `Proposals`,
-    meta: {
-      feature: "Proposals"
-    },
-    component: require(`./components/governance/PageProposals`).default
-  },
+  // {
+  //   path: `/proposals`,
+  //   name: `Proposals`,
+  //   meta: {
+  //     feature: "Proposals"
+  //   },
+  //   component: require(`./components/governance/PageProposals`).default
+  // },
   // for depredecated routes
-  {
-    path: `/governance/proposals`,
-    redirect: `/proposals`
-  },
-  {
-    path: `/proposals/:proposalId`,
-    name: `Proposal`,
-    meta: {
-      feature: "Proposals"
-    },
-    component: require(`./components/governance/PageProposal`).default,
-    props: true
-  },
+  // {
+  //   path: `/governance/proposals`,
+  //   redirect: `/proposals`
+  // },
+  // {
+  //   path: `/proposals/:proposalId`,
+  //   name: `Proposal`,
+  //   meta: {
+  //     feature: "Proposals"
+  //   },
+  //   component: require(`./components/governance/PageProposal`).default,
+  //   props: true
+  // },
   // for depredecated routes
-  {
-    path: `/governance/proposals/:proposalId`,
-    redirect: `/proposals/:proposalId`
-  },
+  // {
+  //   path: `/governance/proposals/:proposalId`,
+  //   redirect: `/proposals/:proposalId`
+  // },
   {
     path: `/validators`,
     name: `Validators`,
@@ -72,15 +72,15 @@ export default [
       feature: "Portfolio"
     }
   },
-  {
-    path: `/transactions`,
-    name: `transactions`,
-    component: require(`./components/wallet/PageTransactions`).default,
-    meta: {
-      requiresAuth: true,
-      feature: "Activity"
-    }
-  },
+  // {
+  //   path: `/transactions`,
+  //   name: `transactions`,
+  //   component: require(`./components/wallet/PageTransactions`).default,
+  //   meta: {
+  //     requiresAuth: true,
+  //     feature: "Activity"
+  //   }
+  // },
   {
     path: `/networks`,
     name: `networks`,
@@ -194,14 +194,14 @@ export default [
     path: `/about`,
     component: require(`./components/common/PageAbout`).default
   },
-  {
-    path: `/careers`,
-    component: require(`./components/common/PageCareers`).default
-  },
-  {
-    path: `/feature-not-available/:feature`,
-    component: require(`./components/common/PageFeatureNotAvailable`).default,
-    props: true
-  },
+  // {
+  //   path: `/careers`,
+  //   component: require(`./components/common/PageCareers`).default
+  // },
+  // {
+  //   path: `/feature-not-available/:feature`,
+  //   component: require(`./components/common/PageFeatureNotAvailable`).default,
+  //   props: true
+  // },
   { path: `*`, component: require(`./components/common/Page404`).default }
 ]

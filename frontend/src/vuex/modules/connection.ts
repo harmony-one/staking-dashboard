@@ -2,10 +2,12 @@ import Vue from "vue"
 import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
-import { fetchNetworks } from "../../mock-service"
+import { fetchNetworks, fetchNetworkInfo } from "../../mock-service"
 import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 
-const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK;
+const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK
+
+const POLLING_TIMEOUT = 5 * 1000
 
 export interface INetworkConfig {
   id: string
@@ -18,6 +20,13 @@ export interface INetworkConfig {
   __typename: string
 }
 
+export interface INetworkInfo {
+  effective_median_stake: number
+  current_block_number: number
+  current_block_hash: string
+  total_one_staked: number
+}
+
 const state = {
   stopConnecting: false,
   connected: false,
@@ -26,11 +35,14 @@ const state = {
     chain_id: `1`
   },
   networkConfig: {} as INetworkConfig,
-  network: "",
+  network: DEFAULT_NETWORK,
   connectionAttempts: 0,
   externals: {} as { config: typeof config; node: TNode },
   networks: Array<INetworkConfig>(),
+  networkInfo: {} as INetworkInfo
 }
+
+let interval: any
 
 export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   // get tendermint RPC client from basecoin client
@@ -78,22 +90,31 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       Vue.set(state, `connected`, connected)
     },
     setNetworks(state, networks: INetworkConfig[]) {
-      state.networks = networks;
+      state.networks = networks
     },
+    setNetworkInfo(state, networkInfo: INetworkInfo) {
+      state.networkInfo = networkInfo
+    }
   },
 
   actions: {
     async setLastHeader() {},
 
-    async init({ dispatch, commit }) {
+    async init({ state, dispatch, commit }) {
       const networks: INetworkConfig[] = await fetchNetworks()
 
-      const network = networks.find(
-        network => network.id === DEFAULT_NETWORK
-      )
+      const network = networks.find(network => network.id === state.network)
 
-      commit('setNetworks', networks);
+      if (!interval) {
+        interval = setInterval(
+          () => dispatch("loadNetworkInfo"),
+          POLLING_TIMEOUT
+        )
+      }
+
+      commit("setNetworks", networks)
       dispatch("setNetwork", network || networks[0])
+      dispatch("loadNetworkInfo");
     },
 
     async reconnect({ commit, state, rootState }) {
@@ -102,11 +123,17 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         state.networkConfig.chain_id
       )
 
-      setNetworkToExtension(state.networkConfig);
+      setNetworkToExtension(state.networkConfig)
 
       commit("setConnected", true)
 
       // store.dispatch("getDelegates");
+    },
+
+    async loadNetworkInfo({ commit, state }) {
+      const networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+
+      commit("setNetworkInfo", networkInfo)
     },
 
     // async connect({ commit, state }) {

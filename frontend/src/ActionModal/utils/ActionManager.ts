@@ -43,7 +43,7 @@ export default class ActionManager {
 
     if (!this.context.connected) {
       throw Error(
-        `Currently not connected to a secure node. Please try again when Lunie has secured a connection.`
+        `Currently not connected to a secure node. Please try again when Harmony Staking has secured a connection.`
       )
     }
 

@@ -49,6 +49,8 @@ export default function init(urlParams, env = process.env) {
 
   // store.dispatch(`loadLocalPreferences`)
 
+  store.dispatch('loadPersistedState');
+
   store
     .dispatch(`init`)
     // wait for connected as the check for session will sign in directly and query account data

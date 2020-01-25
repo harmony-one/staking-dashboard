@@ -14,7 +14,7 @@
     <TmFormGroup class="action-modal-form-group">
       <div class="form-message notice">
         <span>
-          Undelegations take 21 days to complete and cannot be undone. Please
+          Undelegations take 7 epochs to complete and cannot be undone. Please
           make sure you understand the rules of delegation. Would you prefer to
           <a id="switch-to-redelgation" href="#" @click="switchToRedelegation()"
             >redelegate?</a

@@ -19,12 +19,12 @@ const processMessage = (store, type, payload) => {
       store.commit("setExtensionAccounts", payload)
       break
     case "GET_SESSION_RESPONSE":
-      if(payload) {
+      if (payload) {
         store.commit(`setCurrrentModalOpen`, true)
       }
       break
     case "CLOSE_SESSION_RESPONSE":
-        store.commit(`setCurrrentModalOpen`, false)
+      store.commit(`setCurrrentModalOpen`, false)
       break
     default:
       return

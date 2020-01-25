@@ -203,12 +203,20 @@
           v-else-if="step === successStep"
           class="action-modal-form success-step"
         >
-          <TmDataMsg icon="check">
+          <TmDataMsg
+            :icon="isTransactionFailed ? 'sentiment_dissatisfied' : 'check'"
+          >
             <div slot="title">
-              {{ notifyMessage.title }}
+              {{
+                isTransactionFailed ? "Transaction failed" : notifyMessage.title
+              }}
             </div>
             <div slot="subtitle">
-              {{ notifyMessage.body }}
+              {{
+                isTransactionFailed
+                  ? txConfirmResult.message
+                  : notifyMessage.body
+              }}
               <br />
               <br />Transaction:
               <a :href="linkToTransaction" target="_blank">
@@ -390,7 +398,7 @@ export default {
     submissionError: null,
     show: false,
     actionManager: new ActionManager(),
-    txHash: null,
+    txConfirmResult: null,
     defaultStep,
     feeStep,
     signStep,
@@ -414,6 +422,12 @@ export default {
     ]),
     requiresSignIn() {
       return !this.session.signedIn
+    },
+    txHash() {
+      return this.txConfirmResult && this.txConfirmResult.txHash
+    },
+    isTransactionFailed() {
+      return this.txConfirmResult && this.txConfirmResult.error
     },
     balanceInAtoms() {
       return atoms(this.liquidAtoms)
@@ -482,6 +496,11 @@ export default {
         if (signMethods.length === 1) {
           this.selectedSignMethod = signMethods[0].value
         }
+      }
+    },
+    currrentModalOpen(isOpen) {
+      if (!isOpen) {
+        this.close()
       }
     }
   },
@@ -658,7 +677,7 @@ export default {
         console.log("[submit] error", message)
 
         this.onSendingFailed(message)
-        this.txHash = null
+        this.txConfirmResult = null
         // this.session.currrentModalOpen.close()
         this.close()
       }
@@ -666,15 +685,12 @@ export default {
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
 
-      const { txhash } = await includedFn()
+      this.txConfirmResult = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
       this.$store
         .dispatch(`getDelegates`)
         .then(() => this.$store.dispatch(`getRewardsFromMyValidators`))
-
-      // this.includedHeight = blockNumbers[0]
-      this.txHash = txhash
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {
       this.step = successStep

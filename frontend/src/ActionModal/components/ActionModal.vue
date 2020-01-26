@@ -424,7 +424,7 @@ export default {
       return !this.session.signedIn
     },
     txHash() {
-      return this.txConfirmResult && this.txConfirmResult.txHash
+      return this.txConfirmResult && this.txConfirmResult.txhash
     },
     isTransactionFailed() {
       return this.txConfirmResult && this.txConfirmResult.error

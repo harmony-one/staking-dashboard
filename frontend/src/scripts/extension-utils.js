@@ -14,6 +14,8 @@ const processMessage = (store, type, payload) => {
     case "INIT_EXTENSION":
       store.commit("setExtensionAvailable")
       store.dispatch("getAddressesFromExtension")
+
+      getExtensionSession()
       break
     case "GET_WALLETS_RESPONSE":
       store.commit("setExtensionAccounts", payload)

@@ -14,9 +14,19 @@ const processMessage = (store, type, payload) => {
     case "INIT_EXTENSION":
       store.commit("setExtensionAvailable")
       store.dispatch("getAddressesFromExtension")
+
+      getExtensionSession()
       break
     case "GET_WALLETS_RESPONSE":
       store.commit("setExtensionAccounts", payload)
+      break
+    case "GET_SESSION_RESPONSE":
+      if (payload) {
+        store.commit(`setCurrrentModalOpen`, true)
+      }
+      break
+    case "CLOSE_SESSION_RESPONSE":
+      store.commit(`setCurrrentModalOpen`, false)
       break
     default:
       return
@@ -102,6 +112,20 @@ export const signWithExtension = async (signMessage, senderAddress) => {
 
 export const waitTransactionConfirm = async () => {
   return await waitForResponse(`TRANSACTION_CONFIRM_RESPONSE`)
+}
+
+export const closeExtensionSession = () => {
+  sendMessageToContentScript(
+    {
+      type: "CLOSE_SESSION",
+      payload: true
+    },
+    true
+  )
+}
+
+export const getExtensionSession = () => {
+  sendMessageToContentScript({ type: "GET_SESSION" })
 }
 
 export const setNetwork = async networkConfig => {

@@ -203,12 +203,20 @@
           v-else-if="step === successStep"
           class="action-modal-form success-step"
         >
-          <TmDataMsg icon="check">
+          <TmDataMsg
+            :icon="isTransactionFailed ? 'sentiment_dissatisfied' : 'check'"
+          >
             <div slot="title">
-              {{ notifyMessage.title }}
+              {{
+                isTransactionFailed ? "Transaction failed" : notifyMessage.title
+              }}
             </div>
             <div slot="subtitle">
-              {{ notifyMessage.body }}
+              {{
+                isTransactionFailed
+                  ? txConfirmResult.message
+                  : notifyMessage.body
+              }}
               <br />
               <br />Transaction:
               <a :href="linkToTransaction" target="_blank">
@@ -294,6 +302,7 @@ import { track } from "scripts/google-analytics"
 import config from "src/config"
 
 import ActionManager from "../utils/ActionManager"
+import { closeExtensionSession } from "scripts/extension-utils"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -389,7 +398,7 @@ export default {
     submissionError: null,
     show: false,
     actionManager: new ActionManager(),
-    txHash: null,
+    txConfirmResult: null,
     defaultStep,
     feeStep,
     signStep,
@@ -404,9 +413,21 @@ export default {
       network: state => state.connection.network,
       networkConfig: state => state.connection.networkConfig
     }),
-    ...mapGetters([`connected`, `bondDenom`, `liquidAtoms`, `modalContext`]),
+    ...mapGetters([
+      `connected`,
+      `bondDenom`,
+      `liquidAtoms`,
+      `modalContext`,
+      "currrentModalOpen"
+    ]),
     requiresSignIn() {
       return !this.session.signedIn
+    },
+    txHash() {
+      return this.txConfirmResult && this.txConfirmResult.txhash
+    },
+    isTransactionFailed() {
+      return this.txConfirmResult && this.txConfirmResult.error
     },
     balanceInAtoms() {
       return atoms(this.liquidAtoms)
@@ -476,6 +497,11 @@ export default {
           this.selectedSignMethod = signMethods[0].value
         }
       }
+    },
+    currrentModalOpen(isOpen) {
+      if (!isOpen) {
+        this.close()
+      }
     }
   },
   updated: function() {
@@ -495,28 +521,30 @@ export default {
           "You are in the middle of creating a transaction already. Are you sure you want to cancel this action?"
         )
         if (confirmResult) {
-          this.session.currrentModalOpen.close()
-          this.$store.commit(`setCurrrentModalOpen`, false)
+          this.close()
         }
       }
     },
     open() {
-      // this.confirmModalOpen()
-      // if (this.session.currrentModalOpen) {
-      //   return
-      // }
+      this.confirmModalOpen()
+
+      if (this.session.currrentModalOpen) {
+        return
+      }
 
       this.show = true
       this.gasPrice = config.default_gas_price.toFixed(9)
 
-      // this.$store.commit(`setCurrrentModalOpen`, this)
       // this.trackEvent(`event`, `modal`, this.title)
       // this.checkFeatureAvailable()
       // this.gasPrice = config.default_gas_price.toFixed(9)
       // this.show = true
     },
     close() {
-      this.$store.commit(`setCurrrentModalOpen`, false)
+      if (this.session.currrentModalOpen) {
+        closeExtensionSession()
+        this.$store.commit(`setCurrrentModalOpen`, false)
+      }
       this.submissionError = null
       this.password = null
       this.step = defaultStep
@@ -635,6 +663,8 @@ export default {
             sendData
           )
         } else {
+          this.$store.commit(`setCurrrentModalOpen`, true)
+
           sendResponse = await this.actionManager.send(memo, feeProperties)
         }
 
@@ -647,7 +677,7 @@ export default {
         console.log("[submit] error", message)
 
         this.onSendingFailed(message)
-        this.txHash = null
+        this.txConfirmResult = null
         // this.session.currrentModalOpen.close()
         this.close()
       }
@@ -655,15 +685,12 @@ export default {
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
 
-      const { txhash } = await includedFn()
+      this.txConfirmResult = await includedFn()
 
       this.$store.dispatch(`queryWalletBalances`)
       this.$store
         .dispatch(`getDelegates`)
         .then(() => this.$store.dispatch(`getRewardsFromMyValidators`))
-
-      // this.includedHeight = blockNumbers[0]
-      this.txHash = txhash
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {
       this.step = successStep

@@ -8,7 +8,8 @@ Vue.use(Router)
 
 export const routeGuard = (store, apollo) => async (to, from, next) => {
   // Set any open modal to false
-  store.state.session.currrentModalOpen = false
+
+  //store.state.session.currrentModalOpen = false
 
   // Redirect if fullPath begins with a hash (fallback for old pre history mode urls)
   if (to.fullPath.includes("#")) {

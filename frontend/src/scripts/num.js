@@ -12,19 +12,20 @@ function truncate(number, digits) {
 }
 
 export const SMALLEST = 1e-6
-const language = 'en-US' // window.navigator.userLanguage || window.navigator.language
+const language = "en-US" // window.navigator.userLanguage || window.navigator.language
 
-function setDecimalLength(value, length) {
+function setDecimalLength(value, minLength, maxLength) {
   return new Intl.NumberFormat(language, {
-    minimumFractionDigits: length > 3 ? length : 0
-  }).format(truncate(value, length))
+    minimumFractionDigits: minLength,
+    maximumFractionDigits: maxLength
+  }).format(truncate(value, maxLength))
 }
 export function shortDecimals(value) {
-  return setDecimalLength(value, 3)
+  return setDecimalLength(value, 3, 9)
 }
 
 export function fullDecimals(value) {
-  return setDecimalLength(value, 6)
+  return setDecimalLength(value, 6, 9)
 }
 
 export function pretty(number = 0) {
@@ -100,7 +101,7 @@ export function viewDenom(denom) {
 
 export function createDisplayCoin({ amount, denom }, length = 3) {
   return {
-    amount: setDecimalLength(atoms(amount), length),
+    amount: setDecimalLength(atoms(amount), length, 9),
     denom: viewDenom(denom)
   }
 }

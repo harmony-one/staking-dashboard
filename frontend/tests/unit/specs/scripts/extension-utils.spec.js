@@ -26,7 +26,7 @@ describe(`Extension Utils`, () => {
       processLunieExtensionMessages(store)({
         source: global,
         data: {
-          type: "FROM_LUNIE_EXTENSION",
+          type: "FROM_HARMONY_EXTENSION",
           message: {
             type: "INIT_EXTENSION"
           }
@@ -41,7 +41,7 @@ describe(`Extension Utils`, () => {
       processLunieExtensionMessages(store)({
         source: global,
         data: {
-          type: "NOT_FROM_LUNIE_EXTENSION",
+          type: "NOT_FROM_HARMONY_EXTENSION",
           message: {
             type: "INIT_EXTENSION"
           }
@@ -55,7 +55,7 @@ describe(`Extension Utils`, () => {
       processLunieExtensionMessages(store)({
         source: global,
         data: {
-          type: "FROM_LUNIE_EXTENSION",
+          type: "FROM_HARMONY_EXTENSION",
           message: {
             type: "GET_WALLETS_RESPONSE",
             payload: [
@@ -80,7 +80,7 @@ describe(`Extension Utils`, () => {
       const result = processLunieExtensionMessages(store)({
         source: global,
         data: {
-          type: "FROM_LUNIE_EXTENSION",
+          type: "FROM_HARMONY_EXTENSION",
           message: {
             type: "IN CORRECT TYPE"
           }
@@ -109,7 +109,7 @@ describe(`Extension Utils`, () => {
           {
             payload: { type: "GET_WALLETS" },
             skipResponse: false,
-            type: "FROM_LUNIE_IO"
+            type: "FROM_HARMONY_IO"
           },
           "*"
         ]
@@ -136,10 +136,10 @@ describe(`Extension Utils`, () => {
                   senderAddress: "cosmos1234",
                   signMessage: "abc"
                 },
-                type: "LUNIE_SIGN_REQUEST"
+                type: "HARMONY_SIGN_REQUEST"
               },
               skipResponse: true,
-              type: "FROM_LUNIE_IO"
+              type: "FROM_HARMONY_IO"
             },
             "*"
           ]
@@ -155,9 +155,9 @@ describe(`Extension Utils`, () => {
                 payload: {
                   rejected: true
                 },
-                type: "LUNIE_SIGN_REQUEST_RESPONSE"
+                type: "HARMONY_SIGN_REQUEST_RESPONSE"
               },
-              type: "FROM_LUNIE_EXTENSION"
+              type: "FROM_HARMONY_EXTENSION"
             }
           })
         })
@@ -175,9 +175,9 @@ describe(`Extension Utils`, () => {
                 payload: {
                   error: "Expected"
                 },
-                type: "LUNIE_SIGN_REQUEST_RESPONSE"
+                type: "HARMONY_SIGN_REQUEST_RESPONSE"
               },
-              type: "FROM_LUNIE_EXTENSION"
+              type: "FROM_HARMONY_EXTENSION"
             }
           })
         })
@@ -194,9 +194,9 @@ describe(`Extension Utils`, () => {
                   signature: "abcd",
                   publicKey: "1234"
                 },
-                type: "LUNIE_SIGN_REQUEST_RESPONSE"
+                type: "HARMONY_SIGN_REQUEST_RESPONSE"
               },
-              type: "FROM_LUNIE_EXTENSION"
+              type: "FROM_HARMONY_EXTENSION"
             }
           })
         })

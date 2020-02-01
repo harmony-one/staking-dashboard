@@ -1,7 +1,7 @@
 "use strict"
 
-const LUNIE_EXT_TYPE = "FROM_LUNIE_EXTENSION"
-const LUNIE_WEBSITE_TYPE = "FROM_LUNIE_IO"
+const HARMONY_EXT_TYPE = "FROM_HARMONY_EXTENSION"
+const HARMONY_WEBSITE_TYPE = "FROM_HARMONY_IO"
 
 const unWrapMessageFromContentScript = data => data.message
 
@@ -36,7 +36,7 @@ const processMessage = (store, type, payload) => {
 const filterExtensionMessage = callback => message => {
   if (message.source !== window) return
   const { data } = message
-  if (data.type && data.type === LUNIE_EXT_TYPE) {
+  if (data.type && data.type === HARMONY_EXT_TYPE) {
     callback(data)
   }
 }
@@ -57,7 +57,7 @@ export const listenToExtensionMessages = store => {
 // ---- Querying -----
 
 const sendMessageToContentScript = (payload, skipResponse = false) => {
-  window.postMessage({ type: LUNIE_WEBSITE_TYPE, payload, skipResponse }, "*")
+  window.postMessage({ type: HARMONY_WEBSITE_TYPE, payload, skipResponse }, "*")
 }
 
 // react to certain response type
@@ -97,7 +97,7 @@ export const getAccountsFromExtension = () => {
 
 export const signWithExtension = async (signMessage, senderAddress) => {
   const res = await sendAsyncMessageToContentScript({
-    type: "LUNIE_SIGN_REQUEST",
+    type: "HARMONY_SIGN_REQUEST",
     payload: {
       signMessage,
       senderAddress

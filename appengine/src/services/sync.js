@@ -81,6 +81,15 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         cache[STAKING_NETWORK_INFO].current_block_hash =
           res2.data.result.blockHash
       }
+
+      const medianStakeRes = await apiClient.post(
+        '/',
+        bodyParams('hmy_getMedianRawStakeSnapshot')
+      )
+      if (medianStakeRes.data.result) {
+        cache[STAKING_NETWORK_INFO].effective_median_stake = medianStakeRes.data.result
+      }
+
       // console.log("getAllValidatorAddressesData", res.data)
       return cache[STAKING_NETWORK_INFO]
     } catch (err) {

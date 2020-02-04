@@ -85,6 +85,12 @@ export function atoms(number = 0) {
     .toNumber()
 }
 
+export function ones(number = 0) {
+  return BigNumber(number)
+      .div(1e6)
+      .toNumber()
+}
+
 export function uatoms(number = 0) {
   return BigNumber(number)
     .times(1e6)
@@ -156,6 +162,7 @@ export const roundObjectPercentages = dataMap => {
 
 export default {
   SMALLEST,
+  ones,
   atoms,
   uatoms,
   viewDenom,

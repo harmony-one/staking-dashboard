@@ -7,7 +7,8 @@
     <template slot="managed-body">
       <div class="networkInfo">
         <div class="item">
-          <h4>Effective median stake:</h4> {{ networkInfo.effective_median_stake }} ONE
+          <h4>Effective median stake:</h4>
+          {{ networkInfo.effective_median_stake | ones | shortDecimals }} ONE
         </div>
         <div class="item">
           <h4>Current block number:</h4>
@@ -60,6 +61,7 @@ import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
 import { transactionToShortString } from "src/scripts/transaction-utils"
+import { ones, shortDecimals } from "scripts/num"
 
 export default {
   name: `tab-validators`,
@@ -68,6 +70,10 @@ export default {
     PageContainer,
     TmField,
     TmBtn
+  },
+  filters: {
+    ones,
+    shortDecimals
   },
   data: () => ({
     searchTerm: "",
@@ -78,7 +84,10 @@ export default {
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({ allValidators: state => state.validators.validators }),
-    ...mapState({ activeValidators: state => state.validators.validators.filter(v => v.active === true) }),
+    ...mapState({
+      activeValidators: state =>
+        state.validators.validators.filter(v => v.active === true)
+    }),
     validators: state => {
       return state.allValidators
         .filter(

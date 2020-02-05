@@ -11,3 +11,9 @@ yarn dev
 ```
 yarn serve
 ```
+
+
+# Update networks table in firebase
+
+- Go to mock-data/networks.js and edit the table.
+- node db.js to update the networks table in firebase

@@ -87,7 +87,7 @@ export function atoms(number = 0) {
 
 export function ones(number = 0) {
   return BigNumber(number)
-      .div(1e6)
+      .div(1e18)
       .toNumber()
 }
 

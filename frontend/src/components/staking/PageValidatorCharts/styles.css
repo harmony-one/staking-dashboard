@@ -1,0 +1,102 @@
+.validator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--bc-dim);
+  color: var(--txt-black);
+}
+
+.validator-image {
+  border-radius: 0.25rem;
+  height: 4rem;
+  width: 4rem;
+  border: 1px solid var(--bc-dim);
+}
+
+.validator-name {
+  color: var(--txt);
+  font-size: var(--h1);
+  line-height: 2rem;
+  font-weight: 500;
+}
+
+.validator-info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+  text-overflow: ellipsis;
+}
+
+.validator h4,
+.validator h5 {
+  font-size: var(--sm);
+  display: inline-block;
+}
+
+.validator h5 {
+  padding-left: 0.5rem;
+  color: var(--success);
+}
+
+span {
+  font-size: 12px;
+  line-height: normal;
+}
+
+.bech32-address {
+  font-size: 12px;
+  line-height: normal;
+}
+
+.button-container {
+  display: flex;
+  align-items: flex-end;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--bc-dim);
+}
+
+.button-container button:first-child {
+  margin-right: 0.5rem;
+}
+
+.status-container {
+  padding: 1rem 1rem 0;
+}
+
+.validator-status {
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 600;
+  border: 2px solid;
+  padding: 2px 4px;
+  border-radius: 0.25rem;
+}
+
+.validator-status.inactive {
+  color: red;
+  border-color: red;
+}
+
+.validator-status.active {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.validator-status-detailed {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--warning);
+  font-size: 0.8rem;
+}
+
+@media screen and (max-width: 667px) {
+  .button-container {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .button-container button {
+    width: 50%;
+  }
+}

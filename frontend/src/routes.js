@@ -57,7 +57,7 @@ export default [
     meta: {
       feature: "Validators"
     },
-    component: require(`./components/staking/PageValidator`).default
+    component: require(`./components/staking/PageValidatorCharts/index`).default
   },
   {
     path: `/staking/validators/:validator`,

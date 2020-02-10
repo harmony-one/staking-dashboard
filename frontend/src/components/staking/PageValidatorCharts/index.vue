@@ -7,11 +7,29 @@
     :data-empty="!validator.operator_address"
     :hide-header="true"
     data-title="Validator"
-    class="small"
   >
     <template v-if="validator.operator_address" slot="managed-body">
-      <MainBlock v-bind:validator="validator" />
-      <GeneralInfoBlock v-bind:validator="validator" />
+      <div class="validator-layout">
+        <Widget title="Main" style="width: 450px; height: 258px;">
+          <MainBlock v-bind:validator="validator" />
+        </Widget>
+        <Widget title="General info" style="width: 450px; height: 258px;">
+          <GeneralInfoBlock v-bind:validator="validator" />
+        </Widget>
+
+        <Widget
+          title="Stake & Delegation history"
+          style="width: 450px; height: 400px;"
+        >
+          <StakeHistoryBlock v-bind:validator="validator" />
+        </Widget>
+        <Widget
+          title="Reward rate history"
+          style="width: 450px; height: 400px;"
+        >
+          <RewardHistoryBlock v-bind:validator="validator" />
+        </Widget>
+      </div>
     </template>
     <template v-else>
       <div slot="title">Validator Not Found</div>
@@ -26,8 +44,11 @@
 
 <script>
 import { mapState } from "vuex"
-import MainBlock from "./MainBlock"
+import Widget from "./components/Widget"
 import GeneralInfoBlock from "./GeneralInfoBlock"
+import MainBlock from "./MainBlock"
+import StakeHistoryBlock from "./StakeHistoryBlock"
+import RewardHistoryBlock from "./RewardHistoryBlock"
 import TmPage from "common/TmPage"
 import { fetchValidatorByAddress } from "../../../mock-service"
 
@@ -36,7 +57,10 @@ export default {
   components: {
     MainBlock,
     GeneralInfoBlock,
-    TmPage
+    StakeHistoryBlock,
+    RewardHistoryBlock,
+    TmPage,
+    Widget
   },
   props: {
     showOnMobile: {
@@ -85,3 +109,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.validator-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+</style>

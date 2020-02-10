@@ -1,5 +1,5 @@
 <template>
-  <div class="card-white">
+  <div class="card-white validator-info">
     <ul class="row">
       <li class="column">
         <h4>Description</h4>
@@ -83,6 +83,7 @@
 </template>
 <script>
 import { shortDecimals, percent } from "scripts/num"
+import Bech32 from "common/Bech32"
 
 export default {
   name: `general-info-block`,
@@ -96,6 +97,9 @@ export default {
     }
   },
   props: ["validator"],
+  components: {
+    Bech32
+  },
   computed: {
     selfBondPercent() {
       return percent(this.validator.self_stake / this.validator.total_stake)
@@ -121,3 +125,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@import "./styles.css";
+</style>

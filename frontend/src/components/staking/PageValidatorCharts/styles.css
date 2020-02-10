@@ -21,29 +21,6 @@
   font-weight: 500;
 }
 
-.validator-info {
-  display: flex;
-  flex-direction: column;
-  padding-left: 1rem;
-  text-overflow: ellipsis;
-}
-
-.validator h4,
-.validator h5 {
-  font-size: var(--sm);
-  display: inline-block;
-}
-
-.validator h5 {
-  padding-left: 0.5rem;
-  color: var(--success);
-}
-
-span {
-  font-size: 12px;
-  line-height: normal;
-}
-
 .bech32-address {
   font-size: 12px;
   line-height: normal;
@@ -99,4 +76,35 @@ span {
   .button-container button {
     width: 50%;
   }
+}
+
+/* validator-info */
+
+.validator-info {
+  display: flex;
+  flex-direction: column;
+  text-overflow: ellipsis;
+}
+
+.validator-info li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+
+.validator-info h4,
+.validator-info h5 {
+  font-size: var(--sm);
+  display: inline-block;
+}
+
+.validator-info h5 {
+  padding-left: 0.5rem;
+  color: var(--success);
+}
+
+.validator-info span {
+  font-size: 12px;
+  line-height: normal;
 }

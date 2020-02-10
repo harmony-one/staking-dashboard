@@ -138,7 +138,7 @@ export default {
       if (this.validator.jailed) return `Temporally banned from the network`
       if (this.validator.tombstoned) return `Banned from the network`
       if (this.validator.status === 0) return `Banned from the network`
-      return false
+      return "Validator is online and earning rewards"
     },
     rewards() {
       const { session, bondDenom, distribution, validator } = this

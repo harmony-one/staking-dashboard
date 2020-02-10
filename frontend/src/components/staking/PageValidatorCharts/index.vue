@@ -13,8 +13,11 @@
         <Widget title="Main" style="width: 450px; height: 258px;">
           <MainBlock v-bind:validator="validator" />
         </Widget>
-        <Widget title="General info" style="width: 450px; height: 258px;">
+        <Widget title="General info" style="width: 250px; height: 258px;">
           <GeneralInfoBlock v-bind:validator="validator" />
+        </Widget>
+        <Widget title="Perfomance" style="width: 250px; height: 258px;">
+          <PerfomanceBlock v-bind:validator="validator" />
         </Widget>
 
         <Widget
@@ -46,6 +49,7 @@
 import { mapState } from "vuex"
 import Widget from "./components/Widget"
 import GeneralInfoBlock from "./GeneralInfoBlock"
+import PerfomanceBlock from "./PerfomanceBlock"
 import MainBlock from "./MainBlock"
 import StakeHistoryBlock from "./StakeHistoryBlock"
 import RewardHistoryBlock from "./RewardHistoryBlock"
@@ -55,6 +59,7 @@ import { fetchValidatorByAddress } from "../../../mock-service"
 export default {
   name: `page-validator-charts`,
   components: {
+    PerfomanceBlock,
     MainBlock,
     GeneralInfoBlock,
     StakeHistoryBlock,
@@ -97,7 +102,7 @@ export default {
     fetchValidator: async function() {
       this.loading = true
 
-      if (this.connection.networkConfig.id) {
+      if (this.connection.networkConfig.id || true) {
         this.validator = await fetchValidatorByAddress(
           this.connection.networkConfig.id,
           this.$route.params.validator

@@ -24,9 +24,13 @@
           <Bech32 :address="validator.operator_address" />
         </span>
       </li>
+      <li class="column">
+        <h4>Validator Since</h4>
+        <span>Block #{{ validator.creation_height }}</span>
+      </li>
     </ul>
 
-    <ul class="row">
+    <ul class="row" v-show="false">
       <li>
         <h4>Voting Power / Total Stake</h4>
         <span id="page-profile__power">

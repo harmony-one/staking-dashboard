@@ -1,42 +1,22 @@
 <template>
   <div class="chart-container">
-    <ChartLine v-if="loaded" :chartdata="chartdata" :options="options" />
+    <ChartLine :chartdata="chartdata" :options="options" />
   </div>
 </template>
 
 <script>
 import ChartLine from "./components/ChartLine"
+import moment from "moment"
 
-const barChartData = {
-  labels: ["January", "February", "March", "April", "May", "June", "July"],
-  datasets: [
-    {
-      label: "Rate",
-      borderColor: "#0a93eb",
-      data: [
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40)
-      ],
-      fill: false
-    }
-  ]
-}
-
-function randomScalingFactor(min, number) {
-  return Math.round(Number(min) + Math.random() * (number || 100))
-}
+// function randomScalingFactor(min, number) {
+//   return Math.round(Number(min) + Math.random() * (number || 100))
+// }
 
 export default {
   name: "LineChartContainer",
   components: { ChartLine },
+  props: ["history"],
   data: () => ({
-    loaded: false,
-    chartdata: barChartData,
     options: {
       tooltips: {
         mode: "index",
@@ -67,14 +47,18 @@ export default {
       }
     }
   }),
-  async mounted() {
-    this.loaded = false
-    try {
-      // const { userlist } = await fetch("/api/userlist")
-      this.chartdata = barChartData
-      this.loaded = true
-    } catch (e) {
-      console.error(e)
+  computed: {
+    chartdata() {
+      return {
+        labels: this.history.map(v => moment(v.uctDate).format("hh:mm")),
+        datasets: [
+          {
+            label: "Rate",
+            borderColor: "#0a93eb",
+            data: this.history.map(v => Math.round(v.commission.rate * 10000) / 100)
+          }
+        ]
+      }
     }
   }
 }

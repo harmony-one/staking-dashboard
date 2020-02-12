@@ -11,26 +11,26 @@
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="validator-layout">
         <Widget title="Main" style="width: 450px; height: 258px;">
-          <MainBlock v-bind:validator="validator" />
+          <MainBlock :validator="validator" />
         </Widget>
         <Widget title="General info" style="width: 250px; height: 258px;">
-          <GeneralInfoBlock v-bind:validator="validator" />
+          <GeneralInfoBlock :validator="validator" />
         </Widget>
         <Widget title="Perfomance" style="width: 250px; height: 258px;">
-          <PerfomanceBlock v-bind:validator="validator" />
+          <PerfomanceBlock :validator="validator" />
         </Widget>
 
         <Widget
           title="Stake & Delegation history"
           style="width: 450px; height: 400px;"
         >
-          <StakeHistoryBlock v-bind:validator="validator" />
+          <StakeHistoryBlock :history="validatorHistory" />
         </Widget>
         <Widget
           title="Reward rate history"
           style="width: 450px; height: 400px;"
         >
-          <RewardHistoryBlock v-bind:validator="validator" />
+          <RewardHistoryBlock :history="validatorHistory" />
         </Widget>
       </div>
     </template>
@@ -54,7 +54,11 @@ import MainBlock from "./MainBlock"
 import StakeHistoryBlock from "./StakeHistoryBlock"
 import RewardHistoryBlock from "./RewardHistoryBlock"
 import TmPage from "common/TmPage"
-import { fetchValidatorByAddress } from "../../../mock-service"
+import {
+  fetchValidatorByAddress,
+  fetchValidatorHistory
+} from "../../../mock-service"
+import { formatByStep } from "./helpers"
 
 export default {
   name: `page-validator-charts`,
@@ -75,7 +79,8 @@ export default {
   },
   data: () => ({
     loading: true,
-    validator: {}
+    validator: {},
+    validatorHistory: []
   }),
   computed: {
     ...mapState([`connection`]),
@@ -102,11 +107,18 @@ export default {
     fetchValidator: async function() {
       this.loading = true
 
-      if (this.connection.networkConfig.id || true) {
+      if (this.connection.networkConfig.id) {
         this.validator = await fetchValidatorByAddress(
           this.connection.networkConfig.id,
           this.$route.params.validator
         )
+
+        const history = await fetchValidatorHistory(
+          this.connection.networkConfig.id,
+          this.$route.params.validator
+        )
+
+        this.validatorHistory = formatByStep(history, 1000 * 60 * 5)
       }
 
       this.loading = false

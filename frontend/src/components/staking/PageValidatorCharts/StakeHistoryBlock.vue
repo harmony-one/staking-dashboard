@@ -1,54 +1,18 @@
 <template>
   <div class="chart-container">
-    <ChartBar v-if="loaded" :chartdata="chartdata" :options="options" />
+    <ChartBar :chartdata="chartdata" :options="options" />
   </div>
 </template>
 
 <script>
 import ChartBar from "./components/ChartBar"
-
-const barChartData = {
-  labels: ["January", "February", "March", "April", "May", "June", "July"],
-  datasets: [
-    {
-      label: "Self delegated",
-      backgroundColor: "hsl(183, 88%, 50%)",
-      data: [
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40),
-        randomScalingFactor(0, 40)
-      ]
-    },
-    {
-      label: "Delegated",
-      backgroundColor: "#dedede",
-      data: [
-        randomScalingFactor(30),
-        randomScalingFactor(30),
-        randomScalingFactor(30),
-        randomScalingFactor(30),
-        randomScalingFactor(30),
-        randomScalingFactor(30),
-        randomScalingFactor(30)
-      ]
-    }
-  ]
-}
-
-function randomScalingFactor(min, number) {
-  return Math.round(Number(min) + Math.random() * (number || 100))
-}
+import moment from 'moment'
 
 export default {
   name: "StakeHistoryBlock",
   components: { ChartBar },
+  props: ["history"],
   data: () => ({
-    loaded: false,
-    chartdata: barChartData,
     options: {
       tooltips: {
         mode: "index",
@@ -69,16 +33,25 @@ export default {
       }
     }
   }),
-  async mounted() {
-    this.loaded = false
-    try {
-      // const { userlist } = await fetch("/api/userlist")
-      this.chartdata = barChartData
-      this.loaded = true
-    } catch (e) {
-      console.error(e)
+  computed: {
+    chartdata() {
+      return {
+        labels: this.history.map(v => moment(v.uctDate).format('hh:mm')),
+        datasets: [
+          {
+            label: "Self delegated",
+            backgroundColor: "hsl(183, 88%, 50%)",
+            data: this.history.map(v => v.self_stake / 1e18)
+          },
+          {
+            label: "Delegated",
+            backgroundColor: "#dedede",
+            data: this.history.map(v => v.total_stake / 1e18)
+          }
+        ]
+      }
     }
-  }
+  },
 }
 </script>
 

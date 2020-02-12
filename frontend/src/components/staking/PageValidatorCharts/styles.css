@@ -19,6 +19,7 @@
   font-size: var(--h1);
   line-height: 2rem;
   font-weight: 500;
+  word-break: break-all;
 }
 
 .bech32-address {

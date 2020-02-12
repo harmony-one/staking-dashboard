@@ -1,6 +1,11 @@
 <template>
-  <div class="chart-container">
-    <ChartLine :chartdata="chartdata" :options="options" />
+  <div>
+    <div class="chart-container">
+      <ChartLine :chartdata="chartdata" :options="options" />
+    </div>
+    <div class="chart-description">
+      Reward rate show percentage expected return over a fixed time period
+    </div>
   </div>
 </template>
 
@@ -15,7 +20,7 @@ import moment from "moment"
 export default {
   name: "LineChartContainer",
   components: { ChartLine },
-  props: ["history"],
+  props: ["history", "validator"],
   data: () => ({
     options: {
       tooltips: {
@@ -55,7 +60,9 @@ export default {
           {
             label: "Rate",
             borderColor: "#0a93eb",
-            data: this.history.map(v => Math.round(v.commission.rate * 10000) / 100)
+            data: this.history.map(
+              v => Math.round(v.commission.rate * 10000) / 100
+            )
           }
         ]
       }
@@ -63,10 +70,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.chart-container .chartjs-render-monitor {
-  height: 340px;
-  max-height: 340px;
-}
-</style>

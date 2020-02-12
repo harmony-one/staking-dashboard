@@ -1,0 +1,167 @@
+<template>
+  <div>
+    <div class="slider-block">
+      <VueSlider
+        v-model="rate"
+        :max="30"
+        :included="true"
+        :marks="marks"
+        :disabled="true"
+        :tooltip="'always'"
+        :tooltip-formatter="rateTitle"
+      >
+        <template #tooltip="{ index }">
+          <span class="tooltip">{{ rate }}%</span>
+          <span class="tooltip-after">
+            {{ maxChangeRateTitle }}
+          </span>
+        </template>
+        <template v-slot:dot="{ value, focus }">
+          <div class="dot" />
+        </template>
+      </VueSlider>
+    </div>
+    <div class="chart-container-commission">
+      <ChartLine :chartdata="chartdata" :options="options" />
+    </div>
+    <div class="chart-description">Last commission change {{ 2 }} days ago</div>
+  </div>
+</template>
+
+<script>
+import ChartLine from "./components/ChartLine"
+import moment from "moment"
+import VueSlider from "vue-slider-component"
+import "vue-slider-component/theme/antd.css"
+
+// function randomScalingFactor(min, number) {
+//   return Math.round(Number(min) + Math.random() * (number || 100))
+// }
+
+export default {
+  name: "LineChartContainer",
+  components: { ChartLine, VueSlider },
+  props: ["history", "validator"],
+  data: () => ({
+    rate: 10,
+    options: {
+      tooltips: {
+        mode: "index",
+        intersect: false
+      },
+      // responsive: true,
+      scales: {
+        xAxes: [
+          {
+            stacked: true
+          }
+        ],
+        yAxes: [
+          {
+            ticks: {
+              min: 0,
+              // max: 100,
+              callback: function(value) {
+                return value + "%"
+              }
+            },
+            scaleLabel: {
+              display: true,
+              labelString: "Commission rate, %"
+            }
+          }
+        ]
+      }
+    }
+  }),
+  methods: {
+    rateTitle() {
+      return `${this.currentRate}%`
+    }
+  },
+  computed: {
+    currentRate() {
+      return Math.round(this.validator.rate * 10000) / 100
+    },
+    maxRate() {
+      return Math.round(this.validator.max_rate * 10000) / 100
+    },
+    maxChangeRate() {
+      return Math.round(this.validator.max_change_rate * 10000) / 100
+    },
+    maxChangeRateTitle() {
+      return `+/- ${this.maxChangeRate}% daily change`
+    },
+    marks() {
+      return {
+        0: {
+          label: "0%",
+          labelStyle: {
+            fontSize: '13px'
+          }
+        },
+        30: {
+          label: "30%",
+          labelStyle: {
+            fontSize: '13px'
+          }
+        }
+      }
+    },
+    chartdata() {
+      return {
+        labels: this.history.map(v => moment(v.uctDate).format("hh:mm")),
+        datasets: [
+          {
+            label: "Rate",
+            borderColor: "#0a93eb",
+            data: this.history.map(
+              v => Math.round(v.commission.rate * 10000) / 100
+            )
+          }
+        ]
+      }
+    }
+  }
+}
+</script>
+
+<style>
+.chart-container-commission .chartjs-render-monitor {
+  height: 290px;
+  max-height: 290px;
+  border: 1px solid #dedede;
+}
+
+.chart-description {
+  margin: 20px 0;
+  font-size: 13px;
+}
+
+.slider-block {
+  margin: 40px 50px 30px 10px;
+}
+
+.tooltip-after {
+  position: absolute;
+  color: #3ada2f;
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 2px;
+  font-size: 13px;
+  width: 150px;
+}
+
+.tooltip {
+  color: #0b93ea;
+  margin-left: 9px;
+}
+
+.dot {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 17.3px 10px 0 10px;
+  border-color: #0b93ea transparent transparent transparent;
+}
+</style>

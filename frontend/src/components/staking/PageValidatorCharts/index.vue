@@ -10,7 +10,7 @@
   >
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="validator-layout">
-        <Widget title="Main" style="width: 450px; height: 258px;">
+        <Widget style="width: 450px; height: 258px;">
           <MainBlock :validator="validator" />
         </Widget>
         <Widget title="General info" style="width: 250px; height: 258px;">
@@ -22,15 +22,21 @@
 
         <Widget
           title="Stake & Delegation history"
-          style="width: 450px; height: 400px;"
+          style="width: 500px; height: 400px;"
         >
-          <StakeHistoryBlock :history="validatorHistory" />
+          <StakeHistoryBlock :history="validatorHistory" :validator="validator" />
         </Widget>
         <Widget
           title="Reward rate history"
-          style="width: 450px; height: 400px;"
+          style="width: 500px; height: 400px;"
         >
-          <RewardHistoryBlock :history="validatorHistory" />
+          <RewardHistoryBlock :history="validatorHistory" :validator="validator" />
+        </Widget>
+        <Widget
+          title="Commission"
+          style="width: 500px; height: 490px;"
+        >
+          <CommissionHistoryBlock :history="validatorHistory" :validator="validator" />
         </Widget>
       </div>
     </template>
@@ -53,6 +59,7 @@ import PerfomanceBlock from "./PerfomanceBlock"
 import MainBlock from "./MainBlock"
 import StakeHistoryBlock from "./StakeHistoryBlock"
 import RewardHistoryBlock from "./RewardHistoryBlock"
+import CommissionHistoryBlock from "./CommissionHistoryBlock"
 import TmPage from "common/TmPage"
 import {
   fetchValidatorByAddress,
@@ -68,6 +75,7 @@ export default {
     GeneralInfoBlock,
     StakeHistoryBlock,
     RewardHistoryBlock,
+    CommissionHistoryBlock,
     TmPage,
     Widget
   },

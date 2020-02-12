@@ -1,9 +1,9 @@
 <template>
   <div class="widget-container">
-    <div class="widget-title" v-if="title">
-      {{ title }}
-    </div>
     <div class="widget">
+      <div class="widget-title" v-if="title">
+        {{ title }}
+      </div>
       <div class="widget-body">
         <slot />
       </div>
@@ -38,11 +38,11 @@ export default {
 
 .widget-title {
   font-size: 20px;
-  font-weight: bold;
-  margin: 0px 20px 6px 20px;
+  color: #0b93ea;
+  margin: 10px 20px 0px 20px;
 }
 
 .widget-body {
-  padding: 15px 20px;
+  padding: 10px 20px;
 }
 </style>

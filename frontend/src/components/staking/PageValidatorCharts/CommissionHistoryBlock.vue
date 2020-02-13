@@ -22,7 +22,7 @@
       </VueSlider>
     </div>
     <div class="chart-container-commission">
-      <ChartLine :chartdata="chartdata" :options="options" />
+      <ChartLine :chartdata="chartdata" :options="options" style="height: 300px;" />
     </div>
     <div class="chart-description">Last commission change {{ 2 }} days ago</div>
   </div>
@@ -45,6 +45,8 @@ export default {
   data: () => ({
     rate: 10,
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       tooltips: {
         mode: "index",
         intersect: false
@@ -128,13 +130,11 @@ export default {
 
 <style>
 .chart-container-commission .chartjs-render-monitor {
-  height: 290px;
-  max-height: 290px;
   border: 1px solid #dedede;
 }
 
 .chart-description {
-  margin: 20px 0;
+  margin: 10px 0;
   font-size: 13px;
 }
 

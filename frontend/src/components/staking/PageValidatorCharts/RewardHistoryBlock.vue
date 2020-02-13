@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="chart-container">
-      <ChartLine :chartdata="chartdata" :options="options" />
+      <ChartLine :chartdata="chartdata" :options="options" style="height: 300px;" />
     </div>
     <div class="chart-description">
       Reward rate show percentage expected return over a fixed time period
@@ -23,6 +23,8 @@ export default {
   props: ["history", "validator"],
   data: () => ({
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       tooltips: {
         mode: "index",
         intersect: false

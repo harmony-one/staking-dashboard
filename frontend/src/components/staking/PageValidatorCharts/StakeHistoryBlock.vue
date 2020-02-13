@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="chart-container">
-      <ChartBar :chartdata="chartdata" :options="options" />
+      <ChartBar :chartdata="chartdata" :options="options" style="height: 300px;" />
     </div>
     <div class="chart-description">
       Max delegation:
@@ -21,6 +21,9 @@ export default {
   props: ["history", "validator"],
   data: () => ({
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      aspectRatio: 3,
       tooltips: {
         mode: "index",
         intersect: false
@@ -68,9 +71,7 @@ export default {
 </script>
 
 <style>
-.chart-container .chartjs-render-monitor {
-  height: 290px;
-  max-height: 290px;
+.chart-container {
   border: 1px solid #dedede;
 }
 </style>

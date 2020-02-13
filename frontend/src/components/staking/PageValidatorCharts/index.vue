@@ -24,19 +24,25 @@
           title="Stake & Delegation history"
           style="width: 500px; height: 400px;"
         >
-          <StakeHistoryBlock :history="validatorHistory" :validator="validator" />
+          <StakeHistoryBlock
+            :history="validatorHistory"
+            :validator="validator"
+          />
         </Widget>
         <Widget
           title="Reward rate history"
           style="width: 500px; height: 400px;"
         >
-          <RewardHistoryBlock :history="validatorHistory" :validator="validator" />
+          <RewardHistoryBlock
+            :history="validatorHistory"
+            :validator="validator"
+          />
         </Widget>
-        <Widget
-          title="Commission"
-          style="width: 500px; height: 490px;"
-        >
-          <CommissionHistoryBlock :history="validatorHistory" :validator="validator" />
+        <Widget title="Commission" style="width: 500px; height: 490px;">
+          <CommissionHistoryBlock
+            :history="validatorHistory"
+            :validator="validator"
+          />
         </Widget>
       </div>
     </template>
@@ -126,7 +132,15 @@ export default {
           this.$route.params.validator
         )
 
-        this.validatorHistory = formatByStep(history, 1000 * 60 * 5)
+        let stepTime = 1000 * 60 * 5
+
+        this.validatorHistory = formatByStep(history, stepTime)
+
+        // scale to optimal
+        while (this.validatorHistory.length > 10) {
+          stepTime = stepTime * 2
+          this.validatorHistory = formatByStep(history, stepTime)
+        }
       }
 
       this.loading = false

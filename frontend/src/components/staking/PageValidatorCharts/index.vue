@@ -44,6 +44,9 @@
             :validator="validator"
           />
         </Widget>
+        <Widget title="Event history" style="width: 500px; height: 400px;">
+          <EventHistoryBlock :validator="validator" />
+        </Widget>
       </div>
     </template>
     <template v-else>
@@ -66,6 +69,7 @@ import MainBlock from "./MainBlock"
 import StakeHistoryBlock from "./StakeHistoryBlock"
 import RewardHistoryBlock from "./RewardHistoryBlock"
 import CommissionHistoryBlock from "./CommissionHistoryBlock"
+import EventHistoryBlock from "./EventHistoryBlock"
 import TmPage from "common/TmPage"
 import {
   fetchValidatorByAddress,
@@ -82,6 +86,7 @@ export default {
     StakeHistoryBlock,
     RewardHistoryBlock,
     CommissionHistoryBlock,
+    EventHistoryBlock,
     TmPage,
     Widget
   },

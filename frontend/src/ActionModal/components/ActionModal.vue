@@ -44,12 +44,6 @@
         <FeatureNotAvailable :feature="title" />
       </template>
       <template v-else>
-        <p
-          v-if="session.windowsDevice && step !== successStep"
-          class="form-message notice"
-        >
-          {{ session.windowsWarning }}
-        </p>
         <div v-if="requiresSignIn" class="action-modal-form">
           <p class="form-message notice">
             You need to sign in to submit a transaction.

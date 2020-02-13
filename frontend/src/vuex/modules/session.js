@@ -5,10 +5,6 @@ function isWindowsPlatform() {
   return window.navigator.platform.match(/win32|win64/i) !== null
 }
 
-const windowsWarning = `If you’re using Windows 10 (May 2019 update), signing
-transactions with your Ledger Nano S will not work. Please use another
-operating system, or version of Windows.`
-
 const mockSessionState = {
   // signedIn: true,
   // address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
@@ -42,7 +38,6 @@ export default () => {
       navigator.userAgent.includes(`Chrome`) ||
       navigator.userAgent.includes(`Opera`),
     windowsDevice: isWindowsPlatform(),
-    windowsWarning: windowsWarning,
 
     // import into state to be able to test easier
     externals: {

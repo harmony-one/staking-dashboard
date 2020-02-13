@@ -33,6 +33,7 @@ import ChartLine from "./components/ChartLine"
 import moment from "moment"
 import VueSlider from "vue-slider-component"
 import "vue-slider-component/theme/antd.css"
+import { percent } from "../../../scripts/num"
 
 // function randomScalingFactor(min, number) {
 //   return Math.round(Number(min) + Math.random() * (number || 100))
@@ -49,7 +50,11 @@ export default {
       maintainAspectRatio: false,
       tooltips: {
         mode: "index",
-        intersect: false
+        intersect: false,
+        callbacks: {
+          title: data => "Date: " + data[0].xLabel,
+          label: data => "Rate: " + percent(data.yLabel / 100)
+        }
       },
       // responsive: true,
       scales: {
@@ -116,6 +121,7 @@ export default {
         datasets: [
           {
             label: "Rate",
+            fill: false,
             borderColor: "#0a93eb",
             data: this.history.map(
               v => Math.round(v.commission.rate * 10000) / 100

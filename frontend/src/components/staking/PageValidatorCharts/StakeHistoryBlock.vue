@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="chart-container">
-      <ChartBar :chartdata="chartdata" :options="options" style="height: 300px;" />
+      <ChartBar
+        :chartdata="chartdata"
+        :options="options"
+        style="height: 300px;"
+      />
     </div>
     <div class="chart-description">
       Max delegation:
@@ -13,7 +17,7 @@
 <script>
 import ChartBar from "./components/ChartBar"
 import moment from "moment"
-import { shortDecimals } from "scripts/num"
+import { shortDecimals } from "../../../scripts/num"
 
 export default {
   name: "StakeHistoryBlock",
@@ -26,7 +30,17 @@ export default {
       aspectRatio: 3,
       tooltips: {
         mode: "index",
-        intersect: false
+        intersect: false,
+        callbacks: {
+          title: data => "Date: " + data[0].xLabel,
+          label: data => {
+            return (
+              (!data.datasetIndex ? "Self delegated: " : "Delegated: ") +
+              shortDecimals(data.yLabel) +
+              " ONE"
+            )
+          }
+        }
       },
       // responsive: true,
       scales: {

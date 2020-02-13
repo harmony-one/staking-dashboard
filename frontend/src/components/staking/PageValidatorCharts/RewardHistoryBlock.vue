@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="chart-container">
-      <ChartLine :chartdata="chartdata" :options="options" style="height: 300px;" />
+      <ChartLine
+        :chartdata="chartdata"
+        :options="options"
+        style="height: 300px;"
+      />
     </div>
     <div class="chart-description">
       Reward rate show percentage expected return over a fixed time period
@@ -12,6 +16,7 @@
 <script>
 import ChartLine from "./components/ChartLine"
 import moment from "moment"
+import { percent } from "../../../scripts/num"
 
 // function randomScalingFactor(min, number) {
 //   return Math.round(Number(min) + Math.random() * (number || 100))
@@ -27,15 +32,18 @@ export default {
       maintainAspectRatio: false,
       tooltips: {
         mode: "index",
-        intersect: false
+        intersect: false,
+        callbacks: {
+          title: data => "Date: " + data[0].xLabel,
+          label: data => "Rate: " + percent(data.yLabel / 100)
+        }
       },
-      // responsive: true,
+      // hover: {
+      //   mode: "nearest",
+      //   intersect: true
+      // },
       scales: {
-        xAxes: [
-          {
-            stacked: true
-          }
-        ],
+        xAxes: [{ display: true }],
         yAxes: [
           {
             ticks: {
@@ -62,8 +70,10 @@ export default {
           {
             label: "Rate",
             borderColor: "#0a93eb",
+            fill: false,
             data: this.history.map(
-              v => Math.round(v.commission.rate * 10000) / 100
+              // v => Math.round(v.commission.rate * 10000) / 100
+              v => Math.round(Math.random() * 30)
             )
           }
         ]

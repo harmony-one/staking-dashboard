@@ -8,7 +8,6 @@
         {{ subtitle }}
       </h3>
       <slot slot="menu-body" name="menu-body">
-        <TmBalance v-if="session.signedIn" />
       </slot>
       <slot slot="header-buttons" name="header-buttons" />
     </TmPageHeader>
@@ -21,12 +20,10 @@
 <script>
 import TmPageHeader from "./TmPageHeader.vue"
 import { mapState } from "vuex"
-import TmBalance from "common/TmBalance"
 
 export default {
   name: `page-container`,
   components: {
-    TmBalance,
     TmPageHeader
   },
   props: {

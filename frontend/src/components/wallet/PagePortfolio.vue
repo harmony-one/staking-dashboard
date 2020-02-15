@@ -8,6 +8,23 @@
       :sign-in-required="true"
     >
       <template slot="managed-body">
+        <div
+          v-if="session.signedIn"
+          style="display: flex; flex-direction: row;"
+        >
+          <Widget title="" style="width: 400px; height: 320px;">
+            <TmBalance />
+          </Widget>
+          <LightWidget title="Stake allocation" style="width: 340px; height: 400px;">
+            <StakeAllocationBlock />
+          </LightWidget>
+          <LightWidget
+            title="Time until next epoch"
+            style="width: 300px; height: 340px;"
+          >
+            <TimePieBlock :last-epoch-time="lastEpochTime" />
+          </LightWidget>
+        </div>
         <DelegationsOverview />
         <template v-if="Object.keys(delegation.unbondingDelegations).length">
           <h3 class="tab-header">
@@ -23,18 +40,32 @@
 <script>
 import { mapState, mapGetters } from "vuex"
 import TmPage from "common/TmPage"
+import TmBalance from "./TmBalance"
 import DelegationsOverview from "staking/DelegationsOverview"
 import Undelegations from "staking/Undelegations"
+import TimePieBlock from "./TimePieBlock"
+import StakeAllocationBlock from "./StakeAllocationBlock"
+import Widget from "./components/Widget"
+import LightWidget from "./components/LightWidget"
+import moment from "moment"
 
 export default {
   name: `page-portfolio`,
   components: {
+    StakeAllocationBlock,
     TmPage,
     Undelegations,
-    DelegationsOverview
+    DelegationsOverview,
+    TmBalance,
+    Widget,
+    LightWidget,
+    TimePieBlock
   },
   data: () => ({
-    lastUpdate: 0
+    lastUpdate: 0,
+    lastEpochTime: moment()
+      .add(-1, "day")
+      .toDate()
   }),
   computed: {
     ...mapState([`session`, `wallet`, `delegation`]),

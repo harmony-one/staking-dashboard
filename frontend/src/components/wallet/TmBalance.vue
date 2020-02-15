@@ -10,29 +10,34 @@
 
       <div class="row small-container">
         <div class="available-atoms">
-          <h3>Available {{ bondDenom | viewDenom }}</h3>
-          <h2>{{ unbondedAtoms }}</h2>
+          <h3>Staked</h3>
+          <h2>{{ rewards }}</h2>
         </div>
 
         <div v-if="rewards" class="rewards">
-          <h3>Total Rewards</h3>
+          <h3>Reward</h3>
           <h2>+{{ rewards }}</h2>
+        </div>
+
+        <div class="available-atoms">
+          <h3>Available</h3>
+          <h2>{{ unbondedAtoms }}</h2>
         </div>
       </div>
     </div>
     <div class="button-container">
-      <TmBtn
-        class="send-button"
-        value="Send"
-        type="secondary"
-        @click.native="onSend()"
-      />
       <TmBtn
         id="withdraw-btn"
         :disabled="!readyToWithdraw"
         class="withdraw-rewards"
         value="Claim Rewards"
         @click.native="readyToWithdraw && onWithdrawal()"
+      />
+      <TmBtn
+        class="send-button"
+        value="Transfer funds"
+        type="secondary"
+        @click.native="onSend()"
       />
     </div>
 
@@ -171,6 +176,7 @@ export default {
 .rewards h2 {
   color: var(--success);
   font-size: var(--m);
+  line-height: 20px;
 }
 
 .available-atoms h2 {
@@ -199,6 +205,7 @@ export default {
 
 .small-container {
   padding-top: 1rem;
+  justify-content: space-between;
 }
 
 @media screen and (max-width: 667px) {

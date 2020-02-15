@@ -22,55 +22,61 @@
       </div>
     </td>
     <td class="data-table__row__info">
-      <Avatar
-        v-if="!validator || !validator.avatarUrl"
-        class="li-validator-image"
-        alt="generic validator logo - generated avatar from address"
-        :address="validator.operator_address"
-      />
-      <img
-        v-else-if="validator && validator.avatarUrl"
-        :src="validator.avatarUrl"
-        class="li-validator-image"
-        :alt="`validator logo for ` + validator.moniker"
-      />
+      <!--      <Avatar-->
+      <!--        v-if="!validator || !validator.avatarUrl"-->
+      <!--        class="li-validator-image"-->
+      <!--        alt="generic validator logo - generated avatar from address"-->
+      <!--        :address="validator.operator_address"-->
+      <!--      />-->
+      <!--      <img-->
+      <!--        v-else-if="validator && validator.avatarUrl"-->
+      <!--        :src="validator.avatarUrl"-->
+      <!--        class="li-validator-image"-->
+      <!--        :alt="`validator logo for ` + validator.moniker"-->
+      <!--      />-->
       <div class="validator-info">
         <h3 class="li-validator-name">
           {{ validator.moniker }}
         </h3>
-        <div v-if="validator.my_delegations > 0">
-<!--          <h4>-->
-<!--            {{ validator.my_delegations | atoms | shortDecimals }}-->
-<!--          </h4>-->
-          <h5 v-if="validator.rewards > 0">
-            +{{ validator.rewards | atoms | shortDecimals }}
-          </h5>
-        </div>
       </div>
     </td>
     <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ validator.my_delegations | atoms | shortDecimals }}
+      {{ 0.00005 | percent }}
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'voting-power' }">
+    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
+      {{ validator.rate | percent }}
+    </td>
+    <td>
+      {{ validator.total_one_staked | zeroDecimals }}
+    </td>
+    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{ validator.avg_voting_power | percent }}
     </td>
   </tr>
 </template>
 
 <script>
-import { percent, shortDecimals, atoms } from "scripts/num"
-import Avatar from "common/Avatar"
+import {
+  percent,
+  shortDecimals,
+  atoms,
+  zeroDecimals,
+  twoDecimals
+} from "scripts/num"
+// import Avatar from "common/Avatar"
 
 export default {
   name: `li-validator`,
-  components: {
-    Avatar
-  },
+  // components: {
+  //   Avatar
+  // },
   filters: {
     atoms,
     shortDecimals,
     percent,
-    toLower: text => text.toLowerCase()
+    toLower: text => text.toLowerCase(),
+    zeroDecimals,
+    twoDecimals
   },
   props: {
     validator: {
@@ -126,8 +132,8 @@ export default {
 .validator-info {
   display: flex;
   flex-direction: column;
-  padding-left: 1rem;
   text-overflow: ellipsis;
+  justify-content: center;
 }
 
 .li-validator h4,
@@ -159,6 +165,10 @@ export default {
   height: 2.5rem;
   width: 2.5rem;
   border: 1px solid var(--bc-dim);
+}
+
+.status-container {
+  margin-top: -3px;
 }
 
 .validator-status {

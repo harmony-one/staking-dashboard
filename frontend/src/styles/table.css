@@ -15,7 +15,8 @@
 }
 
 .data-table th {
-  padding: 0.5rem 2rem;
+  width: 130px;
+  padding: 0.5rem 10px;
   text-align: left;
 }
 
@@ -32,24 +33,29 @@
 }
 
 .data-table th:nth-child(3) {
-    width: 50%;
+  width: 30%;
 }
 
-.data-table th:nth-last-child(-n+1) {
-    width: 150px;
-    text-align: right;
-    padding-right: 1.5rem;
+.data-table th:nth-last-child(-n + 1) {
+  text-align: right;
 }
 
-.data-table td:nth-last-child(-n+1) {
-    text-align: right;
+.data-table td:nth-last-child(-n + 1) {
+  text-align: right;
+  padding-right: 1.5rem;
 }
 
 .data-table td {
-  padding: 0.5rem 2rem;
+  padding: 0 10px;
+  height: 40px;
+  width: 100%;
   position: relative;
   vertical-align: middle;
-  width: 100%;
+}
+
+.data-table td > span {
+  font-size: 14px;
+  color: #89898d;
 }
 
 .data-table__row__cell__separator::after {

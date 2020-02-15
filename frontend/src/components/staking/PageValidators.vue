@@ -6,9 +6,15 @@
   >
     <template slot="managed-body">
       <div class="networkInfo">
-        <div class="item">
-          <h4>Effective median stake:</h4>
-          {{ networkInfo.effective_median_stake | ones | shortDecimals }} ONE
+        <div class="column">
+          <div class="item">
+            <h4>Effective median stake:</h4>
+            {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
+          </div>
+          <div class="item">
+            <h4>Total stake:</h4>
+            {{ networkInfo.total_one_staked | zeroDecimals }} ONE
+          </div>
         </div>
         <div class="item">
           <h4>Current block number:</h4>
@@ -61,7 +67,7 @@ import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
 import { transactionToShortString } from "src/scripts/transaction-utils"
-import { ones, shortDecimals } from "scripts/num"
+import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 
 export default {
   name: `tab-validators`,
@@ -73,7 +79,9 @@ export default {
   },
   filters: {
     ones,
-    shortDecimals
+    shortDecimals,
+    zeroDecimals,
+    twoDecimals
   },
   data: () => ({
     searchTerm: "",
@@ -191,6 +199,13 @@ export default {
     // text-align: center;
   }
 
+  .column {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    min-width: 230px;
+  }
+
   h4 {
     font-size: 16px;
     display: inline-block;
@@ -202,5 +217,4 @@ export default {
     flex-direction: column;
   }
 }
-
 </style>

@@ -117,6 +117,16 @@ export default {
           tooltip: `The validator's moniker`
         },
         {
+          title: `Return %`,
+          value: `rate`,
+          tooltip: `Rate of return per validator`
+        },
+        {
+          title: `Fees`,
+          value: `fee`,
+          tooltip: `Commission fees`
+        },
+        {
           title: `Total ONE staked`,
           value: `total`,
           tooltip: `Total ONE staked`

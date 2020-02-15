@@ -33,6 +33,12 @@ export function fetchValidatorByAddress(networkId: string, address: string) {
     .then(rez => remapValidator(rez.data, true))
 }
 
+export function fetchValidatorHistory(networkId: string, address: string) {
+  return axios.get(
+    `${API_URL}/networks/${networkId}/validator_history/${address}`
+  ).then(rez => rez.data)
+}
+
 export function fetchDelegationsByAddress(networkId: string, address: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/delegations/${address}`)

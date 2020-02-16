@@ -1,3 +1,4 @@
-runtime: nodejs10
-manual_scaling:
-  instances: 1
+runtime: nodejs
+env: flexible
+automatic_scaling:
+  max_num_instances: 1

@@ -1,18 +1,22 @@
 const axios = require('axios')
+const _ = require('lodash')
 const { isNotEmpty, bodyParams } = require('./helpers')
 
 const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
 const VALIDATORS = 'VALIDATORS'
 const ACTIVE_VALIDATORS = 'ACTIVE_VALIDATORS'
 const VALIDATOR_INFO = 'VALIDATOR_INFO'
+const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
+const MAX_LENGTH = 30
 
 module.exports = function (BLOCKCHAIN_SERVER) {
   const cache = {
     VALIDATORS: [],
     ACTIVE_VALIDATORS: [],
     VALIDATOR_INFO: {},
+    VALIDATOR_INFO_HISTORY: {},
     DELEGATIONS_BY_DELEGATOR: {},
     DELEGATIONS_BY_VALIDATOR: {},
     STAKING_NETWORK_INFO: {}
@@ -97,47 +101,63 @@ module.exports = function (BLOCKCHAIN_SERVER) {
     }
   }
   const getValidatorInfoData = async address => {
-    const res = await apiClient.post(
-      '/',
-      bodyParams('hmy_getValidatorInformation', address)
-    )
+    try {
+      const res = await apiClient.post(
+        '/',
+        bodyParams('hmy_getValidatorInformation', address)
+      )
 
-    if (isNotEmpty(res.data.result)) {
-      let selfStake = 0
-      let totalStake = 0
-      if (cache[DELEGATIONS_BY_VALIDATOR][address]) {
-        const elem = cache[DELEGATIONS_BY_VALIDATOR][address].find(
-          e => e.validator_address === e.delegator_address
-        )
-        if (elem) {
-          selfStake = elem.amount
+      if (isNotEmpty(res.data.result)) {
+        let selfStake = 0
+        let totalStake = 0
+        if (cache[DELEGATIONS_BY_VALIDATOR][address]) {
+          const elem = cache[DELEGATIONS_BY_VALIDATOR][address].find(
+            e => e.validator_address === e.delegator_address
+          )
+          if (elem) {
+            selfStake = elem.amount
+          }
+          totalStake = cache[DELEGATIONS_BY_VALIDATOR][address].reduce(
+            (acc, val) => acc + val.amount,
+            0
+          )
         }
-        totalStake = cache[DELEGATIONS_BY_VALIDATOR][address].reduce(
-          (acc, val) => acc + val.amount,
-          0
-        )
+
+        // fields below are included in the validator.
+        // * signed_blocks
+        // * blocks_should_sign
+        // * total_one_staked
+        const utcDate = new Date(Date.now())
+
+        const validatorInfo = {
+          active: !!cache[ACTIVE_VALIDATORS].includes(address),
+          self_stake: selfStake,
+          total_stake: totalStake,
+          // TODO(minh) fix it.
+          signed_blocks: 50,
+          blocks_should_sign: 100,
+          total_one_staked: 4,
+          uctDate: utcDate,
+          ...res.data.result
+        }
+
+        cache[VALIDATOR_INFO][address] = validatorInfo
+
+        // Calculating cache[VALIDATOR_INFO_HISTORY]
+        const timeIndex = Math.floor(Math.floor(utcDate.getTime() / 1000)/60)
+        if (!cache[VALIDATOR_INFO_HISTORY][address]) {
+          cache[VALIDATOR_INFO_HISTORY][address] = new Map();
+        }
+        cache[VALIDATOR_INFO_HISTORY][address][timeIndex] = validatorInfo
+        if (cache[VALIDATOR_INFO_HISTORY][address][timeIndex - MAX_LENGTH]) {
+          delete cache[VALIDATOR_INFO_HISTORY][address][timeIndex - MAX_LENGTH]
+        }
       }
-
-      // fields below are included in the validator.
-      // * signed_blocks
-      // * blocks_should_sign
-      // * total_one_staked
-
-      const validatorInfo = {
-        active: !!cache[ACTIVE_VALIDATORS].includes(address),
-        self_stake: selfStake,
-        total_stake: totalStake,
-        // TODO(minh) fix it.
-        signed_blocks: 50,
-        blocks_should_sign: 100,
-        total_one_staked: 4,
-        ...res.data.result
-      }
-
-      cache[VALIDATOR_INFO][address] = validatorInfo
+      // console.log("getAllValidatorInfoData ${address}", res.data);
+      return res.data.result
+    } catch (e) {
+      console.log(e)
     }
-    // console.log("getAllValidatorInfoData ${address}", res.data);
-    return res.data.result
   }
 
   const getDelegationsByDelegatorData = async address => {
@@ -170,6 +190,16 @@ module.exports = function (BLOCKCHAIN_SERVER) {
     try {
       await getActiveValidatorAddressesData()
 
+      console.log(
+        'ActiveValidators: ',
+        cache[ACTIVE_VALIDATORS] && cache[ACTIVE_VALIDATORS].length
+      )
+      cache[ACTIVE_VALIDATORS] = cache[ACTIVE_VALIDATORS].slice(0, 30)
+      console.log(
+        'ActiveValidators: ',
+        cache[ACTIVE_VALIDATORS] && cache[ACTIVE_VALIDATORS].length
+      )
+
       if (cache[ACTIVE_VALIDATORS]) {
         cache[ACTIVE_VALIDATORS].forEach(async address => {
           await getValidatorInfoData(address)
@@ -179,6 +209,16 @@ module.exports = function (BLOCKCHAIN_SERVER) {
 
       // TODO: currently only fetch active validators.
       await getAllValidatorAddressesData()
+
+      console.log(
+        'ActiveValidators: ',
+        cache[ACTIVE_VALIDATORS] && cache[ACTIVE_VALIDATORS].length
+      )
+      cache[VALIDATORS] = cache[VALIDATORS].slice(0, 30)
+      console.log(
+        'Validators: ',
+        cache[VALIDATORS] && cache[VALIDATORS].length
+      )
 
       if (cache[VALIDATORS]) {
         cache[VALIDATORS].forEach(async address => {
@@ -234,6 +274,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
     getValidators,
     getActiveValidators,
     getValidatorInfo: address => cache[VALIDATOR_INFO][address],
+    getValidatorHistory: address => _.values(cache[VALIDATOR_INFO_HISTORY][address]).sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate)),
     getDelegationsByDelegator,
     getDelegationsByValidator: address =>
       cache[DELEGATIONS_BY_VALIDATOR][address]

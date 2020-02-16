@@ -1,11 +1,12 @@
 import config from "src/config"
-import HarmonyApp from "./harmony-ledger"
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
+import HarmonyApp, { SW_ERR } from "./harmony-ledger"
+
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 import { ITransactionData } from "@/staking-client/Staking"
 import { Transaction } from "@harmony-js/transaction"
 import { StakingTransaction } from "@harmony-js/staking"
-import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
 // @ts-ignore
 import TransportWebHID from "@ledgerhq/hw-transport-webhid"
 
@@ -94,7 +95,19 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
   actions: {
     async connectLedgerApp() {
       const app = await getHarmonyApp()
-      const response: any = await app.publicKey(false)
+      let response: any = await app.publicKey(false)
+      if (response.return_code === SW_ERR) {
+        throw new Error("Authorization request rejected")
+      }
+
+      if (!response.one_address) {
+        throw new Error("Address Not Found")
+      }
+
+      if (response.one_address.indexOf(`1`) === -1) {
+        throw new Error("Not A Valid Bech32 Address")
+      }
+
       return response.one_address.toString()
     },
 

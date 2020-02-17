@@ -42,12 +42,7 @@ export function fetchValidatorHistory(networkId: string, address: string) {
 export function fetchDelegationsByAddress(networkId: string, address: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/delegations/${address}`)
-    .then(rez =>
-      rez.data.map((d: any) => ({
-        ...d,
-        amount: d.amount / 1000000000000
-      }))
-    )
+    .then(rez => rez.data)
 }
 
 export function fetchNetworkInfo(networkId: string) {

@@ -38,9 +38,9 @@
   margin-right: 0.5rem;
 }
 
-.status-container {
-  padding: 1rem 1rem 0;
-}
+/*.status-container {*/
+/*  padding: 1rem 1rem 0;*/
+/*}*/
 
 .validator-status {
   text-transform: uppercase;

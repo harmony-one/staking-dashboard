@@ -23,7 +23,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin-top: 30px;
-  margin-left: 50px;
 }
 
 .widget-portfolio {
@@ -43,6 +42,6 @@ export default {
 }
 
 .widget-body {
-  padding: 10px 20px;
+  padding: 10px 0px;
 }
 </style>

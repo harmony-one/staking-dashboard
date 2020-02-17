@@ -4,7 +4,7 @@
       <ChartPie
         :chartdata="chartdata"
         :options="options"
-        style="height: 300px;"
+        style="height: 300px; width: 340px;"
       />
     </div>
   </div>
@@ -29,22 +29,8 @@ function hexToRgb(hex) {
 export default {
   name: "StakeAllocationBlock",
   components: { ChartPie },
-  props: ["historyData"],
+  props: ["delegations"],
   data: () => ({
-    history: [
-      {
-        validator: "Sample",
-        stake_amount: 12 * 10e17
-      },
-      {
-        validator: "Harmony",
-        stake_amount: 22 * 10e17
-      },
-      {
-        validator: "Other",
-        stake_amount: 44 * 10e17
-      }
-    ],
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -97,10 +83,10 @@ export default {
       // )
 
       return {
-        labels: this.history.map(v => v.validator),
+        labels: this.delegations.map(v => v.validator),
         datasets: [
           {
-            data: this.history.map(v => v.stake_amount),
+            data: this.delegations.map(v => v.amount),
             backgroundColor: chartColors
           }
         ]

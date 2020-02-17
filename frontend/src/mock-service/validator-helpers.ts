@@ -13,6 +13,7 @@ const blockchainValidator = {
   ],
   "min-self-delegation": 2000000000000000000,
   "max-total-delegation": 3106511852580897000,
+  address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24",
   commission: {
     rate: "0.150000000000000000",
     "max-rate": "0.900000000000000000",
@@ -69,6 +70,7 @@ const frontendValidator = {
   self_stake: 11,
   total_stake: 0,
   total_one_staked: 0,
+  address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24",
 }
 
 export type TBlockchainValidator = typeof blockchainValidator
@@ -79,6 +81,7 @@ export const remapValidator = (
   convertAddress = false
 ): TFrontendValidator => {
   return {
+    ...validator,
     userName: validator.description.name,
 
     operator_address: convertAddress
@@ -105,6 +108,7 @@ export const remapValidator = (
     self_stake: validator.self_stake,
     total_stake: validator.total_stake,
     total_one_staked: validator.total_one_staked,
+    address: validator.address,
 
     customized: false,
     identity: "DCB176E79AE7D51F",

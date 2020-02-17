@@ -8,15 +8,21 @@
       :sign-in-required="true"
     >
       <template slot="managed-body">
-        <div
-          v-if="session.signedIn"
-          style="display: flex; flex-direction: row;"
-        >
-          <Widget title="" style="width: 400px; height: 320px;">
+        <div v-if="session.signedIn" class="portfolio-top-container">
+          <Widget title="" style="width: 450px; height: 320px;">
             <TmBalance />
           </Widget>
-          <LightWidget title="Stake allocation" style="width: 340px; height: 400px;">
-            <StakeAllocationBlock />
+          <LightWidget
+            title="Stake allocation"
+            style="width: 340px; height: 400px;"
+          >
+            <div v-if="delegation.loading || validators.loading">
+              Loading...
+            </div>
+            <div v-else-if="!delegations.length">
+              No delegations
+            </div>
+            <StakeAllocationBlock :delegations="delegations" v-else />
           </LightWidget>
           <LightWidget
             title="Time until next epoch"
@@ -68,8 +74,27 @@ export default {
       .toDate()
   }),
   computed: {
-    ...mapState([`session`, `wallet`, `delegation`]),
-    ...mapGetters([`lastHeader`])
+    ...mapState([`session`, `wallet`, `delegation`, `delegates`, "validators"]),
+    ...mapGetters([`lastHeader`]),
+    delegations() {
+      if (this.delegates.loading || this.validators.loading) {
+        return []
+      }
+
+      const delegates = this.delegates.delegates
+      const validators = this.validators.validators
+
+      return delegates.map(d => {
+        const validator = validators.find(
+          v => v.address === d.validator_address
+        )
+
+        return {
+          ...d,
+          validator: validator && validator.description.name
+        }
+      })
+    }
   },
   watch: {
     lastHeader: {
@@ -99,5 +124,12 @@ export default {
 .tab-header {
   margin-top: 2rem;
   margin-bottom: 1rem;
+}
+
+.portfolio-top-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 </style>

@@ -47,7 +47,7 @@
       {{ validator.rate | percent }}
     </td>
     <td>
-      {{ validator.total_one_staked | zeroDecimals }}
+      {{ validator.total_stake | ones | zeroDecimals }}
     </td>
     <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{ validator.avg_voting_power | percent }}
@@ -60,6 +60,7 @@ import {
   percent,
   shortDecimals,
   atoms,
+  ones,
   zeroDecimals,
   twoDecimals
 } from "scripts/num"
@@ -72,6 +73,7 @@ export default {
   // },
   filters: {
     atoms,
+    ones,
     shortDecimals,
     percent,
     toLower: text => text.toLowerCase(),

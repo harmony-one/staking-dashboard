@@ -11,7 +11,7 @@ export default () => {
     async getValidators({ commit, rootState }) {
       let validators = await fetchValidators(rootState.connection.networkConfig.id)
 
-      const { delegates } = rootState.delegates
+      // const { delegates } = rootState.delegates
 
       // if (validators) {
       //   validators = validators.map(validator => {

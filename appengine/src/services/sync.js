@@ -6,7 +6,7 @@ const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
 const VALIDATORS = 'VALIDATORS'
 const ACTIVE_VALIDATORS = 'ACTIVE_VALIDATORS'
 const VALIDATOR_INFO = 'VALIDATOR_INFO'
-const VALIDATOR_INFO_HISTORY = 'history'
+const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
@@ -190,7 +190,7 @@ module.exports = function(
           await updateDocument(
             historyCollection,
             `${address}_${dayIndex}`,
-            cache[VALIDATOR_INFO_HISTORY][address][dayIndex]
+            validatorInfo
           )
         }
         cache[VALIDATOR_INFO_HISTORY][address][dayIndex] = validatorInfo

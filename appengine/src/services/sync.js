@@ -194,11 +194,16 @@ module.exports = function(
           }
         }
         if (
+          cache[VALIDATOR_INFO][address] &&
+          cache[VALIDATOR_INFO][address].commission &&
           validatorInfo.commission.rate !==
-          cache[VALIDATOR_INFO][address].commission.rate
+            cache[VALIDATOR_INFO][address].commission.rate
         ) {
           validatorInfo['commision-recent-change'] = utcDate
-        } else if (cache[VALIDATOR_INFO][address]['commision-recent-change']) {
+        } else if (
+          cache[VALIDATOR_INFO][address] &&
+          cache[VALIDATOR_INFO][address]['commision-recent-change']
+        ) {
           validatorInfo['commision-recent-change'] =
             cache[VALIDATOR_INFO][address]['commision-recent-change']
         }

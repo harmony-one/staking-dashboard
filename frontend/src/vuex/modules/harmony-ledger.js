@@ -30,7 +30,7 @@ const INS = {
     SIGN_STAKING: 0x04,
     SIGN_TX: 0x08,
 };
-const SW_ERR = 0x6985;
+export const SW_ERR = 0x6985;
 const CMDS = {
     P1_FIRST: 0x0,
     P1_MORE: 0x80,
@@ -106,6 +106,7 @@ export default class HarmonyApp {
         }
         const errorCodeData = resp.slice(-2);
         const returnCode = errorCodeData[0] * 256 + errorCodeData[1];
+
         return {
             one_address: Buffer.from(resp.slice(0, 42)),
             return_code: returnCode,

@@ -20,12 +20,30 @@ function setDecimalLength(value, minLength, maxLength) {
     maximumFractionDigits: maxLength
   }).format(truncate(value, maxLength))
 }
+
 export function shortDecimals(value) {
   return setDecimalLength(value, 3, 9)
 }
 
+function usd(value) {
+  return new Intl.NumberFormat(language, {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value)
+}
+
 export function fullDecimals(value) {
   return setDecimalLength(value, 6, 9)
+}
+
+export function zeroDecimals(value) {
+  return setDecimalLength(value, 0, 0)
+}
+
+export function twoDecimals(value) {
+  return setDecimalLength(value, 2, 2)
 }
 
 export function pretty(number = 0) {
@@ -87,8 +105,8 @@ export function atoms(number = 0) {
 
 export function ones(number = 0) {
   return BigNumber(number)
-      .div(1e18)
-      .toNumber()
+    .div(1e18)
+    .toNumber()
 }
 
 export function uatoms(number = 0) {
@@ -163,11 +181,14 @@ export const roundObjectPercentages = dataMap => {
 export default {
   SMALLEST,
   ones,
+  usd,
   atoms,
   uatoms,
   viewDenom,
   createDisplayCoin,
   shortDecimals,
+  zeroDecimals,
+  twoDecimals,
   fullDecimals,
   pretty,
   prettyInt,

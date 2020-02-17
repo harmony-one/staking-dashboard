@@ -257,8 +257,8 @@ module.exports = function(
 
       if (cache[ACTIVE_VALIDATORS]) {
         cache[ACTIVE_VALIDATORS].forEach(async address => {
-          await getValidatorInfoData(address)
           await getDelegationsByValidatorData(address)
+          await getValidatorInfoData(address)
         })
       }
 
@@ -274,8 +274,8 @@ module.exports = function(
 
       if (cache[VALIDATORS]) {
         cache[VALIDATORS].forEach(async address => {
-          await getValidatorInfoData(address)
           await getDelegationsByValidatorData(address)
+          await getValidatorInfoData(address)
         })
       }
 

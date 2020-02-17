@@ -70,7 +70,7 @@ module.exports = function(
       // console.log("getAllValidatorAddressesData", res.data)
       return res.data.result
     } catch (err) {
-      // console.log(err)
+      console.log('error when doing getAllValidatorAddressesData:', err)
     }
   }
 
@@ -109,14 +109,13 @@ module.exports = function(
     }
   }
 
-  const getDayIndex = uctDate => {
-    return Math.floor(utcDate.getTime() / (1000 * 60 * 60 * 24))
-  }
+  const getDayIndex = utcDate =>
+    Math.floor(utcDate.getTime() / (1000 * 60 * 60 * 24))
 
   const getRecentData = async address => {
     const res = new Map()
     try {
-      const recent = getCollectionDataWithLimit(
+      const recent = await getCollectionDataWithLimit(
         historyCollection,
         address,
         'index',
@@ -125,7 +124,9 @@ module.exports = function(
       _.forEach(recent, item => {
         res[item.index] = item
       })
-    } catch (err) {}
+    } catch (err) {
+      console.log(`error when getRecentData ${address}`, err)
+    }
     return res
   }
 
@@ -157,6 +158,7 @@ module.exports = function(
         // * blocks_should_sign
         // * total_one_staked
         const utcDate = new Date(Date.now())
+        const dayIndex = getDayIndex(utcDate)
 
         const validatorInfo = {
           active: !!cache[ACTIVE_VALIDATORS].includes(address),
@@ -167,32 +169,40 @@ module.exports = function(
           blocks_should_sign: 100,
           total_one_staked: 4,
           uctDate: utcDate,
+          index: dayIndex,
+          address: res.data.result['one-address'],
           ...res.data.result
         }
 
-        cache[VALIDATOR_INFO][address] = validatorInfo
-
         // Calculating cache[VALIDATOR_INFO_HISTORY]
-        const dayIndex = getDayIndex(utcDate)
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
           cache[VALIDATOR_INFO_HISTORY][address] = await getRecentData(address)
         }
         // update the previous dayIndex if this is the first time dayIndex will be inserted.
-        if (
-          !cache[VALIDATOR_INFO_HISTORY][address][dayIndex] &&
-          cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]
-        ) {
-          await updateDocument(
-            historyCollection,
-            `${address}_${dayIndex - 1}`,
-            cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]
-          )
+        if (!cache[VALIDATOR_INFO_HISTORY][address][dayIndex]) {
           await updateDocument(
             historyCollection,
             `${address}_${dayIndex}`,
             validatorInfo
           )
+          if (cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]) {
+            await updateDocument(
+              historyCollection,
+              `${address}_${dayIndex - 1}`,
+              cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]
+            )
+          }
         }
+        if (
+          validatorInfo.commission.rate !==
+          cache[VALIDATOR_INFO][address].commission.rate
+        ) {
+          validatorInfo['commision-recent-change'] = utcDate
+        } else if (cache[VALIDATOR_INFO][address]['commision-recent-change']) {
+          validatorInfo['commision-recent-change'] =
+            cache[VALIDATOR_INFO][address]['commision-recent-change']
+        }
+        cache[VALIDATOR_INFO][address] = validatorInfo
         cache[VALIDATOR_INFO_HISTORY][address][dayIndex] = validatorInfo
         if (cache[VALIDATOR_INFO_HISTORY][address][dayIndex - MAX_LENGTH]) {
           delete cache[VALIDATOR_INFO_HISTORY][address][dayIndex - MAX_LENGTH]
@@ -201,7 +211,7 @@ module.exports = function(
       // console.log("getAllValidatorInfoData ${address}", res.data);
       return res.data.result
     } catch (e) {
-      console.log(e)
+      console.log('error in getValidatorInfoData:', e)
     }
   }
 

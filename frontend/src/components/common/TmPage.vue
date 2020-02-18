@@ -8,7 +8,6 @@
         {{ subtitle }}
       </h3>
       <slot slot="menu-body" name="menu-body">
-        <TmBalance v-if="session.signedIn" />
       </slot>
       <slot slot="header-buttons" name="header-buttons" />
     </TmPageHeader>
@@ -43,12 +42,10 @@ import CardSignInRequired from "common/CardSignInRequired"
 import { mapState, mapGetters } from "vuex"
 import TmDataError from "common/TmDataError"
 import TmDataConnecting from "common/TmDataConnecting"
-import TmBalance from "common/TmBalance"
 
 export default {
   name: `tm-page`,
   components: {
-    TmBalance,
     TmPageHeader,
     TmDataEmpty,
     TmDataLoading,

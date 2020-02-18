@@ -25,6 +25,11 @@ export default {
   props: ["history", "validator"],
   data: () => ({
     options: {
+      plugins: {
+        labels: {
+          render: () => ""
+        }
+      },
       responsive: true,
       maintainAspectRatio: false,
       aspectRatio: 3,

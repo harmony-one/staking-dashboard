@@ -16,7 +16,7 @@
         <Widget title="General info" style="width: 250px; height: 258px;">
           <GeneralInfoBlock :validator="validator" />
         </Widget>
-        <Widget title="Perfomance" style="width: 250px; height: 258px;">
+        <Widget title="Performance" style="width: 250px; height: 258px;">
           <PerfomanceBlock :validator="validator" />
         </Widget>
 

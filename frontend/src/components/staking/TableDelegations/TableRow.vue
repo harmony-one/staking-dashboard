@@ -1,11 +1,11 @@
 <template>
   <tr
     class="li-validator"
-    :data-moniker="validator.moniker"
+    :data-moniker="data.moniker"
     @click="
       $router.push({
         name: 'validator',
-        params: { validator: validator.operator_address }
+        params: { validator: data.operator_address }
       })
     "
   >
@@ -23,34 +23,30 @@
     </td>
     <td class="data-table__row__info">
       <!--      <Avatar-->
-      <!--        v-if="!validator || !validator.avatarUrl"-->
+      <!--        v-if="!validator || !data.avatarUrl"-->
       <!--        class="li-validator-image"-->
       <!--        alt="generic validator logo - generated avatar from address"-->
-      <!--        :address="validator.operator_address"-->
+      <!--        :address="data.operator_address"-->
       <!--      />-->
       <!--      <img-->
-      <!--        v-else-if="validator && validator.avatarUrl"-->
-      <!--        :src="validator.avatarUrl"-->
+      <!--        v-else-if="validator && data.avatarUrl"-->
+      <!--        :src="data.avatarUrl"-->
       <!--        class="li-validator-image"-->
-      <!--        :alt="`validator logo for ` + validator.moniker"-->
+      <!--        :alt="`validator logo for ` + data.moniker"-->
       <!--      />-->
       <div class="validator-info">
         <h3 class="li-validator-name">
-          {{ validator.moniker }}
+          {{ data.moniker }}
         </h3>
       </div>
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ 0.00005 | percent }}
+    <td>{{ data.stake | ones | fourDecimals }} ONE</td>
+    <td>{{ data.rewards | ones | fourDecimals }} ONE</td>
+    <td class="hide-xs">
+      {{ (data.stake ? data.rewards / data.stake : 0) | percent }}
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ validator.rate | percent }}
-    </td>
-    <td>
-      {{ validator.total_stake | ones | zeroDecimals }}
-    </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ validator.avg_voting_power | percent }}
+    <td class="hide-xs">
+      {{ "2 days ago" }}
     </td>
   </tr>
 </template>
@@ -58,30 +54,24 @@
 <script>
 import {
   percent,
-  shortDecimals,
-  atoms,
+  fourDecimals,
   ones,
-  zeroDecimals,
-  twoDecimals
 } from "scripts/num"
 // import Avatar from "common/Avatar"
 
 export default {
-  name: `li-validator`,
+  name: `table-row`,
   // components: {
   //   Avatar
   // },
   filters: {
-    atoms,
     ones,
-    shortDecimals,
+    fourDecimals,
     percent,
     toLower: text => text.toLowerCase(),
-    zeroDecimals,
-    twoDecimals
   },
   props: {
-    validator: {
+    data: {
       type: Object,
       required: true
     },
@@ -98,18 +88,18 @@ export default {
   computed: {
     status() {
       if (
-        this.validator.jailed ||
-        this.validator.tombstoned ||
-        this.validator.status === 0 ||
-        this.validator.active === false
+        this.data.jailed ||
+        this.data.tombstoned ||
+        this.data.status === 0 ||
+        this.data.active === false
       )
         return `Inactive`
       return `Active`
     },
     status_detailed() {
-      if (this.validator.jailed) return `Temporally banned from the network`
-      if (this.validator.tombstoned) return `Banned from the network`
-      if (this.validator.status === 0) return `Banned from the network`
+      if (this.data.jailed) return `Temporally banned from the network`
+      if (this.data.tombstoned) return `Banned from the network`
+      if (this.data.status === 0) return `Banned from the network`
       return false
     }
   },

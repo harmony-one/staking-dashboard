@@ -8,6 +8,29 @@
       :sign-in-required="true"
     >
       <template slot="managed-body">
+        <div v-if="session.signedIn" class="portfolio-top-container">
+          <Widget title="" style="width: 450px; height: 320px;">
+            <TmBalance />
+          </Widget>
+          <LightWidget
+            title="Stake allocation"
+            style="width: 340px; height: 380px;"
+          >
+            <div v-if="delegation.loading || validators.loading">
+              Loading...
+            </div>
+            <div v-else-if="!delegations.length">
+              No delegations
+            </div>
+            <StakeAllocationBlock :delegations="delegations" v-else />
+          </LightWidget>
+          <LightWidget
+            title="Time until next epoch"
+            style="width: 300px; height: 340px;"
+          >
+            <TimePieBlock :last-epoch-time="lastEpochTime" />
+          </LightWidget>
+        </div>
         <DelegationsOverview />
         <template v-if="Object.keys(delegation.unbondingDelegations).length">
           <h3 class="tab-header">
@@ -23,22 +46,55 @@
 <script>
 import { mapState, mapGetters } from "vuex"
 import TmPage from "common/TmPage"
+import TmBalance from "./TmBalance"
 import DelegationsOverview from "staking/DelegationsOverview"
 import Undelegations from "staking/Undelegations"
+import TimePieBlock from "./TimePieBlock"
+import StakeAllocationBlock from "./StakeAllocationBlock"
+import Widget from "./components/Widget"
+import LightWidget from "./components/LightWidget"
+import moment from "moment"
 
 export default {
   name: `page-portfolio`,
   components: {
+    StakeAllocationBlock,
     TmPage,
     Undelegations,
-    DelegationsOverview
+    DelegationsOverview,
+    TmBalance,
+    Widget,
+    LightWidget,
+    TimePieBlock
   },
   data: () => ({
-    lastUpdate: 0
+    lastUpdate: 0,
+    lastEpochTime: moment()
+      .add(-1, "day")
+      .toDate()
   }),
   computed: {
-    ...mapState([`session`, `wallet`, `delegation`]),
-    ...mapGetters([`lastHeader`])
+    ...mapState([`session`, `wallet`, `delegation`, `delegates`, "validators"]),
+    ...mapGetters([`lastHeader`]),
+    delegations() {
+      if (this.delegates.loading || this.validators.loading) {
+        return []
+      }
+
+      const delegates = this.delegates.delegates
+      const validators = this.validators.validators
+
+      return delegates.map(d => {
+        const validator = validators.find(
+          v => v.address === d.validator_address
+        )
+
+        return {
+          ...d,
+          validator: validator && validator.description.name
+        }
+      })
+    }
   },
   watch: {
     lastHeader: {
@@ -68,5 +124,12 @@ export default {
 .tab-header {
   margin-top: 2rem;
   margin-bottom: 1rem;
+}
+
+.portfolio-top-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 0px;
 }
 </style>

@@ -3,7 +3,7 @@
     <div class="slider-block">
       <VueSlider
         v-model="rate"
-        :max="30"
+        :max="maxRate"
         :included="true"
         :marks="marks"
         :disabled="true"
@@ -22,9 +22,15 @@
       </VueSlider>
     </div>
     <div class="chart-container-commission">
-      <ChartLine :chartdata="chartdata" :options="options" style="height: 300px;" />
+      <ChartLine
+        :chartdata="chartdata"
+        :options="options"
+        style="height: 300px;"
+      />
     </div>
-    <div class="chart-description">Last commission change {{ 2 }} days ago</div>
+    <div class="chart-description">
+      Last commission change {{ lastChange }}
+    </div>
   </div>
 </template>
 
@@ -81,11 +87,6 @@ export default {
       }
     }
   }),
-  methods: {
-    rateTitle() {
-      return `${this.currentRate}%`
-    }
-  },
   computed: {
     currentRate() {
       return Math.round(this.validator.rate * 10000) / 100
@@ -99,21 +100,31 @@ export default {
     maxChangeRateTitle() {
       return `+/- ${this.maxChangeRate}% daily change`
     },
+    lastChange() {
+      const lastUpdate = this.history[this.history.length - 1]
+
+      const daysAgo = moment().diff(lastUpdate && lastUpdate.uctDate, "days")
+
+      return daysAgo ? daysAgo + " days ago" : "today"
+    },
     marks() {
-      return {
-        0: {
-          label: "0%",
-          labelStyle: {
-            fontSize: '13px'
-          }
-        },
-        30: {
-          label: "30%",
-          labelStyle: {
-            fontSize: '13px'
-          }
+      const marks = {}
+
+      marks[0] = {
+        label: "0%",
+        labelStyle: {
+          fontSize: "13px"
         }
       }
+
+      marks[this.maxRate] = {
+        label: this.maxRate + "%",
+        labelStyle: {
+          fontSize: "13px"
+        }
+      }
+
+      return marks
     },
     chartdata() {
       return {
@@ -130,6 +141,11 @@ export default {
           }
         ]
       }
+    }
+  },
+  methods: {
+    rateTitle() {
+      return `${this.currentRate}%`
     }
   }
 }

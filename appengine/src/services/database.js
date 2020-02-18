@@ -1,6 +1,7 @@
-const DATABASE_URL = process.env.DATABASE_URL || 'https://staking-explorer.firebaseio.com'
+const DATABASE_URL =
+  process.env.DATABASE_URL || 'https://staking-explorer.firebaseio.com'
 
-module.exports = function () {
+module.exports = function() {
   // Init admin
   const admin = require('firebase-admin')
   var serviceAccount = require('../../keys/staking_explorer.json')
@@ -12,13 +13,37 @@ module.exports = function () {
 
   const db = admin.firestore()
 
-  const getCollectionData = async (collectionName) => {
+  const getCollectionData = async collectionName => {
     const snapshot = await db.collection(collectionName).get()
+    return snapshot.docs.map(doc => doc.data())
+  }
+
+  const updateDocument = async (collectionName, docName, data) => {
+    await db
+      .collection(collectionName)
+      .doc(docName)
+      .set(data)
+  }
+
+  const getCollectionDataWithLimit = async (
+    collectionName,
+    address,
+    orderBy,
+    limit
+  ) => {
+    const snapshot = await db
+      .collection(collectionName)
+      .where('address', '==', address)
+      .orderBy(orderBy, 'desc')
+      .limit(limit)
+      .get()
     return snapshot.docs.map(doc => doc.data())
   }
 
   return {
     db,
-    getCollectionData
+    getCollectionData,
+    getCollectionDataWithLimit,
+    updateDocument
   }
 }

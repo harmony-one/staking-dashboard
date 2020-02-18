@@ -11,7 +11,12 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
 
-module.exports = function (BLOCKCHAIN_SERVER) {
+module.exports = function(
+  BLOCKCHAIN_SERVER,
+  chainTitle,
+  updateDocument,
+  getCollectionDataWithLimit
+) {
   const cache = {
     VALIDATORS: [],
     ACTIVE_VALIDATORS: [],
@@ -23,6 +28,8 @@ module.exports = function (BLOCKCHAIN_SERVER) {
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
+
+  const historyCollection = `${chainTitle}_history`
 
   const apiClient = axios.create({
     baseURL: BLOCKCHAIN_SERVER,
@@ -63,7 +70,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       // console.log("getAllValidatorAddressesData", res.data)
       return res.data.result
     } catch (err) {
-      // console.log(err)
+      console.log('error when doing getAllValidatorAddressesData:', err)
     }
   }
 
@@ -91,7 +98,8 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         bodyParams('hmy_getMedianRawStakeSnapshot')
       )
       if (medianStakeRes.data.result) {
-        cache[STAKING_NETWORK_INFO].effective_median_stake = medianStakeRes.data.result
+        cache[STAKING_NETWORK_INFO].effective_median_stake =
+          medianStakeRes.data.result
       }
 
       // console.log("getAllValidatorAddressesData", res.data)
@@ -100,6 +108,28 @@ module.exports = function (BLOCKCHAIN_SERVER) {
       // console.log(err)
     }
   }
+
+  const getDayIndex = utcDate =>
+    Math.floor(utcDate.getTime() / (1000 * 60 * 60 * 24))
+
+  const getRecentData = async address => {
+    const res = new Map()
+    try {
+      const recent = await getCollectionDataWithLimit(
+        historyCollection,
+        address,
+        'index',
+        MAX_LENGTH
+      )
+      _.forEach(recent, item => {
+        res[item.index] = item
+      })
+    } catch (err) {
+      console.log(`error when getRecentData ${address}`, err)
+    }
+    return res
+  }
+
   const getValidatorInfoData = async address => {
     try {
       const res = await apiClient.post(
@@ -128,6 +158,7 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         // * blocks_should_sign
         // * total_one_staked
         const utcDate = new Date(Date.now())
+        const dayIndex = getDayIndex(utcDate)
 
         const validatorInfo = {
           active: !!cache[ACTIVE_VALIDATORS].includes(address),
@@ -138,25 +169,54 @@ module.exports = function (BLOCKCHAIN_SERVER) {
           blocks_should_sign: 100,
           total_one_staked: 4,
           uctDate: utcDate,
+          index: dayIndex,
+          address: res.data.result['one-address'],
           ...res.data.result
         }
 
-        cache[VALIDATOR_INFO][address] = validatorInfo
-
         // Calculating cache[VALIDATOR_INFO_HISTORY]
-        const timeIndex = Math.floor(Math.floor(utcDate.getTime() / 1000)/60)
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
-          cache[VALIDATOR_INFO_HISTORY][address] = new Map();
+          cache[VALIDATOR_INFO_HISTORY][address] = await getRecentData(address)
         }
-        cache[VALIDATOR_INFO_HISTORY][address][timeIndex] = validatorInfo
-        if (cache[VALIDATOR_INFO_HISTORY][address][timeIndex - MAX_LENGTH]) {
-          delete cache[VALIDATOR_INFO_HISTORY][address][timeIndex - MAX_LENGTH]
+        // update the previous dayIndex if this is the first time dayIndex will be inserted.
+        if (!cache[VALIDATOR_INFO_HISTORY][address][dayIndex]) {
+          await updateDocument(
+            historyCollection,
+            `${address}_${dayIndex}`,
+            validatorInfo
+          )
+          if (cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]) {
+            await updateDocument(
+              historyCollection,
+              `${address}_${dayIndex - 1}`,
+              cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]
+            )
+          }
+        }
+        if (
+          cache[VALIDATOR_INFO][address] &&
+          cache[VALIDATOR_INFO][address].commission &&
+          validatorInfo.commission.rate !==
+            cache[VALIDATOR_INFO][address].commission.rate
+        ) {
+          validatorInfo['commision-recent-change'] = utcDate
+        } else if (
+          cache[VALIDATOR_INFO][address] &&
+          cache[VALIDATOR_INFO][address]['commision-recent-change']
+        ) {
+          validatorInfo['commision-recent-change'] =
+            cache[VALIDATOR_INFO][address]['commision-recent-change']
+        }
+        cache[VALIDATOR_INFO][address] = validatorInfo
+        cache[VALIDATOR_INFO_HISTORY][address][dayIndex] = validatorInfo
+        if (cache[VALIDATOR_INFO_HISTORY][address][dayIndex - MAX_LENGTH]) {
+          delete cache[VALIDATOR_INFO_HISTORY][address][dayIndex - MAX_LENGTH]
         }
       }
       // console.log("getAllValidatorInfoData ${address}", res.data);
       return res.data.result
     } catch (e) {
-      console.log(e)
+      console.log('error in getValidatorInfoData:', e)
     }
   }
 
@@ -202,8 +262,8 @@ module.exports = function (BLOCKCHAIN_SERVER) {
 
       if (cache[ACTIVE_VALIDATORS]) {
         cache[ACTIVE_VALIDATORS].forEach(async address => {
-          await getValidatorInfoData(address)
           await getDelegationsByValidatorData(address)
+          await getValidatorInfoData(address)
         })
       }
 
@@ -215,15 +275,12 @@ module.exports = function (BLOCKCHAIN_SERVER) {
         cache[ACTIVE_VALIDATORS] && cache[ACTIVE_VALIDATORS].length
       )
       cache[VALIDATORS] = cache[VALIDATORS].slice(0, 30)
-      console.log(
-        'Validators: ',
-        cache[VALIDATORS] && cache[VALIDATORS].length
-      )
+      console.log('Validators: ', cache[VALIDATORS] && cache[VALIDATORS].length)
 
       if (cache[VALIDATORS]) {
         cache[VALIDATORS].forEach(async address => {
-          await getValidatorInfoData(address)
           await getDelegationsByValidatorData(address)
+          await getValidatorInfoData(address)
         })
       }
 
@@ -274,7 +331,10 @@ module.exports = function (BLOCKCHAIN_SERVER) {
     getValidators,
     getActiveValidators,
     getValidatorInfo: address => cache[VALIDATOR_INFO][address],
-    getValidatorHistory: address => _.values(cache[VALIDATOR_INFO_HISTORY][address]).sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate)),
+    getValidatorHistory: address =>
+      _.values(cache[VALIDATOR_INFO_HISTORY][address]).sort(
+        (a, b) => new Date(a.utcDate) - new Date(b.utcDate)
+      ),
     getDelegationsByDelegator,
     getDelegationsByValidator: address =>
       cache[DELEGATIONS_BY_VALIDATOR][address]

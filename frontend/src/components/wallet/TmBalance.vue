@@ -11,12 +11,12 @@
       <div class="row small-container">
         <div class="available-atoms">
           <h3>Staked</h3>
-          <h2>{{ rewards }}</h2>
+          <h2>{{ rewards | fourDecimals }}</h2>
         </div>
 
         <div v-if="rewards" class="rewards">
           <h3>Reward</h3>
-          <h2>+{{ rewards }}</h2>
+          <h2>+{{ rewards | fourDecimals }}</h2>
         </div>
 
         <div class="available-atoms">
@@ -51,6 +51,7 @@
 </template>
 <script>
 import num from "scripts/num"
+import { fourDecimals } from "scripts/num"
 import TmBtn from "common/TmBtn"
 import SendModal from "src/ActionModal/components/SendModal"
 import ModalWithdrawRewards from "src/ActionModal/components/ModalWithdrawRewards"
@@ -63,7 +64,8 @@ export default {
     ModalWithdrawRewards
   },
   filters: {
-    viewDenom: num.viewDenom
+    viewDenom: num.viewDenom,
+    fourDecimals
   },
   data() {
     return {
@@ -90,7 +92,7 @@ export default {
     },
     unbondedAtoms() {
       return this.loaded
-        ? this.num.shortDecimals(this.num.atoms(this.liquidAtoms))
+        ? fourDecimals(this.num.atoms(this.liquidAtoms))
         : `--`
     },
     // only be ready to withdraw of the validator rewards are loaded and the user has rewards to withdraw

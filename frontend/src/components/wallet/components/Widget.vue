@@ -38,7 +38,7 @@ export default {
 .widget-title {
   font-size: 20px;
   color: #0b93ea;
-  margin: 10px 20px 0px 20px;
+  margin: 0px 20px 0px 20px;
 }
 
 .widget-body {

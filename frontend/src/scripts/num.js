@@ -46,6 +46,10 @@ export function twoDecimals(value) {
   return setDecimalLength(value, 2, 2)
 }
 
+export function fourDecimals(value) {
+  return setDecimalLength(value, 2, 4)
+}
+
 export function pretty(number = 0) {
   return new Intl.NumberFormat(language, {
     minimumFractionDigits: 2,

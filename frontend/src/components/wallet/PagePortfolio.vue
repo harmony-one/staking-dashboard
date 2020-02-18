@@ -14,7 +14,7 @@
           </Widget>
           <LightWidget
             title="Stake allocation"
-            style="width: 340px; height: 400px;"
+            style="width: 340px; height: 380px;"
           >
             <div v-if="delegation.loading || validators.loading">
               Loading...
@@ -130,6 +130,6 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 </style>

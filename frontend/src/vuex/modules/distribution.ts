@@ -80,12 +80,14 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
 
       commit(`resetDelegationRewards`)
 
-      rootState.delegates.delegates.forEach((d: any) =>
-        commit(`setDelegationRewards`, {
-          validatorAddr: d.validator_address,
-          rewards: { one: Number(d.reward / 1000000000000) }
-        })
-      )
+      if (Array.isArray(rootState.delegates.delegates)) {
+        rootState.delegates.delegates.forEach((d: any) =>
+          commit(`setDelegationRewards`, {
+            validatorAddr: d.validator_address,
+            rewards: { one: Number(d.reward) }
+          })
+        )
+      }
 
       // await Promise.all(
       //   yourValidators.map((validator: any) =>

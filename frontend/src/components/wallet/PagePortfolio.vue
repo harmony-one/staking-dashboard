@@ -20,7 +20,7 @@
               Loading...
             </div>
             <div v-else-if="!delegations.length">
-              No delegations
+              No delegations in your portfolio
             </div>
             <StakeAllocationBlock :delegations="delegations" v-else />
           </LightWidget>
@@ -84,16 +84,18 @@ export default {
       const delegates = this.delegates.delegates
       const validators = this.validators.validators
 
-      return delegates.map(d => {
-        const validator = validators.find(
-          v => v.address === d.validator_address
-        )
+      return delegates
+        ? delegates.map(d => {
+            const validator = validators.find(
+              v => v.address === d.validator_address
+            )
 
-        return {
-          ...d,
-          validator: validator && validator.description.name
-        }
-      })
+            return {
+              ...d,
+              validator: validator && validator.description.name
+            }
+          })
+        : []
     }
   },
   watch: {

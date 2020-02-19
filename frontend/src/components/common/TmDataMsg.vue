@@ -50,7 +50,6 @@ export default {
 <style>
 .tm-data-msg {
   padding: 2rem;
-  margin: 2rem;
   display: flex;
   align-items: center;
   border-radius: 0.25rem;

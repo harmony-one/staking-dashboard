@@ -4,24 +4,24 @@
       <div class="total-atoms">
         <h3>Total {{ bondDenom | viewDenom }}</h3>
         <h2 class="total-atoms__value">
-          {{ totalAtomsDisplay }}
+          {{ totalAtomsDisplay | ones | fourDecimals }}
         </h2>
       </div>
 
       <div class="row small-container">
         <div class="available-atoms">
           <h3>Staked</h3>
-          <h2>{{ rewards | fourDecimals }}</h2>
+          <h2>{{ staked | ones | fourDecimals }}</h2>
         </div>
 
-        <div v-if="rewards" class="rewards">
+        <div class="rewards">
           <h3>Reward</h3>
-          <h2>+{{ rewards | fourDecimals }}</h2>
+          <h2>+{{ rewards | ones | fourDecimals }}</h2>
         </div>
 
         <div class="available-atoms">
           <h3>Available</h3>
-          <h2>{{ unbondedAtoms }}</h2>
+          <h2>{{ unbondedAtoms | ones | fourDecimals }}</h2>
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@
 </template>
 <script>
 import num from "scripts/num"
-import { fourDecimals } from "scripts/num"
+import { fourDecimals, ones } from "scripts/num"
 import TmBtn from "common/TmBtn"
 import SendModal from "src/ActionModal/components/SendModal"
 import ModalWithdrawRewards from "src/ActionModal/components/ModalWithdrawRewards"
@@ -65,7 +65,8 @@ export default {
   },
   filters: {
     viewDenom: num.viewDenom,
-    fourDecimals
+    fourDecimals,
+    ones
   },
   data() {
     return {
@@ -74,26 +75,16 @@ export default {
     }
   },
   computed: {
-    ...mapState([`wallet`, `distribution`, `delegation`, `session`]),
-    ...mapGetters([
-      `liquidAtoms`,
-      `lastHeader`,
-      `totalAtoms`,
-      `bondDenom`,
-      `totalRewards`
+    ...mapState([
+      `wallet`,
+      `distribution`,
+      `delegation`,
+      `session`,
+      "delegates"
     ]),
+    ...mapGetters([`liquidAtoms`, `lastHeader`, `bondDenom`, `totalRewards`]),
     loaded() {
       return this.wallet.loaded && this.delegation.loaded
-    },
-    totalAtomsDisplay() {
-      return this.loaded
-        ? this.num.shortDecimals(this.num.atoms(this.totalAtoms))
-        : `--`
-    },
-    unbondedAtoms() {
-      return this.loaded
-        ? fourDecimals(this.num.atoms(this.liquidAtoms))
-        : `--`
     },
     // only be ready to withdraw of the validator rewards are loaded and the user has rewards to withdraw
     // the validator rewards are needed to filter the top 5 validators to withdraw from
@@ -101,13 +92,23 @@ export default {
       return this.totalRewards > 0
     },
     rewards() {
-      if (!this.distribution.loaded) {
-        return `--`
-      }
-      const rewards = this.totalRewards
-      return this.num.shortDecimals(
-        this.num.atoms(rewards && rewards > 10 ? rewards : 0)
-      )
+      return this.distribution.loaded ? this.totalRewards : 0
+    },
+    staked() {
+      const delegates = this.delegates.delegates
+
+      return this.delegates.loaded
+        ? delegates
+          ? delegates.reduce((sum, d) => sum + d.amount, 0)
+          : 0
+        : 0
+    },
+    unbondedAtoms() {
+      // TODO - unify liquidAtoms format
+      return this.liquidAtoms * 10e11
+    },
+    totalAtomsDisplay() {
+      return this.staked + this.rewards + this.unbondedAtoms
     }
   },
   watch: {

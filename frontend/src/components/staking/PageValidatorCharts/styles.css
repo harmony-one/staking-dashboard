@@ -9,8 +9,10 @@
 
 .validator-image {
   border-radius: 0.25rem;
-  height: 4rem;
-  width: 4rem;
+  height: 64px;
+  width: 64px;
+  min-height: 64px;
+  min-width: 64px;
   border: 1px solid var(--bc-dim);
   margin-right: 20px;
 }

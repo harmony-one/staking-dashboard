@@ -38,7 +38,7 @@
       <TmBtn id="delegation-btn" value="Stake" @click.native="onDelegation" />
       <TmBtn
         id="undelegation-btn"
-        :disabled="!myDelegation"
+        :disabled="!rewards"
         value="Unstake"
         type="secondary"
         @click.native="onUndelegation"
@@ -54,7 +54,7 @@
     />
     <UndelegationModal
       ref="undelegationModal"
-      :maximum="Number(myBond)"
+      :maximum="rewards | ones"
       :to="session.signedIn ? session.address : ``"
       :validator="validator"
       :denom="bondDenom"

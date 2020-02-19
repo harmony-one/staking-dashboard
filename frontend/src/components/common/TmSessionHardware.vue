@@ -6,9 +6,6 @@
 
     <template v-if="session.browserWithLedgerSupport">
       <div class="session-main">
-        <p v-if="session.windowsDevice" class="form-message notice">
-          {{ session.windowsWarning }}
-        </p>
         <HardwareState :loading="status === `connect` ? false : true">
           <template v-if="status === `connect` || status === `detect`">
             <p>
@@ -76,9 +73,6 @@ export default {
         this.connectionError = message
         return
       }
-
-      console.log("address = ");
-      console.log(this.address);
       await this.$store.dispatch(`signIn`, {
         sessionType: `ledger`,
         address: this.address

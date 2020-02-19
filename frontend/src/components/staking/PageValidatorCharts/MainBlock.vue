@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="validator-main-block">
     <div class="status-container">
       <span :class="status | toLower" class="validator-status">
         {{ status }}
@@ -23,10 +23,12 @@
           class="validator-image"
         />
         <div class="validator-info">
-          <h3 class="validator-name">{{ validator.moniker }}</h3>
-          <div v-if="myDelegation">
-            <h4>{{ myDelegation }}</h4>
-            <h5 v-if="rewards">{{ 0 | atoms | shortDecimals | noBlanks }}</h5>
+          <h2>{{ validator.moniker }}</h2>
+          <div v-if="staked">
+            <h4>{{ staked | ones | fourDecimals | noBlanks }}</h4>
+            <h5 v-if="rewards">
+              +{{ rewards | ones | fourDecimals | noBlanks }}
+            </h5>
           </div>
         </div>
       </td>
@@ -36,7 +38,7 @@
       <TmBtn id="delegation-btn" value="Stake" @click.native="onDelegation" />
       <TmBtn
         id="undelegation-btn"
-        :disabled="!myDelegation"
+        :disabled="!rewards"
         value="Unstake"
         type="secondary"
         @click.native="onUndelegation"
@@ -52,7 +54,7 @@
     />
     <UndelegationModal
       ref="undelegationModal"
-      :maximum="Number(myBond)"
+      :maximum="rewards | ones"
       :to="session.signedIn ? session.address : ``"
       :validator="validator"
       :denom="bondDenom"
@@ -62,9 +64,8 @@
 </template>
 
 <script>
-import { calculateTokens } from "scripts/common"
 import { mapState, mapGetters } from "vuex"
-import { atoms, viewDenom, shortDecimals, percent, uatoms } from "scripts/num"
+import { ones, fourDecimals, percent, uatoms } from "scripts/num"
 import { formatBech32 } from "src/filters"
 import TmBtn from "common/TmBtn"
 import DelegationModal from "src/ActionModal/components/DelegationModal"
@@ -81,8 +82,8 @@ export default {
     TmBtn
   },
   filters: {
-    atoms,
-    shortDecimals,
+    ones,
+    fourDecimals,
     percent,
     toLower: text => text.toLowerCase(),
     // empty descriptions have a strange '[do-not-modify]' value which we don't want to show
@@ -107,22 +108,14 @@ export default {
       `liquidAtoms`,
       `connected`
     ]),
-    myBond() {
+    staked() {
       if (!this.validator.operator_address) return 0
 
       const delegator = this.delegates.delegates.find(
         d => d.validator_address === this.validator.operator_address
       )
 
-      return atoms(
-        calculateTokens(this.validator, delegator ? delegator.amount : 0)
-      )
-    },
-    myDelegation() {
-      const { bondDenom, myBond } = this
-      const myDelegation = shortDecimals(myBond)
-      const myDelegationString = `${myDelegation} ${viewDenom(bondDenom)}`
-      return Number(myBond) === 0 ? null : myDelegationString
+      return delegator ? delegator.amount : 0
     },
     status() {
       if (
@@ -143,7 +136,7 @@ export default {
     rewards() {
       const { session, bondDenom, distribution, validator } = this
       if (!session.signedIn) {
-        return null
+        return 0
       }
 
       const validatorRewards = distribution.rewards[validator.operator_address]
@@ -151,9 +144,6 @@ export default {
     }
   },
   methods: {
-    shortDecimals,
-    atoms,
-    uatoms,
     percent,
     onDelegation(options) {
       this.$refs.delegationModal.open(options)
@@ -205,4 +195,12 @@ export default {
 </script>
 <style scoped>
 @import "./styles.css";
+
+.validator-main-block > .status-container {
+  padding: 0 1rem;
+}
+
+.validator-main-block .validator-info > h2 {
+  font-size: 20px;
+}
 </style>

@@ -9,17 +9,21 @@
 
 .validator-image {
   border-radius: 0.25rem;
-  height: 4rem;
-  width: 4rem;
+  height: 64px;
+  width: 64px;
+  min-height: 64px;
+  min-width: 64px;
   border: 1px solid var(--bc-dim);
+  margin-right: 20px;
 }
 
 .validator-name {
   color: var(--txt);
-  font-size: var(--h1);
-  line-height: 2rem;
+  font-size: var(--h2);
+  line-height: 20px;
   font-weight: 500;
   word-break: break-all;
+  margin-bottom: 10px;
 }
 
 .bech32-address {
@@ -84,6 +88,11 @@
 .validator-info {
   display: flex;
   flex-direction: column;
+  width: 100%;
+}
+
+.validator-info h3 {
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -109,7 +118,6 @@
 }
 
 .validator-info h5 {
-  padding-left: 0.5rem;
   color: var(--success);
 }
 

@@ -20,7 +20,7 @@
     </div>
 
     <TmDataMsg
-      v-else-if="validators.length === 0"
+      v-else-if="validators.delegations.length === 0"
       icon="sentiment_dissatisfied"
     >
       <div slot="title">

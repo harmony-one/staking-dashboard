@@ -6,17 +6,17 @@
   >
     <template slot="managed-body">
       <div class="networkInfo">
-        <div class="column">
-          <div class="item">
+        <div class="networkInfo-column">
+          <div class="networkInfo-item">
             <h4>Effective median stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
-          <div class="item">
+          <div class="networkInfo-item">
             <h4>Total stake:</h4>
             {{ networkInfo.total_one_staked | zeroDecimals }} ONE
           </div>
         </div>
-        <div class="item">
+        <div class="networkInfo-item">
           <h4>Current block number:</h4>
           <a :href="linkToTransaction" target="_blank">
             #{{ networkInfo.current_block_number }}
@@ -131,7 +131,7 @@ export default {
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-  margin: 0.5rem 1rem;
+  margin: 0 1rem 20px 1rem !important;
   flex-direction: column-reverse;
 
   .toggles {
@@ -186,20 +186,20 @@ export default {
 
 .networkInfo {
   display: flex;
-  margin: 1rem 0 1.8rem;
+  margin: 1rem 0 20px;
   justify-content: space-between;
   border-bottom: 1px solid var(--bc-dim);
   border-top: 1px solid var(--bc-dim);
   padding: 0.5rem 2rem;
 
-  .item {
+  &-item {
     // margin-right: 20px;
     align-items: center;
     justify-content: center;
     // text-align: center;
   }
 
-  .column {
+  &-column {
     display: flex;
     flex-direction: column;
     width: 50%;

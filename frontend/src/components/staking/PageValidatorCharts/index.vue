@@ -16,7 +16,7 @@
         <Widget title="General info" style="width: 250px; height: 258px;">
           <GeneralInfoBlock :validator="validator" />
         </Widget>
-        <Widget title="Performance" style="width: 250px; height: 258px;">
+        <Widget title="Performance" style="width: 250px;">
           <PerfomanceBlock :validator="validator" />
         </Widget>
 
@@ -157,8 +157,13 @@ export default {
 <style>
 .validator-layout {
   display: flex;
+  flex-flow: row wrap;
   flex-direction: row;
   justify-content: flex-start;
   flex-wrap: wrap;
+}
+
+.validator-layout > div {
+  flex-grow: 1;
 }
 </style>

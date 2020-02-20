@@ -23,7 +23,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin-top: 30px;
-  margin-left: 50px;
+  margin-right: 30px;
 }
 
 .widget {

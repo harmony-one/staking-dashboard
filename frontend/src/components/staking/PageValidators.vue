@@ -190,7 +190,7 @@ export default {
   justify-content: space-between;
   border-bottom: 1px solid var(--bc-dim);
   border-top: 1px solid var(--bc-dim);
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 1rem;
 
   &-item {
     // margin-right: 20px;

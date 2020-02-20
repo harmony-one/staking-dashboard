@@ -9,12 +9,12 @@
     >
       <template slot="managed-body">
         <div v-if="session.signedIn" class="portfolio-top-container">
-          <Widget title="" style="width: 450px; height: 320px;">
+          <Widget title="" style="flex-grow: 2; height: 240px;">
             <TmBalance />
           </Widget>
           <LightWidget
             title="Stake allocation"
-            style="width: 340px; height: 380px;"
+            style="flex-grow: 1; height: 380px;"
           >
             <div v-if="delegation.loading || validators.loading">
               Loading...
@@ -22,11 +22,11 @@
             <div v-else-if="!delegations.length">
               No delegations in your portfolio
             </div>
-            <StakeAllocationBlock :delegations="delegations" v-else />
+            <StakeAllocationBlock v-else :delegations="delegations" />
           </LightWidget>
           <LightWidget
             title="Time until next epoch"
-            style="width: 300px; height: 340px;"
+            style="flex-grow: 1; height: 340px;"
           >
             <TimePieBlock :last-epoch-time="lastEpochTime" />
           </LightWidget>
@@ -130,8 +130,14 @@ export default {
 
 .portfolio-top-container {
   display: flex;
+  flex-flow: row wrap;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 0px;
+  margin-bottom: 15px;
+}
+
+.portfolio-top-container > div {
+  margin-top: 30px;
+  margin-right: 30px;
 }
 </style>

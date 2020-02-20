@@ -10,6 +10,8 @@ const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
+const SECOND_PER_BLOCK = 8
+const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 
 module.exports = function(
   BLOCKCHAIN_SERVER,
@@ -92,14 +94,26 @@ module.exports = function(
         cache[STAKING_NETWORK_INFO].current_block_hash =
           res2.data.result.blockHash
       }
+      if (
+        cache[STAKING_NETWORK_INFO]['epoch-last-block'] &&
+        cache[STAKING_NETWORK_INFO].current_block_number
+      ) {
+        cache[STAKING_NETWORK_INFO].time_next_epoch =
+          SECOND_PER_BLOCK *
+          (BLOCK_NUM_PER_EPOCH -
+            (cache[STAKING_NETWORK_INFO].current_block_number -
+              cache[STAKING_NETWORK_INFO]['epoch-last-block']))
+      }
 
-      const medianStakeRes = await apiClient.post(
-        '/',
-        bodyParams('hmy_getMedianRawStakeSnapshot')
-      )
-      if (medianStakeRes.data.result) {
-        cache[STAKING_NETWORK_INFO].effective_median_stake =
-          medianStakeRes.data.result
+      if (!cache[STAKING_NETWORK_INFO].effective_median_stake) {
+        const medianStakeRes = await apiClient.post(
+          '/',
+          bodyParams('hmy_getMedianRawStakeSnapshot')
+        )
+        if (medianStakeRes.data.result) {
+          cache[STAKING_NETWORK_INFO].effective_median_stake =
+            medianStakeRes.data.result
+        }
       }
 
       // console.log("getAllValidatorAddressesData", res.data)
@@ -164,10 +178,14 @@ module.exports = function(
           active: !!cache[ACTIVE_VALIDATORS].includes(address),
           self_stake: selfStake,
           total_stake: totalStake,
+          voting_power:
+            cache[STAKING_NETWORK_INFO]['total-staking'] &&
+            cache[STAKING_NETWORK_INFO]['total-staking'] > 0
+              ? totalStake / cache[STAKING_NETWORK_INFO]['total-staking']
+              : null,
           // TODO(minh) fix it.
           signed_blocks: 50,
           blocks_should_sign: 100,
-          total_one_staked: 4,
           uctDate: utcDate,
           index: dayIndex,
           address: res.data.result['one-address'],
@@ -248,6 +266,9 @@ module.exports = function(
 
   const update = async () => {
     try {
+      // Get global info first.
+      await syncStakingNetworkInfo()
+
       await getActiveValidatorAddressesData()
 
       console.log(
@@ -283,8 +304,6 @@ module.exports = function(
           await getValidatorInfoData(address)
         })
       }
-
-      await syncStakingNetworkInfo()
     } catch (err) {
       console.log('Error: ', err.message)
     }

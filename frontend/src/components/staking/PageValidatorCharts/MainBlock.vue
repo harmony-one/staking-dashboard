@@ -24,11 +24,23 @@
         />
         <div class="validator-info">
           <h2>{{ validator.moniker }}</h2>
-          <div v-if="staked">
-            <h4>{{ staked | ones | fourDecimals | noBlanks }}</h4>
-            <h5 v-if="rewards">
-              +{{ rewards | ones | fourDecimals | noBlanks }}
-            </h5>
+          <div class="validator-amounts">
+            <div>
+              <span>Total staked:</span>
+              <h4>
+                {{ validator.total_stake | ones | fourDecimals | noBlanks }}
+              </h4>
+            </div>
+            <div v-if="staked">
+              <span>Self delegations:</span>
+              <h4>
+                {{ staked | ones | fourDecimals | noBlanks }}
+              </h4>
+            </div>
+            <div v-if="rewards">
+              <span>Rewards: </span>
+              <h5>+{{ rewards | ones | fourDecimals | noBlanks }}</h5>
+            </div>
           </div>
         </div>
       </td>
@@ -202,5 +214,26 @@ export default {
 
 .validator-main-block .validator-info > h2 {
   font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 350px;
+}
+
+.validator-main-block .validator-amounts {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.validator-main-block .validator-amounts > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.validator-main-block .validator-amounts > div span {
+  margin-right: 5px;
 }
 </style>

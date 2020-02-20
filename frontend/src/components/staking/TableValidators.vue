@@ -123,12 +123,12 @@ export default {
         },
         {
           title: `Fees`,
-          value: `fee`,
+          value: `rate`,
           tooltip: `Commission fees`
         },
         {
           title: `Total ONE staked`,
-          value: `total`,
+          value: `total_stake`,
           tooltip: `Total ONE staked`
         },
         {

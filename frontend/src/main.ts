@@ -11,6 +11,8 @@ import init from "./initializeApp"
 import { getURLParams } from "./scripts/url"
 import "./registerServiceWorker"
 import "@babel/polyfill"
+// @ts-ignore
+import VueMq from "vue-mq"
 
 Vue.config.productionTip = false
 
@@ -18,6 +20,17 @@ Vue.use(Tooltip, { delay: 1 })
 Vue.use(Vuelidate)
 Vue.use(VueClipboard)
 Vue.use(InfiniteScroll)
+
+Vue.use(VueMq, {
+  breakpoints: {
+    // default breakpoints - customize this
+    sm: 450,
+    md: 800,
+    lg: 1250,
+    xlg: Infinity
+  },
+  defaultBreakpoint: "md" // customize this for SSR
+})
 
 Vue.directive(`focus`, focusElement)
 Vue.directive(`focus-last`, focusParentLast)

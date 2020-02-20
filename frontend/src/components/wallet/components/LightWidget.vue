@@ -22,7 +22,6 @@ export default {
 .widget-container {
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
 }
 
 .widget-portfolio-light {

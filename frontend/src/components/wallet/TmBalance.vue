@@ -147,13 +147,15 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
 }
 
 .values-container {
   display: flex;
   position: relative;
   width: 100%;
-  padding: 1rem 2rem;
+  padding: 1rem 0;
   flex-direction: column;
 }
 
@@ -190,7 +192,7 @@ export default {
 .button-container {
   display: flex;
   align-items: center;
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 0;
   width: 100%;
   border-bottom: 1px solid var(--bc-dim);
   border-top: 1px solid var(--bc-dim);
@@ -209,50 +211,5 @@ export default {
 .small-container {
   padding-top: 1rem;
   justify-content: space-between;
-}
-
-@media screen and (max-width: 667px) {
-  .balance-header {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .values-container {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .values-container .total-atoms__value {
-    font-size: 28px;
-    font-weight: 500;
-    line-height: 32px;
-  }
-
-  .available-atoms,
-  .rewards {
-    padding: 0;
-  }
-
-  .total-atoms {
-    padding: 1rem 0;
-    text-align: center;
-  }
-
-  .button-container {
-    width: 100%;
-    padding: 1rem;
-    border-top: 1px solid var(--bc);
-  }
-
-  .button-container button {
-    width: 50%;
-  }
-
-  .small-container {
-    display: flex;
-    justify-content: space-evenly;
-    padding: 1rem 0;
-    text-align: center;
-  }
 }
 </style>

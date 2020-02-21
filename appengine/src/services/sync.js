@@ -11,6 +11,7 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
 const SECOND_PER_BLOCK = 8
+const SYNC_PERIOD = 8000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 
 module.exports = function(
@@ -292,8 +293,8 @@ module.exports = function(
       await getAllValidatorAddressesData()
 
       console.log(
-        'ActiveValidators: ',
-        cache[ACTIVE_VALIDATORS] && cache[ACTIVE_VALIDATORS].length
+        'AllValidators: ',
+        cache[VALIDATORS] && cache[VALIDATORS].length
       )
       cache[VALIDATORS] = cache[VALIDATORS].slice(0, 30)
       console.log('Validators: ', cache[VALIDATORS] && cache[VALIDATORS].length)
@@ -312,7 +313,7 @@ module.exports = function(
   setInterval(async () => {
     console.log('--------- Updating ---------', BLOCKCHAIN_SERVER)
     await update()
-  }, 4000)
+  }, SYNC_PERIOD)
 
   const getStakingNetworkInfo = () => {
     const stakingNetworkInfo = !cache[STAKING_NETWORK_INFO]

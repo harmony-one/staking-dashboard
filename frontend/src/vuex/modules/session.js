@@ -37,6 +37,8 @@ export default () => {
     browserWithLedgerSupport:
       navigator.userAgent.includes(`Chrome`) ||
       navigator.userAgent.includes(`Opera`),
+    browserWithMathExtensionSupport:
+      navigator.userAgent.includes(`Chrome`),
     windowsDevice: isWindowsPlatform(),
 
     // import into state to be able to test easier

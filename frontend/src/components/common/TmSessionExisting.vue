@@ -28,6 +28,14 @@
         >
         </LiSession>
         <LiSession
+          v-if="!isMobileApp"
+          id="use-mathextension"
+          icon="laptop"
+          title="Use MathWallet"
+          route="mathExtension"
+        >
+        </LiSession>
+        <LiSession
           v-if="session.insecureMode"
           id="recover-with-backup"
           icon="settings_backup_restore"

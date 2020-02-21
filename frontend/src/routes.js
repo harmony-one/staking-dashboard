@@ -168,6 +168,16 @@ export default [
     }
   },
   {
+    path: `/mathExtension`,
+    name: `mathExtension`,
+    components: {
+      session: require(`./components/common/TmSessionMathExtension`).default
+    },
+    meta: {
+      feature: "Session"
+    }
+  },
+  {
     path: `/existing`,
     name: `existing`,
     components: {

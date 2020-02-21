@@ -17,7 +17,8 @@
 <script>
 import ChartBar from "./components/ChartBar"
 import moment from "moment"
-import { shortDecimals } from "../../../scripts/num"
+import { shortDecimals } from "scripts/num"
+import numeral from "numeral"
 
 export default {
   name: "StakeHistoryBlock",
@@ -37,7 +38,8 @@ export default {
         mode: "index",
         intersect: false,
         callbacks: {
-          title: data => "Date: " + data[0].xLabel,
+          title: data =>
+            "Date: " + moment(data[0].xLabel).format("MMM DD, hh:mm"),
           label: data => {
             return (
               (!data.datasetIndex ? "Self delegated: " : "Delegated: ") +
@@ -51,12 +53,18 @@ export default {
       scales: {
         xAxes: [
           {
-            stacked: true
+            stacked: true,
+            ticks: {
+              callback: value => moment(value).format("MM.DD")
+            }
           }
         ],
         yAxes: [
           {
-            stacked: true
+            stacked: true,
+            ticks: {
+              callback: value => numeral(value).format("0a")
+            }
           }
         ]
       }
@@ -70,7 +78,9 @@ export default {
     },
     chartdata() {
       return {
-        labels: this.history.map(v => moment(v.uctDate).format("hh:mm")),
+        labels: this.history.map(
+          v => v.uctDate /* moment(v.uctDate).format("MM.DD") */
+        ),
         datasets: [
           {
             label: "Self delegated",

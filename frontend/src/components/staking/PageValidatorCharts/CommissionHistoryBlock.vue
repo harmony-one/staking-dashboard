@@ -28,9 +28,7 @@
         style="height: 300px;"
       />
     </div>
-    <div class="chart-description">
-      Last commission change {{ lastChange }}
-    </div>
+    <div class="chart-description">Last commission change {{ lastChange }}</div>
   </div>
 </template>
 
@@ -58,7 +56,8 @@ export default {
         mode: "index",
         intersect: false,
         callbacks: {
-          title: data => "Date: " + data[0].xLabel,
+          title: data =>
+            "Date: " + moment(data[0].xLabel).format("MMM DD, hh:mm"),
           label: data => "Rate: " + percent(data.yLabel / 100)
         }
       },
@@ -66,7 +65,10 @@ export default {
       scales: {
         xAxes: [
           {
-            stacked: true
+            stacked: true,
+            ticks: {
+              callback: value => moment(value).format("MM.DD")
+            }
           }
         ],
         yAxes: [
@@ -128,7 +130,9 @@ export default {
     },
     chartdata() {
       return {
-        labels: this.history.map(v => moment(v.uctDate).format("hh:mm")),
+        labels: this.history.map(
+          v => v.uctDate /* moment(v.uctDate).format("MM.DD") */
+        ),
         datasets: [
           {
             label: "Rate",

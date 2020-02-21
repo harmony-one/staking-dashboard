@@ -7,10 +7,11 @@
           Looks like you don't have the Harmony browser extension installed yet.
           Head over to the
           <a
-            href="https://drive.google.com/open?id=14kM_83kU73Oen_YgpKRBGsgQcN0RR97fs1_rimDF5dU"
+            href="https://chrome.google.com/webstore/detail/harmony/dmknnpkhnockodmnclcellfiilmklimd"
             target="_blank"
             rel="noopener norefferer"
-          >Harmony Chrome Extension</a>
+            >Harmony Chrome Extension</a
+          >
           to quickly install the extension.
         </p>
       </div>
@@ -20,7 +21,11 @@
           Below is a list of accounts we've received from the Harmony browser
           extension.
         </p>
-        <AccountList :accounts="accounts" :button-action="signIn" :button-text="`Use Account`" />
+        <AccountList
+          :accounts="accounts"
+          :button-action="signIn"
+          :button-text="`Use Account`"
+        />
       </div>
     </div>
   </SessionFrame>

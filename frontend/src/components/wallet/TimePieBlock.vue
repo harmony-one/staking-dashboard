@@ -19,7 +19,7 @@ import moment from "moment"
 export default {
   name: "TimePieBlock",
   components: { ChartPie },
-  props: ["lastEpochTime"],
+  props: ["timeNextEpoch"],
   data: () => ({
     options: {
       responsive: true,
@@ -41,18 +41,16 @@ export default {
   }),
   computed: {
     timeLeft() {
-      let leftMin = 36 * 60 - moment().diff(this.lastEpochTime) / (1000 * 60)
-
-      leftMin = leftMin < 0 ? 0 : leftMin;
+      const leftMin = isNaN(this.timeNextEpoch) ? 0 : this.timeNextEpoch / 60
 
       return `${Math.floor(leftMin / 60)} hours ${Math.floor(
         leftMin % 60
       )} minutes`
     },
     chartdata() {
-      let diff = moment().diff(this.lastEpochTime) / (1000 * 3600)
+      let diff = isNaN(this.timeNextEpoch) ? 0 : 36 - this.timeNextEpoch / 3600
 
-      diff = diff < 0 ? 0 : diff;
+      diff = diff < 0 ? 0 : diff
 
       return {
         datasets: [

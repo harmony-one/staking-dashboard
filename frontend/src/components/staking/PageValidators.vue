@@ -9,11 +9,11 @@
         <div class="networkInfo-column">
           <div class="networkInfo-item">
             <h4>Effective median stake:</h4>
-            {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
+            {{ networkInfo.effective_median_stake | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
             <h4>Total stake:</h4>
-            {{ networkInfo.total_one_staked | zeroDecimals }} ONE
+            {{ networkInfo['total-staking'] | ones | zeroDecimals }} ONE
           </div>
         </div>
         <div class="networkInfo-item">

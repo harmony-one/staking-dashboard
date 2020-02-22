@@ -25,10 +25,11 @@
             <StakeAllocationBlock v-else :delegations="delegations" />
           </LightWidget>
           <LightWidget
+            v-if="isNetworkInfoLoading"
             title="Time until next epoch"
             style="flex-grow: 1; height: 340px;"
           >
-            <TimePieBlock :last-epoch-time="lastEpochTime" />
+            <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" />
           </LightWidget>
         </div>
         <DelegationsOverview />
@@ -74,8 +75,19 @@ export default {
       .toDate()
   }),
   computed: {
-    ...mapState([`session`, `wallet`, `delegation`, `delegates`, "validators"]),
+    ...mapState([
+      `session`,
+      `wallet`,
+      `delegation`,
+      `delegates`,
+      "validators",
+      "connection"
+    ]),
     ...mapGetters([`lastHeader`]),
+    ...mapState({ networkInfo: state => state.connection.networkInfo }),
+    ...mapState({
+      isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
+    }),
     delegations() {
       if (this.delegates.loading || this.validators.loading) {
         return []

@@ -118,7 +118,7 @@ export default {
         },
         {
           title: `Return %`,
-          value: `rate`,
+          value: `return`,
           tooltip: `Rate of return per validator`
         },
         {

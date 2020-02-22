@@ -44,8 +44,12 @@
             :validator="validator"
           />
         </Widget>
-        <Widget title="Event history" style="width: 500px; height: 400px;">
-          <EventHistoryBlock :validator="validator" />
+        <Widget
+          v-if="allHistory.length"
+          title="Event history"
+          style="width: 500px; height: 400px;"
+        >
+          <EventHistoryBlock :events="eventsHistory" />
         </Widget>
       </div>
     </template>
@@ -75,7 +79,7 @@ import {
   fetchValidatorByAddress,
   fetchValidatorHistory
 } from "../../../mock-service"
-import { formatByStep } from "./helpers"
+import { formatByStep, generateEventHistory } from "./helpers"
 
 export default {
   name: `page-validator-charts`,
@@ -99,12 +103,16 @@ export default {
   data: () => ({
     loading: true,
     validator: {},
-    validatorHistory: []
+    validatorHistory: [],
+    allHistory: []
   }),
   computed: {
     ...mapState([`connection`]),
     networkId() {
       return this.connection.networkConfig.id
+    },
+    eventsHistory() {
+      return this.allHistory.length ? generateEventHistory(this.allHistory) : {}
     }
   },
   watch: {
@@ -137,8 +145,9 @@ export default {
           this.$route.params.validator
         )
 
-        let stepTime = 1000 * 60 * 5
+        this.allHistory = history
 
+        let stepTime = 1000 * 60 * 5
         this.validatorHistory = formatByStep(history, stepTime)
 
         // scale to optimal

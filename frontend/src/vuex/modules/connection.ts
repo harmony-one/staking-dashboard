@@ -22,9 +22,15 @@ export interface INetworkConfig {
 
 export interface INetworkInfo {
   effective_median_stake: number
+  total_one_staked: number
   current_block_number: number
   current_block_hash: string
-  total_one_staked: number
+  "total-supply": string
+  "circulating-supply": string
+  "epoch-last-block": string
+  "total-staking": string
+  "median-raw-stake": string
+  time_next_epoch: string
 }
 
 const state = {
@@ -39,7 +45,8 @@ const state = {
   connectionAttempts: 0,
   externals: {} as { config: typeof config; node: TNode },
   networks: Array<INetworkConfig>(),
-  networkInfo: {} as INetworkInfo
+  networkInfo: {} as INetworkInfo,
+  isNetworkInfoLoading: false
 }
 
 let interval: any
@@ -94,6 +101,13 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
     setNetworkInfo(state, networkInfo: INetworkInfo) {
       state.networkInfo = networkInfo
+      state.isNetworkInfoLoading = true
+
+      // console.log(
+      //   "time_next_epoch: ",
+      //   networkInfo.time_next_epoch,
+      //   (networkInfo.time_next_epoch / 3600).toFixed(3)
+      // )
     }
   },
 
@@ -114,7 +128,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
 
       commit("setNetworks", networks)
       dispatch("setNetwork", network || networks[0])
-      dispatch("loadNetworkInfo");
+      dispatch("loadNetworkInfo")
     },
 
     async reconnect({ commit, state, rootState }) {

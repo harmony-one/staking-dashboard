@@ -27,9 +27,9 @@
           {{ decreased.date | date }}
         </div>
         <div class="row">
-          {{ increased.total_stake_before | ones | shortDecimals }}
+          {{ decreased.total_stake_before | ones | shortDecimals }}
           <i class="material-icons">arrow_forward</i>
-          {{ increased.total_stake_after | ones | shortDecimals }}
+          {{ decreased.total_stake_after | ones | shortDecimals }}
         </div>
       </div>
     </div>
@@ -49,22 +49,10 @@ export default {
     ones,
     shortDecimals
   },
-  props: ["validator"],
-  data() {
-    return {
-      increased: {
-        block: "3",
-        date: new Date(),
-        total_stake_before: 14 * 10e18,
-        total_stake_after: 15 * 10e18
-      },
-      decreased: {
-        block: "230",
-        date: new Date(),
-        total_stake_before: 11 * 10e18,
-        total_stake_after: 10 * 10e18
-      }
-    }
+  props: ["events"],
+  computed: {
+    increased: state => state.events.increased,
+    decreased: state => state.events.decreased
   }
 }
 </script>

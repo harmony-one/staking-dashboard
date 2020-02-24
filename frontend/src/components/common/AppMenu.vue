@@ -156,6 +156,10 @@ export default {
       noScroll.off()
     },
     signOut() {
+      window.harmony.forgetIdentity().then(()=>{
+      }).catch((err=>{
+        console.log(err);
+      }));
       this.$emit(`close`)
       this.$store.dispatch(`signOut`)
     },

@@ -6,6 +6,7 @@ const blockchainValidator = {
   total_stake: 10000000000000000000,
   signed_blocks: 50,
   blocks_should_sign: 100,
+  voting_power: 100,
   total_one_staked: 4,
   "one-address": "one1pdv9lrdwl0rg5vglh4xtyrv3wjk3wsqket7zxy",
   "bls-public-keys": [
@@ -29,7 +30,6 @@ const blockchainValidator = {
   "creation-height": 394472,
 
   uptime: 'didnt response!',
-  avg_voting_power: 'didnt response!',
   total_effective_stake: 'didnt response!',
 }
 
@@ -50,7 +50,7 @@ const frontendValidator = {
   avatarUrl:
     "https://s3.amazonaws.com/keybase_processed_uploads/5dacfc1ad84eecdb4a01fd893d479805_360_360.jpeg",
   start_height: "0",
-  voting_power: "0.0315",
+  voting_power: 0.0315,
   max_change_rate: "0.010000000000000000",
   website: "iqlusion.io",
   min_self_delegation: "100000000000",
@@ -63,7 +63,6 @@ const frontendValidator = {
   id: "16a9a8ae-1568-42a5-b4a6-59735c655dca",
   delegator_shares: "5706991464569.000000000000000000",
   creation_height: 212,
-  avg_voting_power: "0.500000000000000000",
   total_effective_stake: "171000000000000000000.000000000000000000",
   active: false,
   max_total_delegation: 11,
@@ -101,7 +100,7 @@ export const remapValidator = (
     creation_height: validator["creation-height"],
 
     uptime_percentage: validator.uptime,
-    avg_voting_power: validator.avg_voting_power,
+    voting_power: validator.voting_power,
     total_effective_stake: validator.total_effective_stake,
 
     active: validator.active,
@@ -120,7 +119,6 @@ export const remapValidator = (
     avatarUrl:
       "https://s3.amazonaws.com/keybase_processed_uploads/5dacfc1ad84eecdb4a01fd893d479805_360_360.jpeg",
     start_height: "0",
-    voting_power: "0.0315",
     tokens: "5706991464569",
     unbonding_height: 0,
     keybaseId: "DCB176E79AE7D51F",

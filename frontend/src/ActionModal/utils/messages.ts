@@ -113,13 +113,14 @@ export function MsgDeposit(
 
 export function MsgWithdrawDelegationReward(
   senderAddress: string,
-  { validatorAddress }: any
+  { validatorAddress, amount }: any
 ) {
   return {
     type: `cosmos-sdk/MsgWithdrawDelegationReward`,
     value: {
       delegator_address: senderAddress,
-      validator_address: validatorAddress
+      validator_address: validatorAddress,
+      amount: amount
     }
   }
 }

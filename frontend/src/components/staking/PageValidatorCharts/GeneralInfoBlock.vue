@@ -34,7 +34,7 @@
       <li>
         <h4>Voting Power / Total Stake</h4>
         <span id="page-profile__power">
-          {{ validator.avg_voting_power | percent }} /
+          {{ validator.voting_power | percent }} /
           {{ (validator.total_effective_stake / 1e18) | shortDecimals }}
         </span>
       </li>

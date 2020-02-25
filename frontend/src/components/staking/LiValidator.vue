@@ -50,7 +50,7 @@
       {{ validator.total_stake | ones | zeroDecimals }}
     </td>
     <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ validator.avg_voting_power | percent }}
+      {{ validator.voting_power | percent }}
     </td>
   </tr>
 </template>

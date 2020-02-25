@@ -133,7 +133,7 @@ export default {
         },
         {
           title: `Voting Power`,
-          value: `avg_voting_power`,
+          value: `voting_power`,
           tooltip: `Percentage of voting shares`
         }
       ]

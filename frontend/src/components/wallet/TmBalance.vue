@@ -44,7 +44,7 @@
     <SendModal ref="SendModal" />
     <ModalWithdrawRewards
       ref="ModalWithdrawRewards"
-      :rewards="totalRewards"
+      :rewards="rewards"
       :denom="bondDenom"
     />
   </div>
@@ -128,6 +128,7 @@ export default {
     }
   },
   methods: {
+    ones,
     update(height) {
       this.lastUpdate = height
       this.$store.dispatch(`getRewardsFromMyValidators`)

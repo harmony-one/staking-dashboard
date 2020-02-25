@@ -19,13 +19,13 @@
       field-label="Amount"
     >
       <span class="input-suffix">{{ denom | viewDenom }}</span>
-      <TmField id="amount" :value="rewards | atoms | fullDecimals" readonly />
+      <TmField id="amount" :value="rewards | ones | fullDecimals" readonly />
     </TmFormGroup>
   </ActionModal>
 </template>
 
 <script>
-import { viewDenom, atoms, fullDecimals } from "src/scripts/num"
+import { viewDenom, ones, fullDecimals } from "src/scripts/num"
 import ActionModal from "./ActionModal"
 import TmField from "src/components/common/TmField"
 import TmFormGroup from "src/components/common/TmFormGroup"
@@ -40,7 +40,7 @@ export default {
     TmFormGroup
   },
   filters: {
-    atoms,
+    ones,
     viewDenom,
     fullDecimals
   },

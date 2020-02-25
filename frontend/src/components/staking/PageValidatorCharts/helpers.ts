@@ -23,7 +23,7 @@ interface IEvent {
 
 export const generateEventHistory = (
   arr: any[]
-): { increased: IEvent; decreased: IEvent } => {
+): { increased?: IEvent; decreased?: IEvent } => {
   let increased, decreased
 
   const genEvent = (prev: any, next: any): IEvent => {
@@ -48,30 +48,5 @@ export const generateEventHistory = (
     }
   }
 
-  const lastEvent = arr[arr.length - 1]
-
-  if (!increased) {
-    increased = genEvent(lastEvent, lastEvent)
-  }
-
-  if (!decreased) {
-    decreased = genEvent(lastEvent, lastEvent)
-  }
-
   return { increased, decreased }
-
-  // return {
-  //   increased: {
-  //     block: "3",
-  //     date: new Date(),
-  //     total_stake_before: 14 * 10e18,
-  //     total_stake_after: 15 * 10e18
-  //   },
-  //   decreased: {
-  //     block: "230",
-  //     date: new Date(),
-  //     total_stake_before: 11 * 10e18,
-  //     total_stake_after: 10 * 10e18
-  //   }
-  // }
 }

@@ -10,8 +10,8 @@
     :disable="validatorsWithRewards"
   >
     <span class="form-message notice withdraw-limit">
-      Harmony will only withdraw rewards from 5 validators at a time because of a
-      limitation with the Ledger Nano&nbsp;S.
+      Harmony will only withdraw rewards from 5 validators at a time because of
+      a limitation with the Ledger Nano&nbsp;S.
     </span>
     <TmFormGroup
       class="action-modal-form-group"
@@ -57,7 +57,8 @@ export default {
   computed: {
     transactionData() {
       return {
-        type: transaction.WITHDRAW
+        type: transaction.WITHDRAW,
+        amount: this.rewards
       }
     },
     notifyMessage() {

@@ -11,10 +11,10 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
 const SECOND_PER_BLOCK = 8
-const SYNC_PERIOD = 30000
+const SYNC_PERIOD = 120000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
-const VALIDATOR_PAGE_SIZE = 50
-const SLEEP_TIME = 10
+const VALIDATOR_PAGE_SIZE = 100
+const SLEEP_TIME = 5
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -111,9 +111,8 @@ module.exports = function(
       ) {
         cache[STAKING_NETWORK_INFO].time_next_epoch =
           SECOND_PER_BLOCK *
-          (BLOCK_NUM_PER_EPOCH -
-            (cache[STAKING_NETWORK_INFO].current_block_number -
-              cache[STAKING_NETWORK_INFO]['epoch-last-block']))
+          (cache[STAKING_NETWORK_INFO]['epoch-last-block'] -
+            cache[STAKING_NETWORK_INFO].current_block_number)
       }
 
       if (!cache[STAKING_NETWORK_INFO].effective_median_stake) {
@@ -419,13 +418,18 @@ module.exports = function(
       .filter(isNotEmpty)
   }
 
-  const getValidatorsWithPage = page => {
+  const getValidatorsWithPage = (page, size) => {
     const validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]
-    if (page * VALIDATOR_PAGE_SIZE >= validators.length || page < -1) {
+    if (
+      page < 0 ||
+      size < 0 ||
+      size > VALIDATOR_PAGE_SIZE ||
+      page * size >= validators.length
+    ) {
       return []
     } else {
       return validators
-        .slice(page * VALIDATOR_PAGE_SIZE, (page + 1) * VALIDATOR_PAGE_SIZE)
+        .slice(page * size, (page + 1) * size)
         .map(address => {
           return { ...cache[VALIDATOR_INFO][address] }
         })

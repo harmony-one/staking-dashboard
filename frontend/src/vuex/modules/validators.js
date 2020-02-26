@@ -24,7 +24,7 @@ export default () => {
       commit("setTotal", data.total)
       commit("setTotalActive", data.total_active)
 
-      return validators
+      return data.validators
     },
 
     async getValidators({ commit, rootState }) {

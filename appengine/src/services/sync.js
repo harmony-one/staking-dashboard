@@ -144,6 +144,9 @@ module.exports = function(
         'index',
         MAX_LENGTH
       )
+      if (!Array.isArray(recent)) {
+        return
+      }
       _.forEach(recent, item => {
         res[item.index] = item
       })
@@ -218,8 +221,12 @@ module.exports = function(
         const utcDate = new Date(Date.now())
         const dayIndex = getDayIndex(utcDate)
 
+        console.log('active validator length', cache[ACTIVE_VALIDATORS].length)
+        console.log(
+          `address ${address} is ${Array.isArray(cache[ACTIVE_VALIDATORS]) &&
+            cache[ACTIVE_VALIDATORS].includes(address)}`
+        )
         const validatorInfo = {
-          active: !!cache[ACTIVE_VALIDATORS].includes(address),
           self_stake: selfStake,
           total_stake: totalStake,
           voting_power:
@@ -233,7 +240,10 @@ module.exports = function(
           uctDate: utcDate,
           index: dayIndex,
           address: res['one-address'],
-          ...res
+          ...res,
+          active:
+            Array.isArray(cache[ACTIVE_VALIDATORS]) &&
+            cache[ACTIVE_VALIDATORS].includes(address)
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
@@ -247,6 +257,7 @@ module.exports = function(
             `${address}_${dayIndex}`,
             validatorInfo
           )
+          // We pick the last data of the previous day.
           if (cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]) {
             await updateDocument(
               historyCollection,
@@ -377,7 +388,6 @@ module.exports = function(
           await getDelegationsByValidatorData(address)
           await sleep(100)
           await getValidatorInfoData(address)
-          await sleep(100)
           await sleep(100)
         })
       }

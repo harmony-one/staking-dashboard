@@ -11,7 +11,7 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
 const SECOND_PER_BLOCK = 8
-const SYNC_PERIOD = 120000
+const SYNC_PERIOD = 20000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
@@ -293,7 +293,6 @@ module.exports = function(
       bodyParams('hmy_getDelegationsByDelegator', address)
     )
 
-    console.log('here we come')
     let result = res.data.result
     result = _.forEach(result, elem => {
       elem.validator_info = cache[VALIDATOR_INFO][elem.validator_address]
@@ -418,8 +417,15 @@ module.exports = function(
       .filter(isNotEmpty)
   }
 
-  const getValidatorsWithPage = (page, size) => {
-    const validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]
+  const getValidatorsWithPage = async (page, size, active) => {
+    let validators
+
+    if (active) {
+      validators = !cache[ACTIVE_VALIDATORS] ? [] : cache[ACTIVE_VALIDATORS]
+    } else {
+      validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]
+    }
+
     if (
       page < 0 ||
       size < 0 ||
@@ -434,6 +440,13 @@ module.exports = function(
           return { ...cache[VALIDATOR_INFO][address] }
         })
         .filter(isNotEmpty)
+    }
+  }
+
+  const getValidatorsSizes = async () => {
+    return {
+      total: cache[VALIDATORS].length,
+      total_active: cache[ACTIVE_VALIDATORS].length
     }
   }
 
@@ -454,6 +467,7 @@ module.exports = function(
     getStakingNetworkInfo,
     getValidators,
     getValidatorsWithPage,
+    getValidatorsSizes,
     getActiveValidators,
     getValidatorInfo: address => cache[VALIDATOR_INFO][address],
     getValidatorHistory: address =>

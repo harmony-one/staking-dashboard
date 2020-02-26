@@ -11,8 +11,12 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
 const SECOND_PER_BLOCK = 8
-const SYNC_PERIOD = 8000
+const SYNC_PERIOD = 20000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 module.exports = function(
   BLOCKCHAIN_SERVER,
@@ -285,7 +289,10 @@ module.exports = function(
       if (cache[ACTIVE_VALIDATORS]) {
         cache[ACTIVE_VALIDATORS].forEach(async address => {
           await getDelegationsByValidatorData(address)
+          await sleep(100)
           await getValidatorInfoData(address)
+          await sleep(100)
+          await sleep(100)
         })
       }
 
@@ -302,7 +309,9 @@ module.exports = function(
       if (cache[VALIDATORS]) {
         cache[VALIDATORS].forEach(async address => {
           await getDelegationsByValidatorData(address)
+          await sleep(100)
           await getValidatorInfoData(address)
+          await sleep(100)
         })
       }
     } catch (err) {

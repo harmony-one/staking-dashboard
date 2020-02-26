@@ -11,7 +11,7 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
 const SECOND_PER_BLOCK = 8
-const SYNC_PERIOD = 20000
+const SYNC_PERIOD = 60000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
@@ -419,8 +419,7 @@ module.exports = function(
 
   const getValidatorsWithPage = async (page, size, active) => {
     let validators
-
-    if (active) {
+    if (active === 'true') {
       validators = !cache[ACTIVE_VALIDATORS] ? [] : cache[ACTIVE_VALIDATORS]
     } else {
       validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]

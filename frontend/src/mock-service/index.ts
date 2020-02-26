@@ -4,6 +4,8 @@ import {
   TBlockchainValidator
 } from "@/mock-service/validator-helpers"
 
+const queryString = require("query-string")
+
 const API_URL = process.env.MOCK_API_URL
 
 export function fetchProposals() {
@@ -25,6 +27,29 @@ export function fetchValidators(networkId: string) {
       .filter(v => v.description)
       .map(v => remapValidator(v, false))
   })
+}
+
+export function fetchValidatorsWithParams(
+  networkId: string,
+  params: { page: number; size: number; active: boolean }
+) {
+  if (!networkId) {
+    return []
+  }
+
+  return axios
+    .get(
+      `${API_URL}/networks/${networkId}/validators_with_page?${queryString.stringify(
+        params
+      )}`
+    )
+    .then(rez => {
+      const validators: TBlockchainValidator[] = rez.data.validators
+
+      return validators
+        .filter(v => v.description)
+        .map(v => remapValidator(v, false))
+    })
 }
 
 export function fetchValidatorByAddress(networkId: string, address: string) {

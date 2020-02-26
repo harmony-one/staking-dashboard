@@ -16,7 +16,7 @@
             title="Stake allocation"
             style="flex-grow: 1; height: 380px;"
           >
-            <div v-if="delegation.loading || validators.loading">
+            <div v-if="delegation.loading">
               Loading...
             </div>
             <div v-else-if="!delegations.length">
@@ -75,38 +75,24 @@ export default {
       .toDate()
   }),
   computed: {
-    ...mapState([
-      `session`,
-      `wallet`,
-      `delegation`,
-      `delegates`,
-      "validators",
-      "connection"
-    ]),
+    ...mapState([`session`, `wallet`, `delegation`, `delegates`, "connection"]),
     ...mapGetters([`lastHeader`]),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
       isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
     }),
     delegations() {
-      if (this.delegates.loading || this.validators.loading) {
+      if (this.delegates.loading) {
         return []
       }
 
       const delegates = this.delegates.delegates
-      const validators = window.validators
 
       return delegates
-        ? delegates.map(d => {
-            const validator = validators.find(
-              v => v.address === d.validator_address
-            )
-
-            return {
-              ...d,
-              validator: validator && validator.description.name
-            }
-          })
+        ? delegates.map(d => ({
+            ...d,
+            validator: d.validator_info.description.name
+          }))
         : []
     }
   },

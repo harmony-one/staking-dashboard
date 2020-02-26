@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PanelPagination :pagination="pagination" :data="validators" />
+    <PanelPagination :pagination="pagination" :data="data" />
     <table class="data-table card-white">
       <thead>
         <PanelSort
@@ -37,13 +37,17 @@ export default {
     PanelPagination
   },
   props: {
-    validators: {
+    data: {
       type: Array,
       required: true
     },
     showOnMobile: {
       type: String,
       default: () => "returns"
+    },
+    activeOnly: {
+      type: Boolean,
+      default: () => true
     }
   },
   data: () => ({
@@ -58,14 +62,14 @@ export default {
     }
   }),
   computed: {
-    ...mapState([`distribution`, `pool`, `session`, "delegates"]),
+    ...mapState([`distribution`, `pool`, `session`, "delegates", "validators"]),
     ...mapState({
       annualProvision: state => state.minting.annualProvision
     }),
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
       {
-        validators,
+        data,
         pool,
         annualProvision,
         committedDelegations,
@@ -73,7 +77,7 @@ export default {
         distribution
       } = this
     ) {
-      return validators.map(v => {
+      return data.map(v => {
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
@@ -157,12 +161,26 @@ export default {
     this.$store.dispatch(`getPool`)
     this.$store.dispatch(`getRewardsFromMyValidators`)
     this.$store.dispatch(`getMintingParameters`)
+
+    this.getValidators()
+  },
+  watch: {
+    "pagination.pageIndex": function() {
+      this.getValidators()
+    },
+    activeOnly: function() {
+      this.getValidators()
+    }
+  },
+  methods: {
+    getValidators() {
+      this.$store.dispatch(`getValidatorsWithParams`, {
+        page: this.pagination.pageIndex,
+        size: this.pagination.pageSize,
+        active: this.activeOnly
+      })
+    }
   }
-  // methods: {
-  //   loadMore() {
-  //     this.showing += 10
-  //   }
-  // }
 }
 </script>
 <style scoped>

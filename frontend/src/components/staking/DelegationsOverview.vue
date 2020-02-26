@@ -39,6 +39,7 @@
 import { mapState, mapGetters } from "vuex"
 import TmDataMsg from "common/TmDataMsg"
 import TableDelegations from "staking/TableDelegations/TableDelegations"
+import { remapValidator } from "../../mock-service/validator-helpers"
 
 export default {
   name: `delegations-overview`,
@@ -58,23 +59,16 @@ export default {
       return Object.keys(this.committedDelegations)
     },
     ...mapState({
-      allValidators: state => (state.validators.loaded ? window.validators : [])
-    }),
-    ...mapState({
       allDelegations: state => state.delegates.delegates
     }),
     validators: state => {
       const delegations = []
       const undelegations = []
 
-      state.allValidators.forEach(v => {
-        const delegates = state.allDelegations.find(
-          d => d.validator_address === v.operator_address
-        )
-
+      state.allDelegations.forEach(delegates => {
         if (delegates) {
           delegations.push({
-            ...v,
+            ...remapValidator(delegates.validator_info, true),
             stake: delegates.amount,
             rewards: delegates.reward,
             apr: delegates.reward / delegates.amount
@@ -88,7 +82,7 @@ export default {
         ) {
           delegates.Undelegations.forEach(un => {
             undelegations.push({
-              ...v,
+              ...remapValidator(delegates.validator_info, true),
               stake: un.Amount,
               rewards: delegates.reward,
               apr: delegates.reward / un.Amount

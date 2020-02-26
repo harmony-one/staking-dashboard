@@ -2,7 +2,6 @@
 // .env*
 node_modules
 /dist
-yarn.lock
 
 /tests/e2e/reports/
 selenium-debug.log

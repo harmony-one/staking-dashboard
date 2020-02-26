@@ -65,7 +65,7 @@ export default {
     }
   },
   watch: {
-    data() {
+    total() {
       this.pageIndex = 0
       this.pagination.pageIndex = 0
     }

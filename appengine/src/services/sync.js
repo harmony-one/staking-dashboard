@@ -1,6 +1,6 @@
 const axios = require('axios')
 const _ = require('lodash')
-const { isNotEmpty, bodyParams } = require('./helpers')
+const { isNotEmpty, bodyParams, bodyParams2 } = require('./helpers')
 
 const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
 const VALIDATORS = 'VALIDATORS'
@@ -24,6 +24,10 @@ module.exports = function(
   updateDocument,
   getCollectionDataWithLimit
 ) {
+  // Currently only work for OS network.
+  if (!BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io')) {
+    return
+  }
   const cache = {
     VALIDATORS: [],
     ACTIVE_VALIDATORS: [],
@@ -56,8 +60,8 @@ module.exports = function(
 
       if (Array.isArray(res.data.result)) {
         cache[ACTIVE_VALIDATORS] = res.data.result
+        console.log('# of active validators', cache[ACTIVE_VALIDATORS].length)
       }
-      // console.log("hmy_getActiveValidatorAddresses", res.data)
       return res.data.result
     } catch (err) {
       // console.log(err)
@@ -73,8 +77,8 @@ module.exports = function(
 
       if (Array.isArray(res.data.result)) {
         cache[VALIDATORS] = res.data.result
+        console.log('# of validators', cache[VALIDATORS].length)
       }
-      // console.log("getAllValidatorAddressesData", res.data)
       return res.data.result
     } catch (err) {
       console.log('error when doing getAllValidatorAddressesData:', err)
@@ -149,14 +153,49 @@ module.exports = function(
     return res
   }
 
+  const processValidatorWithPage = async page => {
+    try {
+      const res = await apiClient.post(
+        '/',
+        bodyParams2('hmy_getAllValidatorInformation', page)
+      )
+      if (
+        res &&
+        res.data &&
+        res.data.result &&
+        Array.isArray(res.data.result)
+      ) {
+        console.log(
+          `hmy_getAllValidatorInformation with page ${page}: `,
+          res.data.result.length
+        )
+        res.data.result.forEach(elem =>
+          processValidatorInfoData(elem['one-address'], elem)
+        )
+        return res.data.result.length
+      } else {
+        return 0
+      }
+    } catch (err) {
+      console.log('error when processValidatorWithPage: ', err)
+    }
+  }
+
   const getValidatorInfoData = async address => {
     try {
       const res = await apiClient.post(
         '/',
         bodyParams('hmy_getValidatorInformation', address)
       )
+      processValidatorInfoData(address, res)
+    } catch (err) {
+      console.log('error when getValidatorInfoData: ', err)
+    }
+  }
 
-      if (isNotEmpty(res.data.result)) {
+  const processValidatorInfoData = async (address, res) => {
+    try {
+      if (isNotEmpty(res)) {
         let selfStake = 0
         let totalStake = 0
         if (cache[DELEGATIONS_BY_VALIDATOR][address]) {
@@ -193,8 +232,8 @@ module.exports = function(
           blocks_should_sign: 100,
           uctDate: utcDate,
           index: dayIndex,
-          address: res.data.result['one-address'],
-          ...res.data.result
+          address: res['one-address'],
+          ...res
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
@@ -236,8 +275,6 @@ module.exports = function(
           delete cache[VALIDATOR_INFO_HISTORY][address][dayIndex - MAX_LENGTH]
         }
       }
-      // console.log("getAllValidatorInfoData ${address}", res.data);
-      return res.data.result
     } catch (e) {
       console.log('error in getValidatorInfoData:', e)
     }
@@ -254,6 +291,51 @@ module.exports = function(
     }
     // console.log("getDelegationsByDelegatorData ${address}", res.data.result);
     return res.data.result
+  }
+
+  const getAllDelegationsInfo = async () => {
+    try {
+      let page = 0
+      while (true) {
+        const res = await apiClient.post(
+          '/',
+          bodyParams2('hmy_getAllDelegationInformation', page)
+        )
+
+        if (
+          res &&
+          res.data &&
+          Array.isArray(res.data.result) &&
+          isNotEmpty(res.data.result)
+        ) {
+          console.log(
+            `hmy_getAllDelegationInformation with page ${page}: `,
+            res.data.result.length
+          )
+          res.data.result.forEach(elem => {
+            if (Array.isArray(elem) && elem[0] && elem[0].validator_address) {
+              cache[DELEGATIONS_BY_VALIDATOR][elem[0].validator_address] = elem
+            }
+          })
+          page += 1
+          await sleep(100)
+        } else {
+          break
+        }
+      }
+    } catch (err) {
+      console.log('error when getDelegationsFirst', err)
+    }
+  }
+
+  const getAllValidatorsInfo = async () => {
+    let totalValidators = 0
+    let page = 0
+    while (totalValidators < cache[VALIDATORS].length) {
+      totalValidators += await processValidatorWithPage(page)
+      page += 1
+      await sleep(100)
+    }
   }
 
   const getDelegationsByValidatorData = async address => {
@@ -274,43 +356,28 @@ module.exports = function(
       // Get global info first.
       await syncStakingNetworkInfo()
 
+      // Call to store active validator and all validators.
       await getActiveValidatorAddressesData()
+      await getAllValidatorAddressesData()
 
-      console.log(
-        'ActiveValidators: ',
-        cache[ACTIVE_VALIDATORS] && cache[ACTIVE_VALIDATORS].length
-      )
-      cache[ACTIVE_VALIDATORS] = cache[ACTIVE_VALIDATORS].slice(0, 30)
-      console.log(
-        'ActiveValidators: ',
-        cache[ACTIVE_VALIDATORS] && cache[ACTIVE_VALIDATORS].length
-      )
+      // Get  all delegations by validator first.
+      await getAllDelegationsInfo()
+
+      // Then get validator info, each call gets 100 validatorinfo.
+      await getAllValidatorsInfo()
 
       if (cache[ACTIVE_VALIDATORS]) {
         cache[ACTIVE_VALIDATORS].forEach(async address => {
+          if (!cache[VALIDATORS][address]) {
+            return
+          }
+          console.log(
+            `active address ${address} wasn't included in all validators`
+          )
           await getDelegationsByValidatorData(address)
           await sleep(100)
           await getValidatorInfoData(address)
           await sleep(100)
-          await sleep(100)
-        })
-      }
-
-      // TODO: currently only fetch active validators.
-      await getAllValidatorAddressesData()
-
-      console.log(
-        'AllValidators: ',
-        cache[VALIDATORS] && cache[VALIDATORS].length
-      )
-      cache[VALIDATORS] = cache[VALIDATORS].slice(0, 30)
-      console.log('Validators: ', cache[VALIDATORS] && cache[VALIDATORS].length)
-
-      if (cache[VALIDATORS]) {
-        cache[VALIDATORS].forEach(async address => {
-          await getDelegationsByValidatorData(address)
-          await sleep(100)
-          await getValidatorInfoData(address)
           await sleep(100)
         })
       }

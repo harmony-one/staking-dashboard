@@ -13,6 +13,7 @@ const MAX_LENGTH = 30
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 20000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
+const VALIDATOR_PAGE_SIZE = 50
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -419,6 +420,20 @@ module.exports = function(
       .filter(isNotEmpty)
   }
 
+  const getValidatorsWithPage = page => {
+    const validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]
+    if (page * VALIDATOR_PAGE_SIZE >= validators.length || page < -1) {
+      return []
+    } else {
+      validators
+        .slice(page * VALIDATOR_PAGE_SIZE, (page + 1) * VALIDATOR_PAGE_SIZE)
+        .map(address => {
+          return { ...cache[VALIDATOR_INFO][address] }
+        })
+        .filter(isNotEmpty)
+    }
+  }
+
   const getActiveValidators = () => {
     if (!cache[ACTIVE_VALIDATORS]) {
       return []
@@ -429,12 +444,19 @@ module.exports = function(
     }).filter(isNotEmpty)
   }
 
-  const getDelegationsByDelegator = async address =>
-    await getDelegationsByDelegatorData(address)
+  const getDelegationsByDelegator = async address => {
+    const delegations = await getDelegationsByDelegatorData(address),
+    const validators = _.map(delegations, elem => cache[VALIDATOR_INFO][elem.validator_address])
+    return {
+      delegations,
+      validators
+    }
+  }
 
   return {
     getStakingNetworkInfo,
     getValidators,
+    getValidatorsWithPage,
     getActiveValidators,
     getValidatorInfo: address => cache[VALIDATOR_INFO][address],
     getValidatorHistory: address =>

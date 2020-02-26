@@ -11,6 +11,17 @@ module.exports = (app, db, syncServices) => {
   )
 
   app.get(
+    '/networks/:networkId/validators_with_page/:page',
+    asyncHandler(async (req, res) => {
+      const data = syncServices[req.params.networkId].getValidatorsWithPage(
+        req.params.page
+      )
+
+      res.json({ validators: data })
+    })
+  )
+
+  app.get(
     '/networks/:networkId/activeValidators',
     asyncHandler(async (req, res) => {
       const data = syncServices[req.params.networkId].getActiveValidators()

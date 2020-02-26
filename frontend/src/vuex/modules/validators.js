@@ -1,4 +1,4 @@
-import { fetchValidators } from "../../mock-service"
+import { fetchValidators, fetchValidatorsWithParams } from "../../mock-service"
 
 export default () => {
   const state = {
@@ -8,6 +8,21 @@ export default () => {
   }
 
   const actions = {
+    async getValidatorsWithParams({ commit, rootState }, params) {
+      // commit("setLoading", true)
+
+      let validators = await fetchValidatorsWithParams(
+        rootState.connection.networkConfig.id,
+        params
+      )
+
+      commit("setLoaded", true)
+
+      commit("setValidators", validators)
+
+      return validators
+    },
+
     async getValidators({ commit, rootState }) {
       commit("setLoading", true)
 
@@ -16,7 +31,7 @@ export default () => {
       )
 
       // @ts-ignore
-      window.validators = validators
+      // window.validators = validators
 
       // const { delegates } = rootState.delegates
 

@@ -23,8 +23,7 @@
           </a>
         </div>
       </div>
-      <TmDataLoading v-if="isLoading" />
-      <div v-else>
+      <div v-if="isNetworkInfoLoading">
         <div class="filterOptions">
           <TmField
             v-model="searchTerm"
@@ -49,7 +48,8 @@
           </div>
         </div>
         <TableValidators
-          :validators="validators"
+          :data="validators"
+          :activeOnly="activeOnly"
           show-on-mobile="expectedReturns"
         />
         <div
@@ -59,6 +59,7 @@
           No results for these search terms
         </div>
       </div>
+      <TmDataLoading v-if="isLoading" />
     </template>
   </PageContainer>
 </template>
@@ -96,8 +97,9 @@ export default {
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
+    ...mapState({ isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading }),
     ...mapState({
-      allValidators: state => (state.validators.loaded ? window.validators : [])
+      allValidators: state => (state.validators.loaded ? state.validators.validators : [])
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
     activeValidators: state =>

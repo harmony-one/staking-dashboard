@@ -41,7 +41,7 @@ export default (opts = {}) => {
 
       Promise.all([
         store.dispatch("getDelegates"),
-        store.dispatch("getValidators")
+        // store.dispatch("getValidators")
       ]).then(() => store.dispatch("getRewardsFromMyValidators"))
     }
   })

@@ -11,9 +11,10 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
 const SECOND_PER_BLOCK = 8
-const SYNC_PERIOD = 20000
+const SYNC_PERIOD = 30000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 50
+const SLEEP_TIME = 10
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -222,11 +223,6 @@ module.exports = function(
         const utcDate = new Date(Date.now())
         const dayIndex = getDayIndex(utcDate)
 
-        console.log('active validator length', cache[ACTIVE_VALIDATORS].length)
-        console.log(
-          `address ${address} is ${Array.isArray(cache[ACTIVE_VALIDATORS]) &&
-            cache[ACTIVE_VALIDATORS].includes(address)}`
-        )
         const validatorInfo = {
           self_stake: selfStake,
           total_stake: totalStake,
@@ -298,11 +294,17 @@ module.exports = function(
       bodyParams('hmy_getDelegationsByDelegator', address)
     )
 
-    if (isNotEmpty(res.data.result)) {
-      cache[DELEGATIONS_BY_DELEGATOR][address] = res.data.result
+    console.log('here we come')
+    let result = res.data.result
+    result = _.forEach(result, elem => {
+      elem.validator_info = cache[VALIDATOR_INFO][elem.validator_address]
+      console.log(`address : ${elem.validator_address}`)
+      console.log(`info : ${cache[VALIDATOR_INFO][elem.validator_address]}`)
+    })
+    if (isNotEmpty(result)) {
+      cache[DELEGATIONS_BY_DELEGATOR][address] = result
     }
-    // console.log("getDelegationsByDelegatorData ${address}", res.data.result);
-    return res.data.result
+    return result
   }
 
   const getAllDelegationsInfo = async () => {
@@ -330,7 +332,7 @@ module.exports = function(
             }
           })
           page += 1
-          await sleep(100)
+          await sleep(SLEEP_TIME)
         } else {
           break
         }
@@ -346,7 +348,7 @@ module.exports = function(
     while (totalValidators < cache[VALIDATORS].length) {
       totalValidators += await processValidatorWithPage(page)
       page += 1
-      await sleep(100)
+      await sleep(SLEEP_TIME)
     }
   }
 
@@ -383,13 +385,10 @@ module.exports = function(
           if (!cache[VALIDATORS][address]) {
             return
           }
-          console.log(
-            `active address ${address} wasn't included in all validators`
-          )
           await getDelegationsByValidatorData(address)
-          await sleep(100)
+          await sleep(SLEEP_TIME)
           await getValidatorInfoData(address)
-          await sleep(100)
+          await sleep(SLEEP_TIME)
         })
       }
     } catch (err) {
@@ -425,7 +424,7 @@ module.exports = function(
     if (page * VALIDATOR_PAGE_SIZE >= validators.length || page < -1) {
       return []
     } else {
-      validators
+      return validators
         .slice(page * VALIDATOR_PAGE_SIZE, (page + 1) * VALIDATOR_PAGE_SIZE)
         .map(address => {
           return { ...cache[VALIDATOR_INFO][address] }
@@ -444,14 +443,8 @@ module.exports = function(
     }).filter(isNotEmpty)
   }
 
-  const getDelegationsByDelegator = async address => {
-    const delegations = await getDelegationsByDelegatorData(address),
-    const validators = _.map(delegations, elem => cache[VALIDATOR_INFO][elem.validator_address])
-    return {
-      delegations,
-      validators
-    }
-  }
+  const getDelegationsByDelegator = async address =>
+    await getDelegationsByDelegatorData(address)
 
   return {
     getStakingNetworkInfo,

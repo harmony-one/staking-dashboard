@@ -58,46 +58,50 @@ export default {
       return Object.keys(this.committedDelegations)
     },
     ...mapState({
-      validators: state => {
-        const delegations = []
-        const undelegations = []
+      allValidators: state => (state.validators.loaded ? window.validators : [])
+    }),
+    ...mapState({
+      allDelegations: state => state.delegates.delegates
+    }),
+    validators: state => {
+      const delegations = []
+      const undelegations = []
 
-        state.validators.validators.forEach(v => {
-          const delegates = state.delegates.delegates.find(
-            d => d.validator_address === v.operator_address
-          )
+      state.allValidators.forEach(v => {
+        const delegates = state.allDelegations.find(
+          d => d.validator_address === v.operator_address
+        )
 
-          if (delegates) {
-            delegations.push({
+        if (delegates) {
+          delegations.push({
+            ...v,
+            stake: delegates.amount,
+            rewards: delegates.reward,
+            apr: delegates.reward / delegates.amount
+          })
+        }
+
+        if (
+          delegates &&
+          delegates.Undelegations &&
+          delegates.Undelegations.length
+        ) {
+          delegates.Undelegations.forEach(un => {
+            undelegations.push({
               ...v,
-              stake: delegates.amount,
+              stake: un.Amount,
               rewards: delegates.reward,
-              apr: delegates.reward / delegates.amount
+              apr: delegates.reward / un.Amount
             })
-          }
+          })
+        }
+      })
 
-          if (
-            delegates &&
-            delegates.Undelegations &&
-            delegates.Undelegations.length
-          ) {
-            delegates.Undelegations.forEach(un => {
-              undelegations.push({
-                ...v,
-                stake: un.Amount,
-                rewards: delegates.reward,
-                apr: delegates.reward / un.Amount
-              })
-            })
-          }
-        })
-
-        return { delegations, undelegations }
-      }
-    })
+      return { delegations, undelegations }
+    }
   },
   async mounted() {
-    this.$store.dispatch(`getValidators`)
+    // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
   }
 }

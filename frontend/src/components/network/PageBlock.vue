@@ -136,7 +136,7 @@ export default {
     this.getBlock()
   },
   mounted(){
-    this.$store.dispatch(`getValidators`)
+    // this.$store.dispatch(`getValidators`)
   },
   methods: {
     async getBlock({ $store, $route, $router, lastHeader } = this) {

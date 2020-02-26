@@ -9,7 +9,14 @@ export default () => {
 
   const actions = {
     async getValidators({ commit, rootState }) {
-      let validators = await fetchValidators(rootState.connection.networkConfig.id)
+      commit("setLoading", true)
+
+      let validators = await fetchValidators(
+        rootState.connection.networkConfig.id
+      )
+
+      // @ts-ignore
+      window.validators = validators
 
       // const { delegates } = rootState.delegates
 
@@ -28,15 +35,18 @@ export default () => {
 
       commit("setLoaded", true)
 
-      commit("setValidators", validators)
+      // commit("setValidators", validators)
 
-      return validators;
+      return validators
     }
   }
 
   const mutations = {
     setValidators(state, validators) {
       state.validators = validators
+    },
+    setLoading(state, loading) {
+      state.loading = loading
     },
     setLoaded(state, loaded) {
       state.loading = false

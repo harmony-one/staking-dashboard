@@ -9,11 +9,11 @@
         <div class="networkInfo-column">
           <div class="networkInfo-item">
             <h4>Effective median stake:</h4>
-            {{ networkInfo.effective_median_stake | zeroDecimals }} ONE
+            {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
             <h4>Total stake:</h4>
-            {{ networkInfo['total-staking'] | ones | zeroDecimals }} ONE
+            {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
         </div>
         <div class="networkInfo-item">
@@ -23,38 +23,41 @@
           </a>
         </div>
       </div>
-      <div class="filterOptions">
-        <TmField
-          v-model="searchTerm"
-          class="searchField"
-          placeholder="Search"
-        />
-        <div class="toggles">
-          <TmBtn
-            value="All"
-            :number="allValidators.length"
-            class="btn-radio secondary"
-            :type="!activeOnly ? `active` : `secondary`"
-            @click.native="activeOnly = false"
+      <TmDataLoading v-if="isLoading" />
+      <div v-else>
+        <div class="filterOptions">
+          <TmField
+            v-model="searchTerm"
+            class="searchField"
+            placeholder="Search"
           />
-          <TmBtn
-            value="Active"
-            :number="activeValidators.length"
-            class="btn-radio secondary"
-            :type="activeOnly ? `active` : `secondary`"
-            @click.native="activeOnly = true"
-          />
+          <div class="toggles">
+            <TmBtn
+              value="All"
+              :number="allValidators.length"
+              class="btn-radio secondary"
+              :type="!activeOnly ? `active` : `secondary`"
+              @click.native="activeOnly = false"
+            />
+            <TmBtn
+              value="Active"
+              :number="activeValidators.length"
+              class="btn-radio secondary"
+              :type="activeOnly ? `active` : `secondary`"
+              @click.native="activeOnly = true"
+            />
+          </div>
         </div>
-      </div>
-      <TableValidators
-        :validators="validators"
-        show-on-mobile="expectedReturns"
-      />
-      <div
-        v-if="validators && validators.length === 0 && searchTerm"
-        class="no-results"
-      >
-        No results for these search terms
+        <TableValidators
+          :validators="validators"
+          show-on-mobile="expectedReturns"
+        />
+        <div
+          v-if="validators && validators.length === 0 && searchTerm"
+          class="no-results"
+        >
+          No results for these search terms
+        </div>
       </div>
     </template>
   </PageContainer>
@@ -66,6 +69,7 @@ import TableValidators from "staking/TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
+import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 
@@ -75,7 +79,8 @@ export default {
     TableValidators,
     PageContainer,
     TmField,
-    TmBtn
+    TmBtn,
+    TmDataLoading
   },
   filters: {
     ones,
@@ -85,17 +90,18 @@ export default {
   },
   data: () => ({
     searchTerm: "",
-    activeOnly: false
+    activeOnly: true
   }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
-    ...mapState({ allValidators: state => state.validators.validators }),
     ...mapState({
-      activeValidators: state =>
-        state.validators.validators.filter(v => v.active === true)
+      allValidators: state => (state.validators.loaded ? window.validators : [])
     }),
+    ...mapState({ isLoading: state => state.validators.loading }),
+    activeValidators: state =>
+      state.allValidators.filter(v => v.active === true),
     validators: state => {
       return state.allValidators
         .filter(
@@ -111,13 +117,15 @@ export default {
         : ""
     },
     linkToTransaction() {
-      const blocksUrl = this.networkConfig.explorer_url.replace("tx", "block")
+      const blocksUrl = this.networkConfig.explorer_url
+        ? this.networkConfig.explorer_url.replace("tx", "block")
+        : ""
 
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },
   async mounted() {
-    this.$store.dispatch(`getValidators`)
+    // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
 
     console.log(this)

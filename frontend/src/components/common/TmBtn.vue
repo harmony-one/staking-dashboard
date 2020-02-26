@@ -156,6 +156,6 @@ export default {
   padding-top: 5px;
   text-align: center;
   margin-left: 10px;
-  background: rgba(255, 255, 255, 0.4);
+  /* background: rgba(255, 255, 255, 0.4); */
 }
 </style>

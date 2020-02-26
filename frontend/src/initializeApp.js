@@ -59,7 +59,7 @@ export default function init(urlParams, env = process.env) {
       store.dispatch(`checkForPersistedAddresses`)
       Promise.all([
         store.dispatch("getDelegates"),
-        store.dispatch("getValidators")
+        // store.dispatch("getValidators")
       ]).then(() => store.dispatch("getRewardsFromMyValidators"))
       store.dispatch(`getPool`)
       store.dispatch(`getMintingParameters`)

@@ -94,7 +94,7 @@ export default {
       }
 
       const delegates = this.delegates.delegates
-      const validators = this.validators.validators
+      const validators = window.validators
 
       return delegates
         ? delegates.map(d => {

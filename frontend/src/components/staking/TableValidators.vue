@@ -1,5 +1,6 @@
 <template>
   <div>
+    <PanelPagination :pagination="pagination" :data="validators" />
     <table class="data-table card-white">
       <thead>
         <PanelSort
@@ -8,16 +9,11 @@
           :show-on-mobile="showOnMobile"
         />
       </thead>
-      <tbody
-        is="transition-group"
-        v-infinite-scroll="loadMore"
-        infinite-scroll-distance="400"
-        name="flip-list"
-      >
+      <tbody>
         <LiValidator
           v-for="(validator, index) in showingValidators"
           :key="validator.operator_address"
-          :index="index"
+          :index="startIndex + index"
           :validator="validator"
           :show-on-mobile="showOnMobile"
         />
@@ -31,12 +27,14 @@ import { mapGetters, mapState } from "vuex"
 import orderBy from "lodash.orderby"
 import LiValidator from "staking/LiValidator"
 import PanelSort from "staking/PanelSort"
+import PanelPagination from "staking/PanelPagination"
 import { expectedReturns } from "scripts/returns"
 export default {
   name: `table-validators`,
   components: {
     LiValidator,
-    PanelSort
+    PanelSort,
+    PanelPagination
   },
   props: {
     validators: {
@@ -54,8 +52,10 @@ export default {
       property: `expectedReturns`,
       order: `desc`
     },
-    showing: 15,
-    rollingWindow: 10000 // param of slashing period
+    pagination: {
+      pageIndex: 0,
+      pageSize: 20
+    }
   }),
   computed: {
     ...mapState([`distribution`, `pool`, `session`, "delegates"]),
@@ -106,8 +106,14 @@ export default {
         [this.sort.order]
       )
     },
+    startIndex() {
+      return this.pagination.pageIndex * this.pagination.pageSize
+    },
     showingValidators() {
-      return this.sortedEnrichedValidators.slice(0, this.showing)
+      return this.sortedEnrichedValidators.slice(
+        this.startIndex,
+        this.startIndex + this.pagination.pageSize
+      )
     },
     properties() {
       return [
@@ -139,24 +145,24 @@ export default {
       ]
     }
   },
-  watch: {
-    "sort.property": function() {
-      this.showing = 15
-    },
-    "sort.order": function() {
-      this.showing = 15
-    }
-  },
+  // watch: {
+  //   "sort.property": function() {
+  //     this.showing = 15
+  //   },
+  //   "sort.order": function() {
+  //     this.showing = 15
+  //   }
+  // },
   mounted() {
     this.$store.dispatch(`getPool`)
     this.$store.dispatch(`getRewardsFromMyValidators`)
     this.$store.dispatch(`getMintingParameters`)
-  },
-  methods: {
-    loadMore() {
-      this.showing += 10
-    }
   }
+  // methods: {
+  //   loadMore() {
+  //     this.showing += 10
+  //   }
+  // }
 }
 </script>
 <style scoped>

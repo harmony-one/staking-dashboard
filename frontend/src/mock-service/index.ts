@@ -44,11 +44,11 @@ export function fetchValidatorsWithParams(
       )}`
     )
     .then(rez => {
-      const validators: TBlockchainValidator[] = rez.data.validators
+      const validators: any[] = rez.data.validators
+        .filter((v: any) => v.description)
+        .map((v: any) => remapValidator(v, false))
 
-      return validators
-        .filter(v => v.description)
-        .map(v => remapValidator(v, false))
+      return { ...rez.data, validators }
     })
 }
 

@@ -33,14 +33,14 @@
           <div class="toggles">
             <TmBtn
               value="All"
-              :number="allValidators.length"
+              :number="total"
               class="btn-radio secondary"
               :type="!activeOnly ? `active` : `secondary`"
               @click.native="activeOnly = false"
             />
             <TmBtn
               value="Active"
-              :number="activeValidators.length"
+              :number="totalActive"
               class="btn-radio secondary"
               :type="activeOnly ? `active` : `secondary`"
               @click.native="activeOnly = true"
@@ -99,7 +99,9 @@ export default {
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({ isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading }),
     ...mapState({
-      allValidators: state => (state.validators.loaded ? state.validators.validators : [])
+      allValidators: state => (state.validators.loaded ? state.validators.validators : []),
+      total: state => state.validators.total,
+      totalActive: state => state.validators.totalActive,
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
     activeValidators: state =>

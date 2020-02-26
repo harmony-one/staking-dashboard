@@ -1,6 +1,6 @@
 <template>
   <div class="card-white validator-info" style="margin: 15px 0;">
-    <div class="row">
+    <div v-if="increased" class="row">
       <i class="material-icons" style="color: green; width: 40px;"
         >arrow_upwards</i
       >
@@ -16,8 +16,11 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      Not found increased events
+    </div>
     <div class="line" />
-    <div class="row">
+    <div v-if="decreased" class="row">
       <i class="material-icons" style="color: red; width: 40px;"
         >arrow_downward</i
       >
@@ -32,6 +35,9 @@
           {{ decreased.total_stake_after | ones | shortDecimals }}
         </div>
       </div>
+    </div>
+    <div v-else>
+      Not found decreased events
     </div>
   </div>
 </template>

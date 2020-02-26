@@ -2,7 +2,7 @@
   <div>
     <div class="slider-block">
       <VueSlider
-        v-model="rate"
+        v-model="currentRate"
         :max="maxRate"
         :included="true"
         :marks="marks"
@@ -11,7 +11,7 @@
         :tooltip-formatter="rateTitle"
       >
         <template #tooltip="{ index }">
-          <span class="tooltip">{{ rate }}%</span>
+          <span class="tooltip">{{ currentRate }}%</span>
           <span class="tooltip-after">
             {{ maxChangeRateTitle }}
           </span>
@@ -48,7 +48,6 @@ export default {
   components: { ChartLine, VueSlider },
   props: ["history", "validator"],
   data: () => ({
-    rate: 10,
     options: {
       responsive: true,
       maintainAspectRatio: false,

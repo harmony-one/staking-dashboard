@@ -4,21 +4,25 @@ export default () => {
   const state = {
     loading: true,
     loaded: false,
-    validators: []
+    validators: [],
+    total: 0,
+    totalActive: 0,
   }
 
   const actions = {
     async getValidatorsWithParams({ commit, rootState }, params) {
       // commit("setLoading", true)
 
-      let validators = await fetchValidatorsWithParams(
+      let data = await fetchValidatorsWithParams(
         rootState.connection.networkConfig.id,
         params
       )
 
       commit("setLoaded", true)
 
-      commit("setValidators", validators)
+      commit("setValidators", data.validators)
+      commit("setTotal", data.total)
+      commit("setTotalActive", data.total_active)
 
       return validators
     },
@@ -59,6 +63,12 @@ export default () => {
   const mutations = {
     setValidators(state, validators) {
       state.validators = validators
+    },
+    setTotal(state, total) {
+      state.total = total
+    },
+    setTotalActive(state, total) {
+      state.totalActive = total
     },
     setLoading(state, loading) {
       state.loading = loading

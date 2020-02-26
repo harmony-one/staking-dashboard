@@ -50,7 +50,7 @@
 <script>
 export default {
   name: "PaginationTable",
-  props: ["data", "pagination"],
+  props: ["total", "pagination"],
   data() {
     return {
       pageIndex: 0
@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     txCount() {
-      return this.data.length
+      return this.total
     },
     pageCount() {
       return Math.ceil(this.txCount / this.pagination.pageSize)

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <PanelPagination :pagination="pagination" :data="data" />
+    <PanelPagination
+      :pagination="pagination"
+      :total="activeOnly ? totalActive : total"
+    />
     <table class="data-table card-white">
       <thead>
         <PanelSort
@@ -66,6 +69,10 @@ export default {
     ...mapState({
       annualProvision: state => state.minting.annualProvision
     }),
+    ...mapState({
+      total: state => state.validators.total,
+      totalActive: state => state.validators.totalActive
+    }),
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
       {
@@ -114,10 +121,12 @@ export default {
       return this.pagination.pageIndex * this.pagination.pageSize
     },
     showingValidators() {
-      return this.sortedEnrichedValidators.slice(
-        this.startIndex,
-        this.startIndex + this.pagination.pageSize
-      )
+      return this.sortedEnrichedValidators
+
+      //         .slice(
+      //   this.startIndex,
+      //   this.startIndex + this.pagination.pageSize
+      // )
     },
     properties() {
       return [

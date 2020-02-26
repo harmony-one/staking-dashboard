@@ -2,6 +2,7 @@ import * as crypto from "@harmony-js/crypto"
 
 const blockchainValidator = {
   active: true,
+  index: 1,
   self_stake: 10000000000000000000,
   total_stake: 10000000000000000000,
   signed_blocks: 50,

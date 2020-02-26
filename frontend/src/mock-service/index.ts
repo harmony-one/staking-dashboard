@@ -34,9 +34,14 @@ export function fetchValidatorByAddress(networkId: string, address: string) {
 }
 
 export function fetchValidatorHistory(networkId: string, address: string) {
-  return axios.get(
-    `${API_URL}/networks/${networkId}/validator_history/${address}`
-  ).then(rez => rez.data)
+  return axios
+    .get(`${API_URL}/networks/${networkId}/validator_history/${address}`)
+    .then(rez =>
+      rez.data.map((v: TBlockchainValidator) => ({
+        ...v,
+        uctDate: new Date(v.index * 1000 * 60 * 60 * 24).toISOString()
+      }))
+    )
 }
 
 export function fetchDelegationsByAddress(networkId: string, address: string) {

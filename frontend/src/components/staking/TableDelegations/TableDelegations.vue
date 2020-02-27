@@ -2,11 +2,7 @@
   <div>
     <table class="data-table card-white">
       <thead>
-        <PanelSort
-          :sort="sort"
-          :properties="properties"
-          :show-on-mobile="showOnMobile"
-        />
+        <PanelSort :sort="sort" :properties="properties" :show-on-mobile="showOnMobile" />
       </thead>
       <tbody
         is="transition-group"
@@ -33,108 +29,108 @@ import PanelSort from "staking/PanelSort"
 import TableRow from "./TableRow"
 
 export default {
-  name: `table-delegations`,
-  components: {
-    TableRow,
-    PanelSort
-  },
-  props: {
-    data: {
-      type: Array,
-      required: true
+    name: `table-delegations`,
+    components: {
+        TableRow,
+        PanelSort
     },
-    showOnMobile: {
-      type: String,
-      default: () => "returns"
-    }
-  },
-  data: () => ({
-    query: ``,
-    sort: {
-      property: `stake`,
-      order: `desc`
-    },
-    showing: 15,
-    rollingWindow: 10000 // param of slashing period
-  }),
-  computed: {
-    ...mapState([`distribution`, `pool`, `session`, "delegates"]),
-    ...mapState({
-      annualProvision: state => state.minting.annualProvision
-    }),
-    ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
-    sortedEnrichedValidators() {
-      return orderBy(
-        this.data.slice(0),
-        [this.sort.property],
-        [this.sort.order]
-      )
-    },
-    showingValidators() {
-      return this.sortedEnrichedValidators.slice(0, this.showing)
-    },
-    properties() {
-      return [
-        {
-          title: `Name`,
-          value: `small_moniker`,
-          tooltip: `The validator's moniker`
+    props: {
+        data: {
+            type: Array,
+            required: true
         },
-        {
-          title: `Stake`,
-          value: `stake`,
-          tooltip: `Stake`
-        },
-        {
-          title: `Reward (up to date)`,
-          value: `rewards`,
-          tooltip: `Reward (up to date)`
-        },
-        {
-          title: `APR %`,
-          value: `apr`,
-          tooltip: `APR %`
-        },
-        {
-          title: `Staked since`,
-          value: `staked_since`,
-          tooltip: `Staked since`
+        showOnMobile: {
+            type: String,
+            default: () => "returns"
         }
-      ]
-    }
-  },
-  watch: {
-    "sort.property": function() {
-      this.showing = 15
     },
-    "sort.order": function() {
-      this.showing = 15
+    data: () => ({
+        query: ``,
+        sort: {
+            property: `stake`,
+            order: `desc`
+        },
+        showing: 15,
+        rollingWindow: 10000 // param of slashing period
+    }),
+    computed: {
+        ...mapState([`distribution`, `pool`, `session`, "delegates"]),
+        ...mapState({
+            annualProvision: state => state.minting.annualProvision
+        }),
+        ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
+        sortedEnrichedValidators() {
+            return orderBy(
+                this.data.slice(0),
+                [this.sort.property],
+                [this.sort.order]
+            )
+        },
+        showingValidators() {
+            return this.sortedEnrichedValidators.slice(0, this.showing)
+        },
+        properties() {
+            return [
+                {
+                    title: `Name`,
+                    value: `small_moniker`,
+                    tooltip: `The validator's moniker`
+                },
+                {
+                    title: `Stake`,
+                    value: `stake`,
+                    tooltip: `Stake`
+                },
+                {
+                    title: `Reward (up to date)`,
+                    value: `rewards`,
+                    tooltip: `Reward (up to date)`
+                },
+                {
+                    title: `APR %`,
+                    value: `apr`,
+                    tooltip: `APR %`
+                }
+                // {
+                //   title: `Staked since`,
+                //   value: `staked_since`,
+                //   tooltip: `Staked since`
+                // }
+            ]
+        }
+    },
+    watch: {
+        "sort.property": function() {
+            this.showing = 15
+        },
+        "sort.order": function() {
+            this.showing = 15
+        }
+    },
+    mounted() {
+        this.$store.dispatch(`getPool`)
+        this.$store.dispatch(`getRewardsFromMyValidators`)
+        this.$store.dispatch(`getMintingParameters`)
+    },
+    methods: {
+        loadMore() {
+            this.showing += 10
+        }
     }
-  },
-  mounted() {
-    this.$store.dispatch(`getPool`)
-    this.$store.dispatch(`getRewardsFromMyValidators`)
-    this.$store.dispatch(`getMintingParameters`)
-  },
-  methods: {
-    loadMore() {
-      this.showing += 10
-    }
-  }
 }
 </script>
 <style scoped>
 @media screen and (max-width: 550px) {
-  .data-table td {
-    overflow: hidden;
-  }
+    .data-table td {
+        overflow: hidden;
+    }
 
-  .data-table__row__info {
-    max-width: 22rem;
-  }
+    .data-table__row__info {
+        max-width: 22rem;
+    }
 }
 
 .flip-list-move {
-  transition: transform 0.3s;
+    transition: transform 0.3s;
 }
 </style>

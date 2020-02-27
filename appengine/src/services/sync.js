@@ -418,6 +418,8 @@ module.exports = function(
   }
 
   const getValidatorsWithPage = async (page, size, active) => {
+    const pageInt = parseInt(page, 10)
+    const sizeInt = parseInt(size, 10)
     let validators
     if (active === 'true') {
       validators = !cache[ACTIVE_VALIDATORS] ? [] : cache[ACTIVE_VALIDATORS]
@@ -426,15 +428,15 @@ module.exports = function(
     }
 
     if (
-      page < 0 ||
-      size < 0 ||
-      size > VALIDATOR_PAGE_SIZE ||
-      page * size >= validators.length
+      pageInt < 0 ||
+      sizeInt < 0 ||
+      sizeInt > VALIDATOR_PAGE_SIZE ||
+      pageInt * sizeInt >= validators.length
     ) {
       return []
     } else {
       return validators
-        .slice(page * size, (page + 1) * size)
+        .slice(pageInt * sizeInt, (pageInt + 1) * sizeInt)
         .map(address => {
           return { ...cache[VALIDATOR_INFO][address] }
         })

@@ -34,6 +34,7 @@
 
 .data-table th:nth-child(3) {
   width: 30%;
+  padding-left: 60px;
 }
 
 .data-table th:nth-last-child(-n + 1) {
@@ -51,6 +52,7 @@
   width: 100%;
   position: relative;
   vertical-align: middle;
+  overflow: hidden;
 }
 
 .data-table td > span {

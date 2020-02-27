@@ -22,18 +22,11 @@
       </div>
     </td>
     <td class="data-table__row__info">
-      <!--      <Avatar-->
-      <!--        v-if="!validator || !validator.avatarUrl"-->
-      <!--        class="li-validator-image"-->
-      <!--        alt="generic validator logo - generated avatar from address"-->
-      <!--        :address="validator.operator_address"-->
-      <!--      />-->
-      <!--      <img-->
-      <!--        v-else-if="validator && validator.avatarUrl"-->
-      <!--        :src="validator.avatarUrl"-->
-      <!--        class="li-validator-image"-->
-      <!--        :alt="`validator logo for ` + validator.moniker"-->
-      <!--      />-->
+      <ValidatorLogo
+        :name="validator.moniker"
+        :operator-address="validator.operator_address"
+        :logo-url="validator.logo_url"
+      />
       <div class="validator-info">
         <h3 class="li-validator-name">
           {{ validator.moniker }}
@@ -64,13 +57,11 @@ import {
   zeroDecimals,
   twoDecimals
 } from "scripts/num"
-// import Avatar from "common/Avatar"
+import ValidatorLogo from "./components/ValidatorLogo"
 
 export default {
   name: `li-validator`,
-  // components: {
-  //   Avatar
-  // },
+  components: { ValidatorLogo },
   filters: {
     atoms,
     ones,

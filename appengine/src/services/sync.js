@@ -237,6 +237,9 @@ module.exports = function(
           index: dayIndex,
           address: res['one-address'],
           ...res,
+          active_nodes: Array.isArray(res[bls - public - keys])
+            ? res[bls - public - keys].length
+            : 1,
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address)

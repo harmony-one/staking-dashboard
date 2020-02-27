@@ -242,7 +242,14 @@ module.exports = function(
             : 1,
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
-            cache[ACTIVE_VALIDATORS].includes(address)
+            cache[ACTIVE_VALIDATORS].includes(address),
+          uptime_percentage:
+            res['current-snapshot'] &&
+            res['current-snapshot']['num-blocks-signed'] &&
+            res['current-snapshot']['num-blocks-to-sign']
+              ? parseFloat(res['current-snapshot']['num-blocks-signed']) /
+                parseInt(res['current-snapshot']['num-blocks-to-sign'])
+              : 0
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]

@@ -48,8 +48,6 @@ const frontendValidator = {
   jailed: false,
   max_rate: "1.000000000000000000",
   tombstoned: false,
-  avatarUrl:
-    "https://s3.amazonaws.com/keybase_processed_uploads/5dacfc1ad84eecdb4a01fd893d479805_360_360.jpeg",
   start_height: "0",
   voting_power: 0.0315,
   max_change_rate: "0.010000000000000000",
@@ -117,8 +115,6 @@ export const remapValidator = (
     status: 2,
     jailed: false,
     tombstoned: false,
-    avatarUrl:
-      "https://s3.amazonaws.com/keybase_processed_uploads/5dacfc1ad84eecdb4a01fd893d479805_360_360.jpeg",
     start_height: "0",
     tokens: "5706991464569",
     unbonding_height: 0,

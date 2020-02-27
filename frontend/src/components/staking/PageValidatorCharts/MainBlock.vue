@@ -10,17 +10,10 @@
     </div>
     <div class="validator">
       <td class="data-table__row__info">
-        <Avatar
-          v-if="!validator.avatarUrl"
-          class="validator-image"
-          alt="generic geometric symbol - generated avatar from address"
-          :address="validator.operator_address"
-        />
-        <img
-          v-else-if="validator.avatarUrl"
-          :src="validator.avatarUrl"
-          :alt="`validator logo for ` + validator.moniker"
-          class="validator-image"
+        <ValidatorLogo
+          :name="validator.moniker"
+          :operator-address="validator.operator_address"
+          :logo-url="validator.logo_url"
         />
         <div class="validator-info">
           <h2>{{ validator.moniker }}</h2>
@@ -82,7 +75,7 @@ import { formatBech32 } from "src/filters"
 import TmBtn from "common/TmBtn"
 import DelegationModal from "src/ActionModal/components/DelegationModal"
 import UndelegationModal from "src/ActionModal/components/UndelegationModal"
-import Avatar from "common/Avatar"
+import ValidatorLogo from "../components/ValidatorLogo"
 import isEmpty from "lodash.isempty"
 
 export default {
@@ -90,7 +83,7 @@ export default {
   components: {
     DelegationModal,
     UndelegationModal,
-    Avatar,
+    ValidatorLogo,
     TmBtn
   },
   filters: {

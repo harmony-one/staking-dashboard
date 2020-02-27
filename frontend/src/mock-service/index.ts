@@ -50,6 +50,9 @@ export function fetchValidatorsWithParams(
 
       return { ...rez.data, validators }
     })
+    .catch(() => {
+      return { validators: [], totalActive: 0, total: 0 }
+    })
 }
 
 export function fetchValidatorByAddress(networkId: string, address: string) {
@@ -73,6 +76,7 @@ export function fetchDelegationsByAddress(networkId: string, address: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/delegations/${address}`)
     .then(rez => rez.data)
+    .catch(() => [])
 }
 
 export function fetchNetworkInfo(networkId: string) {

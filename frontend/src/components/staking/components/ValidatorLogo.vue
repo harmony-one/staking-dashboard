@@ -1,5 +1,5 @@
 <template>
-  <div class="validator-logo-container">
+  <div :class="containerClasses">
     <img
       v-if="!isImageLoaded && !loadedWithError"
       class="loader li-validator-image"
@@ -32,7 +32,7 @@ export default {
   components: {
     Avatar
   },
-  props: ["operatorAddress", "logoUrl", "name"],
+  props: ["operatorAddress", "logoUrl", "name", "size"],
   data() {
     return {
       isImageLoaded: false,
@@ -45,6 +45,12 @@ export default {
         this.logoUrl ||
         `https://github.com/harmony-one/validator-logos/raw/master/validators/${this.operatorAddress}.jpg`
       )
+    },
+    containerClasses() {
+      return {
+        "validator-logo-container": true,
+        large: this.size === "large"
+      }
     }
   }
 }
@@ -65,6 +71,21 @@ export default {
   .loader {
     padding: 10px 0;
     border: none;
+  }
+
+  &.large {
+    margin-right: 20px;
+
+    .li-validator-image {
+      height: 64px;
+      width: 64px;
+      min-height: 64px;
+      min-width: 64px;
+    }
+
+    .loader {
+      padding: 15px 0;
+    }
   }
 }
 </style>

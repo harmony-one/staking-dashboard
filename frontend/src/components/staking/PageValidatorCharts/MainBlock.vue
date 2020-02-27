@@ -14,6 +14,7 @@
           :name="validator.moniker"
           :operator-address="validator.operator_address"
           :logo-url="validator.logo_url"
+          size="large"
         />
         <div class="validator-info">
           <h2>{{ validator.moniker }}</h2>

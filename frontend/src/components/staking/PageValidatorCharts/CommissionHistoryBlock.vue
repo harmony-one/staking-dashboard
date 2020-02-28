@@ -138,7 +138,7 @@ export default {
             fill: false,
             borderColor: "#0a93eb",
             data: this.history.map(
-              v => Math.round(v.commission.rate * 10000) / 100
+              v => Math.round(v.rate * 10000) / 100
               // v => Math.round(Math.random() * 30)
             )
           }

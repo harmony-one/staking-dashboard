@@ -16,11 +16,11 @@ const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
 
-function sleep(ms) {
+function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-module.exports = function(
+module.exports = function (
   BLOCKCHAIN_SERVER,
   chainTitle,
   updateDocument,
@@ -174,7 +174,7 @@ module.exports = function(
           res.data.result.length
         )
         res.data.result.forEach(elem =>
-          processValidatorInfoData(elem['one-address'], elem)
+          processValidatorInfoData(elem.address, elem)
         )
         return res.data.result.length
       } else {

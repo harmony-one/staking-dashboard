@@ -7,6 +7,7 @@ export default () => {
     validators: [],
     total: 0,
     totalActive: 0,
+    totalFound: 0
   }
 
   const actions = {
@@ -23,6 +24,7 @@ export default () => {
       commit("setValidators", data.validators)
       commit("setTotal", data.total)
       commit("setTotalActive", data.total_active)
+      commit("setTotalFound", data.totalFound)
 
       return data.validators
     },
@@ -69,6 +71,9 @@ export default () => {
     },
     setTotalActive(state, total) {
       state.totalActive = total
+    },
+    setTotalFound(state, total) {
+      state.totalFound = total
     },
     setLoading(state, loading) {
       state.loading = loading

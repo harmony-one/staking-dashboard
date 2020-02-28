@@ -65,6 +65,9 @@ export default {
     }
   },
   watch: {
+    'pagination.pageIndex': function() {
+      this.pageIndex = this.pagination.pageIndex
+    },
     total() {
       this.pageIndex = 0
       this.pagination.pageIndex = 0

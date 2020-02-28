@@ -48,7 +48,7 @@ export default {
       default: () => "returns"
     },
     isUndelegation: {
-      typye: Boolean,
+      type: Boolean,
       default: () => false
     }
   },
@@ -78,61 +78,38 @@ export default {
       return this.sortedEnrichedValidators.slice(0, this.showing)
     },
     properties() {
-      return this.isUndelegation
-        ? [
-            {
-              title: `Name`,
-              value: `small_moniker`,
-              tooltip: `The validator's moniker`
-            },
-            {
-              title: `Stake`,
-              value: `stake`,
-              tooltip: `Stake`
-            },
-            {
-              title: `Reward (up to date)`,
-              value: `rewards`,
-              tooltip: `Reward (up to date)`
-            },
-            {
-              title: `APR %`,
-              value: `apr`,
-              tooltip: `APR %`
-            }
-            // {
-            //   title: `Staked since`,
-            //   value: `staked_since`,
-            //   tooltip: `Staked since`
-            // }
-          ]
-        : [
-            {
-              title: `Name`,
-              value: `small_moniker`,
-              tooltip: `The validator's moniker`
-            },
-            {
-              title: `Stake`,
-              value: `stake`,
-              tooltip: `Stake`
-            },
-            {
-              title: `Reward (up to date)`,
-              value: `rewards`,
-              tooltip: `Reward (up to date)`
-            },
-            {
-              title: `APR %`,
-              value: `apr`,
-              tooltip: `APR %`
-            },
-            {
-              title: `Ending in`,
-              value: `remainning_time`,
-              tooltip: `Ending in`
-            }
-          ]
+      const columns = [
+        {
+          title: `Name`,
+          value: `small_moniker`,
+          tooltip: `The validator's moniker`
+        },
+        {
+          title: `Stake`,
+          value: `stake`,
+          tooltip: `Stake`
+        },
+        {
+          title: `Reward (up to date)`,
+          value: `rewards`,
+          tooltip: `Reward (up to date)`
+        },
+        {
+          title: `APR %`,
+          value: `apr`,
+          tooltip: `APR %`
+        }
+      ]
+
+      if (this.isUndelegation) {
+        columns.push({
+          title: `Ending in`,
+          value: `remaining_time`,
+          tooltip: `Ending in`
+        })
+      }
+
+      return columns
     }
   },
   watch: {

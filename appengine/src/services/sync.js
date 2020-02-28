@@ -301,7 +301,7 @@ module.exports = function(
       elem.validator_info = cache[VALIDATOR_INFO][elem.validator_address]
       console.log(`address : ${elem.validator_address}`)
       console.log(`info : ${cache[VALIDATOR_INFO][elem.validator_address]}`)
-      if (elem.Undelegations && )
+      // if (elem.Undelegations && )
 
     })
     if (isNotEmpty(result)) {

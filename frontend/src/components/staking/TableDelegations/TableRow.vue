@@ -36,7 +36,7 @@
       {{ (data.stake ? data.rewards / data.stake : 0) | percent }}
     </td>
     <td v-if="data.remainning_time" class="hide-xs">
-      {{ undelegationTimeLeft(data.remainning_time) }}
+      {{ undelegationTimeLeft }}
     </td>
   </tr>
 </template>
@@ -73,11 +73,12 @@ export default {
   },
   computed: {
     undelegationTimeLeft() {
+      const leftMin = data.remainning_time;
+
       return `${Math.floor(leftMin / 60)} hours ${Math.floor(
         leftMin % 60
       )} minutes`
-
-    }
+    },
     status() {
       if (
         this.data.jailed ||
@@ -97,11 +98,6 @@ export default {
   },
   methods: {
     percent,
-    undelegationTimeLeft(leftMin) {
-      return `${Math.floor(leftMin / 60)} hours ${Math.floor(
-        leftMin % 60
-      )} minutes`
-    }
   }
 }
 </script>

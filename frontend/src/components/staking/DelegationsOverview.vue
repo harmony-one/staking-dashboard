@@ -89,7 +89,7 @@ export default {
               stake: un.Amount,
               rewards: delegates.reward,
               apr: delegates.reward / un.Amount,
-              remainning_time:
+              remaining_time:
                 networkInfo.current_epoch &&
                 un.Epoch &&
                 networkInfo.time_next_epoch

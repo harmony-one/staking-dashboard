@@ -1,37 +1,47 @@
 import * as crypto from "@harmony-js/crypto"
 
 const blockchainValidator = {
-  active: true,
-  index: 1,
-  self_stake: 10000000000000000000,
-  total_stake: 10000000000000000000,
+  self_stake: 1.11111e23,
+  total_stake: 1.11111e23,
+  voting_power: 1,
   signed_blocks: 50,
   blocks_should_sign: 100,
-  voting_power: 100,
-  total_one_staked: 4,
-  "one-address": "one1pdv9lrdwl0rg5vglh4xtyrv3wjk3wsqket7zxy",
+  uctDate: "2020-02-28T11:11:57.250Z",
+  index: 18320,
+  address: "one1337twjy8nfcwxzjqrc6lgqxxhs0zeult242ttw",
   "bls-public-keys": [
-    "65f55eb3052f9e9f632b2923be594ba77c55543f5c58ee1454b9cfd658d25e06373b0f7d42a19c84768139ea294f6204"
+    "426739d753d36fbe34f8782c01faf0c224e6fbb764fb08339010195b8e657893b8ae4f9bcdad451060518e07a87b418e"
   ],
-  "min-self-delegation": 2000000000000000000,
-  "max-total-delegation": 3106511852580897000,
-  address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24",
-  commission: {
-    rate: "0.150000000000000000",
-    "max-rate": "0.900000000000000000",
-    "max-change-rate": "0.050000000000000000"
+  "last-epoch-in-committee": 9,
+  "min-self-delegation": 1e23,
+  "max-total-delegation": 1e24,
+  active: false,
+  rate: "0.100000000000000000",
+  "max-rate": "0.750000000000000000",
+  "max-change-rate": "0.155456293704318700",
+  "update-height": 638,
+  name: "BBQ",
+  identity: "Harmony",
+  website: "harmony.one",
+  "security-contact": "Daniel-VDM",
+  details: "Yo",
+  "creation-height": 638,
+  banned: false,
+  delegations: [
+    {
+      "delegator-address": "one1337twjy8nfcwxzjqrc6lgqxxhs0zeult242ttw",
+      amount: 1.11111e23,
+      reward: 383989285550398050000,
+      undelegations: []
+    }
+  ],
+  availability: {
+    "num-blocks-to-sign": 0,
+    "num-blocks-signed": 0
   },
-  description: {
-    name: "Ganesh",
-    identity: "ganesh",
-    website: "ganesha@harmony.one",
-    security_contact: "Leo",
-    details: "This is Ganesha@harmony.one"
-  },
-  "creation-height": 394472,
+  active_nodes: 1,
 
-  uptime: 'didnt response!',
-  total_effective_stake: 'didnt response!',
+  uptime: '0',
 }
 
 const frontendValidator = {
@@ -67,8 +77,7 @@ const frontendValidator = {
   max_total_delegation: 11,
   self_stake: 11,
   total_stake: 0,
-  total_one_staked: 0,
-  address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24",
+  address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24"
 }
 
 export type TBlockchainValidator = typeof blockchainValidator
@@ -80,32 +89,31 @@ export const remapValidator = (
 ): TFrontendValidator => {
   return {
     ...validator,
-    userName: validator.description.name,
+    userName: validator.name,
 
     operator_address: convertAddress
-      ? crypto.getAddress(validator["one-address"]).bech32
-      : validator["one-address"],
+      ? crypto.getAddress(validator["address"]).bech32
+      : validator["address"],
 
-    rate: validator.commission.rate,
-    max_rate: validator.commission["max-rate"],
-    max_change_rate: validator.commission["max-change-rate"],
+    rate: validator.rate,
+    max_rate: validator["max-rate"],
+    max_change_rate: validator["max-change-rate"],
     max_total_delegation: validator["max-total-delegation"],
     min_self_delegation: String(validator["min-self-delegation"]),
-    website: validator.description.website,
+    website: validator.website,
     // consensus_pubkey: validator.slot_pub_keys[0],
-    details: validator.description.details,
-    moniker: validator.description.name,
+    details: validator.details,
+    moniker: validator.name,
 
     creation_height: validator["creation-height"],
 
     uptime_percentage: validator.uptime,
     voting_power: validator.voting_power,
-    total_effective_stake: validator.total_effective_stake,
+    total_effective_stake: '0',
 
     active: validator.active,
     self_stake: validator.self_stake,
     total_stake: validator.total_stake,
-    total_one_staked: validator.total_one_staked,
     address: validator.address,
 
     customized: false,

@@ -24,7 +24,6 @@ export function fetchValidators(networkId: string) {
     const validators: TBlockchainValidator[] = rez.data.validators
 
     return validators
-      .filter(v => v.description)
       .map(v => remapValidator(v, false))
   })
 }
@@ -45,7 +44,6 @@ export function fetchValidatorsWithParams(
     )
     .then(rez => {
       const validators: any[] = rez.data.validators
-        .filter((v: any) => v.description)
         .map((v: any) => remapValidator(v, false))
 
       return { ...rez.data, validators }

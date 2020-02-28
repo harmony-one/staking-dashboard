@@ -104,6 +104,7 @@ module.exports = function(
           res2.data.result.blockNumber
         cache[STAKING_NETWORK_INFO].current_block_hash =
           res2.data.result.blockHash
+        cache[STAKING_NETWORK_INFO].current_epoch = res2.data.result.epoch
       }
       if (
         cache[STAKING_NETWORK_INFO]['epoch-last-block'] &&
@@ -243,6 +244,7 @@ module.exports = function(
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address)
+
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
@@ -299,6 +301,8 @@ module.exports = function(
       elem.validator_info = cache[VALIDATOR_INFO][elem.validator_address]
       console.log(`address : ${elem.validator_address}`)
       console.log(`info : ${cache[VALIDATOR_INFO][elem.validator_address]}`)
+      if (elem.Undelegations && )
+
     })
     if (isNotEmpty(result)) {
       cache[DELEGATIONS_BY_DELEGATOR][address] = result

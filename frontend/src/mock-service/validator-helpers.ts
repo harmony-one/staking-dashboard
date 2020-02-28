@@ -41,7 +41,7 @@ const blockchainValidator = {
   },
   active_nodes: 1,
 
-  uptime: '0',
+  uptime_percentage: '0',
 }
 
 const frontendValidator = {
@@ -107,7 +107,7 @@ export const remapValidator = (
 
     creation_height: validator["creation-height"],
 
-    uptime_percentage: validator.uptime,
+    uptime_percentage: validator.uptime_percentage,
     voting_power: validator.voting_power,
     total_effective_stake: '0',
 

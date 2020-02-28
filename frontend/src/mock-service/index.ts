@@ -23,15 +23,20 @@ export function fetchValidators(networkId: string) {
   return axios.get(`${API_URL}/networks/${networkId}/validators`).then(rez => {
     const validators: TBlockchainValidator[] = rez.data.validators
 
-    return validators
-      .filter(v => v.description)
-      .map(v => remapValidator(v, false))
+    return validators.map(v => remapValidator(v, false))
   })
 }
 
 export function fetchValidatorsWithParams(
   networkId: string,
-  params: { page: number; size: number; active: boolean }
+  params: {
+    page: number
+    size: number
+    active: boolean
+    search?: string
+    sortProperty?: string
+    sortOrder?: string
+  }
 ) {
   if (!networkId) {
     return []
@@ -44,11 +49,14 @@ export function fetchValidatorsWithParams(
       )}`
     )
     .then(rez => {
-      const validators: any[] = rez.data.validators
-        .filter((v: any) => v.description)
-        .map((v: any) => remapValidator(v, false))
+      const validators: any[] = rez.data.validators.map((v: any) =>
+        remapValidator(v, false)
+      )
 
       return { ...rez.data, validators }
+    })
+    .catch(() => {
+      return { validators: [], totalActive: 0, total: 0 }
     })
 }
 
@@ -73,6 +81,7 @@ export function fetchDelegationsByAddress(networkId: string, address: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/delegations/${address}`)
     .then(rez => rez.data)
+    .catch(() => [])
 }
 
 export function fetchNetworkInfo(networkId: string) {

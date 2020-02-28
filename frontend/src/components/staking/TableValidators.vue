@@ -2,7 +2,7 @@
   <div>
     <PanelPagination
       :pagination="pagination"
-      :total="activeOnly ? totalActive : total"
+      :total="totalFound"
     />
     <table class="data-table card-white">
       <thead>
@@ -27,7 +27,6 @@
 
 <script>
 import { mapGetters, mapState } from "vuex"
-import orderBy from "lodash.orderby"
 import LiValidator from "staking/LiValidator"
 import PanelSort from "staking/PanelSort"
 import PanelPagination from "staking/PanelPagination"
@@ -51,6 +50,10 @@ export default {
     activeOnly: {
       type: Boolean,
       default: () => true
+    },
+    search: {
+      type: String,
+      default: () => ""
     }
   },
   data: () => ({
@@ -62,7 +65,8 @@ export default {
     pagination: {
       pageIndex: 0,
       pageSize: 20
-    }
+    },
+    fetchTimeoutId: null
   }),
   computed: {
     ...mapState([`distribution`, `pool`, `session`, "delegates", "validators"]),
@@ -70,8 +74,7 @@ export default {
       annualProvision: state => state.minting.annualProvision
     }),
     ...mapState({
-      total: state => state.validators.total,
-      totalActive: state => state.validators.totalActive
+      totalFound: state => state.validators.totalFound
     }),
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
@@ -111,11 +114,7 @@ export default {
       })
     },
     sortedEnrichedValidators() {
-      return orderBy(
-        this.enrichedValidators.slice(0),
-        [this.sort.property],
-        [this.sort.order]
-      )
+      return this.enrichedValidators.slice(0)
     },
     startIndex() {
       return this.pagination.pageIndex * this.pagination.pageSize
@@ -132,7 +131,7 @@ export default {
       return [
         {
           title: `Name`,
-          value: `small_moniker`,
+          value: `name`,
           tooltip: `The validator's moniker`
         },
         {
@@ -158,6 +157,28 @@ export default {
       ]
     }
   },
+  watch: {
+    activeOnly: function() {
+      this.getValidators()
+    },
+    "sort.order": function() {
+      this.getValidators()
+    },
+    "sort.property": function() {
+      this.getValidators()
+    },
+    "pagination.pageIndex": function() {
+      this.getValidators()
+    },
+    search: function() {
+      clearTimeout(this.fetchTimeoutId)
+
+      this.fetchTimeoutId = setTimeout(() => {
+        this.pagination.pageIndex = 0
+        this.getValidators()
+      }, 300)
+    }
+  },
   // watch: {
   //   "sort.property": function() {
   //     this.showing = 15
@@ -173,20 +194,15 @@ export default {
 
     this.getValidators()
   },
-  watch: {
-    "pagination.pageIndex": function() {
-      this.getValidators()
-    },
-    activeOnly: function() {
-      this.getValidators()
-    }
-  },
   methods: {
     getValidators() {
       this.$store.dispatch(`getValidatorsWithParams`, {
+        active: this.activeOnly,
         page: this.pagination.pageIndex,
         size: this.pagination.pageSize,
-        active: this.activeOnly
+        sortProperty: this.sort.property,
+        sortOrder: this.sort.order,
+        search: this.search
       })
     }
   }

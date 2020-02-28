@@ -49,7 +49,8 @@
         </div>
         <TableValidators
           :data="validators"
-          :activeOnly="activeOnly"
+          :active-only="activeOnly"
+          :search="searchTerm"
           show-on-mobile="expectedReturns"
         />
         <div
@@ -97,23 +98,20 @@ export default {
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
-    ...mapState({ isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading }),
     ...mapState({
-      allValidators: state => (state.validators.loaded ? state.validators.validators : []),
+      isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
+    }),
+    ...mapState({
+      allValidators: state =>
+        state.validators.loaded ? state.validators.validators : [],
       total: state => state.validators.total,
-      totalActive: state => state.validators.totalActive,
+      totalActive: state => state.validators.totalActive
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
       return state.allValidators
-        .filter(
-          v =>
-            !state.searchTerm ||
-            v.moniker.toLowerCase().includes(state.searchTerm.toLowerCase())
-        )
-        .filter(v => !state.activeOnly || v.active === true)
     },
     prettyTransactionHash() {
       return this.networkInfo.current_block_hash
@@ -133,7 +131,7 @@ export default {
     this.$store.dispatch("getDelegates")
 
     console.log(this)
-  }
+  },
 }
 </script>
 

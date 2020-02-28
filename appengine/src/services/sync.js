@@ -16,11 +16,11 @@ const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
 
-function sleep (ms) {
+function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-module.exports = function (
+module.exports = function(
   BLOCKCHAIN_SERVER,
   chainTitle,
   updateDocument,
@@ -235,7 +235,7 @@ module.exports = function (
           blocks_should_sign: 100,
           uctDate: utcDate,
           index: dayIndex,
-          address: res['one-address'],
+          address: res.address,
           ...res,
           active_nodes: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].length
@@ -267,9 +267,7 @@ module.exports = function (
         }
         if (
           cache[VALIDATOR_INFO][address] &&
-          cache[VALIDATOR_INFO][address].commission &&
-          validatorInfo.commission.rate !==
-            cache[VALIDATOR_INFO][address].commission.rate
+          validatorInfo.rate !== cache[VALIDATOR_INFO][address].rate
         ) {
           validatorInfo['commision-recent-change'] = utcDate
         } else if (
@@ -402,6 +400,8 @@ module.exports = function (
     await update()
   }, SYNC_PERIOD)
 
+  update()
+
   const getStakingNetworkInfo = () => {
     const stakingNetworkInfo = !cache[STAKING_NETWORK_INFO]
       ? {}
@@ -420,10 +420,13 @@ module.exports = function (
       .filter(isNotEmpty)
   }
 
-  const getValidatorsWithPage = async (page, size, active) => {
+  const getValidatorsWithPage = async params => {
+    const { page, size, active, sortProperty, sortOrder, search } = params
+
     const pageInt = parseInt(page, 10)
     const sizeInt = parseInt(size, 10)
     let validators
+
     if (active === 'true') {
       validators = !cache[ACTIVE_VALIDATORS] ? [] : cache[ACTIVE_VALIDATORS]
     } else {
@@ -436,14 +439,38 @@ module.exports = function (
       sizeInt > VALIDATOR_PAGE_SIZE ||
       pageInt * sizeInt >= validators.length
     ) {
-      return []
+      return {
+        validators: [],
+        totalFound: 0,
+        total: cache[VALIDATORS].length,
+        total_active: cache[ACTIVE_VALIDATORS].length
+      }
     } else {
-      return validators
-        .slice(pageInt * sizeInt, (pageInt + 1) * sizeInt)
+      validators = validators
         .map(address => {
           return { ...cache[VALIDATOR_INFO][address] }
         })
         .filter(isNotEmpty)
+        .filter(
+          v => !search || v.name.toLowerCase().includes(search.toLowerCase())
+        )
+
+      const totalFound = validators.length
+
+      validators = _.orderBy(
+        validators.slice(0),
+        [sortProperty],
+        [sortOrder]
+      )
+
+      validators = validators.slice(pageInt * sizeInt, (pageInt + 1) * sizeInt)
+
+      return {
+        validators,
+        totalFound,
+        total: cache[VALIDATORS].length,
+        total_active: cache[ACTIVE_VALIDATORS].length
+      }
     }
   }
 

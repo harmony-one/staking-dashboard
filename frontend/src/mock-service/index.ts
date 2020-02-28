@@ -23,14 +23,20 @@ export function fetchValidators(networkId: string) {
   return axios.get(`${API_URL}/networks/${networkId}/validators`).then(rez => {
     const validators: TBlockchainValidator[] = rez.data.validators
 
-    return validators
-      .map(v => remapValidator(v, false))
+    return validators.map(v => remapValidator(v, false))
   })
 }
 
 export function fetchValidatorsWithParams(
   networkId: string,
-  params: { page: number; size: number; active: boolean }
+  params: {
+    page: number
+    size: number
+    active: boolean
+    search?: string
+    sortProperty?: string
+    sortOrder?: string
+  }
 ) {
   if (!networkId) {
     return []
@@ -43,8 +49,9 @@ export function fetchValidatorsWithParams(
       )}`
     )
     .then(rez => {
-      const validators: any[] = rez.data.validators
-        .map((v: any) => remapValidator(v, false))
+      const validators: any[] = rez.data.validators.map((v: any) =>
+        remapValidator(v, false)
+      )
 
       return { ...rez.data, validators }
     })

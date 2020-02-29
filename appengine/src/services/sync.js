@@ -57,7 +57,7 @@ module.exports = function(
     try {
       const res = await apiClient.post(
         '/',
-        bodyParams('hmy_getActiveValidatorAddresses')
+        bodyParams('hmy_getElectedValidatorAddresses')
       )
 
       if (Array.isArray(res.data.result)) {

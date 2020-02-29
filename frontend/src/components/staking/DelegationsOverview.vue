@@ -90,13 +90,13 @@ export default {
               rewards: delegates.reward,
               apr: delegates.reward / un.Amount,
               remaining_time:
-                networkInfo.current_epoch &&
+                state.networkInfo.current_epoch &&
                 un.Epoch &&
-                networkInfo.time_next_epoch
-                  ? networkInfo.time_next_epoch +
+                state.networkInfo.time_next_epoch
+                  ? state.networkInfo.time_next_epoch +
                     (parseInt(un.Epoch) +
                       7 -
-                      parseInt(networkInfo.current_epoch)) *
+                      parseInt(state.networkInfo.current_epoch)) *
                       SECONDS_PER_EPOCH
                   : undefined
             })

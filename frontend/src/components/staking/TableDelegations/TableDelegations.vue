@@ -81,7 +81,7 @@ export default {
       const columns = [
         {
           title: `Name`,
-          value: `small_moniker`,
+          value: `name`,
           tooltip: `The validator's moniker`
         },
         {

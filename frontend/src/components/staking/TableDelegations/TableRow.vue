@@ -13,7 +13,7 @@
     <td class="hide-xs">
       <div class="status-container">
         <span
-          :class="status | toLower"
+          :class="status | toClassName"
           class="validator-status"
           :title="status_detailed"
           >{{ status }}</span
@@ -33,17 +33,18 @@
     <td>{{ data.stake | ones | fourDecimals }} ONE</td>
     <td>{{ data.rewards | ones | fourDecimals }} ONE</td>
     <td class="hide-xs">
-      {{ (data.stake ? data.rewards / data.stake : 0) | percent }}
+      {{ "N/A" /* (data.stake ? data.rewards / data.stake : 0) | percent */ }}
     </td>
-    <!-- <td class="hide-xs">
-      {{ "2 days ago" }}
-    </td>-->
+    <td v-if="data.remaining_time" class="hide-xs">
+      {{ undelegationTimeLeft }}
+    </td>
   </tr>
 </template>
 
 <script>
 import { percent, fourDecimals, ones } from "scripts/num"
-import ValidatorLogo from '../components/ValidatorLogo'
+import ValidatorLogo from "../components/ValidatorLogo"
+import moment from "moment"
 
 export default {
   name: `table-row`,
@@ -54,7 +55,8 @@ export default {
     ones,
     fourDecimals,
     percent,
-    toLower: text => text.toLowerCase()
+    toLower: text => text.toLowerCase(),
+    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
   },
   props: {
     data: {
@@ -72,6 +74,13 @@ export default {
     }
   },
   computed: {
+    undelegationTimeLeft() {
+      const leftMin = this.data.remaining_time
+
+      const eventDate = moment(Date.now() + leftMin * 1000)
+
+      return new moment().to(eventDate)
+    },
     status() {
       if (
         this.data.jailed ||
@@ -79,14 +88,18 @@ export default {
         this.data.status === 0 ||
         this.data.active === false
       )
-        return `Inactive`
-      return `Active`
+        return `Not elected`
+      return `Elected`
     },
     status_detailed() {
-      if (this.data.jailed) return `Temporally banned from the network`
-      if (this.data.tombstoned) return `Banned from the network`
-      if (this.data.status === 0) return `Banned from the network`
-      return false
+      if (
+        this.data.jailed ||
+        this.data.tombstoned ||
+        this.data.status === 0 ||
+        this.data.active === false
+      )
+        return "Validator is not elected in committees at current epoch"
+      return "Validator is elected in committees at current epoch"
     }
   },
   methods: {

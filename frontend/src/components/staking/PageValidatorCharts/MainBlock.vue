@@ -1,7 +1,7 @@
 <template>
   <div class="validator-main-block">
     <div class="status-container">
-      <span :class="status | toLower" class="validator-status">
+      <span :class="status | toClassName" class="validator-status">
         {{ status }}
       </span>
       <span v-if="status_detailed" class="validator-status-detailed">
@@ -92,6 +92,7 @@ export default {
     fourDecimals,
     percent,
     toLower: text => text.toLowerCase(),
+    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
     // empty descriptions have a strange '[do-not-modify]' value which we don't want to show
     noBlanks: function(value) {
       if (!value || value === `[do-not-modify]`) return `--`
@@ -129,15 +130,21 @@ export default {
         this.validator.tombstoned ||
         this.validator.status === 0 ||
         this.validator.active === false
-      )
-        return `Inactive`
-      return `Active`
+      ) {
+        return `Not elected`
+      }
+      return `Elected`
     },
     status_detailed() {
-      if (this.validator.jailed) return `Temporally banned from the network`
-      if (this.validator.tombstoned) return `Banned from the network`
-      if (this.validator.status === 0) return `Banned from the network`
-      return "Validator is online and earning rewards"
+      if (
+        this.validator.jailed ||
+        this.validator.tombstoned ||
+        this.validator.status === 0 ||
+        this.validator.active === false
+      ) {
+        return `Validator is not elected in committees at current epoch`
+      }
+      return "Validator is elected in committees at current epoch"
     },
     rewards() {
       const { session, bondDenom, distribution, validator } = this

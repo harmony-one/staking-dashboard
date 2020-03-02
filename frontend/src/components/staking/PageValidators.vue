@@ -39,7 +39,7 @@
               @click.native="activeOnly = false"
             />
             <TmBtn
-              value="Active"
+              value="Elected"
               :number="totalActive"
               class="btn-radio secondary"
               :type="activeOnly ? `active` : `secondary`"

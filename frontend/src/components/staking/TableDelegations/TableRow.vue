@@ -43,7 +43,7 @@
 
 <script>
 import { percent, fourDecimals, ones } from "scripts/num"
-import ValidatorLogo from '../components/ValidatorLogo'
+import ValidatorLogo from "../components/ValidatorLogo"
 
 export default {
   name: `table-row`,
@@ -79,14 +79,18 @@ export default {
         this.data.status === 0 ||
         this.data.active === false
       )
-        return `Inactive`
-      return `Active`
+        return `Not elected`
+      return `Elected`
     },
     status_detailed() {
-      if (this.data.jailed) return `Temporally banned from the network`
-      if (this.data.tombstoned) return `Banned from the network`
-      if (this.data.status === 0) return `Banned from the network`
-      return false
+      if (
+        this.data.jailed ||
+        this.data.tombstoned ||
+        this.data.status === 0 ||
+        this.data.active === false
+      )
+        return "Validator is not elected in committees at current epoch"
+      return "Validator is elected in committees at current epoch"
     }
   },
   methods: {

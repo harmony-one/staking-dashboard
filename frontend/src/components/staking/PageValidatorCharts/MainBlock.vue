@@ -129,15 +129,21 @@ export default {
         this.validator.tombstoned ||
         this.validator.status === 0 ||
         this.validator.active === false
-      )
-        return `Inactive`
-      return `Active`
+      ) {
+        return `Not elected`
+      }
+      return `Elected`
     },
     status_detailed() {
-      if (this.validator.jailed) return `Temporally banned from the network`
-      if (this.validator.tombstoned) return `Banned from the network`
-      if (this.validator.status === 0) return `Banned from the network`
-      return "Validator is online and earning rewards"
+      if (
+        this.validator.jailed ||
+        this.validator.tombstoned ||
+        this.validator.status === 0 ||
+        this.validator.active === false
+      ) {
+        return `Validator is not elected in committees at current epoch`
+      }
+      return "Validator is elected in committees at current epoch"
     },
     rewards() {
       const { session, bondDenom, distribution, validator } = this

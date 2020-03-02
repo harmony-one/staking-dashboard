@@ -94,8 +94,8 @@ export default {
         this.validator.status === 0 ||
         this.validator.active === false
       )
-        return `Inactive`
-      return `Active`
+        return `Not elected`
+      return `Elected`
     },
     status_detailed() {
       if (this.validator.jailed) return `Temporally banned from the network`

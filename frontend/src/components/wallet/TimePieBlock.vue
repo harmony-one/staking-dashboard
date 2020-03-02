@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="chart-container-stake-allocate">
-      <div class="legend">{{ timeLeft }}</div>
+      <div v-if="timeLeft" class="legend">{{ timeLeft }}</div>
+      <div v-else class="legend">less then <br> 1 minute</div>
       <ChartPie
         :chartdata="chartdata"
         :options="options"
@@ -43,7 +44,15 @@ export default {
     timeLeft() {
       const leftMin = isNaN(this.timeNextEpoch) ? 0 : this.timeNextEpoch / 60
 
-      return `${Math.floor(leftMin / 60)} hours ${Math.floor(
+      if (leftMin < 1) {
+        return false
+      }
+
+      if (leftMin < 60) {
+        return `${Math.floor(leftMin % 60)} minutes`
+      }
+
+      return `${Math.floor(leftMin / 60)} hours and ${Math.floor(
         leftMin % 60
       )} minutes`
     },
@@ -69,7 +78,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .chart-container-stake-allocate {
   margin: 5px 0 15px 0;
   height: 300px;
@@ -78,9 +87,14 @@ export default {
 
 .legend {
   position: absolute;
-  max-width: 80px;
-  top: 106px;
-  left: 84px;
+  width: 120px;
+  height: 120px;
+  top: 68px;
+  left: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
   text-align: center;
 }
 </style>

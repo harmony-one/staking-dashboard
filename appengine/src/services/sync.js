@@ -10,6 +10,7 @@ const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const MAX_LENGTH = 30
+const VOTING_POWER = 'VOTING_POWER'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
@@ -37,7 +38,8 @@ module.exports = function (
     VALIDATOR_INFO_HISTORY: {},
     DELEGATIONS_BY_DELEGATOR: {},
     DELEGATIONS_BY_VALIDATOR: {},
-    STAKING_NETWORK_INFO: {}
+    STAKING_NETWORK_INFO: {},
+    VOTING_POWER: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -57,7 +59,7 @@ module.exports = function (
     try {
       const res = await apiClient.post(
         '/',
-        bodyParams('hmy_getActiveValidatorAddresses')
+        bodyParams('hmy_getElectedValidatorAddresses')
       )
 
       if (Array.isArray(res.data.result)) {
@@ -226,12 +228,13 @@ module.exports = function (
         const validatorInfo = {
           self_stake: selfStake,
           total_stake: totalStake,
-          voting_power:
-            cache[STAKING_NETWORK_INFO]['total-staking'] &&
-            cache[STAKING_NETWORK_INFO]['total-staking'] > 0
-              ? totalStake / cache[STAKING_NETWORK_INFO]['total-staking']
-              : null,
-          // TODO(minh) fix it.
+          voting_power: Array.isArray(res['bls-public-keys'])
+            ? res['bls-public-keys'].reduce(
+              (acc, val) =>
+                acc + cache[VOTING_POWER][val] ? cache[VOTING_POWER][val] : 0,
+              0
+            )
+            : undefined,
           signed_blocks: 50,
           blocks_should_sign: 100,
           uctDate: utcDate,
@@ -245,13 +248,12 @@ module.exports = function (
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address),
           uptime_percentage:
-                res['current-snapshot'] &&
-                res['current-snapshot']['num-blocks-signed'] &&
-                res['current-snapshot']['num-blocks-to-sign']
-                  ? parseFloat(res['current-snapshot']['num-blocks-signed']) /
-                    parseInt(res['current-snapshot']['num-blocks-to-sign'])
-                  : 0
-
+            res['current-snapshot'] &&
+            res['current-snapshot']['num-blocks-signed'] &&
+            res['current-snapshot']['num-blocks-to-sign']
+              ? parseFloat(res['current-snapshot']['num-blocks-signed']) /
+                parseInt(res['current-snapshot']['num-blocks-to-sign'])
+              : 0
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
@@ -374,8 +376,44 @@ module.exports = function (
     return res.data.result
   }
 
+  const updateVotingPower = async () => {
+    try {
+      const res = await apiClient.post(
+        '/',
+        bodyParams('hmy_getSuperCommittees')
+      )
+
+      if (
+        res.data.result &&
+                res.data.result.current &&
+                res.data.result.current.Deciders &&
+                res.data.result.current.Deciders['0'] &&
+                res.data.result.current.Deciders['0']['committee-members'] &&
+                Array.isArray(
+                  res.data.result.current.Deciders['0']['committee-members']
+                )
+      ) {
+        res.data.result.current.Deciders['0']['committee-members'].forEach(
+          elem => {
+            const blsKey = elem['bls-public-key']
+            const power = elem['voting-power-%']
+            if (!!blsKey && !!power) {
+              cache[VOTING_POWER][blsKey] = parseFloat(power)
+            }
+          }
+        )
+      }
+      return res.data.result
+    } catch (err) {
+      console.log('error when updatingVotingPower', err)
+    }
+  }
+
   const update = async () => {
     try {
+      // Calculate voting power first.
+      await updateVotingPower()
+
       // Get global info first.
       await syncStakingNetworkInfo()
 
@@ -467,11 +505,7 @@ module.exports = function (
 
       const totalFound = validators.length
 
-      validators = _.orderBy(
-        validators.slice(0),
-        [sortProperty],
-        [sortOrder]
-      )
+      validators = _.orderBy(validators.slice(0), [sortProperty], [sortOrder])
 
       validators = validators.slice(pageInt * sizeInt, (pageInt + 1) * sizeInt)
 

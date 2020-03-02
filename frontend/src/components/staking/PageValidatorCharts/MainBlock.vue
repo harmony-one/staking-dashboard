@@ -1,7 +1,7 @@
 <template>
   <div class="validator-main-block">
     <div class="status-container">
-      <span :class="status | toLower" class="validator-status">
+      <span :class="status | toClassName" class="validator-status">
         {{ status }}
       </span>
       <span v-if="status_detailed" class="validator-status-detailed">
@@ -92,6 +92,7 @@ export default {
     fourDecimals,
     percent,
     toLower: text => text.toLowerCase(),
+    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
     // empty descriptions have a strange '[do-not-modify]' value which we don't want to show
     noBlanks: function(value) {
       if (!value || value === `[do-not-modify]`) return `--`

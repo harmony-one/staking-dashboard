@@ -13,7 +13,7 @@
     <td class="hide-xs">
       <div class="status-container">
         <span
-          :class="status | toLower"
+          :class="status | toClassName"
           class="validator-status"
           :title="status_detailed"
         >
@@ -68,6 +68,7 @@ export default {
     shortDecimals,
     percent,
     toLower: text => text.toLowerCase(),
+    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
     zeroDecimals,
     twoDecimals
   },

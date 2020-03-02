@@ -13,7 +13,7 @@
     <td class="hide-xs">
       <div class="status-container">
         <span
-          :class="status | toLower"
+          :class="status | toClassName"
           class="validator-status"
           :title="status_detailed"
           >{{ status }}</span
@@ -33,7 +33,7 @@
     <td>{{ data.stake | ones | fourDecimals }} ONE</td>
     <td>{{ data.rewards | ones | fourDecimals }} ONE</td>
     <td class="hide-xs">
-      {{ (data.stake ? data.rewards / data.stake : 0) | percent }}
+      {{ "N/A" /* (data.stake ? data.rewards / data.stake : 0) | percent */ }}
     </td>
     <td v-if="data.remaining_time" class="hide-xs">
       {{ undelegationTimeLeft }}
@@ -44,6 +44,7 @@
 <script>
 import { percent, fourDecimals, ones } from "scripts/num"
 import ValidatorLogo from "../components/ValidatorLogo"
+import moment from "moment"
 
 export default {
   name: `table-row`,
@@ -54,7 +55,8 @@ export default {
     ones,
     fourDecimals,
     percent,
-    toLower: text => text.toLowerCase()
+    toLower: text => text.toLowerCase(),
+    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
   },
   props: {
     data: {
@@ -73,11 +75,11 @@ export default {
   },
   computed: {
     undelegationTimeLeft() {
-      const leftMin = data.remaining_time;
+      const leftMin = this.data.remaining_time
 
-      return `${Math.floor(leftMin / 60)} hours ${Math.floor(
-        leftMin % 60
-      )} minutes`
+      const eventDate = moment(Date.now() + leftMin * 1000)
+
+      return new moment().to(eventDate)
     },
     status() {
       if (
@@ -101,7 +103,7 @@ export default {
     }
   },
   methods: {
-    percent,
+    percent
   }
 }
 </script>

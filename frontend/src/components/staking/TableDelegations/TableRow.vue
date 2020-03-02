@@ -35,9 +35,9 @@
     <td class="hide-xs">
       {{ (data.stake ? data.rewards / data.stake : 0) | percent }}
     </td>
-    <!-- <td class="hide-xs">
-      {{ "2 days ago" }}
-    </td>-->
+    <td v-if="data.remaining_time" class="hide-xs">
+      {{ undelegationTimeLeft }}
+    </td>
   </tr>
 </template>
 
@@ -72,6 +72,13 @@ export default {
     }
   },
   computed: {
+    undelegationTimeLeft() {
+      const leftMin = data.remaining_time;
+
+      return `${Math.floor(leftMin / 60)} hours ${Math.floor(
+        leftMin % 60
+      )} minutes`
+    },
     status() {
       if (
         this.data.jailed ||
@@ -94,7 +101,7 @@ export default {
     }
   },
   methods: {
-    percent
+    percent,
   }
 }
 </script>

@@ -16,11 +16,11 @@ const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
 
-function sleep(ms) {
+function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-module.exports = function(
+module.exports = function (
   BLOCKCHAIN_SERVER,
   chainTitle,
   updateDocument,
@@ -243,7 +243,14 @@ module.exports = function(
             : 1,
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
-            cache[ACTIVE_VALIDATORS].includes(address)
+            cache[ACTIVE_VALIDATORS].includes(address),
+          uptime_percentage:
+                res['current-snapshot'] &&
+                res['current-snapshot']['num-blocks-signed'] &&
+                res['current-snapshot']['num-blocks-to-sign']
+                  ? parseFloat(res['current-snapshot']['num-blocks-signed']) /
+                    parseInt(res['current-snapshot']['num-blocks-to-sign'])
+                  : 0
 
         }
 
@@ -302,7 +309,6 @@ module.exports = function(
       console.log(`address : ${elem.validator_address}`)
       console.log(`info : ${cache[VALIDATOR_INFO][elem.validator_address]}`)
       // if (elem.Undelegations && )
-
     })
     if (isNotEmpty(result)) {
       cache[DELEGATIONS_BY_DELEGATOR][address] = result

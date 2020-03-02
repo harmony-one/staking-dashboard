@@ -176,8 +176,9 @@ module.exports = function (
           `hmy_getAllValidatorInformation with page ${page}: `,
           res.data.result.length
         )
+
         res.data.result.forEach(elem =>
-          processValidatorInfoData(elem.address, elem)
+          processValidatorInfoData(elem['one-address'] || elem.address, elem)
         )
         return res.data.result.length
       } else {
@@ -226,6 +227,8 @@ module.exports = function (
         const dayIndex = getDayIndex(utcDate)
 
         const validatorInfo = {
+          ...res.description,
+          ...res.commission,
           self_stake: selfStake,
           total_stake: totalStake,
           voting_power: Array.isArray(res['bls-public-keys'])
@@ -239,7 +242,7 @@ module.exports = function (
           blocks_should_sign: 100,
           uctDate: utcDate,
           index: dayIndex,
-          address: res.address,
+          address: res['one-address'] || res.address,
           ...res,
           active_nodes: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].length
@@ -383,17 +386,10 @@ module.exports = function (
         bodyParams('hmy_getSuperCommittees')
       )
 
-      if (
-        res.data.result &&
-                res.data.result.current &&
-                res.data.result.current.Deciders &&
-                res.data.result.current.Deciders['0'] &&
-                res.data.result.current.Deciders['0']['committee-members'] &&
-                Array.isArray(
-                  res.data.result.current.Deciders['0']['committee-members']
-                )
-      ) {
-        res.data.result.current.Deciders['0']['committee-members'].forEach(
+      const committeeMembers = _.get(res, 'data.result.current.Deciders.0.committee-members')
+
+      if (committeeMembers && Array.isArray(committeeMembers)) {
+        committeeMembers.forEach(
           elem => {
             const blsKey = elem['bls-public-key']
             const power = elem['voting-power-%']

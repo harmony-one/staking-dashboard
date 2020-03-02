@@ -15,6 +15,7 @@
       <h2 class="table-title">Pending undelegations</h2>
       <TableDelegations
         :data="validators.undelegations"
+        :is-undelegation="true"
         show-on-mobile="expectedReturns"
       />
     </div>
@@ -41,6 +42,7 @@ import TmDataMsg from "common/TmDataMsg"
 import TableDelegations from "staking/TableDelegations/TableDelegations"
 import { remapValidator } from "../../mock-service/validator-helpers"
 
+const SECONDS_PER_EPOCH = 60 * 60 * 24
 export default {
   name: `delegations-overview`,
   components: {
@@ -55,6 +57,7 @@ export default {
     ...mapState(["delegates"]),
     ...mapState({ network: state => state.connection.network }),
     ...mapGetters([`committedDelegations`]),
+    ...mapState({ networkInfo: state => state.connection.networkInfo }),
     delegationsAddressList() {
       return Object.keys(this.committedDelegations)
     },
@@ -85,7 +88,17 @@ export default {
               ...remapValidator(delegates.validator_info, true),
               stake: un.Amount,
               rewards: delegates.reward,
-              apr: delegates.reward / un.Amount
+              apr: delegates.reward / un.Amount,
+              remaining_time:
+                state.networkInfo.current_epoch &&
+                un.Epoch &&
+                state.networkInfo.time_next_epoch
+                  ? state.networkInfo.time_next_epoch +
+                    (parseInt(un.Epoch) +
+                      7 -
+                      parseInt(state.networkInfo.current_epoch)) *
+                      SECONDS_PER_EPOCH
+                  : undefined
             })
           })
         }

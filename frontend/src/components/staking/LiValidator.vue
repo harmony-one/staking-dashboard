@@ -13,7 +13,7 @@
     <td class="hide-xs">
       <div class="status-container">
         <span
-          :class="status | toLower"
+          :class="status | toClassName"
           class="validator-status"
           :title="status_detailed"
         >
@@ -68,6 +68,7 @@ export default {
     shortDecimals,
     percent,
     toLower: text => text.toLowerCase(),
+    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
     zeroDecimals,
     twoDecimals
   },
@@ -94,8 +95,8 @@ export default {
         this.validator.status === 0 ||
         this.validator.active === false
       )
-        return `Inactive`
-      return `Active`
+        return `Not elected`
+      return `Elected`
     },
     status_detailed() {
       if (this.validator.jailed) return `Temporally banned from the network`

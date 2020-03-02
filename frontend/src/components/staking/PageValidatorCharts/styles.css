@@ -65,6 +65,11 @@
   border-color: var(--success);
 }
 
+.validator-status.elected {
+  color: var(--success);
+  border-color: var(--success);
+}
+
 .validator-status-detailed {
   display: inline-block;
   margin-left: 10px;

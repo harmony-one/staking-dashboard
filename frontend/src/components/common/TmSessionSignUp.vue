@@ -127,7 +127,11 @@
       <div v-if="!session.insecureMode" class="session-main">
         <p v-if="!extension.enabled">
           Creating an address in the browser is unsafe. Please install our
-          <a target="_blank" href="http://example.com">browser extension</a>
+          <a
+            target="_blank"
+            href="https://chrome.google.com/webstore/detail/harmony/dmknnpkhnockodmnclcellfiilmklimd?hl=en"
+            >browser extension</a
+          >
         </p>
         <!--        <p>-->
         <!--          Creating an address in the browser is unsafe. To offer you a secure-->
@@ -145,7 +149,7 @@
           >
           or the
           <a
-            href="https://hub.cosmos.network/docs/delegator-guide-cli.html#creating-an-account"
+            href="https://docs.harmony.one/home/wallet-guides/harmony-cli/create-import-wallet"
             target="_blank"
             rel="noopener norefferer"
             >command line</a

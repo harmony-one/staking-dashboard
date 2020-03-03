@@ -91,7 +91,7 @@ export default {
       return delegates
         ? delegates.map(d => ({
             ...d,
-            validator: d.validator_info.description.name
+            validator: d.validator_info.name
           }))
         : []
     }

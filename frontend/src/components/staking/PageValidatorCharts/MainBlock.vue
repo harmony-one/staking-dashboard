@@ -191,11 +191,14 @@ export default {
           const delegate = delegates.delegates.find(function(validator) {
             return validator.operator_address === address
           })
+
+          const name = delegate.validator_info && delegate.validator_info.name;
+
           return validators.concat({
             address: address,
             maximum: Math.floor(committedDelegations[address]),
-            key: `${delegate.description.moniker} - ${formatBech32(
-              delegate.operator_address,
+            key: `${name} - ${formatBech32(
+              delegate.delegator_address,
               false,
               20
             )}`,

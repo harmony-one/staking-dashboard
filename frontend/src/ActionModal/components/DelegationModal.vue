@@ -14,9 +14,8 @@
     <TmFormGroup class="action-modal-form-group">
       <div class="form-message notice">
         <span v-if="!isRedelegation()">
-          It will take 21 days to unlock your tokens after a delegation and
-          there is a risk that some tokens will be lost depending on the
-          behaviour of the validator.
+          It will take 7 epochs to unlock your tokens after a delegation and the
+          tokens are still slashable if the validator behaves maliciously.
         </span>
         <span v-else>
           Voting power and rewards will change instantly upon redelegation —
@@ -99,11 +98,7 @@
         name="Wallet"
         type="custom"
       />
-      <TmFormMsg
-        v-else-if="$v.amount.$error && !$v.amount.decimal"
-        name="Amount"
-        type="numeric"
-      />
+      <TmFormMsg v-else-if="$v.amount.$error && !$v.amount.decimal" name="Amount" type="numeric" />
       <TmFormMsg
         v-else-if="$v.amount.$error && (!$v.amount.required || amount === 0)"
         name="Amount"
@@ -139,152 +134,161 @@ import ActionModal from "./ActionModal"
 import transaction from "../utils/transactionTypes"
 
 export default {
-  name: `delegation-modal`,
-  components: {
-    TmField,
-    TmFieldGroup,
-    TmBtn,
-    TmFormGroup,
-    TmFormMsg,
-    ActionModal
-  },
-  filters: {
-    viewDenom
-  },
-  props: {
-    fromOptions: {
-      type: Array,
-      required: true
+    name: `delegation-modal`,
+    components: {
+        TmField,
+        TmFieldGroup,
+        TmBtn,
+        TmFormGroup,
+        TmFormMsg,
+        ActionModal
     },
-    to: {
-      type: String,
-      required: true
+    filters: {
+        viewDenom
     },
-    validator: {
-      type: Object,
-      required: true
-    },
-    denom: {
-      type: String,
-      required: true
-    }
-  },
-  data: () => ({
-    amount: null,
-    selectedIndex: 0
-  }),
-  computed: {
-    ...mapState([`session`]),
-    ...mapGetters([`modalContext`]),
-    balance() {
-      if (!this.session.signedIn) return 0
-
-      return this.fromOptions[this.selectedIndex].maximum
-    },
-    from() {
-      if (!this.session.signedIn) return ``
-
-      return this.fromOptions[this.selectedIndex].address
-    },
-    transactionData() {
-      if (!this.from) return {}
-
-      if (this.from === this.modalContext.userAddress) {
-        return {
-          type: transaction.DELEGATE,
-          validatorAddress: this.validator.operator_address,
-          amount: uatoms(this.amount),
-          denom: this.denom
+    props: {
+        fromOptions: {
+            type: Array,
+            required: true
+        },
+        to: {
+            type: String,
+            required: true
+        },
+        validator: {
+            type: Object,
+            required: true
+        },
+        denom: {
+            type: String,
+            required: true
         }
-      } else {
-        const validatorSrc = this.modalContext.delegates.find(
-          v => this.from === v.operator_address
-        )
-        return {
-          type: transaction.REDELEGATE,
-          validatorSourceAddress: validatorSrc.operator_address,
-          validatorDestinationAddress: this.validator.operator_address,
-          amount: uatoms(this.amount),
-          denom: this.denom
-        }
-      }
     },
-    notifyMessage() {
-      if (this.from === this.modalContext.userAddress) {
-        return {
-          title: `Successful delegation!`,
-          body: `You have successfully delegated your ${viewDenom(this.denom)}s`
-        }
-      } else {
-        return {
-          title: `Successful redelegation!`,
-          body: `You have successfully redelegated your ${viewDenom(
-            this.denom
-          )}s`
-        }
-      }
-    },
-    // Will be replaced by `status` field from backend
-    validatorStatus() {
-      if (
-        this.validator.jailed ||
-        this.validator.tombstoned ||
-        this.validator.status === 0
-      )
-        return `Inactive`
-      return `Active`
-    },
-    // Will be replaced by `status_detail` field from backend
-    validatorStatusDetailed() {
-      if (this.validator.jailed) return `temporally banned from the network`
-      else if (this.validator.tombstoned) return `banned from the network`
-      else if (this.validator.status === 0) return `banned from the network`
-      else return false
-    }
-  },
-  methods: {
-    viewDenom,
-    open(options) {
-      if (options && options.redelegation && this.fromOptions.length > 1) {
-        this.selectedIndex = 1
-      }
-      this.$refs.actionModal.open()
-    },
-    validateForm() {
-      this.$v.$touch()
+    data: () => ({
+        amount: null,
+        selectedIndex: 0
+    }),
+    computed: {
+        ...mapState([`session`]),
+        ...mapGetters([`modalContext`]),
+        balance() {
+            if (!this.session.signedIn) return 0
 
-      return !this.$v.$invalid
-    },
-    clear() {
-      this.$v.$reset()
+            return this.fromOptions[this.selectedIndex].maximum
+        },
+        from() {
+            if (!this.session.signedIn) return ``
 
-      this.selectedIndex = 0
-      this.amount = null
+            return this.fromOptions[this.selectedIndex].address
+        },
+        transactionData() {
+            if (!this.from) return {}
+
+            if (this.from === this.modalContext.userAddress) {
+                return {
+                    type: transaction.DELEGATE,
+                    validatorAddress: this.validator.operator_address,
+                    amount: uatoms(this.amount),
+                    denom: this.denom
+                }
+            } else {
+                const validatorSrc = this.modalContext.delegates.find(
+                    v => this.from === v.operator_address
+                )
+                return {
+                    type: transaction.REDELEGATE,
+                    validatorSourceAddress: validatorSrc.operator_address,
+                    validatorDestinationAddress: this.validator
+                        .operator_address,
+                    amount: uatoms(this.amount),
+                    denom: this.denom
+                }
+            }
+        },
+        notifyMessage() {
+            if (this.from === this.modalContext.userAddress) {
+                return {
+                    title: `Successful delegation!`,
+                    body: `You have successfully delegated your ${viewDenom(
+                        this.denom
+                    )}s`
+                }
+            } else {
+                return {
+                    title: `Successful redelegation!`,
+                    body: `You have successfully redelegated your ${viewDenom(
+                        this.denom
+                    )}s`
+                }
+            }
+        },
+        // Will be replaced by `status` field from backend
+        validatorStatus() {
+            if (
+                this.validator.jailed ||
+                this.validator.tombstoned ||
+                this.validator.status === 0
+            )
+                return `Inactive`
+            return `Active`
+        },
+        // Will be replaced by `status_detail` field from backend
+        validatorStatusDetailed() {
+            if (this.validator.jailed)
+                return `temporally banned from the network`
+            else if (this.validator.tombstoned) return `banned from the network`
+            else if (this.validator.status === 0)
+                return `banned from the network`
+            else return false
+        }
     },
-    setMaxAmount() {
-      this.amount = atoms(this.balance)
+    methods: {
+        viewDenom,
+        open(options) {
+            if (
+                options &&
+                options.redelegation &&
+                this.fromOptions.length > 1
+            ) {
+                this.selectedIndex = 1
+            }
+            this.$refs.actionModal.open()
+        },
+        validateForm() {
+            this.$v.$touch()
+
+            return !this.$v.$invalid
+        },
+        clear() {
+            this.$v.$reset()
+
+            this.selectedIndex = 0
+            this.amount = null
+        },
+        setMaxAmount() {
+            this.amount = atoms(this.balance)
+        },
+        isMaxAmount() {
+            return parseFloat(this.amount) === parseFloat(atoms(this.balance))
+        },
+        enterPressed() {
+            this.$refs.actionModal.validateChangeStep()
+        },
+        isRedelegation() {
+            return this.from !== this.modalContext.userAddress
+        },
+        getFromBalance() {
+            return atoms(this.balance)
+        }
     },
-    isMaxAmount() {
-      return parseFloat(this.amount) === parseFloat(atoms(this.balance))
-    },
-    enterPressed() {
-      this.$refs.actionModal.validateChangeStep()
-    },
-    isRedelegation() {
-      return this.from !== this.modalContext.userAddress
-    },
-    getFromBalance() {
-      return atoms(this.balance)
+    validations() {
+        return {
+            amount: {
+                required: x => !!x && x !== `0`,
+                decimal,
+                between: between(SMALLEST, atoms(this.balance))
+            }
+        }
     }
-  },
-  validations() {
-    return {
-      amount: {
-        required: x => !!x && x !== `0`,
-        decimal,
-        between: between(SMALLEST, atoms(this.balance))
-      }
-    }
-  }
 }
 </script>

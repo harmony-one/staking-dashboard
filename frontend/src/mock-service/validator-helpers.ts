@@ -42,6 +42,8 @@ const blockchainValidator = {
   active_nodes: 1,
 
   uptime_percentage: '0',
+  reminder: 11,
+  average_stake: 11,
 }
 
 const frontendValidator = {
@@ -77,7 +79,9 @@ const frontendValidator = {
   max_total_delegation: 11,
   self_stake: 11,
   total_stake: 0,
-  address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24"
+  address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24",
+  reminder: 11,
+  average_stake: 11
 }
 
 export type TBlockchainValidator = typeof blockchainValidator
@@ -104,6 +108,9 @@ export const remapValidator = (
     // consensus_pubkey: validator.slot_pub_keys[0],
     details: validator.details,
     moniker: validator.name,
+
+    average_stake: validator.average_stake,
+    reminder: validator.reminder,
 
     creation_height: validator["creation-height"],
 

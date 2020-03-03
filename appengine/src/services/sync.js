@@ -206,7 +206,13 @@ module.exports = function(
       if (isNotEmpty(res)) {
         let selfStake = 0
         let totalStake = 0
-        if (cache[DELEGATIONS_BY_VALIDATOR][address]) {
+        let averageStake = 0
+        let remainder = res['max-total-delegation']
+
+        if (
+          cache[DELEGATIONS_BY_VALIDATOR][address] &&
+          cache[DELEGATIONS_BY_VALIDATOR][address].length
+        ) {
           const elem = cache[DELEGATIONS_BY_VALIDATOR][address].find(
             e => e.validator_address === e.delegator_address
           )
@@ -217,6 +223,10 @@ module.exports = function(
             (acc, val) => acc + val.amount,
             0
           )
+
+          averageStake =
+            totalStake / cache[DELEGATIONS_BY_VALIDATOR][address].length
+          remainder = remainder - totalStake
         }
 
         // fields below are included in the validator.
@@ -231,6 +241,8 @@ module.exports = function(
           ...res.commission,
           self_stake: selfStake,
           total_stake: totalStake,
+          average_stake: averageStake,
+          remainder,
           voting_power: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].reduce(
                 (acc, val) =>

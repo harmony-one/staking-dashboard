@@ -87,6 +87,11 @@
         {{ getFromBalance() }}
         {{ denom | viewDenom }}s
       </span>
+      <div v-if="!isRedelegation()" class="form-message">
+        Remaining available stakes
+        {{ validator.remainder | ones | shortDecimals }}
+        {{ denom | viewDenom }}s
+      </div>
       <span v-else-if="isRedelegation()" class="form-message">
         Available to Redelegate:
         {{ getFromBalance() }}
@@ -124,7 +129,14 @@
 <script>
 import { mapState, mapGetters } from "vuex"
 import { between, decimal } from "vuelidate/lib/validators"
-import { uatoms, atoms, viewDenom, SMALLEST } from "src/scripts/num"
+import {
+  uatoms,
+  atoms,
+  viewDenom,
+  SMALLEST,
+  ones,
+  shortDecimals
+} from "src/scripts/num"
 import TmField from "src/components/common/TmField"
 import TmFieldGroup from "src/components/common/TmFieldGroup"
 import TmBtn from "src/components/common/TmBtn"
@@ -144,35 +156,37 @@ export default {
         ActionModal
     },
     filters: {
-        viewDenom
+        viewDenom,
+    ones,
+    shortDecimals
+  },
+  props: {
+    fromOptions: {
+      type: Array,
+      required: true
     },
-    props: {
-        fromOptions: {
-            type: Array,
-            required: true
-        },
-        to: {
-            type: String,
-            required: true
-        },
-        validator: {
-            type: Object,
-            required: true
-        },
-        denom: {
-            type: String,
-            required: true
-        }
+    to: {
+      type: String,
+      required: true
     },
-    data: () => ({
-        amount: null,
-        selectedIndex: 0
-    }),
-    computed: {
-        ...mapState([`session`]),
-        ...mapGetters([`modalContext`]),
-        balance() {
-            if (!this.session.signedIn) return 0
+    validator: {
+      type: Object,
+      required: true
+    },
+    denom: {
+      type: String,
+      required: true
+    }
+  },
+  data: () => ({
+    amount: null,
+    selectedIndex: 0
+  }),
+  computed: {
+    ...mapState([`session`]),
+    ...mapGetters([`modalContext`]),
+    balance() {
+      if (!this.session.signedIn) return 0
 
             return this.fromOptions[this.selectedIndex].maximum
         },
@@ -286,7 +300,10 @@ export default {
             amount: {
                 required: x => !!x && x !== `0`,
                 decimal,
-                between: between(SMALLEST, atoms(this.balance))
+                between: between(
+          SMALLEST,
+          Math.min(atoms(this.balance), ones(this.validator.remainder))
+        )
             }
         }
     }

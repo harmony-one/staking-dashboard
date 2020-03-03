@@ -57,6 +57,7 @@
       :to="validator.operator_address"
       :validator="validator"
       :denom="bondDenom"
+      :disabled="validator.remainder === 0"
     />
     <UndelegationModal
       ref="undelegationModal"

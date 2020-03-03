@@ -17,11 +17,11 @@ const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
 
-function sleep (ms) {
+function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-module.exports = function (
+module.exports = function(
   BLOCKCHAIN_SERVER,
   chainTitle,
   updateDocument,
@@ -233,10 +233,12 @@ module.exports = function (
           total_stake: totalStake,
           voting_power: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].reduce(
-              (acc, val) =>
-                acc + cache[VOTING_POWER][val] ? cache[VOTING_POWER][val] : 0,
-              0
-            )
+                (acc, val) =>
+                  acc + cache[VOTING_POWER][val]
+                    ? cache[VOTING_POWER][val] / 4
+                    : 0,
+                0
+              )
             : undefined,
           signed_blocks: 50,
           blocks_should_sign: 100,
@@ -386,20 +388,27 @@ module.exports = function (
         bodyParams('hmy_getSuperCommittees')
       )
 
-      const committeeMembers = _.get(res, 'data.result.current.Deciders.0.committee-members')
+      votingCache = {}
+      _.range(0, 4).forEach(shardID => {
+        const committeeMembers = _.get(
+          res,
+          `data.result.current.Deciders.${shardID}.committee-members`
+        )
 
-      if (committeeMembers && Array.isArray(committeeMembers)) {
-        committeeMembers.forEach(
-          elem => {
+        if (committeeMembers && Array.isArray(committeeMembers)) {
+          committeeMembers.forEach(elem => {
             const blsKey = elem['bls-public-key']
             const power = elem['voting-power-%']
             if (!!blsKey && !!power) {
-              cache[VOTING_POWER][blsKey] = parseFloat(power)
+              if (!cache[VOTING_POWER][blsKey]) {
+                votingCache[blsKey] = 0.0
+              }
+              votingCache[blsKey] += parseFloat(power)
             }
-          }
-        )
-      }
-      return res.data.result
+          })
+        }
+      })
+      cache[VOTING_POWER] = votingCache
     } catch (err) {
       console.log('error when updatingVotingPower', err)
     }

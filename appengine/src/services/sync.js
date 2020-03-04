@@ -265,11 +265,11 @@ module.exports = function(
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address),
           uptime_percentage:
-            res['current-snapshot'] &&
-            res['current-snapshot']['num-blocks-signed'] &&
-            res['current-snapshot']['num-blocks-to-sign']
-              ? parseFloat(res['current-snapshot']['num-blocks-signed']) /
-                parseInt(res['current-snapshot']['num-blocks-to-sign'])
+            res['availability'] &&
+            res['availability']['num-blocks-signed'] &&
+            res['availability']['num-blocks-to-sign']
+              ? parseFloat(res['availability']['num-blocks-signed']) /
+                parseInt(res['availability']['num-blocks-to-sign'])
               : 0
         }
 

@@ -8,7 +8,7 @@
         </span>
       </li>
       <li class="row">
-        <h4>Number of active nodes</h4>
+        <h4>Number of nodes</h4>
         <span>{{ validator.active_nodes || 0 }}</span>
       </li>
     </ul>

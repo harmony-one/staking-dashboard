@@ -3,7 +3,7 @@ export const formatByStep = (arr: any[], timeStep: number) => {
   const end = new Date(arr[arr.length - 1].uctDate).getTime()
 
   const steps = Math.ceil((end - start) / timeStep)
-  const step = steps ? Math.ceil(arr.length / steps) : 1
+  const step = steps > 0 ? Math.ceil(arr.length / steps) : 1
 
   const rezArr = []
 

@@ -23,7 +23,9 @@ db.listCollections().then(res => {
     const { collectionId } = collection._queryOptions
 
     if (collectionId.indexOf('_history') > -1) {
-      return asyncRes.then(() => removeCollection(collectionId))
+      return asyncRes
+        .then(() => removeCollection(collectionId))
+        .catch(err => console.log('Error ', collectionId, err))
     }
 
     return asyncRes

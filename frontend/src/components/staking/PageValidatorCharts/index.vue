@@ -80,6 +80,7 @@ import {
   fetchValidatorHistory
 } from "../../../mock-service"
 import { formatByStep, generateEventHistory } from "./helpers"
+import { SECONDS_PER_EPOCH } from "@/constants/time-constants"
 
 export default {
   name: `page-validator-charts`,
@@ -148,15 +149,10 @@ export default {
         history = history.sort((a, b) => a.index < b.index ? -1 : 1)
 
         this.allHistory = history
+        this.validatorHistory = history
 
-        let stepTime = 1000 * 60 * 5
-        this.validatorHistory = formatByStep(history, stepTime)
-
-        // scale to optimal
-        while (this.validatorHistory.length > 10) {
-          stepTime = stepTime * 2
-          this.validatorHistory = formatByStep(history, stepTime)
-        }
+        // don't need to use
+        // this.validatorHistory = formatByStep(history, SECONDS_PER_EPOCH * 1000)
       }
 
       this.loading = false

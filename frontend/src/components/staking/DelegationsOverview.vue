@@ -41,8 +41,8 @@ import { mapState, mapGetters } from "vuex"
 import TmDataMsg from "common/TmDataMsg"
 import TableDelegations from "staking/TableDelegations/TableDelegations"
 import { remapValidator } from "../../mock-service/validator-helpers"
+import { SECONDS_PER_EPOCH } from "@/constants/time-constants"
 
-const SECONDS_PER_EPOCH = 60 * 60 * 24
 export default {
   name: `delegations-overview`,
   components: {

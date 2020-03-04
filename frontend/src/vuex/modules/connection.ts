@@ -4,10 +4,9 @@ import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 import { fetchNetworks, fetchNetworkInfo } from "../../mock-service"
 import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
+import { POLLING_TIMEOUT_SEC } from "@/constants/time-constants"
 
 const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK
-
-const POLLING_TIMEOUT = 5 * 1000
 
 export interface INetworkConfig {
   id: string
@@ -122,7 +121,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       if (!interval) {
         interval = setInterval(
           () => dispatch("loadNetworkInfo"),
-          POLLING_TIMEOUT
+          POLLING_TIMEOUT_SEC * 1000
         )
       }
 

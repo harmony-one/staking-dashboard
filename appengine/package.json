@@ -8,7 +8,6 @@
     "dev": "NODE_ENV=development node server.js",
     "start": "NODE_ENV=development node server.js",
     "prod": "NODE_ENV=production node server.js",
-    "deploy": "npm run clear-db && gcloud app deploy",
     "lint": "samples lint",
     "pretest": "npm run lint",
     "test": "samples test app",

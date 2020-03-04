@@ -140,10 +140,12 @@ export default {
           this.$route.params.validator
         )
 
-        const history = await fetchValidatorHistory(
+        let history = await fetchValidatorHistory(
           this.connection.networkConfig.id,
           this.$route.params.validator
         )
+
+        history = history.sort((a, b) => a.index < b.index ? -1 : 1)
 
         this.allHistory = history
 

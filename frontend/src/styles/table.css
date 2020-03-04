@@ -27,7 +27,7 @@
 }
 
 .data-table th:nth-child(2) {
-  width: 10%;
+  width: 94px;
   color: var(--dim-black);
   font-size: var(--sm);
 }

@@ -8,11 +8,12 @@
     "dev": "NODE_ENV=development node server.js",
     "start": "NODE_ENV=development node server.js",
     "prod": "NODE_ENV=production node server.js",
-    "deploy": "gcloud app deploy",
+    "deploy": "npm run clear-db && gcloud app deploy",
     "lint": "samples lint",
     "pretest": "npm run lint",
     "test": "samples test app",
-    "database": "node db.js"
+    "database": "node ./db_utils/db.js",
+    "clear-db": "node ./db_utils/clear_history_db.js"
   },
   "repository": {
     "type": "git",

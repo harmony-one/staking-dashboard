@@ -31,8 +31,8 @@
       </div>
     </td>
     <td>{{ data.stake | ones | fourDecimals }} ONE</td>
-    <td>{{ data.rewards | ones | fourDecimals }} ONE</td>
-    <td class="hide-xs">
+    <td v-if="!isUndelegation">{{ data.rewards | ones | fourDecimals }} ONE</td>
+    <td v-if="!isUndelegation" class="hide-xs">
       {{ "N/A" /* (data.stake ? data.rewards / data.stake : 0) | percent */ }}
     </td>
     <td v-if="data.remaining_time" class="hide-xs">
@@ -56,12 +56,16 @@ export default {
     fourDecimals,
     percent,
     toLower: text => text.toLowerCase(),
-    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
+    toClassName: text => text.toLowerCase().replace(/ /g, "_")
   },
   props: {
     data: {
       type: Object,
       required: true
+    },
+    isUndelegation: {
+      type: Boolean,
+      default: () => false
     },
     index: {
       type: Number,

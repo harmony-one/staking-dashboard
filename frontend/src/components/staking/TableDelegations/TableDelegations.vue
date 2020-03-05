@@ -19,6 +19,7 @@
           :key="row.operator_address"
           :index="index"
           :data="row"
+          :is-undelegation="isUndelegation"
           :show-on-mobile="showOnMobile"
         />
       </tbody>
@@ -78,38 +79,48 @@ export default {
       return this.sortedEnrichedValidators.slice(0, this.showing)
     },
     properties() {
-      const columns = [
-        {
-          title: `Name`,
-          value: `name`,
-          tooltip: `The validator's moniker`
-        },
-        {
-          title: `Stake`,
-          value: `stake`,
-          tooltip: `Stake`
-        },
-        {
-          title: `Reward (up to date)`,
-          value: `rewards`,
-          tooltip: `Reward (up to date)`
-        },
-        {
-          title: `APR %`,
-          value: `apr`,
-          tooltip: `APR %`
-        }
-      ]
-
       if (this.isUndelegation) {
-        columns.push({
-          title: `Ending in`,
-          value: `remaining_time`,
-          tooltip: `Ending in`
-        })
+        return [
+          {
+            title: `Name`,
+            value: `name`,
+            tooltip: `The validator's moniker`
+          },
+          {
+            title: `Stake`,
+            value: `stake`,
+            tooltip: `Stake`
+          },
+          {
+            title: `Ending in`,
+            value: `remaining_time`,
+            tooltip: `Ending in`
+          }
+        ]
+      } else {
+        return [
+          {
+            title: `Name`,
+            value: `name`,
+            tooltip: `The validator's moniker`
+          },
+          {
+            title: `Stake`,
+            value: `stake`,
+            tooltip: `Stake`
+          },
+          {
+            title: `Reward (up to date)`,
+            value: `rewards`,
+            tooltip: `Reward (up to date)`
+          },
+          {
+            title: `APR %`,
+            value: `apr`,
+            tooltip: `APR %`
+          }
+        ]
       }
-
-      return columns
     }
   },
   watch: {

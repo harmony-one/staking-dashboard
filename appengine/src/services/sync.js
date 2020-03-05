@@ -28,8 +28,12 @@ module.exports = function(
   getCollectionDataWithLimit
 ) {
   // Currently only work for OS network and testnet.
-  if (!(BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
-        BLOCKCHAIN_SERVER.includes('api.s0.b.hmny.io'))) {
+  if (
+    !(
+      BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
+      BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io')
+    )
+  ) {
     return
   }
   const cache = {
@@ -397,7 +401,6 @@ module.exports = function(
         bodyParams('hmy_getSuperCommittees')
       )
 
-      votingCache = {}
       _.range(0, 4).forEach(shardID => {
         const committeeMembers = _.get(
           res,
@@ -409,15 +412,11 @@ module.exports = function(
             const blsKey = elem['bls-public-key']
             const power = elem['voting-power-%']
             if (!!blsKey && !!power) {
-              if (!cache[VOTING_POWER][blsKey]) {
-                votingCache[blsKey] = 0.0
-              }
-              votingCache[blsKey] += parseFloat(power)
+              cache[VOTING_POWER][blsKey] += parseFloat(power)
             }
           })
         }
       })
-      cache[VOTING_POWER] = votingCache
     } catch (err) {
       console.log('error when updatingVotingPower', err)
     }

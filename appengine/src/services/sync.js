@@ -27,8 +27,9 @@ module.exports = function(
   updateDocument,
   getCollectionDataWithLimit
 ) {
-  // Currently only work for OS network.
-  if (!BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io')) {
+  // Currently only work for OS network and testnet.
+  if (!(BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
+        BLOCKCHAIN_SERVER.includes('api.s0.b.hmny.io'))) {
     return
   }
   const cache = {

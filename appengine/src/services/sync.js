@@ -244,13 +244,9 @@ module.exports = function(
           average_stake: averageStake,
           remainder,
           voting_power: Array.isArray(res['bls-public-keys'])
-            ? res['bls-public-keys'].reduce(
-                (acc, val) =>
-                  acc + cache[VOTING_POWER][val]
-                    ? cache[VOTING_POWER][val] / 4
-                    : 0,
-                0
-              )
+            ? _.sumBy(res['bls-public-keys'], item =>
+                cache[VOTING_POWER][item] ? cache[VOTING_POWER][item] : 0
+              ) / 4.0
             : undefined,
           signed_blocks: 50,
           blocks_should_sign: 100,
@@ -265,11 +261,11 @@ module.exports = function(
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address),
           uptime_percentage:
-            res['availability'] &&
-            res['availability']['num-blocks-signed'] &&
-            res['availability']['num-blocks-to-sign']
-              ? parseFloat(res['availability']['num-blocks-signed']) /
-                parseInt(res['availability']['num-blocks-to-sign'])
+            res.availability &&
+            res.availability['num-blocks-signed'] &&
+            res.availability['num-blocks-to-sign']
+              ? parseFloat(res.availability['num-blocks-signed']) /
+                parseInt(res.availability['num-blocks-to-sign'])
               : 0
         }
 

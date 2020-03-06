@@ -10,7 +10,7 @@
   >
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="validator-layout">
-        <Widget style="width: 450px; height: 258px;">
+        <Widget style="width: 450px;">
           <MainBlock :validator="validator" />
         </Widget>
         <Widget title="General info" style="width: 250px; height: 258px;">

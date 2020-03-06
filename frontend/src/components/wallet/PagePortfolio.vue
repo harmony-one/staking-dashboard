@@ -1,5 +1,14 @@
 <template>
   <div>
+    <div v-if="!session.signedIn" class="portfolio-top-container no-sign-in">
+      <LightWidget
+        v-if="isNetworkInfoLoading"
+        title="Time until next epoch"
+        style="flex-grow: 1; height: 340px; box-shadow: none;"
+      >
+        <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" />
+      </LightWidget>
+    </div>
     <TmPage
       :managed="true"
       :loading="wallet.loading && delegation.loading"
@@ -120,7 +129,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .tab-header {
   margin-top: 2rem;
   margin-bottom: 1rem;
@@ -132,10 +141,20 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 15px;
-}
 
-.portfolio-top-container > div {
-  margin-top: 30px;
-  margin-right: 30px;
+  > div {
+    margin-top: 30px;
+    margin-right: 30px;
+  }
+
+  &.no-sign-in {
+    margin: 1.5em auto;
+    padding: 0 20px;
+    max-width: 1200px;
+
+    > div {
+      margin: 0;
+    }
+  }
 }
 </style>

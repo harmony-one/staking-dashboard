@@ -104,7 +104,7 @@ export default {
 }
 
 .header-item-logo {
-  height: 2.5rem;
+  height: 48px;
 }
 
 @media screen and (max-width: 1023px) {

@@ -115,6 +115,6 @@ export default {
 .table-title {
   font-size: 20px;
   font-weight: bold;
-  padding: 10px;
+  padding: var(--unit) 0;
 }
 </style>

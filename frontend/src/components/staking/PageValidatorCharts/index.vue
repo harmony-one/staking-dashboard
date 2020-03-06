@@ -168,6 +168,7 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   flex-wrap: wrap;
+  margin-right: calc(var(--unit) * -1);
 }
 
 .validator-layout > div {

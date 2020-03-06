@@ -167,7 +167,7 @@ export default {
   flex-direction: column;
   width: 100%;
   max-width: 360px;
-  margin: 0 auto;
+  margin: 0 var(--unit);
 }
 
 .values-container {
@@ -215,7 +215,6 @@ export default {
   width: 100%;
   border-bottom: 1px solid var(--bc-dim);
   border-top: 1px solid var(--bc-dim);
-  margin-bottom: 2rem;
 }
 
 .button-container button:first-child {

@@ -189,8 +189,8 @@ export default {
   font-size: 10px;
   font-weight: 600;
   border: 2px solid;
-  padding: 2px 4px;
-  border-radius: 0.25rem;
+  padding: 2px 4px 1.5px 4px;
+  border-radius: 8px;
 }
 
 .validator-status.inactive {

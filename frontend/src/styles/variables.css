@@ -1,5 +1,11 @@
 :root {
   /*  ============================================================================= */
+
+  --double: 32px;
+  --unit: 16px;
+  --half: 8px;
+  --quarter: 4px;
+
   --q-tertiary: hsl(325, 96%, 59%);
   --tertiary: #0987d9;
 
@@ -14,12 +20,12 @@
   --link-dark: hsl(233, 88%, 50%);
   --link-hover: rgba(31, 117, 255, 1);
   --link-white: hsl(183, 88%, 50%);
-  --link-orange: hsl(191, 100%, 81%);
-  --link-orange-hover: hsl(193, 75%, 76%);
+  --link-orange: #fff;
+  --link-orange-hover: #ddd;
   --hover: rgba(0, 0, 0, 8%);
   --hover-bg: rgba(27, 113, 255, 0.1);
   --bright: hsl(0, 100%, 100%);
-  --bright-light: rgba(255, 255, 255, 0.1);
+  --bright-light: rgba(255, 255, 255, 0.5);
   --txt: #4d4b5a;
   --txt-header: #222;
   --text-white: #fefefe;

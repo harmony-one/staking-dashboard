@@ -5,7 +5,7 @@
       <ChartPie
         :chartdata="chartdata"
         :options="options"
-        style="height: 250px; width: 250px;"
+        style="height: 200px; width: 200px;"
       />
     </div>
   </div>
@@ -72,6 +72,7 @@ export default {
 }
 
 .legend {
+  font-size: 0.8rem;
   position: absolute;
   display: flex;
   align-items: center;

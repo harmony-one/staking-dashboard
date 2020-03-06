@@ -194,8 +194,9 @@ export default {
   font-weight: 400;
   font-size: 14px;
   color: var(--text-white);
-  border-radius: 0.25rem;
   transition: all 0.5s ease;
+  border: 2px solid var(--bright-light);
+  border-radius: var(--half);
 }
 
 .app-menu-item:hover {
@@ -211,9 +212,8 @@ export default {
   margin: 0 1rem 2rem 1rem;
   padding: 0.5rem 0.75rem;
   color: var(--text-white);
-  border: 2px solid var(--bc);
-  border-color: var(--bright-light) !important;
-  border-radius: 0.25rem;
+  border: 2px solid var(--bright-light);
+  border-radius: var(--half);
   display: flex;
   justify-content: space-between;
   align-items: center;

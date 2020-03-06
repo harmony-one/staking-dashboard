@@ -35,8 +35,8 @@
     <td v-if="!isUndelegation" class="hide-xs">
       {{ "N/A" /* (data.stake ? data.rewards / data.stake : 0) | percent */ }}
     </td>
-    <td v-if="data.remaining_time" class="hide-xs">
-      {{ undelegationTimeLeft }}
+    <td v-if="data.remaining_epoch" class="hide-xs">
+      {{ data.remaining_epoch + ' epochs' }}
     </td>
   </tr>
 </template>
@@ -78,13 +78,13 @@ export default {
     }
   },
   computed: {
-    undelegationTimeLeft() {
-      const leftMin = this.data.remaining_time
-
-      const eventDate = moment(Date.now() + leftMin * 1000)
-
-      return new moment().to(eventDate)
-    },
+    // undelegationTimeLeft() {
+    //   const leftMin = this.data.remaining_time
+    //
+    //   const eventDate = moment(Date.now() + leftMin * 1000)
+    //
+    //   return new moment().to(eventDate)
+    // },
     status() {
       if (
         this.data.jailed ||

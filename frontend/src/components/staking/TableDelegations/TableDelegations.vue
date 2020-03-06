@@ -93,7 +93,7 @@ export default {
           },
           {
             title: `Ending in`,
-            value: `remaining_time`,
+            value: `remaining_epoch`,
             tooltip: `Ending in`
           }
         ]

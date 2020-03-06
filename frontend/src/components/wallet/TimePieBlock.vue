@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="chart-container-stake-allocate">
-      <div class="legend">{{ timeLeft }}</div>
+      <div class="legend">{{ timeNextEpoch / 60 | timeLeft }}</div>
       <ChartPie
         :chartdata="chartdata"
         :options="options"
@@ -14,12 +14,15 @@
 <script>
 import ChartPie from "./components/ChartPie"
 import { chartColors } from "./components/chartColors"
-import moment from "moment"
+import { timeLeft } from '@/filters'
 
 export default {
   name: "TimePieBlock",
   components: { ChartPie },
   props: ["timeNextEpoch"],
+  filters: {
+    timeLeft,
+  },
   data: () => ({
     options: {
       responsive: true,
@@ -40,13 +43,6 @@ export default {
     }
   }),
   computed: {
-    timeLeft() {
-      const leftMin = isNaN(this.timeNextEpoch) ? 0 : this.timeNextEpoch / 60
-
-      return `${Math.floor(leftMin / 60)} hours ${Math.floor(
-        leftMin % 60
-      )} minutes`
-    },
     chartdata() {
       let diff = isNaN(this.timeNextEpoch) ? 0 : 36 - this.timeNextEpoch / 3600
 
@@ -78,9 +74,14 @@ export default {
 
 .legend {
   position: absolute;
-  max-width: 80px;
-  top: 106px;
-  left: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  padding: 15px;
+  width: 120px;
+  height: 120px;
+  top: 70px;
+  left: 65px;
 }
 </style>

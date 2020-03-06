@@ -22,3 +22,22 @@ export const resolveValidatorName = (address, validators) => {
   }
   return formatBech32(address)
 }
+
+const plural = (value, unit) => value + unit + (value === 1 ? "" : "s")
+
+export const timeLeft = minutes => {
+  const leftMinAll = isNaN(minutes) ? 0 : minutes
+
+  const leftHours = Math.floor(leftMinAll / 60)
+  const leftMin = Math.floor(leftMinAll % 60)
+
+  if (leftMinAll < 1) {
+    return "less then 1 minute"
+  }
+
+  if (!leftHours) {
+    return plural(leftMin, " minute")
+  }
+
+  return plural(leftHours, " hour") + " " + plural(leftMin, " minute")
+}

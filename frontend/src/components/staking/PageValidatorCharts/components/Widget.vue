@@ -20,17 +20,16 @@ export default {
 
 <style scoped>
 .widget-container {
+  margin-right: var(--unit);
+  margin-top: var(--unit);
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
-  margin-right: 30px;
 }
 
 .widget {
-  border-radius: 5px;
   border: 1px solid #d9d9e0;
+  border-radius: var(--half);
   background: white;
-  box-shadow: 0px 2px 3px rgba(78, 85, 114, 0.18);
   display: flex;
   flex-direction: column;
   overflow: hidden;

@@ -137,8 +137,14 @@ export default {
   flex-flow: row wrap;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin: var(--unit) 0;
+}
 
+.portfolio-top-container > div {
+  margin-right: var(--unit);
+}
+.portfolio-top-container > div:last-child {
+  margin-right: 0;
   > div {
     margin-top: 30px;
     margin-right: 20px;

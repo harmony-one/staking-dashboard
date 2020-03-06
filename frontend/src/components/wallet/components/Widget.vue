@@ -20,18 +20,19 @@ export default {
 
 <style scoped>
 .widget-container {
+  margin-right: var(--unit);
   display: flex;
   flex-direction: column;
 }
 
 .widget-portfolio {
-  border-radius: 5px;
   border: 1px solid #d9d9e0;
-  background: rgba(54, 207, 214, 0.02);
-  box-shadow: 0px 2px 3px rgba(78, 85, 114, 0.18);
+  border-radius: var(--half);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
+  margin-bottom: var(--unit);
 }
 
 .widget-title {
@@ -41,6 +42,6 @@ export default {
 }
 
 .widget-body {
-  padding: 10px 20px;
+  padding: var(--unit);
 }
 </style>

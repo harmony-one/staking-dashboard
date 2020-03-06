@@ -113,10 +113,9 @@ export default {
 </script>
 <style scoped>
 .li-validator {
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.25rem;
-  border-bottom: 1px solid var(--bc-dim);
-  border-radius: 0.25rem;
+  font-size: 1rem;
+  padding: var(--unit) 0;
+  border-bottom: 1px solid #ddd;
   color: var(--txt-black);
 }
 
@@ -171,8 +170,8 @@ export default {
   font-size: 10px;
   font-weight: 600;
   border: 2px solid;
-  padding: 2px 4px;
-  border-radius: 0.25rem;
+  padding: 2px 4px 1px 4px;
+  border-radius: 8px;
 }
 
 .validator-status.inactive {

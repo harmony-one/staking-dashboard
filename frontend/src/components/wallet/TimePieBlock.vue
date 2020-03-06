@@ -68,7 +68,6 @@ export default {
 <style>
 .chart-container-stake-allocate {
   margin: 5px 0 15px 0;
-  height: 300px;
   position: relative;
 }
 

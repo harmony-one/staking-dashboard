@@ -11,6 +11,8 @@ import router, { routeGuard } from "./router"
 import Store from "./vuex/store"
 import { createApolloProvider } from "src/gql/apollo.js"
 
+const google_analytics_uid = process.env.GOOGLE_ANALYTICS_UID || ""
+
 function setOptions(urlParams, store) {
   if (urlParams.experimental) {
     store.commit(`setExperimentalMode`)
@@ -25,9 +27,9 @@ function setOptions(urlParams, store) {
 
 export default function init(urlParams, env = process.env) {
   // add error handlers in production
-  // if (env.NODE_ENV === `production`) {
-  //   enableGoogleAnalytics(config.google_analytics_uid)
-  // }
+  if (env.NODE_ENV === `production`) {
+    enableGoogleAnalytics(google_analytics_uid)
+  }
 
   const stargate = urlParams.stargate || process.env.MOCK_API_URL
   console.log(`Expecting stargate at: ${stargate}`)

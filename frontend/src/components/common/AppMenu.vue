@@ -235,7 +235,6 @@ export default {
 }
 
 .sign-out {
-  border-color: var(--bright-light) !important;
   font-size: 12px;
   margin: 0 1rem;
   padding: 0.5rem 0.75rem;

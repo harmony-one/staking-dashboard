@@ -144,7 +144,7 @@ export default {
 
   > div {
     margin-top: 30px;
-    margin-right: 30px;
+    margin-right: 20px;
   }
 
   &.no-sign-in {

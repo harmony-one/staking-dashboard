@@ -14,7 +14,7 @@
           </Widget>
           <LightWidget
             title="Stake allocation"
-            style="flex-grow: 1; height: 380px;"
+            style="flex-grow: 1;"
           >
             <div v-if="delegation.loading">
               Loading...
@@ -27,7 +27,7 @@
           <LightWidget
             v-if="isNetworkInfoLoading"
             title="Time until next epoch"
-            style="flex-grow: 1; height: 340px;"
+            style="flex-grow: 1;"
           >
             <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" />
           </LightWidget>
@@ -131,11 +131,13 @@ export default {
   flex-flow: row wrap;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin: var(--unit) 0;
 }
 
 .portfolio-top-container > div {
-  margin-top: 30px;
-  margin-right: 30px;
+  margin-right: var(--unit);
+}
+.portfolio-top-container > div:last-child {
+  margin-right: 0;
 }
 </style>

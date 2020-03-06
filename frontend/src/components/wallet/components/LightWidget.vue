@@ -20,19 +20,19 @@ export default {
 
 <style scoped>
 .widget-container {
+  margin-right: var(--unit);
   display: flex;
   flex-direction: column;
 }
 
 .widget-portfolio-light {
-  border-radius: 5px;
   border: 1px solid #d9d9e0;
-  background: rgba(54, 207, 214, 0.02);
-  box-shadow: 0px 2px 3px rgba(78, 85, 114, 0.18);
+  border-radius: var(--half);
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  margin-bottom: var(--unit);
 }
 
 .widget-title {

@@ -114,9 +114,8 @@ export default {
 .tm-page {
   position: relative;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px 20px;
+  padding: 0 var(--double);
 }
 
 .tm-page.small {

@@ -18,13 +18,10 @@
     >
       <template slot="managed-body">
         <div v-if="session.signedIn" class="portfolio-top-container">
-          <Widget title="" style="flex-grow: 2; height: 240px;">
+          <Widget title="" class="balance">
             <TmBalance />
           </Widget>
-          <LightWidget
-            title="Stake allocation"
-            style="flex-grow: 1; height: 380px;"
-          >
+          <LightWidget title="Stake allocation" class="delegations">
             <div v-if="delegation.loading">
               Loading...
             </div>
@@ -36,7 +33,7 @@
           <LightWidget
             v-if="isNetworkInfoLoading"
             title="Time until next epoch"
-            style="flex-grow: 1; height: 340px;"
+            class="time_next_epoch"
           >
             <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" />
           </LightWidget>
@@ -145,6 +142,9 @@ export default {
   > div {
     margin-top: 30px;
     margin-right: 20px;
+    height: fit-content;
+    border-radius: 5px;
+    flex-grow: 1;
   }
 
   &.no-sign-in {
@@ -154,6 +154,24 @@ export default {
 
     > div {
       margin: 0;
+    }
+  }
+
+  @media screen and (min-width: 1300px) and (max-width: 1400px) {
+    > div {
+      margin-right: 10px;
+    }
+
+    .balance {
+      max-width: 380px;
+    }
+
+    .delegations {
+      max-width: 310px;
+    }
+
+    .time_next_epoch {
+      max-width: 280px;
     }
   }
 }

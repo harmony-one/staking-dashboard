@@ -84,21 +84,19 @@ export default {
           delegates.Undelegations.length
         ) {
           delegates.Undelegations.forEach(un => {
+            const { current_epoch, time_next_epoch } = state.networkInfo
+            let remaining_epoch
+
+            if (current_epoch && un.Epoch && time_next_epoch) {
+              remaining_epoch = 7 + parseInt(un.Epoch) - parseInt(current_epoch)
+            }
+
             undelegations.push({
               ...remapValidator(delegates.validator_info, true),
               stake: un.Amount,
               rewards: delegates.reward,
               apr: delegates.reward / un.Amount,
-              remaining_time:
-                state.networkInfo.current_epoch &&
-                un.Epoch &&
-                state.networkInfo.time_next_epoch
-                  ? state.networkInfo.time_next_epoch +
-                    (parseInt(un.Epoch) +
-                      7 -
-                      parseInt(state.networkInfo.current_epoch)) *
-                      SECONDS_PER_EPOCH
-                  : undefined
+              remaining_epoch
             })
           })
         }

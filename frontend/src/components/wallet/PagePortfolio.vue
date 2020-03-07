@@ -50,6 +50,58 @@
   </div>
 </template>
 
+<style scoped lang="scss">
+.tab-header {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.portfolio-top-container {
+  display: flex;
+  flex-flow: row wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: var(--unit);
+
+  > div {
+    margin-right: var(--unit);
+    height: fit-content;
+    border-radius: 5px;
+    flex-grow: 1;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &.no-sign-in {
+    margin: 1.5em auto;
+    padding: 0 20px;
+
+    > div {
+      margin: 0;
+    }
+  }
+
+  @media screen and (min-width: 1300px) and (max-width: 1400px) {
+    > div {
+      margin-right: 10px;
+    }
+
+    .balance {
+      max-width: 380px;
+    }
+
+    .delegations {
+      max-width: 310px;
+    }
+
+    .time_next_epoch {
+      max-width: 280px;
+    }
+  }
+}
+</style>
 <script>
 import { mapState, mapGetters } from "vuex"
 import TmPage from "common/TmPage"
@@ -126,59 +178,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-.tab-header {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-.portfolio-top-container {
-  display: flex;
-  flex-flow: row wrap;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: var(--unit) 0;
-}
-
-.portfolio-top-container > div {
-  margin-right: var(--unit);
-}
-.portfolio-top-container > div:last-child {
-  margin-right: 0;
-  > div {
-    margin-top: 30px;
-    margin-right: 20px;
-    height: fit-content;
-    border-radius: 5px;
-    flex-grow: 1;
-  }
-
-  &.no-sign-in {
-    margin: 1.5em auto;
-    padding: 0 20px;
-    max-width: 1200px;
-
-    > div {
-      margin: 0;
-    }
-  }
-
-  @media screen and (min-width: 1300px) and (max-width: 1400px) {
-    > div {
-      margin-right: 10px;
-    }
-
-    .balance {
-      max-width: 380px;
-    }
-
-    .delegations {
-      max-width: 310px;
-    }
-
-    .time_next_epoch {
-      max-width: 280px;
-    }
-  }
-}
-</style>

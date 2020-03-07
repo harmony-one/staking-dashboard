@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="chart-container-stake-allocate">
-      <div class="legend">{{ timeNextEpoch / 60 | timeLeft }}</div>
       <ChartPie
         :chartdata="chartdata"
         :options="options"
         style="height: 200px; width: 200px;"
       />
     </div>
+    <div class="legend">{{ timeNextEpoch / 60 | timeLeft }}</div>
   </div>
 </template>
 
@@ -67,10 +67,11 @@ export default {
 
 <style>
 .chart-container-stake-allocate {
-  margin: 5px 0 15px 0;
+  margin: 5px 10px 15px 0;
   position: relative;
 }
 
+/*
 .legend {
   position: absolute;
   display: flex;
@@ -83,4 +84,11 @@ export default {
   top: 70px;
   left: 65px;
 }
+ */
+
+.legend {
+  width: 100%;
+  text-align: center;
+}
+
 </style>

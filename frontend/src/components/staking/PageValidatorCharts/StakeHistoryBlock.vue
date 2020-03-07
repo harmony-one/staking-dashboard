@@ -90,7 +90,7 @@ export default {
           {
             label: "Delegated",
             backgroundColor: "#dedede",
-            data: this.history.map(v => v.total_stake - v.self_stake / 1e18)
+            data: this.history.map(v => (v.total_stake - v.self_stake) / 1e18)
           }
         ]
       }

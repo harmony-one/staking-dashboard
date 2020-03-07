@@ -4,7 +4,7 @@
       <ChartPie
         :chartdata="chartdata"
         :options="options"
-        style="height: 200px; width: 240px;"
+        style="height: 230px; width: 230px;"
       />
     </div>
   </div>

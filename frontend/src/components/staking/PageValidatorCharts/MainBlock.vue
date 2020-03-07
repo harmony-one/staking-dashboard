@@ -36,7 +36,7 @@
               </h4>
             </div>
             <div v-if="rewards">
-              <span>Rewards:</span>
+              <span>Your rewards:</span>
               <h5>+{{ rewards | ones | fourDecimals | noBlanks }}</h5>
             </div>
           </div>

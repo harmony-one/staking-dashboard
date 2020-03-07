@@ -1,12 +1,12 @@
 <template>
   <div class="validator-main-block">
     <div class="status-container">
-      <span :class="status | toClassName" class="validator-status">{{
-        status
-      }}</span>
-      <span v-if="status_detailed" class="validator-status-detailed">{{
-        status_detailed
-      }}</span>
+      <span :class="status | toClassName" class="validator-status">
+        {{ status }}
+      </span>
+      <span v-if="status_detailed" class="validator-status-detailed">
+        {{ status_detailed }}
+      </span>
     </div>
     <div class="validator">
       <td class="data-table__row__info">
@@ -27,18 +27,16 @@
             </div>
             <div>
               <span>Delegated stake:</span>
-              <h4>
-                {{ delegatedStake | ones | fourDecimals | noBlanks }}
-              </h4>
+              <h4>{{ delegatedStake | ones | fourDecimals | noBlanks }}</h4>
             </div>
-            <div v-if="selfStakeAmount">
+            <div>
               <span>Self stake:</span>
               <h4>
-                {{ selfStakeAmount | ones | fourDecimals | noBlanks }}
+                {{ validatorSelfStakeAmount | ones | fourDecimals | noBlanks }}
               </h4>
             </div>
             <div v-if="rewards">
-              <span>Rewards: </span>
+              <span>Rewards:</span>
               <h5>+{{ rewards | ones | fourDecimals | noBlanks }}</h5>
             </div>
           </div>
@@ -152,8 +150,11 @@ export default {
     selfStakeAmount() {
       return this.selfStake ? this.selfStake.amount : 0
     },
+    validatorSelfStakeAmount() {
+      return this.validator.self_stake
+    },
     delegatedStake() {
-      return this.validator.total_stake - this.selfStakeAmount
+      return this.validator.total_stake - this.validatorSelfStakeAmount
     },
     rewards() {
       return this.selfStake ? this.selfStake.reward : 0

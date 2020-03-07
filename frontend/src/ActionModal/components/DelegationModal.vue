@@ -280,7 +280,7 @@ export default {
             this.amount = null
         },
         setMaxAmount() {
-            this.amount = atoms(this.balance)
+            this.amount = Math.min(atoms(this.balance), ones(this.validator.remainder))
         },
         isMaxAmount() {
             return parseFloat(this.amount) === parseFloat(atoms(this.balance))

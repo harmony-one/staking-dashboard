@@ -1,14 +1,5 @@
 <template>
   <div>
-    <div v-if="!session.signedIn" class="portfolio-top-container no-sign-in">
-      <LightWidget
-        v-if="isNetworkInfoLoading"
-        title="Time until next epoch"
-        style="flex-grow: 1; height: 340px; box-shadow: none;"
-      >
-        <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" />
-      </LightWidget>
-    </div>
     <TmPage
       :managed="true"
       :loading="wallet.loading && delegation.loading"
@@ -145,16 +136,6 @@ export default {
     height: fit-content;
     border-radius: 5px;
     flex-grow: 1;
-  }
-
-  &.no-sign-in {
-    margin: 1.5em auto;
-    padding: 0 20px;
-    max-width: 1200px;
-
-    > div {
-      margin: 0;
-    }
   }
 
   @media screen and (min-width: 1300px) and (max-width: 1400px) {

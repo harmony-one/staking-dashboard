@@ -260,7 +260,7 @@
                   v-else
                   color="primary"
                   value="Send"
-                  :disabled="!hasSigningMethod"
+                  :disabled="!hasSigningMethod || !selectedSignMethod"
                   @click.native="validateChangeStep"
                 />
               </div>
@@ -444,8 +444,8 @@ export default {
     signMethods() {
       let signMethods = []
       if (this.session.sessionType === sessionType.EXPLORE) {
-        signMethods.push(signMethodOptions.LEDGER)
         signMethods.push(signMethodOptions.EXTENSION)
+        signMethods.push(signMethodOptions.LEDGER)
       } else if (this.session.sessionType === sessionType.LEDGER) {
         signMethods.push(signMethodOptions.LEDGER)
       } else if (this.session.sessionType === sessionType.EXTENSION) {
@@ -487,7 +487,7 @@ export default {
     signMethods: {
       immediate: true,
       handler(signMethods) {
-        if (signMethods.length === 1) {
+        if (signMethods.length) {
           this.selectedSignMethod = signMethods[0].value
         }
       }

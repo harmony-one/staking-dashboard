@@ -3,7 +3,7 @@
 // Modified function to support new transaction type
 export const getUnbondTimeFromTX = (tx, unbondingDelegations) => {
   const { type, blockNumber, value } = tx
-  if (type === `cosmos-sdk/MsgUndelegate`) {
+  if (type === `harmony-sdk/MsgUndelegate`) {
     const validatorUnbondingDelegation =
       unbondingDelegations[value.validator_address]
     const unbondingDelegation =

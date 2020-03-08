@@ -7,7 +7,7 @@ export function MsgSend(
   }: any
 ) {
   return {
-    type: `cosmos-sdk/MsgSend`,
+    type: `harmony-sdk/MsgSend`,
     value: {
       from_address: senderAddress,
       to_address: toAddress,
@@ -22,7 +22,7 @@ export function MsgDelegate(
   { validatorAddress, amount, denom }: any
 ) {
   return {
-    type: `cosmos-sdk/MsgDelegate`,
+    type: `harmony-sdk/MsgDelegate`,
     value: {
       delegator_address: senderAddress,
       validator_address: validatorAddress,
@@ -36,7 +36,7 @@ export function MsgUndelegate(
   { validatorAddress, amount, denom }: any
 ) {
   return {
-    type: `cosmos-sdk/MsgUndelegate`,
+    type: `harmony-sdk/MsgUndelegate`,
     value: {
       validator_address: validatorAddress,
       delegator_address: senderAddress,
@@ -50,7 +50,7 @@ export function MsgRedelegate(
   { validatorSourceAddress, validatorDestinationAddress, amount, denom }: any
 ) {
   return {
-    type: `cosmos-sdk/MsgBeginRedelegate`,
+    type: `harmony-sdk/MsgBeginRedelegate`,
     value: {
       delegator_address: senderAddress,
       validator_src_address: validatorSourceAddress,
@@ -72,7 +72,7 @@ export function MsgSubmitProposal(
   }: any
 ) {
   return {
-    type: `cosmos-sdk/MsgSubmitProposal`,
+    type: `harmony-sdk/MsgSubmitProposal`,
     value: {
       proposer: senderAddress,
       proposal_type: proposalType,
@@ -85,7 +85,7 @@ export function MsgSubmitProposal(
 
 export function MsgVote(senderAddress: string, { proposalId, option }: any) {
   return {
-    type: `cosmos-sdk/MsgVote`,
+    type: `harmony-sdk/MsgVote`,
     value: {
       voter: senderAddress,
       proposal_id: proposalId,
@@ -102,7 +102,7 @@ export function MsgDeposit(
   }: any
 ) {
   return {
-    type: `cosmos-sdk/MsgDeposit`,
+    type: `harmony-sdk/MsgDeposit`,
     value: {
       depositor: senderAddress,
       proposal_id: proposalId,
@@ -116,7 +116,7 @@ export function MsgWithdrawDelegationReward(
   { validatorAddress, amount }: any
 ) {
   return {
-    type: `cosmos-sdk/MsgWithdrawDelegationReward`,
+    type: `harmony-sdk/MsgWithdrawDelegationReward`,
     value: {
       delegator_address: senderAddress,
       validator_address: validatorAddress,

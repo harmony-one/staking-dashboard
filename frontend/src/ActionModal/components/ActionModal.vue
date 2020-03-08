@@ -659,7 +659,7 @@ export default {
         } else {
           this.$store.commit(`setCurrrentModalOpen`, true)
 
-          sendResponse = await this.actionManager.send(memo, feeProperties)
+          sendResponse = await this.actionManager.send(memo, feeProperties, this.networkConfig)
         }
 
         const { included } = sendResponse

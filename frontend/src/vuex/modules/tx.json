@@ -2,7 +2,7 @@
   "tx": {
     "msg": [
       {
-        "type": "cosmos-sdk/MsgSend",
+        "type": "harmony-sdk/MsgSend",
         "value": {
           "from_address": "cosmos18da7h02z3e46ulee5prg5zl6pr9va0ytv6w46k",
           "to_address": "cosmos18da7h02z3e46ulee5prg5zl6pr9va0ytv6w46k",
@@ -38,7 +38,7 @@
 {
   "tx": {
     "msg": {
-      "type": "cosmos-sdk/MsgSend",
+      "type": "harmony-sdk/MsgSend",
       "value": {
         "from_address": "cosmos18da7h02z3e46ulee5prg5zl6pr9va0ytv6w46k",
         "to_address": "cosmos18da7h02z3e46ulee5prg5zl6pr9va0ytv6w46k",

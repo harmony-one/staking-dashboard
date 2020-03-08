@@ -3,7 +3,7 @@ import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 import { fetchNetworks, fetchNetworkInfo } from "../../mock-service"
-import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
+// import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 import { POLLING_TIMEOUT_SEC } from "@/constants/time-constants"
 
 const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK
@@ -136,7 +136,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         state.networkConfig.chain_id
       )
 
-      setNetworkToExtension(state.networkConfig)
+      // setNetworkToExtension(state.networkConfig)
 
       commit("setConnected", true)
 
@@ -167,96 +167,3 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     }
   }
 })
-
-// const NODE_HALTED_TIMEOUT = config.node_halted_timeout
-// const MAX_CONNECTION_ATTEMPTS = 5
-
-// actions: {
-//   async setLastHeader({ state }, header) {
-//     state.lastHeader = header
-//   },
-//   reconnect({ commit, dispatch }) {
-//     commit("resetConnectionAttempts")
-//     commit("stopConnecting", false)
-//     dispatch("connect")
-//   },
-//   async connect({ state, commit, dispatch }) {
-//     const {
-//       externals: { node },
-//       rpcUrl,
-//       connectionAttempts,
-//       stopConnecting
-//     } = state
-//
-//     if (connectionAttempts >= MAX_CONNECTION_ATTEMPTS) {
-//       commit("stopConnecting")
-//       return
-//     }
-//     if (stopConnecting) return
-//
-//     commit(`setConnected`, false)
-//     try {
-//       await node.tendermint.connect(rpcUrl)
-//       node.tendermint.ondisconnect = () => {
-//         commit(`setConnected`, false)
-//         dispatch(`connect`)
-//       }
-//       commit(`setConnected`, true)
-//       dispatch(`reconnected`)
-//       dispatch(`rpcSubscribe`)
-//       dispatch(`subscribeToBlocks`)
-//     } catch (err) {
-//       console.log(`Failed reconnect attempt`)
-//       commit("increaseConnectionAttempts")
-//       setTimeout(() => {
-//         dispatch(`connect`)
-//       }, 1000)
-//     }
-//   },
-//   async rpcSubscribe({ commit, dispatch, rootState }) {
-//     const { node } = state.externals
-//     if (state.stopConnecting) return
-//
-//     node.tendermint.status().then(status => {
-//       dispatch(`setLastHeader`, {
-//         height: status.sync_info.latest_block_height,
-//         chain_id: status.node_info.network
-//       })
-//
-//       if (status.node_info.network === `testnet`) {
-//         commit(`setInsecureMode`)
-//       }
-//     })
-//
-//     node.tendermint.subscribe(
-//       {
-//         query: `tm.event = 'NewBlockHeader'`
-//       },
-//       ({ header }) => {
-//         dispatch(`setLastHeader`, header)
-//       }
-//     )
-//     if (rootState.session.signedIn) {
-//       dispatch(`walletSubscribe`)
-//     }
-//     dispatch(`checkNodeHalted`)
-//   },
-//   checkNodeHalted(
-//     { state, dispatch },
-//     nodeHaltedTimeout = NODE_HALTED_TIMEOUT
-//   ) {
-//     state.nodeHaltedTimeout = setTimeout(() => {
-//       if (!state.lastHeader.height) {
-//         dispatch(`nodeHasHalted`)
-//       }
-//     }, nodeHaltedTimeout) // default 30s
-//   },
-//   async setNetwork({ commit, dispatch }, network) {
-//     commit("setNetworkId", network.id)
-//     commit("setRpcUrl", network.rpc_url)
-//     dispatch("reconnect")
-//     console.info(
-//       `Connecting to: ${network.title} (${network.chain_id}) – ${network.rpc_url}`
-//     )
-//   }
-// },

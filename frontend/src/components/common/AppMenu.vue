@@ -1,11 +1,5 @@
 <template>
   <menu class="app-menu">
-    <div v-if="session.signedIn" class="sign-out">
-      <a id="sign-out" @click="signOut()">
-        <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
-        Sign out
-      </a>
-    </div>
     <div v-if="session.signedIn" class="user-box">
       <div>
         <h3>Your Address</h3>
@@ -126,6 +120,14 @@
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
     </div>
+
+    <div v-if="session.signedIn" class="sign-out">
+      <a id="sign-out" @click="signOut()">
+        <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
+        Sign out
+      </a>
+    </div>
+
     <ConnectedNetwork />
   </menu>
 </template>
@@ -170,13 +172,17 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .app-menu {
   z-index: var(--z-appMenu);
   display: flex;
   flex-flow: column;
   position: relative;
-  height: 100%;
+  flex-grow: 1;
+
+  .app-menu-main {
+    flex-grow: 1;
+  }
 }
 
 .app-menu .app-menu-item {
@@ -200,29 +206,6 @@ export default {
   margin: 2.5rem 1rem 1rem;
 }
 
-.sign-out a {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: white;
-  cursor: pointer;
-}
-
-.sign-out a > i {
-  margin-right: 10px;
-  font-size: 20px;
-}
-
-.sign-out {
-  border-color: var(--bright-light) !important;
-  font-size: 12px;
-  margin: 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--text-white);
-  border: 2px solid var(--bc);
-  border-radius: 0.25rem;
-}
-
 .user-box {
   font-size: 14px;
   margin: 0 1rem 2rem 1rem;
@@ -234,21 +217,44 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  i {
+    color: var(--bright);
+    font-size: var(--m);
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: var(--bc-dim);
+
+    &:hover {
+      background: var(--bc);
+      cursor: pointer;
+    }
+  }
 }
 
-.user-box i {
-  color: var(--bright);
-  font-size: var(--m);
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 50%;
-  background: var(--bc-dim);
-}
+.sign-out {
+  border-color: var(--bright-light) !important;
+  font-size: 12px;
+  margin: 0 1rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-white);
+  border: 2px solid var(--bc);
+  border-radius: 0.25rem;
 
-.user-box i:hover {
-  background: var(--bc);
-  cursor: pointer;
+  a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+
+    i {
+      margin-right: 10px;
+      font-size: 20px;
+    }
+  }
 }
 
 .app-menu .app-menu-item--link:hover {

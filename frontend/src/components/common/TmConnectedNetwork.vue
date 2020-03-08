@@ -95,18 +95,21 @@ export default {
 
 <style scoped>
 .sidebar-bottom {
-  margin: 0.5rem;
-  padding: 0.5rem;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 208px; /* sidebar width minus margin */
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .intercom-button {
   width: 100%;
   margin: 1rem 0;
+  text-align: left;
+  border-color: var(--bright-light) !important;
+  font-size: 12px;
+  min-height: 40px;
+  color: var(--text-white);
+  border: 2px solid var(--bc);
+  border-radius: 0.25rem;
 }
 
 .tm-connected-network {

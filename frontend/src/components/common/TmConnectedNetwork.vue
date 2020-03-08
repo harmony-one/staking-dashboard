@@ -12,61 +12,48 @@
         size="small"
       />
     </a>
-    <div
-      v-if="connection.connected"
-      id="tm-connected-network"
-      class="tm-connected-network"
-    >
-      <div class="tm-connected-network__connection">
-        <div id="tm-connected-network__icon" class="tm-connected-network__icon">
-          <span
-            v-tooltip.top="`Network is up and running`"
-            class="tm-connected-network__status green"
-          />
-        </div>
-        <div
-          id="tm-connected-network__string"
-          class="tm-connected-network__string"
-        >
-          <span v-tooltip.top="networkTooltip" class="chain-id">
-            {{ connection.lastHeader.chain_title }}
-          </span>
+    <div v-tooltip.top="networkTooltip" id="network_status">
+      <div
+        v-if="connection.connected"
+        id="tm-connected-network"
+        class="tm-connected-network"
+      >
+        <div class="tm-connected-network__connection">
+          <div
+            id="tm-connected-network__icon"
+            class="tm-connected-network__icon"
+          >
+            <span class="tm-connected-network__status green" />
+          </div>
+          <div
+            id="tm-connected-network__string"
+            class="tm-connected-network__string"
+          >
+            <span class="chain-id">
+              {{ connection.lastHeader.chain_title }}
+            </span>
+          </div>
         </div>
       </div>
-<!--      <div-->
-<!--        id="tm-connected-network__block"-->
-<!--        class="tm-connected-network__string"-->
-<!--      >-->
-<!--        <span>-->
-<!--          <router-link-->
-<!--            :to="{-->
-<!--              name: `block`,-->
-<!--              params: { height: connection.lastHeader.height }-->
-<!--            }"-->
-<!--          >-->
-<!--            #{{ connection.lastHeader.height | prettyInt }}-->
-<!--          </router-link>-->
-<!--        </span>-->
-<!--      </div>-->
-    </div>
-    <div
-      v-else
-      id="tm-disconnected-network"
-      class="tm-connected-network tm-disconnected-network"
-    >
-      <img
-        class="tm-connected-network-loader"
-        src="~assets/images/loader-white.svg"
-        alt="a small spinning circle to display loading"
-      />
-      <div
-        v-tooltip.top="'Seeking connection'"
-        class="
+      <div v-else>
+        <div
+          id="tm-disconnected-network"
+          class="tm-connected-network tm-disconnected-network"
+        >
+          <img
+            class="tm-connected-network-loader"
+            src="~assets/images/loader-white.svg"
+            alt="a small spinning circle to display loading"
+          />
+          <div
+            class="
         tm-connected-network__string
         tm-connected-network__string--connecting
       "
-      >
-        Connecting…
+          >
+            Connecting…
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -87,7 +74,9 @@ export default {
   computed: {
     ...mapState([`connection`]),
     networkTooltip() {
-      return `You're connected to ${this.connection.lastHeader.chain_title}`
+      return this.connection.connected
+        ? `You're connected to ${this.connection.lastHeader.chain_title}`
+        : "Seeking connection"
     }
   }
 }

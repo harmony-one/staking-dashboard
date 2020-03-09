@@ -137,7 +137,7 @@ module.exports = function(
         }
       }
 
-      if (!cache[STAKING_DISTRO]) {
+      if (cache[STAKING_DISTRO]) {
         cache[STAKING_NETWORK_INFO].staking_distro = cache[STAKING_DISTRO]
       }
 

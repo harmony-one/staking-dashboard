@@ -23,6 +23,9 @@
           </a>
         </div>
       </div>
+      <div v-if="networkInfo.staking_distro" style="margin: 15px 0 30px 0;">
+        <AllStakesChart :data="networkInfo.staking_distro" />
+      </div>
       <div v-if="isNetworkInfoLoading">
         <div class="filterOptions">
           <TmField
@@ -68,6 +71,7 @@
 <script>
 import { mapState } from "vuex"
 import TableValidators from "staking/TableValidators"
+import AllStakesChart from "staking/AllStakesChart"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
@@ -82,7 +86,8 @@ export default {
     PageContainer,
     TmField,
     TmBtn,
-    TmDataLoading
+    TmDataLoading,
+    AllStakesChart
   },
   filters: {
     ones,
@@ -131,7 +136,7 @@ export default {
     this.$store.dispatch("getDelegates")
 
     console.log(this)
-  },
+  }
 }
 </script>
 
@@ -196,10 +201,9 @@ export default {
 
 .networkInfo {
   display: flex;
-  margin: 1rem 0 20px;
+  margin: 1rem 0 0;
   justify-content: space-between;
-  border-bottom: 1px solid var(--bc-dim);
-  border-top: 1px solid var(--bc-dim);
+  align-items: flex-end;
   padding: 0.5rem 1rem;
 
   &-item {

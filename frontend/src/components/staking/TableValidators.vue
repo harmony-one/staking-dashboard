@@ -146,7 +146,7 @@ export default {
         },
         {
           title: `Total ONE staked`,
-          value: `total_stake`,
+          value: `average_stake_by_bls`,
           tooltip: `Total ONE staked`
         },
         {

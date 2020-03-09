@@ -40,7 +40,7 @@
       {{ validator.rate | percent }}
     </td>
     <td>
-      {{ validator.total_stake | ones | zeroDecimals }}
+      {{ validator.average_stake_by_bls | ones | zeroDecimals }}
     </td>
     <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{ validator.voting_power | percent }}

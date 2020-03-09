@@ -1,6 +1,6 @@
 <template>
   <tr
-    class="li-validator"
+    :class="rowClass"
     :data-moniker="validator.moniker"
     @click="
       $router.push({
@@ -58,6 +58,7 @@ import {
   twoDecimals
 } from "scripts/num"
 import ValidatorLogo from "./components/ValidatorLogo"
+import { mapState } from "vuex"
 
 export default {
   name: `li-validator`,
@@ -68,7 +69,7 @@ export default {
     shortDecimals,
     percent,
     toLower: text => text.toLowerCase(),
-    toClassName: text => text.toLowerCase().replace(/ /g, '_'),
+    toClassName: text => text.toLowerCase().replace(/ /g, "_"),
     zeroDecimals,
     twoDecimals
   },
@@ -88,6 +89,7 @@ export default {
     }
   },
   computed: {
+    ...mapState({ networkInfo: state => state.connection.networkInfo }),
     status() {
       if (
         this.validator.jailed ||
@@ -98,6 +100,15 @@ export default {
         return `Not elected`
       return `Elected`
     },
+    rowClass: state => ({
+      "li-validator": true,
+      red:
+        state.validator.average_stake_by_bls >
+        state.networkInfo.effective_median_stake,
+      green:
+        state.validator.average_stake_by_bls <=
+        state.networkInfo.effective_median_stake
+    }),
     status_detailed() {
       if (this.validator.jailed) return `Temporally banned from the network`
       if (this.validator.tombstoned) return `Banned from the network`
@@ -110,13 +121,21 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .li-validator {
   padding: 0.5rem 1rem;
   margin-bottom: 0.25rem;
-  border-bottom: 1px solid var(--bc-dim);
+  border-bottom: 1px solid #dfdfdf;
   border-radius: 0.25rem;
   color: var(--txt-black);
+
+  &.red {
+    background-color: #ff000018;
+  }
+
+  &.green {
+    background-color: #00ff0010;
+  }
 }
 
 .li-validator:last-child {

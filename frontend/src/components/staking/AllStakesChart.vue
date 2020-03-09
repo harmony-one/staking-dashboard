@@ -60,13 +60,11 @@ export default {
   }),
   computed: {
     chartdata() {
-      console.log(1111, this.data)
-
       return {
         labels: this.data.map((v, idx) => idx),
         datasets: [
           {
-            label: "Total ONE Staked",
+            label: "Staked ONE distribution",
             borderColor: "#0a93eb",
             borderWidth: 3,
             fill: false,

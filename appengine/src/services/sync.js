@@ -9,10 +9,12 @@ const VALIDATOR_INFO = 'VALIDATOR_INFO'
 const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
+const STAKING_DISTRO = 'STAKING_DISTRO'
 const MAX_LENGTH = 30
 const VOTING_POWER = 'VOTING_POWER'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
+const SYNC_PERIOD_LONGER = 600000
 const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
@@ -44,7 +46,8 @@ module.exports = function(
     DELEGATIONS_BY_DELEGATOR: {},
     DELEGATIONS_BY_VALIDATOR: {},
     STAKING_NETWORK_INFO: {},
-    VOTING_POWER: {}
+    VOTING_POWER: {},
+    STAKING_DISTRO: []
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -132,6 +135,10 @@ module.exports = function(
           cache[STAKING_NETWORK_INFO].effective_median_stake =
             medianStakeRes.data.result
         }
+      }
+
+      if (!cache[STAKING_DISTRO]) {
+        cache[STAKING_NETWORK_INFO].staking_distro = cache[STAKING_DISTRO]
       }
 
       // console.log("getAllValidatorAddressesData", res.data)
@@ -400,6 +407,18 @@ module.exports = function(
         '/',
         bodyParams('hmy_getSuperCommittees')
       )
+
+      cache[STAKING_DISTRO] = _.concat(
+        _.get(res, 'data.result.current.Deciders.0.committee-members'),
+        _.get(res, 'data.result.current.Deciders.1.committee-members'),
+        _.get(res, 'data.result.current.Deciders.2.committee-members'),
+        _.get(res, 'data.result.current.Deciders.3.committee-members')
+      )
+        .filter(item => !item['is-harmony-slot'])
+        .map(item => item['effective-stake'])
+        .sort()
+
+      console.log('staking distro: ', cache[STAKING_DISTRO])
 
       _.range(0, 4).forEach(shardID => {
         const committeeMembers = _.get(

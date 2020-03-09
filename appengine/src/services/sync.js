@@ -198,6 +198,7 @@ module.exports = function(
       }
     } catch (err) {
       console.log('error when processValidatorWithPage: ', err)
+      return 0
     }
   }
 
@@ -387,7 +388,11 @@ module.exports = function(
     let totalValidators = 0
     let page = 0
     while (totalValidators < cache[VALIDATORS].length) {
-      totalValidators += await processValidatorWithPage(page)
+      const count = await processValidatorWithPage(page)
+      totalValidators += count
+      if (count === 0) {
+        break
+      }
       page += 1
       await sleep(SLEEP_TIME)
     }
@@ -414,12 +419,17 @@ module.exports = function(
       )
 
       cache[STAKING_DISTRO] = _.concat(
-        _.get(res, 'data.result.current.Deciders.0.committee-members'),
-        _.get(res, 'data.result.current.Deciders.1.committee-members'),
-        _.get(res, 'data.result.current.Deciders.2.committee-members'),
-        _.get(res, 'data.result.current.Deciders.3.committee-members')
+        _.get(res, 'data.result.current.Deciders.0.committee-members') || [],
+        _.get(res, 'data.result.current.Deciders.1.committee-members') || [],
+        _.get(res, 'data.result.current.Deciders.2.committee-members') || [],
+        _.get(res, 'data.result.current.Deciders.3.committee-members') || []
       )
-        .filter(item => !item['is-harmony-slot'])
+        .filter(
+          item =>
+            !!item['is-harmony-slot'] &&
+            !item['is-harmony-slot'] &&
+            !item['effective-stake']
+        )
         .map(item => item['effective-stake'])
         .sort()
 
@@ -442,7 +452,10 @@ module.exports = function(
         }
       })
     } catch (err) {
-      console.log('error when updatingVotingPower', err)
+      console.log(
+        `error when updatingVotingPower for ${BLOCKCHAIN_SERVER}`,
+        err
+      )
     }
   }
 

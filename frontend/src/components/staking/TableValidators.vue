@@ -145,9 +145,9 @@ export default {
           tooltip: `Commission fees`
         },
         {
-          title: `Total ONE staked`,
+          title: `Average ONE staked`,
           value: `average_stake_by_bls`,
-          tooltip: `Total ONE staked`
+          tooltip: `Average ONE staked`
         },
         {
           title: `Voting Power`,

@@ -419,17 +419,16 @@ module.exports = function(
       )
 
       cache[STAKING_DISTRO] = _.concat(
-        _.get(res, 'data.result.current.Deciders.0.committee-members') || [],
-        _.get(res, 'data.result.current.Deciders.1.committee-members') || [],
-        _.get(res, 'data.result.current.Deciders.2.committee-members') || [],
-        _.get(res, 'data.result.current.Deciders.3.committee-members') || []
+        _.get(res, 'data.result.current.quorum-deciders.0.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.1.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.2.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.3.committee-members') ||
+          []
       )
-        .filter(
-          item =>
-            !!item['is-harmony-slot'] &&
-            !item['is-harmony-slot'] &&
-            !item['effective-stake']
-        )
+        .filter(item => !item['is-harmony-slot'])
         .map(item => item['effective-stake'])
         .sort()
 

@@ -109,11 +109,11 @@ export default {
             value: `stake`,
             tooltip: `Stake`
           },
-          {
-            title: `Reward (up to date)`,
-            value: `rewards`,
-            tooltip: `Reward (up to date)`
-          },
+          // {
+          //   title: `Reward (up to date)`,
+          //   value: `rewards`,
+          //   tooltip: `Reward (up to date)`
+          // },
           {
             title: `APR %`,
             value: `apr`,

@@ -254,6 +254,11 @@ module.exports = function(
           self_stake: selfStake,
           total_stake: totalStake,
           average_stake: averageStake,
+          average_stake_by_bls:
+            Array.isArray(res['bls-public-keys']) &&
+            res['bls-public-keys'].length > 0
+              ? totalStake / (1.0 * res['bls-public-keys'].length)
+              : 0,
           remainder,
           voting_power: Array.isArray(res['bls-public-keys'])
             ? _.sumBy(res['bls-public-keys'], item =>

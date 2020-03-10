@@ -35,25 +35,26 @@
         <h4>Voting Power / Total Stake</h4>
         <span id="page-profile__power">
           {{ validator.voting_power | percent }} /
-          {{ (validator.total_effective_stake / 1e18) | shortDecimals }}
+          {{ validator.total_effective_stake | ones | shortDecimals }}
         </span>
       </li>
       <li>
         <h4>Self Stake</h4>
         <span id="page-profile__self-bond"
-          >{{ selfBondPercent }} / {{ selfBondAmount }}</span
+          >{{ selfBondPercent }} /
+          {{ validator.self_stake | ones | shortDecimals }}</span
         >
       </li>
       <li>
         <h4>Min Self Delegation</h4>
         <span id="page-profile__min_self_delegation">
-          {{ (validator.min_self_delegation / 1e18) | shortDecimals }}
+          {{ validator.min_self_delegation | ones | shortDecimals }}
         </span>
       </li>
       <li>
         <h4>Max Total Delegation</h4>
         <span id="page-profile__max_total_delegation">
-          {{ (validator.max_total_delegation / 1e18) | shortDecimals }}
+          {{ validator.max_total_delegation | ones | shortDecimals }}
         </span>
       </li>
       <li>
@@ -86,7 +87,7 @@
   </div>
 </template>
 <script>
-import { shortDecimals, percent } from "scripts/num"
+import { shortDecimals, percent, ones } from "scripts/num"
 import Bech32 from "common/Bech32"
 
 export default {
@@ -94,6 +95,7 @@ export default {
   filters: {
     shortDecimals,
     percent,
+    ones,
     // empty descriptions have a strange '[do-not-modify]' value which we don't want to show
     noBlanks: function(value) {
       if (!value || value === `[do-not-modify]`) return `--`
@@ -107,9 +109,6 @@ export default {
   computed: {
     selfBondPercent() {
       return percent(this.validator.self_stake / this.validator.total_stake)
-    },
-    selfBondAmount() {
-      return shortDecimals(this.validator.self_stake / 1e18)
     },
     website() {
       let url = this.validator.website

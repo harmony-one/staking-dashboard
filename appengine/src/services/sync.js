@@ -190,7 +190,7 @@ module.exports = function(
         )
 
         res.data.result.forEach(elem =>
-          processValidatorInfoData(elem['one-address'] || elem.address, elem)
+          processValidatorInfoData(elem.validator.address, elem)
         )
         return res.data.result.length
       } else {
@@ -214,9 +214,10 @@ module.exports = function(
     }
   }
 
-  const processValidatorInfoData = async (address, res) => {
+  const processValidatorInfoData = async (address, result) => {
     try {
-      if (isNotEmpty(res)) {
+      if (isNotEmpty(result)) {
+        const res = result.validator
         let selfStake = 0
         let totalStake = 0
         let averageStake = 0
@@ -249,9 +250,8 @@ module.exports = function(
         const utcDate = new Date(Date.now())
         const dayIndex = getDayIndex(utcDate)
 
+        console.log(result['current-epoch-voting-power'])
         const validatorInfo = {
-          ...res.description,
-          ...res.commission,
           self_stake: selfStake,
           total_stake: totalStake,
           average_stake: averageStake,
@@ -261,11 +261,10 @@ module.exports = function(
               ? totalStake / (1.0 * res['bls-public-keys'].length)
               : 0,
           remainder,
-          voting_power: Array.isArray(res['bls-public-keys'])
-            ? _.sumBy(res['bls-public-keys'], item =>
-                cache[VOTING_POWER][item] ? cache[VOTING_POWER][item] : 0
-              ) / 4.0
-            : undefined,
+          voting_power: _.sumBy(
+            result['current-epoch-voting-power'],
+            item => parseFloat(item['voting-power-raw']) / 4.0
+          ),
           signed_blocks: 50,
           blocks_should_sign: 100,
           uctDate: utcDate,
@@ -434,22 +433,22 @@ module.exports = function(
 
       console.log('staking distro: ', cache[STAKING_DISTRO])
 
-      _.range(0, 4).forEach(shardID => {
-        const committeeMembers = _.get(
-          res,
-          `data.result.current.Deciders.${shardID}.committee-members`
-        )
+      // _.range(0, 4).forEach(shardID => {
+      //   const committeeMembers = _.get(
+      //     res,
+      //     `data.result.current.Deciders.${shardID}.committee-members`
+      //   )
 
-        if (committeeMembers && Array.isArray(committeeMembers)) {
-          committeeMembers.forEach(elem => {
-            const blsKey = elem['bls-public-key']
-            const power = elem['voting-power-%']
-            if (!!blsKey && !!power) {
-              cache[VOTING_POWER][blsKey] += parseFloat(power)
-            }
-          })
-        }
-      })
+      //   if (committeeMembers && Array.isArray(committeeMembers)) {
+      //     committeeMembers.forEach(elem => {
+      //       const blsKey = elem['bls-public-key']
+      //       const power = elem['voting-power-%']
+      //       if (!!blsKey && !!power) {
+      //         cache[VOTING_POWER][blsKey] += parseFloat(power)
+      //       }
+      //     })
+      //   }
+      // })
     } catch (err) {
       console.log(
         `error when updatingVotingPower for ${BLOCKCHAIN_SERVER}`,

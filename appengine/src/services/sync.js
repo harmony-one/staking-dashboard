@@ -429,7 +429,7 @@ module.exports = function(
       )
         .filter(item => !item['is-harmony-slot'])
         .map(item => item['effective-stake'])
-        .sort()
+        .sort((a, b) => b - a)
 
       console.log('staking distro: ', cache[STAKING_DISTRO])
 

@@ -13,7 +13,7 @@
         <Widget style="width: 450px;">
           <MainBlock :validator="validator" />
         </Widget>
-        <Widget title="General info" style="width: 250px;">
+        <Widget title="General info" style="width: 280px;">
           <GeneralInfoBlock :validator="validator" />
         </Widget>
         <Widget title="Performance" style="width: 250px;">
@@ -146,7 +146,7 @@ export default {
           this.$route.params.validator
         )
 
-        history = history.sort((a, b) => a.index < b.index ? -1 : 1)
+        history = history.sort((a, b) => (a.index < b.index ? -1 : 1))
 
         this.allHistory = history
         this.validatorHistory = history

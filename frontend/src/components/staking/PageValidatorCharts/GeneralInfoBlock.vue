@@ -21,7 +21,7 @@
       <li class="column">
         <h4>Validator Address</h4>
         <span>
-          <Bech32 :address="validator.operator_address" />
+          <Bech32 :address="validator.operator_address" :long-form="true" />
         </span>
       </li>
       <li class="column">
@@ -30,7 +30,7 @@
       </li>
     </ul>
 
-    <ul class="row" v-show="false">
+    <ul v-show="false" class="row">
       <li>
         <h4>Voting Power / Total Stake</h4>
         <span id="page-profile__power">
@@ -100,10 +100,10 @@ export default {
       return value
     }
   },
-  props: ["validator"],
   components: {
     Bech32
   },
+  props: ["validator"],
   computed: {
     selfBondPercent() {
       return percent(this.validator.self_stake / this.validator.total_stake)

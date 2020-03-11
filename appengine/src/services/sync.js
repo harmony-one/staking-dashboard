@@ -1,6 +1,11 @@
 const axios = require('axios')
 const _ = require('lodash')
-const { isNotEmpty, bodyParams, bodyParams2, changePercentage } = require('./helpers')
+const {
+  isNotEmpty,
+  bodyParams,
+  bodyParams2,
+  changePercentage
+} = require('./helpers')
 
 const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
 const STAKING_NETWORK_INFO_PREV_EPOCH = 'STAKING_NETWORK_INFO_PREV_EPOCH'
@@ -20,11 +25,11 @@ const BLOCK_NUM_PER_EPOCH = 86400 / SECOND_PER_BLOCK
 const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
 
-function sleep (ms) {
+function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-module.exports = function (
+module.exports = function(
   BLOCKCHAIN_SERVER,
   chainTitle,
   updateDocument,
@@ -145,20 +150,29 @@ module.exports = function (
         cache[STAKING_NETWORK_INFO].staking_distro = cache[STAKING_DISTRO]
       }
 
-      if (cache[STAKING_NETWORK_INFO].current_epoch > prevNetworkInfo.current_epoch) {
+      if (
+        cache[STAKING_NETWORK_INFO].current_epoch >
+        prevNetworkInfo.current_epoch
+      ) {
         cache[STAKING_NETWORK_INFO_PREV_EPOCH] = prevNetworkInfo
       }
 
       if (!_.isEmpty(cache[STAKING_NETWORK_INFO_PREV_EPOCH])) {
         const currentMS = cache[STAKING_NETWORK_INFO].effective_median_stake
-        const prevMS = cache[STAKING_NETWORK_INFO_PREV_EPOCH].effective_median_stake
+        const prevMS =
+          cache[STAKING_NETWORK_INFO_PREV_EPOCH].effective_median_stake
 
-        cache[STAKING_NETWORK_INFO].effective_median_stake_changed = changePercentage(currentMS, prevMS)
+        cache[
+          STAKING_NETWORK_INFO
+        ].effective_median_stake_changed = changePercentage(currentMS, prevMS)
 
         const currentTS = cache[STAKING_NETWORK_INFO]['total-staking']
         const prevTS = cache[STAKING_NETWORK_INFO_PREV_EPOCH]['total-staking']
 
-        cache[STAKING_NETWORK_INFO]['total-staking-changed'] = changePercentage(currentTS, prevTS)
+        cache[STAKING_NETWORK_INFO]['total-staking-changed'] = changePercentage(
+          currentTS,
+          prevTS
+        )
       }
 
       // console.log("getAllValidatorAddressesData", res.data)
@@ -209,9 +223,11 @@ module.exports = function (
           res.data.result.length
         )
 
-        res.data.result.forEach(elem =>
-          processValidatorInfoData(elem.validator.address, elem)
-        )
+        res.data.result.forEach(elem => {
+          if (elem && elem.validator && elem.validator.address) {
+            processValidatorInfoData(elem.validator.address, elem)
+          }
+        })
         return res.data.result.length
       } else {
         return 0
@@ -270,7 +286,10 @@ module.exports = function (
         const utcDate = new Date(Date.now())
         const dayIndex = getDayIndex(utcDate)
 
-        console.log(result['current-epoch-voting-power'])
+        console.log(
+          'current-epoch-voting-power',
+          result['current-epoch-voting-power']
+        )
         const validatorInfo = {
           self_stake: selfStake,
           total_stake: totalStake,

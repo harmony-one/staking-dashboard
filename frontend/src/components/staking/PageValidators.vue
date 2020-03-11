@@ -10,10 +10,14 @@
           <div class="networkInfo-item">
             <h4>Effective median stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
+            <PercentageChange
+              :amount="networkInfo.effective_median_stake_changed"
+            />
           </div>
           <div class="networkInfo-item">
             <h4>Total stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
+            <PercentageChange :amount="networkInfo['total-staking-changed']" />
           </div>
         </div>
         <div class="networkInfo-item">
@@ -78,6 +82,7 @@ import TmBtn from "common/TmBtn"
 import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
+import PercentageChange from "./components/PercentageChange"
 
 export default {
   name: `tab-validators`,
@@ -87,7 +92,8 @@ export default {
     TmField,
     TmBtn,
     TmDataLoading,
-    AllStakesChart
+    AllStakesChart,
+    PercentageChange
   },
   filters: {
     ones,

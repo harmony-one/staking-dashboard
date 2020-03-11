@@ -1,7 +1,7 @@
 <template>
   <span :class="percentageChangeClass">
     <i>{{ sign }}</i
-    >{{ amount | percent }}
+    >{{ amount | percent }} from the previous epoch
   </span>
 </template>
 
@@ -38,6 +38,7 @@ export default {
 <style lang="scss">
 .percentageChangeContainer {
   font-size: 14px;
+  font-style: italic;
 
   i {
     font-size: 16px;

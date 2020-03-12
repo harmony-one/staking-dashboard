@@ -145,26 +145,21 @@ export default {
 </script>
 <style scoped>
 .balance-header {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   max-width: 360px;
   margin: 0 var(--unit);
 }
 
 .values-container {
-  display: flex;
   position: relative;
   width: 100%;
-  padding: 1rem 0;
-  flex-direction: column;
 }
 
 .values-container h2 {
   font-size: 24px;
   font-weight: 500;
   line-height: 24px;
-  color: var(--txt);
+  color: white;
 }
 
 .values-container h3 {
@@ -173,10 +168,15 @@ export default {
   white-space: nowrap;
 }
 
-.total-atoms,
+.total-atoms {
+  color: white;
+  padding: var(--unit);
+  background: var(--blue);
+  border-top-left-radius: var(--half);
+  border-top-right-radius: var(--half);
+}
 .available-atoms,
 .rewards {
-  padding-right: 2.5rem;
 }
 
 .rewards h2 {
@@ -193,7 +193,6 @@ export default {
 .button-container {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0;
   width: 100%;
   border-bottom: 1px solid var(--bc-dim);
   border-top: 1px solid var(--bc-dim);
@@ -209,7 +208,8 @@ export default {
 }
 
 .small-container {
-  padding-top: 1rem;
+  background: white;
+  padding-top: var(--unit);
   justify-content: space-between;
 }
 </style>

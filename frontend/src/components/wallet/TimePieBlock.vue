@@ -4,7 +4,7 @@
       <ChartPie
         :chartdata="chartdata"
         :options="options"
-        style="height: 200px; width: 200px;"
+        style="height: 200px; width: 200px; margin: auto"
       />
     </div>
     <div class="legend">{{ timeNextEpoch / 60 | timeLeft }}</div>
@@ -27,7 +27,7 @@ export default {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutoutPercentage: 50,
+      cutoutPercentage: 92,
       plugins: {
         labels: {
           render: () => ""
@@ -67,7 +67,7 @@ export default {
 
 <style>
 .chart-container-stake-allocate {
-  margin: 5px 10px 15px 0;
+  margin: var(--unit) auto;
   position: relative;
 }
 
@@ -88,6 +88,8 @@ export default {
  */
 
 .legend {
+  margin-top: -122px;
+  padding-bottom: 100px;
   width: 100%;
   text-align: center;
 }

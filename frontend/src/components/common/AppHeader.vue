@@ -1,5 +1,6 @@
 <template>
-  <nav class="app-header" :class="{ mobile: !desktop }">
+  <nav class="app-header">
+  <!-- <nav class="app-header" :class="{ mobile: !desktop }"> -->
     <div class="container">
       <div class="header-item" :class="{ open: open }">
         <a href="/">
@@ -9,16 +10,16 @@
             alt="Harmony Staking spaceship accelerating into a colourful space sky"
           />
         </a>
-        <template v-if="!desktop">
+        <!-- <template v-if="!desktop">
           <div v-if="open" class="close-menu" @click="close()">
             <i class="material-icons mobile-menu-action">close</i>
           </div>
           <div v-if="!open" class="open-menu" @click="show()">
             <i class="material-icons mobile-menu-action">more_vert</i>
           </div>
-        </template>
+        </template> -->
       </div>
-      <AppMenu v-if="open || desktop" @close="close" />
+      <AppMenu @close="close" />
     </div>
   </nav>
 </template>
@@ -80,13 +81,11 @@ export default {
   min-height: 100vh;
 }
 
-
 .mobile-menu-action {
   font-size: 1.5rem !important;
 }
 
 .app-header > .container {
-  border-right: 1px solid var(--light);
   flex: 1;
   display: flex;
   flex-flow: column nowrap;

@@ -17,7 +17,7 @@
     />
     <div class="app-menu-main">
       <router-link
-        class="app-menu-item hide-xs"
+        class="app-menu-item"
         to="/portfolio"
         exact="exact"
         title="Portfolio"
@@ -27,7 +27,7 @@
         <i class="material-icons">chevron_right</i>
       </router-link>
       <router-link
-        class="app-menu-item hide-xs"
+        class="app-menu-item"
         to="/validators"
         title="Validators"
         @click.native="close"
@@ -101,7 +101,7 @@
       </router-link>-->
 
       <router-link
-        class="app-menu-item hide-m"
+        class="app-menu-item"
         to="/terms"
         exact="exact"
         title="Terms"
@@ -111,7 +111,7 @@
       </router-link>
 
       <router-link
-        class="app-menu-item hide-m"
+        class="app-menu-item"
         to="/privacy"
         exact="exact"
         title="Privacy"

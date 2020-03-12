@@ -56,8 +56,8 @@ export default {
 .network-item {
   display: flex;
   align-items: center;
-  border: 1px solid var(--bc-dim);
-  background: var(--app-fg);
+  border: 1px solid var(--light);
+  background: white;
   width: 100%;
   position: relative;
   padding: 0.5rem 1rem;

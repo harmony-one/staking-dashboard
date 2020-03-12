@@ -103,17 +103,12 @@ export default {
 
 .tm-connected-network {
   align-items: center;
-  border-radius: 0.25rem;
-  color: var(--text-white);
-  display: flex;
-  font-size: var(--sm);
-  justify-content: space-between;
-  padding: 0.5rem 0 0;
+  color: var(--gray);
 }
 
 .tm-connected-network .chain-id {
   font-weight: 500;
-  padding-right: 1rem;
+  padding-left: var(--unit);
 }
 
 .tm-connected-network .exit {

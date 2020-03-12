@@ -114,8 +114,6 @@ export default {
 .tm-page {
   position: relative;
   width: 100%;
-  margin: 0 auto;
-  padding: 0 var(--double);
   background:#F6F7FB;
 }
 
@@ -125,6 +123,8 @@ export default {
 
 .tm-page-main {
   position: relative;
+  padding: var(--double);
+  border-bottom: 1px solid var(--light);
 }
 
 .tm-page-title {
@@ -221,7 +221,6 @@ h4 {
 
 @media screen and (min-width: 1024px) {
   .tm-page {
-    margin: 1rem auto;
   }
 }
 

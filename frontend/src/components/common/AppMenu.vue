@@ -186,10 +186,6 @@ export default {
   font-weight: bold;
   font-size: 14px;
   color: var(--gray);
-  border-left: 4px solid var(--blue);
-}
-.app-menu .app-menu-item--link:hover {
-  color: var(--link);
 }
 
 .app-menu .app-menu-item.router-link-active {
@@ -213,12 +209,10 @@ export default {
 }
 
 .user-box {
+  margin: var(--unit) 0;
+  padding-left: 20px;
   font-size: 14px;
-  margin: 0 1rem 2rem 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--text-white);
-  border: 2px solid var(--bright-light);
-  border-radius: var(--half);
+  color: var(--gray);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -268,6 +262,23 @@ export default {
 .app-menu .app-menu-item.router-link-active {
   background: var(--app-fg);
 }
+.app-menu-item i {
+  padding-right: var(--half);
+  align-self: flex-end;
+}
+.app-menu-item:hover, .app-menu-item.router-link-active {
+  color: var(--link);
+  border-left: 4px solid var(--blue);
+}
+
+.app-menu-item:hover {
+  color: var(--blue);
+}
+
+.session-link {
+  margin: 2.5rem 1rem 1rem;
+}
+
 
 .app-menu .app-menu-item.router-link-active i {
   color: white;

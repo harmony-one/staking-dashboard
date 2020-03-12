@@ -45,6 +45,7 @@ a:hover {
   flex: 1;
   display: flex;
   flex-flow: column nowrap;
+  border-left: 1px solid var(--light);
 }
 
 .tm-field {
@@ -112,22 +113,21 @@ input.tm-field {
   display: block;
 }
 
+#app {
+  flex-flow: row nowrap;
+}
+
+#app-content {
+  display: flex;
+  min-width: 0;
+}
+
 @media screen and (max-width: 1023px) {
-  #app-content {
+  /* #app-content {
     padding-top: 44px;
-  }
+  } */
 }
 
-@media screen and (min-width: 1023px) {
-  #app {
-    flex-flow: row nowrap;
-  }
-
-  #app-content {
-    display: flex;
-    min-width: 0;
-  }
-}
 
 @media screen and (max-width: 667px) {
   .hide-xs {

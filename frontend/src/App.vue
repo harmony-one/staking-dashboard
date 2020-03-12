@@ -11,7 +11,7 @@
         </div>
         <router-view />
       </div>
-      <MobileMenu />
+      <!-- <MobileMenu /> -->
       <TmNotifications :notifications="notifications" />
     </div>
   </div>

@@ -42,7 +42,7 @@
           route="login"
         />
       </div>
-      <router-link to="create">
+      <router-link to="create" style="padding-left: 16px;">
         Want to create a new address?
       </router-link>
     </div>

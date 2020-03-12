@@ -85,13 +85,13 @@ export default {
 }
 
 @media screen and (max-width: 425px) {
-  .header-buttons .tm-btn {
+  /* .header-buttons .tm-btn {
     width: 100%;
-  }
+  } */
 }
 
 @media screen and (max-width: 767px) {
-  .tm-page-header-body {
+  /* .tm-page-header-body {
     padding: 0;
   }
 
@@ -111,6 +111,6 @@ export default {
 
   .tm-page-header-text .tm-page-header-body {
     display: block;
-  }
+  } */
 }
 </style>

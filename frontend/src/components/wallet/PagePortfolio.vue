@@ -36,7 +36,7 @@
             title="Time until next epoch"
             class="time_next_epoch"
           >
-            <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" />
+            <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" class="time-body" />
           </LightWidget>
         </div>
         <DelegationsOverview />
@@ -84,22 +84,23 @@
   }
 
 
-  .delegation-body {
+  .delegation-body, .time-body {
     padding: var(--unit);
+    text-align: center;
   }
 
   @media screen and (min-width: 1300px) and (max-width: 1400px) {
-    > div {
-      margin-right: 10px;
-    }
+    // > div {
+    //   margin-right: 10px;
+    // }
 
-    .balance {
-      max-width: 380px;
-    }
+    // .balance {
+    //   max-width: 380px;
+    // }
 
-    .time_next_epoch {
-      max-width: 280px;
-    }
+    // .time_next_epoch {
+    //   max-width: 280px;
+    // }
   }
 }
 </style>

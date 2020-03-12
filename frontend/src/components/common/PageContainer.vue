@@ -195,7 +195,7 @@ h4 {
 }
 
 @media screen and (max-width: 667px) {
-  .row {
+  /* .row {
     flex-direction: column;
   }
 
@@ -204,6 +204,6 @@ h4 {
   }
 
   .tm-page {
-  }
+  } */
 }
 </style>

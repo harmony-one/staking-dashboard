@@ -122,6 +122,7 @@ export default {
 }
 
 .tm-page-main {
+  background:#F6F7FB;
   position: relative;
   padding: var(--double);
   border-bottom: 1px solid var(--light);
@@ -225,7 +226,7 @@ h4 {
 }
 
 @media screen and (max-width: 667px) {
-  .row {
+  /* .row {
     flex-direction: column;
   }
 
@@ -235,6 +236,6 @@ h4 {
 
   .tm-page {
     padding-bottom: 4rem;
-  }
+  } */
 }
 </style>

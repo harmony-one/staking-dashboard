@@ -77,6 +77,7 @@ export default {
   position: relative;
   width: var(--width-side);
   background: white;
+  min-height: 100vh;
 }
 
 
@@ -85,6 +86,7 @@ export default {
 }
 
 .app-header > .container {
+  border-right: 1px solid var(--light);
   flex: 1;
   display: flex;
   flex-flow: column nowrap;

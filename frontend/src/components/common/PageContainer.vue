@@ -86,7 +86,6 @@ export default {
 .tm-page {
   position: relative;
   width: 100%;
-  padding: 0 var(--double);
 }
 
 .tm-page.small {
@@ -95,6 +94,7 @@ export default {
 
 .tm-page-main {
   position: relative;
+  padding: 0 var(--double);
 }
 
 .tm-page-title {
@@ -191,7 +191,6 @@ h4 {
 
 @media screen and (min-width: 1024px) {
   .tm-page {
-    padding: 0 var(--double);
   }
 }
 
@@ -205,7 +204,6 @@ h4 {
   }
 
   .tm-page {
-    padding-bottom: 4rem;
   }
 }
 </style>

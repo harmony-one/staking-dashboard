@@ -40,6 +40,15 @@ export default {
 </script>
 
 <style scoped>
+.tm-page-header {
+  background: white;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  color: var(--gray);
+  border-bottom: 1px solid var(--light);
+}
+
 .header-buttons {
   padding: 0 1rem 1rem 0;
 }
@@ -58,7 +67,6 @@ export default {
 .tm-page-header-text .tm-page-header-body {
   flex: 1;
   display: flex;
-  justify-content: space-between;
 }
 
 .tm-page-header-text .tool-bar i.material-icons {
@@ -71,9 +79,9 @@ export default {
 }
 
 .tm-page-header-text h2 {
-  font-size: var(--xl);
-  font-weight: 500;
-  color: var(--bright);
+  padding-left: var(--double);
+  text-transform: uppercase;
+  color: var(--blue);
 }
 
 @media screen and (max-width: 425px) {

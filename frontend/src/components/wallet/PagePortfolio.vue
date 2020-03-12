@@ -15,6 +15,7 @@
       :loaded="wallet.loaded && delegation.loaded"
       :error="wallet.error || delegation.error"
       :sign-in-required="true"
+      title="Portfolio"
     >
       <template slot="managed-body">
         <div v-if="session.signedIn" class="portfolio-top-container">
@@ -61,7 +62,6 @@
   flex-flow: row wrap;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: var(--unit);
 
   > div {
     margin-right: var(--unit);

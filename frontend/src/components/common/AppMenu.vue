@@ -1,26 +1,7 @@
 <template>
   <menu class="app-menu">
-    <div v-if="session.signedIn" class="sign-out">
-      <a id="sign-out" @click="signOut()">
-        <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
-        Sign out
-      </a>
-    </div>
-    <div v-if="session.signedIn" class="user-box">
-      <div>
-        <h3>Your Address</h3>
-        <Bech32 :address="session.address || ''" />
-      </div>
-    </div>
-    <TmBtn
-      v-else
-      id="sign-in"
-      class="session-link"
-      value="Sign In"
-      type="secondary"
-      size="small"
-      @click.native="signIn()"
-    />
+    
+
     <div class="app-menu-main">
       <router-link
         class="app-menu-item hide-xs"
@@ -126,6 +107,34 @@
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
     </div>
+
+
+
+    <div v-if="session.signedIn" class="user-box">
+      <div>
+        <h3>Your Address</h3>
+        <Bech32 :address="session.address || ''" />
+      </div>
+    </div>
+
+    <div v-if="session.signedIn" class="sign-out">
+      <a id="sign-out" @click="signOut()">
+        <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
+        Sign out
+      </a>
+    </div>
+    
+    <TmBtn
+      v-else
+      id="sign-in"
+      class="session-link"
+      value="Sign In"
+      type="secondary"
+      size="small"
+      @click.native="signIn()"
+    />
+
+
     <ConnectedNetwork />
   </menu>
 </template>
@@ -173,43 +182,12 @@ export default {
 <style scoped>
 
 
-.app-menu {
-  position: relative;
-  height: 100%;
-  background: white;
-  color: var(--gray);
-}
-
-.app-menu .app-menu-item {
-  font-weight: bold;
+.sign-out {
+  margin: var(--unit) 0;
+  padding-left: var(--unit);
   font-size: 14px;
   color: var(--gray);
-  border-left: 4px solid var(--blue);
 }
-.app-menu .app-menu-item--link:hover {
-  color: var(--link);
-}
-
-.app-menu .app-menu-item.router-link-active {
-  background: var(--app-fg);
-}
-
-.app-menu .app-menu-item.router-link-active i {
-  color: white;
-}
-
-.app-menu .app-menu-item.router-link-active h2 {
-  font-weight: 500;
-}
-
-.app-menu-item:hover {
-  color: var(--blue);
-}
-
-.session-link {
-  margin: 2.5rem 1rem 1rem;
-}
-
 .sign-out a {
   display: flex;
   flex-direction: row;
@@ -223,30 +201,58 @@ export default {
   font-size: 20px;
 }
 
-.sign-out {
-  font-size: 12px;
-  margin: 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--gray);
-  border: 2px solid var(--bright-light);
-  border-radius: var(--half);
-}
 
 .user-box {
+  margin: var(--unit) 0;
+  padding-left: 20px;
   font-size: 14px;
-  margin: 0 1rem 2rem 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--text-white);
-  border: 2px solid var(--bright-light);
-  border-radius: var(--half);
+  color: var(--gray);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.user-box div {
-  width: 100%;
+
+.app-menu {
+  position: relative;
+  height: 100%;
+  background: white;
+  color: var(--gray);
+  min-height: calc(100vh - 56px);
 }
+
+.app-menu-item {
+  margin: var(--unit) 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  padding: var(--half) 0 var(--half) var(--unit);
+  color: var(--gray);
+  border-left: 4px solid var(--gray);
+}
+.app-menu-item h2 {
+  flex: 1;
+  display: inline-block;
+}
+.app-menu-item i {
+  padding-right: var(--half);
+  align-self: flex-end;
+}
+.app-menu-item:hover, .app-menu-item.router-link-active {
+  color: var(--link);
+  border-left: 4px solid var(--blue);
+}
+
+.app-menu-item:hover {
+  color: var(--blue);
+}
+
+.session-link {
+  margin: 2.5rem 1rem 1rem;
+}
+
 
 
 @media screen and (max-width: 1023px) {

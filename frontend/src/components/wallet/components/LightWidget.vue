@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .widget-container {
   margin-right: var(--unit);
   display: flex;
@@ -44,4 +44,5 @@ export default {
 .widget-body {
   padding: var(--unit) 0;
 }
+
 </style>

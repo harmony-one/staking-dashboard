@@ -120,20 +120,16 @@
     <div v-if="session.signedIn" class="sign-out">
       <a id="sign-out" @click="signOut()">
         <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
-        Sign out
+        Sign Out
       </a>
     </div>
-    
-    <TmBtn
-      v-else
-      id="sign-in"
-      class="session-link"
-      value="Sign In"
-      type="secondary"
-      size="small"
-      @click.native="signIn()"
-    />
 
+    <div v-else class="sign-out">
+      <a id="sign-out" @click="signIn()">
+        <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
+        Sign In
+      </a>
+    </div>
 
     <ConnectedNetwork />
   </menu>
@@ -182,11 +178,11 @@ export default {
 <style scoped>
 
 
-.sign-out {
+.sign-out, .session-link {
   margin: var(--unit) 0;
   padding-left: var(--unit);
   font-size: 14px;
-  color: var(--gray);
+  color: var(--gray) !important;
 }
 .sign-out a {
   display: flex;
@@ -249,9 +245,6 @@ export default {
   color: var(--blue);
 }
 
-.session-link {
-  margin: 2.5rem 1rem 1rem;
-}
 
 
 

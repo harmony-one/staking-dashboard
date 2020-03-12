@@ -47,49 +47,40 @@ export default {
   font-weight: 400;
   padding: 8px 16px;
   min-width: 100px;
+  min-height: 48px;
   color: var(--bright);
   margin: 0;
-  border-radius: 0.5rem;
+  border-radius: 24px;
   cursor: pointer;
   background: var(--primary);
-  border: 2px solid var(--primary);
-  transition: all 0.5s ease;
+  border: none;
   white-space: nowrap;
   outline: none;
 }
 
 .button:hover {
-  background: var(--primary-dark);
-  border-color: var(--primary-dark);
 }
 
 .button:disabled {
-  opacity: 0.5;
-  background: var(--primary-dark);
-  border-color: var(--bc-dim);
+  opacity: 0.25;
+  background: var(--blue);
   cursor: default;
 }
 
 .button:disabled:hover {
-  background: var(--primary-dark);
-  border-color: var(--bc-dim);
+  background: var(--blue);
 }
 
 .button.secondary.active {
-  background: var(--primary-dark);
-  border: 2px solid var(--primary-dark);
+  background: var(--blue);
 }
 
 .button.secondary {
-  background: var(--primary);
+  background: var(--blue);
 }
 
 .button.secondary:hover {
-  /* background: var(--primary-hover); */
-
-  /* border: 2px solid var(--primary-hover); */
-  background: var(--primary-dark);
-  border: 2px solid var(--primary-dark);
+  opacity: 0.75;
 }
 
 .button.secondary.small {

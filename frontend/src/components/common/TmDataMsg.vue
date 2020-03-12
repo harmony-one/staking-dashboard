@@ -49,11 +49,13 @@ export default {
 
 <style>
 .tm-data-msg {
-  padding: 2rem;
+  padding: var(--unit);
   display: flex;
   align-items: center;
-  border-radius: 0.25rem;
-  border: 1px solid var(--bc);
+  
+  background: white;
+  border: 1px solid var(--light2);
+  border-radius: var(--half);
 }
 
 .tm-data-msg__icon {

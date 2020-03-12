@@ -5,10 +5,9 @@
         <a href="/">
           <img
             class="header-item-logo"
-            src="~assets/images/harmony-logo-white.svg"
+            src="~assets/images/logo-top-right.png"
             alt="Harmony Staking spaceship accelerating into a colourful space sky"
           />
-          Harmony Staking
         </a>
         <template v-if="!desktop">
           <div v-if="open" class="close-menu" @click="close()">
@@ -73,16 +72,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped language="sass">
 .app-header {
-  z-index: var(--z-appHeader);
   position: relative;
   width: var(--width-side);
+  background: white;
 }
 
-.app-header .header-item.open {
-  background: transparent;
-}
 
 .mobile-menu-action {
   font-size: 1.5rem !important;
@@ -95,12 +91,20 @@ export default {
 }
 
 .app-header .header-item {
-  padding: 1.75rem;
-  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  border-bottom: 1px solid var(--light);
+}
+
+.header-item img {
+  height: 24px;
 }
 
 .app-header .header-item a {
   display: inline-block;
+  height: 24px;
 }
 
 .header-item-logo {
@@ -108,36 +112,10 @@ export default {
 }
 
 @media screen and (max-width: 1023px) {
-  .app-header {
-    width: 100%;
-    min-height: 0;
-  }
-
-  .container {
-    background: var(--app-nav);
-    position: fixed;
-    width: 100%;
-  }
-
-  .app-header .header-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0.5rem 0.5rem 1rem;
-    color: white;
-    cursor: pointer;
-  }
-
-  .header-item-logo {
-    height: 2rem;
-  }
+  
 }
 
 @media screen and (min-width: 1024px) {
-  .app-header > .container {
-    position: fixed;
-    min-height: 100vh;
-    background: var(--app-nav);
-  }
+  
 }
 </style>

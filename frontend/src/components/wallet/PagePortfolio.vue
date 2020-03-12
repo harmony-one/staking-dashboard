@@ -18,9 +18,9 @@
     >
       <template slot="managed-body">
         <div v-if="session.signedIn" class="portfolio-top-container">
-          <Widget title="" class="balance">
+          <LightWidget title="Portfolio" class="balance">
             <TmBalance />
-          </Widget>
+          </LightWidget>
           <LightWidget title="Stake allocation" class="delegations">
             <div v-if="delegation.loading">
               Loading...

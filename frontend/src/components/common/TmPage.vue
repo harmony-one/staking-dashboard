@@ -116,6 +116,7 @@ export default {
   width: 100%;
   margin: 0 auto;
   padding: 0 var(--double);
+  background:#F6F7FB;
 }
 
 .tm-page.small {

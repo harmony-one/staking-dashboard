@@ -26,7 +26,8 @@ export default {
 }
 
 .widget-portfolio-light {
-  border: 1px solid #d9d9e0;
+  background: white;
+  border: 1px solid var(--light2);
   border-radius: var(--half);
   display: flex;
   flex-direction: column;

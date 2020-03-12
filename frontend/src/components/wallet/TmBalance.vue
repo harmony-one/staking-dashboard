@@ -163,8 +163,6 @@ export default {
 </script>
 <style scoped>
 .balance-header {
-  width: 100%;
-  max-width: 360px;
   margin: 0 var(--unit);
 }
 
@@ -190,35 +188,44 @@ export default {
   color: white;
   padding: var(--unit);
   background: var(--blue);
-  border-top-left-radius: var(--half);
-  border-top-right-radius: var(--half);
+  border-top-left-radius: var(--unit  );
+  border-top-right-radius: var(--unit);
 }
+
+
+.small-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  padding: var(--unit);
+  border-bottom-left-radius: var(--unit);
+  border-bottom-right-radius: var(--unit);
+  border:1px solid #ddd;
+  border-top: none;
+}
+
+.small-container h2 {
+  color: var(--gray);
+}
+
+
 .available-atoms,
 .rewards {
+  flex: 1;
+  color: var(--gray);
 }
 
-.rewards h2 {
-  color: var(--success);
-  font-size: var(--m);
-  line-height: 20px;
-}
-
-.available-atoms h2 {
-  font-size: var(--m);
-  line-height: 20px;
-}
 
 .button-container {
+  padding:0;
+  padding-top: var(--unit);
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   width: 100%;
-  border-bottom: 1px solid var(--bc-dim);
-  border-top: 1px solid var(--bc-dim);
 }
 
-.button-container button:first-child {
-  margin-right: 0.5rem;
-}
 
 .row {
   display: flex;

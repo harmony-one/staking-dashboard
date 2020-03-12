@@ -124,7 +124,7 @@
     <div v-if="session.signedIn" class="sign-out">
       <a id="sign-out" @click="signOut()">
         <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
-        Sign out
+        Sign Out
       </a>
     </div>
 
@@ -185,7 +185,7 @@ export default {
 .app-menu .app-menu-item {
   font-weight: bold;
   font-size: 14px;
-  color: var(--gray);
+  color: var(--gray) !important;
 }
 
 .app-menu .app-menu-item.router-link-active {
@@ -275,9 +275,6 @@ export default {
   color: var(--blue);
 }
 
-.session-link {
-  margin: 2.5rem 1rem 1rem;
-}
 
 
 .app-menu .app-menu-item.router-link-active i {

@@ -10,17 +10,17 @@
     >
       <template slot="managed-body">
         <div v-if="session.signedIn" class="portfolio-top-container">
-          <LightWidget title="Portfolio" class="balance">
+          <LightWidget title="Summary" class="balance">
             <TmBalance />
           </LightWidget>
           <LightWidget title="Stake allocation" class="delegations">
-            <div v-if="delegation.loading">
+            <div v-if="delegation.loading" class="delegation-body">
               Loading...
             </div>
-            <div v-else-if="!delegations.length">
+            <div v-else-if="!delegations.length" class="delegation-body">
               No delegations in your portfolio
             </div>
-            <StakeAllocationBlock v-else :delegations="delegations" />
+            <StakeAllocationBlock v-else :delegations="delegations" class="delegation-body" />
           </LightWidget>
           <LightWidget
             v-if="isNetworkInfoLoading"
@@ -74,6 +74,11 @@
     }
   }
 
+
+  .delegation-body {
+    padding: var(--unit);
+  }
+
   @media screen and (min-width: 1300px) and (max-width: 1400px) {
     > div {
       margin-right: 10px;
@@ -81,10 +86,6 @@
 
     .balance {
       max-width: 380px;
-    }
-
-    .delegations {
-      max-width: 310px;
     }
 
     .time_next_epoch {

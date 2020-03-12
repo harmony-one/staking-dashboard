@@ -56,8 +56,8 @@ export default {
 }
 
 .bech32-address .address {
+  color: var(--gray);
   width: 100%;
-  color: var(--link-orange);
   cursor: pointer;
   white-space: nowrap;
 }

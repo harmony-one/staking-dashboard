@@ -1,9 +1,16 @@
 :root {
   /*  ============================================================================= */
 
+  --background: #F6F7FB;
+  --blue: #00ADE8;
+  --dark-blue: #293258;
+  --gray: #777;
+  --light: #EEE;
+  --light2: #ddd;
   --double: 32px;
   --unit: 16px;
   --half: 8px;
+  --opf: 24px;
   --quarter: 4px;
 
   --q-tertiary: hsl(325, 96%, 59%);

@@ -174,9 +174,6 @@ export default {
 
 <style scoped lang="scss">
 .app-menu {
-  z-index: var(--z-appMenu);
-  display: flex;
-  flex-flow: column;
   position: relative;
   flex-grow: 1;
 
@@ -186,21 +183,29 @@ export default {
 }
 
 .app-menu .app-menu-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
-  margin: 0.5rem 1rem;
-  font-weight: 400;
+  font-weight: bold;
   font-size: 14px;
-  color: var(--text-white);
-  transition: all 0.5s ease;
-  border: 2px solid var(--bright-light);
-  border-radius: var(--half);
+  color: var(--gray);
+  border-left: 4px solid var(--blue);
+}
+.app-menu .app-menu-item--link:hover {
+  color: var(--link);
+}
+
+.app-menu .app-menu-item.router-link-active {
+  background: var(--app-fg);
+}
+
+.app-menu .app-menu-item.router-link-active i {
+  color: white;
+}
+
+.app-menu .app-menu-item.router-link-active h2 {
+  font-weight: 500;
 }
 
 .app-menu-item:hover {
-  background: var(--hover-bg);
+  color: var(--blue);
 }
 
 .session-link {
@@ -273,27 +278,10 @@ export default {
 }
 
 @media screen and (max-width: 1023px) {
-  .app-menu {
-    background: var(--app-nav);
-    height: 100vh;
-  }
-
-  .app-menu .app-menu-item {
-    padding: 0.5rem;
-  }
-
-  .app-menu-title {
-    font-size: var(--xxl);
-    line-height: 1.125;
-    font-weight: 600;
-    letter-spacing: 0.004em;
-    color: var(--bright);
-  }
+  
 }
 
 @media screen and (min-width: 1023px) {
-  .app-menu {
-    width: var(--width-side);
-  }
+  
 }
 </style>

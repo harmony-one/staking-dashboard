@@ -24,7 +24,7 @@
           <h2>{{ unbondedAtoms | ones | fourDecimals }}</h2>
         </div>
       </div>
-      <div class="total-atoms">
+      <div class="total-atoms total-undel">
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
         <h2 class="total-atoms__value">
           {{ totalUndelegated | ones | fourDecimals }}
@@ -163,26 +163,19 @@ export default {
 </script>
 <style scoped>
 .balance-header {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
+  margin: 0 var(--unit);
 }
 
 .values-container {
-  display: flex;
   position: relative;
   width: 100%;
-  padding: 1rem 0;
-  flex-direction: column;
 }
 
 .values-container h2 {
   font-size: 24px;
   font-weight: 500;
   line-height: 24px;
-  color: var(--txt);
+  color: white;
 }
 
 .values-container h3 {
@@ -191,45 +184,57 @@ export default {
   white-space: nowrap;
 }
 
-.total-atoms,
+.total-atoms {
+  color: white;
+  padding: var(--unit);
+  background: var(--blue);
+  border-top-left-radius: var(--unit  );
+  border-top-right-radius: var(--unit);
+}
+
+.total-atoms.total-undel {
+  margin-top: var(--unit);
+  border-radius: var(--unit  );
+}
+
+
+.small-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  padding: var(--unit);
+  border-bottom-left-radius: var(--unit);
+  border-bottom-right-radius: var(--unit);
+  border:1px solid #ddd;
+  border-top: none;
+}
+
+.small-container h2 {
+  color: var(--gray);
+}
+
+.availabgit,
 .available-atoms,
 .rewards {
-  padding-right: 2.5rem;
+  flex: 1;
+  color: var(--gray);
 }
 
-.rewards h2 {
-  color: var(--success);
-  font-size: var(--m);
-  line-height: 20px;
-}
-
-.available-atoms h2 {
-  font-size: var(--m);
-  line-height: 20px;
-}
 
 .button-container {
+  padding:0;
+  padding-top: var(--unit);
   display: flex;
   align-items: center;
-  padding: 0.5rem 0;
+  justify-content: flex-start;
   width: 100%;
-  border-bottom: 1px solid var(--bc-dim);
-  border-top: 1px solid var(--bc-dim);
-  margin-bottom: 2rem;
 }
 
-.button-container button:first-child {
-  margin-right: 0.5rem;
-}
 
 .row {
   display: flex;
   flex-direction: row;
 }
 
-.small-container {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  justify-content: space-between;
-}
 </style>

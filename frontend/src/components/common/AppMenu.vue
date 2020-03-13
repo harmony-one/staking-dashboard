@@ -1,23 +1,10 @@
 <template>
   <menu class="app-menu">
-    <div v-if="session.signedIn" class="user-box">
-      <div>
-        <h3>Your Address</h3>
-        <Bech32 :address="session.address || ''" />
-      </div>
-    </div>
-    <TmBtn
-      v-else
-      id="sign-in"
-      class="session-link"
-      value="Sign In"
-      type="secondary"
-      size="small"
-      @click.native="signIn()"
-    />
+    
+
     <div class="app-menu-main">
       <router-link
-        class="app-menu-item hide-xs"
+        class="app-menu-item"
         to="/portfolio"
         exact="exact"
         title="Portfolio"
@@ -27,7 +14,7 @@
         <i class="material-icons">chevron_right</i>
       </router-link>
       <router-link
-        class="app-menu-item hide-xs"
+        class="app-menu-item"
         to="/validators"
         title="Validators"
         @click.native="close"
@@ -101,7 +88,7 @@
       </router-link>-->
 
       <router-link
-        class="app-menu-item hide-m"
+        class="app-menu-item"
         to="/terms"
         exact="exact"
         title="Terms"
@@ -111,7 +98,7 @@
       </router-link>
 
       <router-link
-        class="app-menu-item hide-m"
+        class="app-menu-item"
         to="/privacy"
         exact="exact"
         title="Privacy"
@@ -121,10 +108,26 @@
       </router-link>
     </div>
 
+
+
+    <div v-if="session.signedIn" class="user-box">
+      <div>
+        <h3>Your Address</h3>
+        <Bech32 :address="session.address || ''" />
+      </div>
+    </div>
+
     <div v-if="session.signedIn" class="sign-out">
       <a id="sign-out" @click="signOut()">
         <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
-        Sign out
+        Sign Out
+      </a>
+    </div>
+
+    <div v-else class="sign-out">
+      <a id="sign-out" @click="signIn()">
+        <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
+        Sign In
       </a>
     </div>
 
@@ -172,129 +175,84 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.app-menu {
-  z-index: var(--z-appMenu);
-  display: flex;
-  flex-flow: column;
-  position: relative;
-  flex-grow: 1;
+<style scoped>
 
-  .app-menu-main {
-    flex-grow: 1;
-  }
+
+.sign-out, .session-link {
+  margin: var(--unit) 0;
+  padding-left: var(--unit);
+  font-size: 14px;
+  color: var(--gray) !important;
+}
+.sign-out a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--gray);
+  cursor: pointer;
 }
 
-.app-menu .app-menu-item {
+.sign-out a > i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+
+.user-box {
+  margin: var(--unit) 0;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--gray);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
-  margin: 0.5rem 1rem;
-  font-weight: 400;
+}
+
+
+.app-menu {
+  position: relative;
+  height: 100%;
+  background: white;
+  color: var(--gray);
+  min-height: calc(100vh - 56px);
+}
+
+.app-menu-item {
+  margin: var(--unit) 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
   font-size: 14px;
-  color: var(--text-white);
-  border-radius: 0.25rem;
-  transition: all 0.5s ease;
+  padding: var(--half) 0 var(--half) var(--unit);
+  color: var(--gray);
+  border-left: 4px solid var(--gray);
+}
+.app-menu-item h2 {
+  flex: 1;
+  display: inline-block;
+}
+.app-menu-item i {
+  padding-right: var(--half);
+  align-self: flex-end;
+}
+.app-menu-item:hover, .app-menu-item.router-link-active {
+  color: var(--link);
+  border-left: 4px solid var(--blue);
 }
 
 .app-menu-item:hover {
-  background: var(--hover-bg);
+  color: var(--blue);
 }
 
-.session-link {
-  margin: 2.5rem 1rem 1rem;
-}
 
-.user-box {
-  font-size: 14px;
-  margin: 0 1rem 2rem 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--text-white);
-  border: 2px solid var(--bc);
-  border-color: var(--bright-light) !important;
-  border-radius: 0.25rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 
-  i {
-    color: var(--bright);
-    font-size: var(--m);
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    border-radius: 50%;
-    background: var(--bc-dim);
-
-    &:hover {
-      background: var(--bc);
-      cursor: pointer;
-    }
-  }
-}
-
-.sign-out {
-  border-color: var(--bright-light) !important;
-  font-size: 12px;
-  margin: 0 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--text-white);
-  border: 2px solid var(--bc);
-  border-radius: 0.25rem;
-
-  a {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    color: white;
-    cursor: pointer;
-
-    i {
-      margin-right: 10px;
-      font-size: 20px;
-    }
-  }
-}
-
-.app-menu .app-menu-item--link:hover {
-  color: var(--link);
-}
-
-.app-menu .app-menu-item.router-link-active {
-  background: var(--app-fg);
-}
-
-.app-menu .app-menu-item.router-link-active i {
-  color: white;
-}
-
-.app-menu .app-menu-item.router-link-active h2 {
-  font-weight: 500;
-}
 
 @media screen and (max-width: 1023px) {
-  .app-menu {
-    background: var(--app-nav);
-    height: 100vh;
-  }
-
-  .app-menu .app-menu-item {
-    padding: 0.5rem;
-  }
-
-  .app-menu-title {
-    font-size: var(--xxl);
-    line-height: 1.125;
-    font-weight: 600;
-    letter-spacing: 0.004em;
-    color: var(--bright);
-  }
+  
 }
 
 @media screen and (min-width: 1023px) {
-  .app-menu {
-    width: var(--width-side);
-  }
+  
 }
 </style>

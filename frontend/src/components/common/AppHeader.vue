@@ -1,25 +1,25 @@
 <template>
-  <nav class="app-header" :class="{ mobile: !desktop }">
+  <nav class="app-header">
+  <!-- <nav class="app-header" :class="{ mobile: !desktop }"> -->
     <div class="container">
       <div class="header-item" :class="{ open: open }">
         <a href="/">
           <img
             class="header-item-logo"
-            src="~assets/images/harmony-logo-white.svg"
+            src="~assets/images/logo-top-right.png"
             alt="Harmony Staking spaceship accelerating into a colourful space sky"
           />
-          Harmony Staking
         </a>
-        <template v-if="!desktop">
+        <!-- <template v-if="!desktop">
           <div v-if="open" class="close-menu" @click="close()">
             <i class="material-icons mobile-menu-action">close</i>
           </div>
           <div v-if="!open" class="open-menu" @click="show()">
             <i class="material-icons mobile-menu-action">more_vert</i>
           </div>
-        </template>
+        </template> -->
       </div>
-      <AppMenu v-if="open || desktop" @close="close" />
+      <AppMenu @close="close" />
     </div>
   </nav>
 </template>
@@ -73,15 +73,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped language="sass">
 .app-header {
-  z-index: var(--z-appHeader);
   position: relative;
   width: var(--width-side);
-}
-
-.app-header .header-item.open {
-  background: transparent;
+  background: white;
+  min-height: 100vh;
 }
 
 .mobile-menu-action {
@@ -95,49 +92,31 @@ export default {
 }
 
 .app-header .header-item {
-  padding: 1.75rem;
-  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  border-bottom: 1px solid var(--light);
+}
+
+.header-item img {
+  height: 24px;
 }
 
 .app-header .header-item a {
   display: inline-block;
+  height: 24px;
 }
 
 .header-item-logo {
-  height: 2.5rem;
+  height: 48px;
 }
 
 @media screen and (max-width: 1023px) {
-  .app-header {
-    width: 100%;
-    min-height: 0;
-  }
-
-  .container {
-    background: var(--app-nav);
-    position: fixed;
-    width: 100%;
-  }
-
-  .app-header .header-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0.5rem 0.5rem 1rem;
-    color: white;
-    cursor: pointer;
-  }
-
-  .header-item-logo {
-    height: 2rem;
-  }
+  
 }
 
 @media screen and (min-width: 1024px) {
-  .app-header > .container {
-    position: fixed;
-    min-height: 100vh;
-    background: var(--app-nav);
-  }
+  
 }
 </style>

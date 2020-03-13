@@ -60,11 +60,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
-  background: var(--app-fg);
-  border-radius: 0.25rem;
-  border: 2px solid var(--bc-dim);
   margin-bottom: 0.5rem;
+
+  padding: var(--unit);
+  background: white;
+  border-radius: var(--unit);
+  border: 1px solid var(--light);
 }
 
 .account h3 {

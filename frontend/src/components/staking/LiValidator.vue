@@ -102,12 +102,14 @@ export default {
     },
     rowClass: state => ({
       "li-validator": true,
-      red:
-        state.validator.average_stake_by_bls >
-        state.networkInfo.effective_median_stake,
-      green:
-        state.validator.average_stake_by_bls <=
-        state.networkInfo.effective_median_stake
+      // red:
+      //   state.validator.average_stake_by_bls >
+      //   state.networkInfo.effective_median_stake,
+      // green:
+      //   state.validator.average_stake_by_bls <=
+      //   state.networkInfo.effective_median_stake
+      // TODO: currently always green as sahil requested to change
+      green: true
     }),
     status_detailed() {
       if (this.validator.jailed) return `Temporally banned from the network`

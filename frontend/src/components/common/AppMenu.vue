@@ -1,20 +1,7 @@
 <template>
   <menu class="app-menu">
-    <div v-if="session.signedIn" class="user-box">
-      <div>
-        <h3>Your Address</h3>
-        <Bech32 :address="session.address || ''" />
-      </div>
-    </div>
-    <TmBtn
-      v-else
-      id="sign-in"
-      class="session-link"
-      value="Sign In"
-      type="secondary"
-      size="small"
-      @click.native="signIn()"
-    />
+    
+
     <div class="app-menu-main">
       <router-link
         class="app-menu-item"
@@ -121,10 +108,26 @@
       </router-link>
     </div>
 
+
+
+    <div v-if="session.signedIn" class="user-box">
+      <div>
+        <h3>Your Address</h3>
+        <Bech32 :address="session.address || ''" />
+      </div>
+    </div>
+
     <div v-if="session.signedIn" class="sign-out">
       <a id="sign-out" @click="signOut()">
         <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
         Sign Out
+      </a>
+    </div>
+
+    <div v-else class="sign-out">
+      <a id="sign-out" @click="signIn()">
+        <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
+        Sign In
       </a>
     </div>
 
@@ -172,41 +175,28 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.app-menu {
-  position: relative;
-  flex-grow: 1;
+<style scoped>
 
-  .app-menu-main {
-    flex-grow: 1;
-  }
-}
 
-.app-menu .app-menu-item {
-  font-weight: bold;
+.sign-out, .session-link {
+  margin: var(--unit) 0;
+  padding-left: var(--unit);
   font-size: 14px;
   color: var(--gray) !important;
 }
-
-.app-menu .app-menu-item.router-link-active {
-  background: var(--app-fg);
+.sign-out a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--gray);
+  cursor: pointer;
 }
 
-.app-menu .app-menu-item.router-link-active i {
-  color: white;
+.sign-out a > i {
+  margin-right: 10px;
+  font-size: 20px;
 }
 
-.app-menu .app-menu-item.router-link-active h2 {
-  font-weight: 500;
-}
-
-.app-menu-item:hover {
-  color: var(--blue);
-}
-
-.session-link {
-  margin: 2.5rem 1rem 1rem;
-}
 
 .user-box {
   margin: var(--unit) 0;
@@ -216,51 +206,31 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  i {
-    color: var(--bright);
-    font-size: var(--m);
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    border-radius: 50%;
-    background: var(--bc-dim);
-
-    &:hover {
-      background: var(--bc);
-      cursor: pointer;
-    }
-  }
 }
 
-.sign-out {
-  font-size: 12px;
-  margin: 0 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--text-white);
-  border: 2px solid var(--bc);
-  border-radius: 0.25rem;
 
-  a {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    color: white;
-    cursor: pointer;
-
-    i {
-      margin-right: 10px;
-      font-size: 20px;
-    }
-  }
+.app-menu {
+  position: relative;
+  height: 100%;
+  background: white;
+  color: var(--gray);
+  min-height: calc(100vh - 56px);
 }
 
-.app-menu .app-menu-item--link:hover {
-  color: var(--link);
+.app-menu-item {
+  margin: var(--unit) 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  padding: var(--half) 0 var(--half) var(--unit);
+  color: var(--gray);
+  border-left: 4px solid var(--gray);
 }
-
-.app-menu .app-menu-item.router-link-active {
-  background: var(--app-fg);
+.app-menu-item h2 {
+  flex: 1;
+  display: inline-block;
 }
 .app-menu-item i {
   padding-right: var(--half);
@@ -277,13 +247,6 @@ export default {
 
 
 
-.app-menu .app-menu-item.router-link-active i {
-  color: white;
-}
-
-.app-menu .app-menu-item.router-link-active h2 {
-  font-weight: 500;
-}
 
 @media screen and (max-width: 1023px) {
   

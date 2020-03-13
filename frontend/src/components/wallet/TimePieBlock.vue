@@ -70,23 +70,6 @@ export default {
   margin: var(--unit) auto;
   position: relative;
 }
-
-/*
-.legend {
-  font-size: 0.8rem;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 15px;
-  width: 120px;
-  height: 120px;
-  top: 70px;
-  left: 65px;
-}
- */
-
 .legend {
   margin-top: -122px;
   padding-bottom: 100px;

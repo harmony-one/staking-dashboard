@@ -24,7 +24,7 @@
           <h2>{{ unbondedAtoms | ones | fourDecimals }}</h2>
         </div>
       </div>
-      <div class="total-atoms">
+      <div class="total-atoms total-undel">
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
         <h2 class="total-atoms__value">
           {{ totalUndelegated | ones | fourDecimals }}
@@ -192,6 +192,11 @@ export default {
   border-top-right-radius: var(--unit);
 }
 
+.total-atoms.total-undel {
+  margin-top: var(--unit);
+  border-radius: var(--unit  );
+}
+
 
 .small-container {
   width: 100%;
@@ -209,7 +214,7 @@ export default {
   color: var(--gray);
 }
 
-
+.availabgit,
 .available-atoms,
 .rewards {
   flex: 1;

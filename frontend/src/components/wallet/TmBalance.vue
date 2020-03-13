@@ -237,9 +237,4 @@ export default {
   flex-direction: row;
 }
 
-.small-container {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  justify-content: space-between;
-}
 </style>

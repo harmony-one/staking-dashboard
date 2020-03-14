@@ -321,9 +321,8 @@ module.exports = function(
             ? res['bls-public-keys'].length
             : 1,
           elected_nodes: Array.isArray(res['bls-public-keys'])
-            ? _.sumBy(res['bls-public-keys'], item =>
-                cache[BLS_KEYS][item] ? 1 : 0
-              )
+            ? res['bls-public-keys'].filter(item => !!cache[BLS_KEYS][item])
+                .length
             : 1,
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
@@ -493,17 +492,21 @@ module.exports = function(
           []
       )
         .filter(item => !item['is-harmony-slot'])
-        .reduce((cur, item) => (cur[item['bls-public-key']] = true), {})
+        .reduce((cur, item) => {
+          cur[item['bls-public-key']] = true
+          return cur
+        }, {})
 
       cache[GLOBAL_SEATS].total_seats = _.get(
         res,
         'data.result.current.external-slot-count'
       )
-      console.log(`total seats: ${cache[STAKING_NETWORK_INFO].total_seats}`)
-      cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length
+      console.log(`total seats: ${cache[GLOBAL_SEATS].total_seats}`)
       console.log(
-        `total_seats_used: ${cache[STAKING_NETWORK_INFO].total_seats_used}`
+        `total seats2: ${res['data']['result']['current']['external-slot-count']}`
       )
+      cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length
+      console.log(`total_seats_used: ${cache[GLOBAL_SEATS].total_seats_used}`)
 
       console.log('staking distro: ', cache[STAKING_DISTRO])
 

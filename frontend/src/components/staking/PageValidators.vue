@@ -10,14 +10,14 @@
           <div class="networkInfo-item">
             <h4>Effective median stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
-            <PercentageChange
+            <!-- <PercentageChange
               :amount="networkInfo.effective_median_stake_changed"
-            />
+            /> -->
           </div>
           <div class="networkInfo-item">
             <h4>Total stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
-            <PercentageChange :amount="networkInfo['total-staking-changed']" />
+            <!-- <PercentageChange :amount="networkInfo['total-staking-changed']" /> -->
           </div>
         </div>
         <div class="networkInfo-item">

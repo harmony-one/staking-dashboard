@@ -15,9 +15,11 @@ const VALIDATOR_INFO = 'VALIDATOR_INFO'
 const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
+const GLOBAL_SEATS = 'GLOBAL_SEATS'
 const STAKING_DISTRO = 'STAKING_DISTRO'
 const MAX_LENGTH = 30
 const VOTING_POWER = 'VOTING_POWER'
+const BLS_KEYS = 'BLS_KEYS'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
 const SYNC_PERIOD_LONGER = 600000
@@ -54,7 +56,9 @@ module.exports = function(
     STAKING_NETWORK_INFO: {},
     STAKING_NETWORK_INFO_PREV_EPOCH: {},
     VOTING_POWER: {},
-    STAKING_DISTRO: []
+    STAKING_DISTRO: [],
+    GLOBAL_SEATS: {},
+    BLS_KEYS: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -148,6 +152,13 @@ module.exports = function(
 
       if (cache[STAKING_DISTRO]) {
         cache[STAKING_NETWORK_INFO].staking_distro = cache[STAKING_DISTRO]
+      }
+
+      if (cache[GLOBAL_SEATS]) {
+        cache[STAKING_NETWORK_INFO].total_seats =
+          cache[GLOBAL_SEATS].total_seats
+        cache[STAKING_NETWORK_INFO].total_seats_used =
+          cache[GLOBAL_SEATS].total_seats_used
       }
 
       if (
@@ -286,10 +297,6 @@ module.exports = function(
         const utcDate = new Date(Date.now())
         const dayIndex = getDayIndex(utcDate)
 
-        console.log(
-          'current-epoch-voting-power',
-          result['current-epoch-voting-power']
-        )
         const validatorInfo = {
           self_stake: selfStake,
           total_stake: totalStake,
@@ -312,6 +319,11 @@ module.exports = function(
           ...res,
           active_nodes: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].length
+            : 1,
+          elected_nodes: Array.isArray(res['bls-public-keys'])
+            ? _.sumBy(res['bls-public-keys'], item =>
+                cache[BLS_KEYS][item] ? 1 : 0
+              )
             : 1,
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
@@ -470,6 +482,29 @@ module.exports = function(
         .map(item => item['effective-stake'])
         .sort((a, b) => b - a)
 
+      cache[BLS_KEYS] = _.concat(
+        _.get(res, 'data.result.current.quorum-deciders.0.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.1.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.2.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.3.committee-members') ||
+          []
+      )
+        .filter(item => !item['is-harmony-slot'])
+        .reduce((cur, item) => (cur[item['bls-public-key']] = true), {})
+
+      cache[GLOBAL_SEATS].total_seats = _.get(
+        res,
+        'data.result.current.external-slot-count'
+      )
+      console.log(`total seats: ${cache[STAKING_NETWORK_INFO].total_seats}`)
+      cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length
+      console.log(
+        `total_seats_used: ${cache[STAKING_NETWORK_INFO].total_seats_used}`
+      )
+
       console.log('staking distro: ', cache[STAKING_DISTRO])
 
       // _.range(0, 4).forEach(shardID => {
@@ -542,6 +577,7 @@ module.exports = function(
       ? {}
       : cache[STAKING_NETWORK_INFO]
 
+    console.log(stakingNetworkInfo)
     return stakingNetworkInfo
   }
 

@@ -19,6 +19,14 @@
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
             <!-- <PercentageChange :amount="networkInfo['total-staking-changed']" /> -->
           </div>
+          <div class="networkInfo-item">
+            <h4>Total seats:</h4>
+            {{ networkInfo.total_seats }}
+          </div>
+          <div class="networkInfo-item">
+            <h4>Total elected seats:</h4>
+            {{ networkInfo.total_seats_used }}
+          </div>
         </div>
         <div class="networkInfo-item">
           <h4>Current block number:</h4>

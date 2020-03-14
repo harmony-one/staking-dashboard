@@ -84,8 +84,7 @@ export default {
 
 <style scoped>
 .sidebar-bottom {
-  padding: 0 1rem;
-  margin-bottom: 2rem;
+  padding: var(--unit);
   width: 100%;
 }
 

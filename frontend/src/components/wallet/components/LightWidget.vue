@@ -20,7 +20,7 @@ export default {
 
 <style scoped lang="scss">
 .widget-container {
-  margin-right: var(--unit);
+    margin-right: var(--unit);
   display: flex;
   flex-direction: column;
 }
@@ -44,5 +44,6 @@ export default {
 .widget-body {
   padding: var(--unit) 0;
 }
+
 
 </style>

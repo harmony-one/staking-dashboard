@@ -59,10 +59,6 @@
     height: fit-content;
     border-radius: 5px;
     flex-grow: 1;
-
-    &:last-child {
-      margin-right: 0;
-    }
   }
 
   &.no-sign-in {
@@ -182,14 +178,12 @@ export default {
   flex-flow: row wrap;
   flex-direction: row;
   justify-content: space-between;
-  margin: var(--unit) 0;
 }
 
-.portfolio-top-container > div {
-  margin-right: var(--unit);
+.portfolio-top-container {
+  margin-right: -16px;
 }
 .portfolio-top-container > div:last-child {
-  margin-right: 0;
   > div {
     margin-top: 30px;
     margin-right: 20px;

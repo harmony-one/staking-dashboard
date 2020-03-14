@@ -1,6 +1,26 @@
 <template>
   <menu class="app-menu">
     
+    <div v-if="session.signedIn" class="user-box">
+      <div>
+        <h3>Your Address</h3>
+        <Bech32 :address="session.address || ''" />
+      </div>
+    </div>
+
+    <div v-if="session.signedIn" class="sign-out">
+      <a id="sign-out" @click="signOut()">
+        <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
+        Sign Out
+      </a>
+    </div>
+
+    <div v-else class="sign-out">
+      <a id="sign-out" @click="signIn()">
+        <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
+        Sign In
+      </a>
+    </div>
 
     <div class="app-menu-main">
       <router-link
@@ -110,26 +130,6 @@
 
 
 
-    <div v-if="session.signedIn" class="user-box">
-      <div>
-        <h3>Your Address</h3>
-        <Bech32 :address="session.address || ''" />
-      </div>
-    </div>
-
-    <div v-if="session.signedIn" class="sign-out">
-      <a id="sign-out" @click="signOut()">
-        <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
-        Sign Out
-      </a>
-    </div>
-
-    <div v-else class="sign-out">
-      <a id="sign-out" @click="signIn()">
-        <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
-        Sign In
-      </a>
-    </div>
 
     <ConnectedNetwork />
   </menu>

@@ -4,30 +4,30 @@
       <div class="total-atoms">
         <h3>Total {{ bondDenom | viewDenom }}</h3>
         <h2 class="total-atoms__value">
-          {{ totalAtomsDisplay | ones | fourDecimals }}
+          {{ totalAtomsDisplay | ones | zeroDecimals }}
         </h2>
       </div>
 
       <div class="row small-container">
         <div class="availabgit le-atoms">
           <h3>Staked</h3>
-          <h2>{{ staked | ones | fourDecimals }}</h2>
+          <h2>{{ staked | ones | zeroDecimals }}</h2>
         </div>
 
         <div class="rewards">
           <h3>Current reward</h3>
-          <h2>+{{ rewards | ones | fourDecimals }}</h2>
+          <h2>+{{ rewards | ones | zeroDecimals }}</h2>
         </div>
 
         <div class="available-atoms">
           <h3>Available</h3>
-          <h2>{{ unbondedAtoms | ones | fourDecimals }}</h2>
+          <h2>{{ unbondedAtoms | ones | zeroDecimals }}</h2>
         </div>
       </div>
       <div class="total-atoms total-undel">
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
         <h2 class="total-atoms__value">
-          {{ totalUndelegated | ones | fourDecimals }}
+          {{ totalUndelegated | ones | zeroDecimals }}
         </h2>
       </div>
     </div>
@@ -57,7 +57,7 @@
 </template>
 <script>
 import num from "scripts/num"
-import { fourDecimals, ones } from "scripts/num"
+import { zeroDecimals, ones } from "scripts/num"
 import TmBtn from "common/TmBtn"
 import SendModal from "src/ActionModal/components/SendModal"
 import ModalWithdrawRewards from "src/ActionModal/components/ModalWithdrawRewards"
@@ -73,7 +73,7 @@ export default {
   },
   filters: {
     viewDenom: num.viewDenom,
-    fourDecimals,
+    zeroDecimals,
     ones
   },
   data() {

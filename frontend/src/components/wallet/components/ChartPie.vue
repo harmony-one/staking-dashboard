@@ -1,9 +1,9 @@
 <script>
-import { Pie } from "vue-chartjs"
+import { Doughnut } from "vue-chartjs"
 import 'chartjs-plugin-labels';
 
 export default {
-  extends: Pie,
+  extends: Doughnut,
   props: {
     chartdata: {
       type: Object,
@@ -11,7 +11,7 @@ export default {
     },
     options: {
       type: Object,
-      default: null
+      default: null,
     }
   },
   mounted() {

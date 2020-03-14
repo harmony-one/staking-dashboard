@@ -42,6 +42,10 @@ export function zeroDecimals(value) {
   return setDecimalLength(value, 0, 0)
 }
 
+export function oneDecimal(value) {
+  return setDecimalLength(value, 1, 1)
+}
+
 export function twoDecimals(value) {
   return setDecimalLength(value, 2, 2)
 }

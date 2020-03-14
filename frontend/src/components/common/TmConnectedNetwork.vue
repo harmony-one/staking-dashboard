@@ -84,7 +84,11 @@ export default {
 
 <style scoped>
 .sidebar-bottom {
-  padding: var(--unit);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  color: var(--gray);
+  padding: var(--double) var(--unit);
   width: 100%;
 }
 
@@ -95,9 +99,9 @@ export default {
   border-color: var(--bright-light) !important;
   font-size: 12px;
   min-height: 40px;
-  color: var(--text-white);
   border: 2px solid var(--bc);
   border-radius: 0.25rem;
+  color: var(--gray);
 }
 
 .tm-connected-network {

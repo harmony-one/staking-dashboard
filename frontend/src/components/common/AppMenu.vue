@@ -178,6 +178,10 @@ export default {
 <style scoped>
 
 
+.app-menu-main {
+  border-top: 1px solid var(--light);
+}
+
 .sign-out, .session-link {
   margin: var(--unit) 0;
   padding-left: var(--unit);

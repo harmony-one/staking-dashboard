@@ -72,7 +72,7 @@
 
 
   .delegation-body, .time-body {
-    padding: var(--unit);
+    padding: 0 var(--unit);
     text-align: center;
   }
 

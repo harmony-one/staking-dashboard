@@ -4,7 +4,7 @@
       <ChartPie
         :chartdata="chartdata"
         :options="options"
-        style="height: 230px; width: 230px;"
+        class="chart"
       />
     </div>
   </div>
@@ -34,7 +34,7 @@ export default {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutoutPercentage: 0,
+      cutoutPercentage: 60,
       plugins: {
         labels: {
           render: "percentage",
@@ -98,6 +98,14 @@ export default {
 
 <style>
 .chart-container-stake-allocate {
+  display: flex;
   height: 50%;
+  margin: 0 auto;
+}
+
+.chart {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
 }
 </style>

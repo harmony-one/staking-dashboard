@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="chart-container" style="border-radius: 5px; padding: 10px">
+    <div class="chart-container">
       <ChartLine
         :chartdata="chartdata"
         :options="options"
@@ -76,3 +76,11 @@ export default {
   }
 }
 </script>
+
+<style>
+.chart-container {
+  padding: var(--unit);
+  border-radius: var(--half);
+  border: 1px solid $light2;
+}
+</style>

@@ -144,6 +144,8 @@ export default {
 }
 </script>
 <style scoped>
+
+
 @media screen and (max-width: 550px) {
   .data-table td {
     overflow: hidden;

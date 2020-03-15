@@ -37,11 +37,15 @@ export default {
 <style scoped>
 .tm-li-session {
   display: flex;
-  padding: 1rem;
-  margin-bottom: 0.25rem;
-  border: 2px solid var(--bc);
-  background-color: var(--app-fg);
-  border-radius: 0.25rem;
+  margin: var(--unit);
+
+
+  padding: var(--unit);
+  background: white;
+  border-radius: var(--unit);
+  border: 1px solid var(--light);
+
+
 }
 
 .tm-li-session:hover {

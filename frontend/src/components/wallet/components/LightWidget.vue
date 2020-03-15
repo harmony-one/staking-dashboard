@@ -18,31 +18,32 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .widget-container {
-  margin-right: var(--unit);
+    margin-right: var(--unit);
   display: flex;
   flex-direction: column;
 }
 
 .widget-portfolio-light {
-  border: 1px solid #d9d9e0;
+  background: white;
+  border: 1px solid var(--light2);
   border-radius: var(--half);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   overflow: hidden;
   margin-bottom: var(--unit);
 }
 
 .widget-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #0b93ea;
-  margin-top: 10px;
+  font-size: 16px;
+  color: var(--blue);
+  padding: var(--unit);
+  padding-bottom: 0;
+  text-transform: uppercase;
 }
 
 .widget-body {
-  padding: 10px 20px 20px 20px;
+  padding: var(--unit) 0;
 }
+
+
 </style>

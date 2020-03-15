@@ -1,16 +1,16 @@
 <template>
   <div class="bech32-address">
     <div
-      v-tooltip.top="`Click to copy`"
+      v-tooltip.top="copySuccess || `Click to copy`"
       v-clipboard:copy="address"
       v-clipboard:success="() => onCopy()"
       class="address"
     >
       {{ address | formatBech32(longForm, 8, 8) }}
     </div>
-    <div :class="{ active: copySuccess }" class="copied">
+    <!-- <div :class="{ active: copySuccess }" class="copied">
       <i class="material-icons">check</i>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -38,7 +38,7 @@ export default {
   }),
   methods: {
     onCopy() {
-      this.copySuccess = true
+      this.copySuccess = 'Copied!'
       setTimeout(() => {
         this.copySuccess = false
       }, 2500)
@@ -56,8 +56,8 @@ export default {
 }
 
 .bech32-address .address {
+  color: var(--gray);
   width: 100%;
-  color: var(--link-orange);
   cursor: pointer;
   white-space: nowrap;
 }

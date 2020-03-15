@@ -60,6 +60,10 @@ export default {
   margin-right: 10px;
   display: flex;
 
+  > div {
+    background-color: #ffffffa1;
+  }
+
   .li-validator-image {
     border-radius: 0.25rem;
     height: 40px;

@@ -17,7 +17,7 @@
 <script>
 import ChartBar from "./components/ChartBar"
 import moment from "moment"
-import { shortDecimals } from "scripts/num"
+import { shortDecimals, ones } from "scripts/num"
 import numeral from "numeral"
 
 export default {
@@ -72,8 +72,8 @@ export default {
   }),
   computed: {
     maxDelegation() {
-      return this.validator.max_total_delegation / 1e18 > 0
-        ? shortDecimals(this.validator.max_total_delegation / 1e18)
+      return ones(this.validator.max_total_delegation) > 0
+        ? shortDecimals(ones(this.validator.max_total_delegation))
         : "No limit"
     },
     chartdata() {
@@ -85,12 +85,12 @@ export default {
           {
             label: "Self delegated",
             backgroundColor: "hsl(183, 88%, 50%)",
-            data: this.history.map(v => v.self_stake / 1e18)
+            data: this.history.map(v => ones(v.self_stake))
           },
           {
             label: "Delegated",
             backgroundColor: "#dedede",
-            data: this.history.map(v => (v.total_stake - v.self_stake) / 1e18)
+            data: this.history.map(v => ones(v.total_stake - v.self_stake))
           }
         ]
       }
@@ -101,6 +101,7 @@ export default {
 
 <style>
 .chart-container {
+  border-radius: var(--half);
   border: 1px solid #dedede;
 }
 </style>

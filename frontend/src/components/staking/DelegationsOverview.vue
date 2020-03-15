@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root">
     <div v-if="!loading && validators.delegations.length > 0">
       <h2 class="table-title">Delegations</h2>
       <TableDelegations
@@ -112,9 +112,20 @@ export default {
 }
 </script>
 <style scoped>
+
+.root {
+  padding: var(--unit);
+  background: white;
+  border: 1px solid var(--light2);
+  border-radius: var(--half);
+  
+}
+
 .table-title {
-  font-size: 20px;
-  font-weight: bold;
-  padding: var(--unit) 0;
+  
+  font-size: 16px;
+  color: var(--blue);
+  padding-bottom: 0;
+  text-transform: uppercase;
 }
 </style>

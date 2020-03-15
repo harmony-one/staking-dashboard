@@ -1,14 +1,13 @@
 <template>
   <transition name="component-fade" mode="out-in">
     <div class="session-frame">
+      
       <router-link to="/">
         <img class="session-logo" src="~assets/images/harmony-logo-white.svg" />
       </router-link>
       <div class="session-outer-container">
         <div class="session">
-          <a v-if="!hideBack" @click="goBack">
-            <i class="material-icons session-back">arrow_back</i>
-          </a>
+          
           <slot></slot>
         </div>
       </div>

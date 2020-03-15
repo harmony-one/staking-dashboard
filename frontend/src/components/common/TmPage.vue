@@ -114,8 +114,7 @@ export default {
 .tm-page {
   position: relative;
   width: 100%;
-  margin: 0 auto;
-  padding: 0 var(--double);
+  background:#F6F7FB;
 }
 
 .tm-page.small {
@@ -123,7 +122,10 @@ export default {
 }
 
 .tm-page-main {
+  background:#F6F7FB;
   position: relative;
+  padding: var(--double);
+  border-bottom: 1px solid var(--light);
 }
 
 .tm-page-title {
@@ -220,12 +222,11 @@ h4 {
 
 @media screen and (min-width: 1024px) {
   .tm-page {
-    margin: 1rem auto;
   }
 }
 
 @media screen and (max-width: 667px) {
-  .row {
+  /* .row {
     flex-direction: column;
   }
 
@@ -235,6 +236,6 @@ h4 {
 
   .tm-page {
     padding-bottom: 4rem;
-  }
+  } */
 }
 </style>

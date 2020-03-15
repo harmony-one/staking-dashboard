@@ -1,5 +1,5 @@
 <template>
-  <TmPage data-title="Network" class="page" hide-header>
+  <TmPage data-title="Network" title="networks" class="page">
     <template>
       <h3>Main Networks</h3>
       <NetworkList :networks="mainNetworks" />
@@ -37,15 +37,14 @@ export default {
 </script>
 <style scoped>
 .page {
-  padding: 2rem;
+  /* padding: 2rem;
   margin: 0 auto;
-  max-width: 680px;
+  max-width: 680px; */
 }
 
 h3 {
   margin: 0 0 0.25rem 1rem;
   color: var(--dim);
-  font-size: var(--sm);
-  font-weight: 500;
+  text-transform: uppercase;
 }
 </style>

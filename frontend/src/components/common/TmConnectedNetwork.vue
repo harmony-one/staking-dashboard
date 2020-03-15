@@ -84,8 +84,11 @@ export default {
 
 <style scoped>
 .sidebar-bottom {
-  padding: 0 1rem;
-  margin-bottom: 2rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  color: var(--gray);
+  padding: var(--double) var(--unit);
   width: 100%;
 }
 
@@ -96,24 +99,19 @@ export default {
   border-color: var(--bright-light) !important;
   font-size: 12px;
   min-height: 40px;
-  color: var(--text-white);
   border: 2px solid var(--bc);
   border-radius: 0.25rem;
+  color: var(--gray);
 }
 
 .tm-connected-network {
   align-items: center;
-  border-radius: 0.25rem;
-  color: var(--text-white);
-  display: flex;
-  font-size: var(--sm);
-  justify-content: space-between;
-  padding: 0.5rem 0 0;
+  color: var(--gray);
 }
 
 .tm-connected-network .chain-id {
   font-weight: 500;
-  padding-right: 1rem;
+  padding-left: var(--unit);
 }
 
 .tm-connected-network .exit {

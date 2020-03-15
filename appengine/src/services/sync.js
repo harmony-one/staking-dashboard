@@ -1,8 +1,14 @@
 const axios = require('axios')
 const _ = require('lodash')
-const { isNotEmpty, bodyParams, bodyParams2 } = require('./helpers')
+const {
+  isNotEmpty,
+  bodyParams,
+  bodyParams2,
+  changePercentage
+} = require('./helpers')
 
 const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
+const STAKING_NETWORK_INFO_PREV_EPOCH = 'STAKING_NETWORK_INFO_PREV_EPOCH'
 const VALIDATORS = 'VALIDATORS'
 const ACTIVE_VALIDATORS = 'ACTIVE_VALIDATORS'
 const VALIDATOR_INFO = 'VALIDATOR_INFO'
@@ -46,6 +52,7 @@ module.exports = function(
     DELEGATIONS_BY_DELEGATOR: {},
     DELEGATIONS_BY_VALIDATOR: {},
     STAKING_NETWORK_INFO: {},
+    STAKING_NETWORK_INFO_PREV_EPOCH: {},
     VOTING_POWER: {},
     STAKING_DISTRO: []
   }
@@ -104,6 +111,8 @@ module.exports = function(
         bodyParams('hmy_getStakingNetworkInfo')
       )
 
+      const prevNetworkInfo = { ...cache[STAKING_NETWORK_INFO] }
+
       if (res.data.result) {
         cache[STAKING_NETWORK_INFO] = res.data.result
       }
@@ -139,6 +148,31 @@ module.exports = function(
 
       if (cache[STAKING_DISTRO]) {
         cache[STAKING_NETWORK_INFO].staking_distro = cache[STAKING_DISTRO]
+      }
+
+      if (
+        cache[STAKING_NETWORK_INFO].current_epoch >
+        prevNetworkInfo.current_epoch
+      ) {
+        cache[STAKING_NETWORK_INFO_PREV_EPOCH] = prevNetworkInfo
+      }
+
+      if (!_.isEmpty(cache[STAKING_NETWORK_INFO_PREV_EPOCH])) {
+        const currentMS = cache[STAKING_NETWORK_INFO].effective_median_stake
+        const prevMS =
+          cache[STAKING_NETWORK_INFO_PREV_EPOCH].effective_median_stake
+
+        cache[
+          STAKING_NETWORK_INFO
+        ].effective_median_stake_changed = changePercentage(currentMS, prevMS)
+
+        const currentTS = cache[STAKING_NETWORK_INFO]['total-staking']
+        const prevTS = cache[STAKING_NETWORK_INFO_PREV_EPOCH]['total-staking']
+
+        cache[STAKING_NETWORK_INFO]['total-staking-changed'] = changePercentage(
+          currentTS,
+          prevTS
+        )
       }
 
       // console.log("getAllValidatorAddressesData", res.data)
@@ -189,15 +223,18 @@ module.exports = function(
           res.data.result.length
         )
 
-        res.data.result.forEach(elem =>
-          processValidatorInfoData(elem['one-address'] || elem.address, elem)
-        )
+        res.data.result.forEach(elem => {
+          if (elem && elem.validator && elem.validator.address) {
+            processValidatorInfoData(elem.validator.address, elem)
+          }
+        })
         return res.data.result.length
       } else {
         return 0
       }
     } catch (err) {
       console.log('error when processValidatorWithPage: ', err)
+      return 0
     }
   }
 
@@ -213,9 +250,10 @@ module.exports = function(
     }
   }
 
-  const processValidatorInfoData = async (address, res) => {
+  const processValidatorInfoData = async (address, result) => {
     try {
-      if (isNotEmpty(res)) {
+      if (isNotEmpty(result)) {
+        const res = result.validator
         let selfStake = 0
         let totalStake = 0
         let averageStake = 0
@@ -248,9 +286,11 @@ module.exports = function(
         const utcDate = new Date(Date.now())
         const dayIndex = getDayIndex(utcDate)
 
+        console.log(
+          'current-epoch-voting-power',
+          result['current-epoch-voting-power']
+        )
         const validatorInfo = {
-          ...res.description,
-          ...res.commission,
           self_stake: selfStake,
           total_stake: totalStake,
           average_stake: averageStake,
@@ -260,11 +300,10 @@ module.exports = function(
               ? totalStake / (1.0 * res['bls-public-keys'].length)
               : 0,
           remainder,
-          voting_power: Array.isArray(res['bls-public-keys'])
-            ? _.sumBy(res['bls-public-keys'], item =>
-                cache[VOTING_POWER][item] ? cache[VOTING_POWER][item] : 0
-              ) / 4.0
-            : undefined,
+          voting_power: _.sumBy(
+            result['current-epoch-voting-power'],
+            item => parseFloat(item['voting-power-raw']) / 4.0
+          ),
           signed_blocks: 50,
           blocks_should_sign: 100,
           uctDate: utcDate,
@@ -387,7 +426,11 @@ module.exports = function(
     let totalValidators = 0
     let page = 0
     while (totalValidators < cache[VALIDATORS].length) {
-      totalValidators += await processValidatorWithPage(page)
+      const count = await processValidatorWithPage(page)
+      totalValidators += count
+      if (count === 0) {
+        break
+      }
       page += 1
       await sleep(SLEEP_TIME)
     }
@@ -414,35 +457,42 @@ module.exports = function(
       )
 
       cache[STAKING_DISTRO] = _.concat(
-        _.get(res, 'data.result.current.Deciders.0.committee-members'),
-        _.get(res, 'data.result.current.Deciders.1.committee-members'),
-        _.get(res, 'data.result.current.Deciders.2.committee-members'),
-        _.get(res, 'data.result.current.Deciders.3.committee-members')
+        _.get(res, 'data.result.current.quorum-deciders.0.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.1.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.2.committee-members') ||
+          [],
+        _.get(res, 'data.result.current.quorum-deciders.3.committee-members') ||
+          []
       )
         .filter(item => !item['is-harmony-slot'])
         .map(item => item['effective-stake'])
-        .sort()
+        .sort((a, b) => b - a)
 
       console.log('staking distro: ', cache[STAKING_DISTRO])
 
-      _.range(0, 4).forEach(shardID => {
-        const committeeMembers = _.get(
-          res,
-          `data.result.current.Deciders.${shardID}.committee-members`
-        )
+      // _.range(0, 4).forEach(shardID => {
+      //   const committeeMembers = _.get(
+      //     res,
+      //     `data.result.current.Deciders.${shardID}.committee-members`
+      //   )
 
-        if (committeeMembers && Array.isArray(committeeMembers)) {
-          committeeMembers.forEach(elem => {
-            const blsKey = elem['bls-public-key']
-            const power = elem['voting-power-%']
-            if (!!blsKey && !!power) {
-              cache[VOTING_POWER][blsKey] += parseFloat(power)
-            }
-          })
-        }
-      })
+      //   if (committeeMembers && Array.isArray(committeeMembers)) {
+      //     committeeMembers.forEach(elem => {
+      //       const blsKey = elem['bls-public-key']
+      //       const power = elem['voting-power-%']
+      //       if (!!blsKey && !!power) {
+      //         cache[VOTING_POWER][blsKey] += parseFloat(power)
+      //       }
+      //     })
+      //   }
+      // })
     } catch (err) {
-      console.log('error when updatingVotingPower', err)
+      console.log(
+        `error when updatingVotingPower for ${BLOCKCHAIN_SERVER}`,
+        err
+      )
     }
   }
 

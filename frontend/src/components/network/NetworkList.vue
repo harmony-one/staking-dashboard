@@ -2,6 +2,7 @@
   <ul class="network-list">
     <li
       v-for="network in networks"
+      :id="`network_${network.id}`"
       :key="network.id"
       class="select-network-item"
       :class="{ selected: connection.network === network.id }"

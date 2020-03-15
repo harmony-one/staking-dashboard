@@ -7,14 +7,14 @@
     <template slot="managed-body">
       <div class="networkInfo">
         <div class="networkInfo-column">
-          <div class="networkInfo-item">
+          <div id="validators_median_stake" class="networkInfo-item">
             <h4>Effective median stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
             <!-- <PercentageChange
               :amount="networkInfo.effective_median_stake_changed"
             /> -->
           </div>
-          <div class="networkInfo-item">
+          <div id="validators_total_stake" class="networkInfo-item">
             <h4>Total stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
             <!-- <PercentageChange :amount="networkInfo['total-staking-changed']" /> -->

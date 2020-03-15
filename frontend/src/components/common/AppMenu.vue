@@ -1,6 +1,6 @@
 <template>
   <menu class="app-menu">
-    
+
     <div v-if="session.signedIn" class="user-box">
       <div>
         <h3>Your Address</h3>
@@ -24,6 +24,7 @@
 
     <div class="app-menu-main">
       <router-link
+        id="menu_item_portfolio"
         class="app-menu-item"
         to="/portfolio"
         exact="exact"
@@ -34,6 +35,7 @@
         <i class="material-icons">chevron_right</i>
       </router-link>
       <router-link
+        id="menu_item_validators"
         class="app-menu-item"
         to="/validators"
         title="Validators"
@@ -67,6 +69,7 @@
       </router-link>-->
 
       <router-link
+        id="menu_item_networks"
         class="app-menu-item"
         to="/networks"
         exact="exact"
@@ -253,10 +256,10 @@ export default {
 
 
 @media screen and (max-width: 1023px) {
-  
+
 }
 
 @media screen and (min-width: 1023px) {
-  
+
 }
 </style>

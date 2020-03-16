@@ -259,6 +259,10 @@ export default {
   color: var(--gray);
   border-left: 4px solid var(--gray);
 }
+.app-menu-item:nth-child(4) {
+  border-top: 1px solid var(--light);
+  padding-top: var(--unit);
+}
 
 .app-menu-item.small {
   font-weight: normal;

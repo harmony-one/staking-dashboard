@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div v-if="session.signedIn" class="sign-out">
+    <!-- <div v-if="session.signedIn" class="sign-out">
       <a id="sign-out" @click="signOut()">
         <i v-tooltip.top="'Sign Out'" class="material-icons">exit_to_app</i>
         Sign Out
@@ -20,7 +20,7 @@
         <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
         Sign In
       </a>
-    </div>
+    </div> -->
 
     <div class="app-menu-main">
       <router-link
@@ -111,7 +111,7 @@
       </router-link>-->
 
       <router-link
-        class="app-menu-item"
+        class="app-menu-item small"
         to="/terms"
         exact="exact"
         title="Terms"
@@ -121,7 +121,7 @@
       </router-link>
 
       <router-link
-        class="app-menu-item"
+        class="app-menu-item small"
         to="/privacy"
         exact="exact"
         title="Privacy"
@@ -129,6 +129,30 @@
       >
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
+
+      <router-link
+        v-if="session.signedIn" 
+        to="#"
+        class="app-menu-item small"
+        exact="exact"
+        title="signout"
+        @click.native="signOut()"
+      >
+        <h2 class="app-menu-title">Sign Out</h2>
+      </router-link>
+
+      <router-link
+        v-else
+        to="#"
+        class="app-menu-item small"
+        exact="exact"
+        title="signin"
+        @click.native="signIn()"
+      >
+        <h2 class="app-menu-title">Sign In</h2>
+      </router-link>
+
+
     </div>
 
 
@@ -235,6 +259,12 @@ export default {
   color: var(--gray);
   border-left: 4px solid var(--gray);
 }
+
+.app-menu-item.small {
+  font-weight: normal;
+  border-left-color: transparent !important;
+}
+
 .app-menu-item h2 {
   flex: 1;
   display: inline-block;

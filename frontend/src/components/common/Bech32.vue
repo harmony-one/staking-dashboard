@@ -63,7 +63,7 @@ export default {
 }
 
 .bech32-address .address:hover {
-  color: var(--link-orange-hover);
+  color: var(--blue);
 }
 
 .bech32-address .copied {

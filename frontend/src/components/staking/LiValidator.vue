@@ -39,7 +39,7 @@
     <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{ validator.rate | percent }}
     </td>
-    <td>
+    <td class="average_stake_cell">
       {{ validator.average_stake_by_bls | ones | zeroDecimals }}
     </td>
     <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">

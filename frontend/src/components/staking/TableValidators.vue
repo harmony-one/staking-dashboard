@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <PanelPagination
-      :pagination="pagination"
-      :total="totalFound"
-    />
+  <div id="validators_table">
+    <PanelPagination :pagination="pagination" :total="totalFound" />
     <table class="data-table card-white">
       <thead>
         <PanelSort

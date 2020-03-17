@@ -15,6 +15,10 @@
         <h4>Number of elected nodes</h4>
         <span>{{ validator.elected_nodes || 0 }}</span>
       </li>
+      <li class="row">
+        <h4>APR</h4>
+        <span>{{ validator.apr | percent | notAvailable }}</span>
+      </li>
     </ul>
   </div>
 </template>

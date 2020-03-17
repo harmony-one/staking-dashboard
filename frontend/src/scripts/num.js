@@ -97,7 +97,7 @@ export function percentInt(number = 0) {
 }
 
 export function isNotAvailable(value) {
-  return value === -1 || value === undefined
+  return value === -1 || value === null
 }
 
 export function percent(number = 0) {

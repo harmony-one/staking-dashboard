@@ -309,7 +309,7 @@ module.exports = function(
                 _.get(result, 'metrics.by-shard'),
                 item => parseFloat(item['group-percent']) / 4.0
               )
-            : undefined,
+            : null,
           signed_blocks: 50,
           blocks_should_sign: 100,
           uctDate: utcDate,
@@ -347,8 +347,8 @@ module.exports = function(
                     'current-epoch-performance.current-epoch-signing-percent.current-epoch-to-sign'
                   )
                 )
-              : undefined,
-          apr: _.get(result, 'metrics.current-apr.current-apr')
+              : null,
+          apr: _.get(result, 'metrics.current-apr.current-apr', null)
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]

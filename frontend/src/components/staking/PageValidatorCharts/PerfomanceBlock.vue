@@ -4,7 +4,7 @@
       <li class="row">
         <h4>Uptime (Average)</h4>
         <span id="page-profile__uptime">
-          {{ validator.uptime_percentage | percent }}
+          {{ validator.uptime_percentage | percent | notAvailable }}
         </span>
       </li>
       <li class="row">

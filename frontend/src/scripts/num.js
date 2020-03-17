@@ -96,7 +96,15 @@ export function percentInt(number = 0) {
   return new Intl.NumberFormat(language).format(Math.round(number * 100)) + `%`
 }
 
+export function isNotAvailable(value) {
+  return value === -1 || value === undefined
+}
+
 export function percent(number = 0) {
+  if (isNotAvailable(number)) {
+    return number
+  }
+
   return (
     new Intl.NumberFormat(language, {
       minimumFractionDigits: 2,

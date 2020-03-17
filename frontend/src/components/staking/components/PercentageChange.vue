@@ -2,7 +2,7 @@
   <span :class="percentageChangeClass">
     (
     <i>{{ sign }}</i
-    >{{ amount | percent }} from the previous epoch )
+    >{{ amount | percent | notAvailable }} from the previous epoch )
   </span>
 </template>
 

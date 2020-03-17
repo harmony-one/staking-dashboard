@@ -34,7 +34,7 @@
       <li>
         <h4>Voting Power / Total Stake</h4>
         <span id="page-profile__power">
-          {{ validator.voting_power | percent }} /
+          {{ validator.voting_power | percent | notAvailable }} /
           {{ validator.total_effective_stake | ones | shortDecimals }}
         </span>
       </li>
@@ -64,20 +64,20 @@
       <li>
         <h4>Uptime</h4>
         <span id="page-profile__uptime">
-          {{ validator.uptime_percentage | percent }}
+          {{ validator.uptime_percentage | percent | notAvailable }}
         </span>
       </li>
       <li>
         <h4>Current Commission Rate</h4>
-        <span>{{ validator.rate | percent }}</span>
+        <span>{{ validator.rate | percent | notAvailable }}</span>
       </li>
       <li>
         <h4>Max Commission Rate</h4>
-        <span>{{ validator.max_rate | percent }}</span>
+        <span>{{ validator.max_rate | percent | notAvailable }}</span>
       </li>
       <li>
         <h4>Max Daily Commission Change</h4>
-        <span>{{ validator.max_change_rate | percent }}</span>
+        <span>{{ validator.max_change_rate | percent | notAvailable }}</span>
       </li>
       <li>
         <h4>Last Commission Change</h4>

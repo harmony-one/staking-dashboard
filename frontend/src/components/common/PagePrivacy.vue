@@ -7,9 +7,14 @@
       </p>
       <p><span class="c5">When this Privacy Policy Applies</span></p>
       <p>
-        <span class="c0"
-          >	
-          This Privacy Policy applies to the use of https://staking.harmony.one/ (the “App”) and the use and/or access of any of the products, services or content provided by or on behalf of Simple Rules Company (“SRC”) in connection with this Privacy Policy is linked or posted together referred to as the “Services”.  Please read this Privacy Policy before using the Services because it tells you how we collect, use and disclose your personal information.
+        <span class="c0">
+          This Privacy Policy applies to the use of https://staking.harmony.one/
+          (the “App”) and the use and/or access of any of the products, services
+          or content provided by or on behalf of Simple Rules Company (“SRC”) in
+          connection with this Privacy Policy is linked or posted together
+          referred to as the “Services”. Please read this Privacy Policy before
+          using the Services because it tells you how we collect, use and
+          disclose your personal information.
         </span>
       </p>
       <p>
@@ -331,15 +336,12 @@
             >Cookies and similar data collection technology help us improve your
             experience of the Services. In the future we may use Cookies to
             personalize and improve your experience of the Services by, for
-            example, </span
-          ><span>storing your password</span
-          ><span
-            >&nbsp;so that you do not have to re-enter each time you use the
-            Services, helping us analyze technical and navigational information
-            about the Services to better understand how our products are being
-            used, personalizing and</span
-          ><span>&nbsp;tailoring ads</span
-          ><span class="c0">&nbsp;to your interest and detecting fraud.</span>
+            example, storing your password&nbsp;so that you do not have to
+            re-enter each time you use the Services, helping us analyze
+            technical and navigational information about the Services to better
+            understand how our products are being used, personalizing and
+            tailoring ads to your interest and detecting fraud.</span
+          >
         </li>
         <li class="c1">
           <span class="c0"
@@ -434,10 +436,10 @@
           >Moreover, if you access third-party websites through the App or the
           Services you may encounter third-party advertising. &nbsp;If you
           click-through to a third-party website, you are no longer on a site
-          hosted by SRC and activity on the third-party site will be governed
-          by the third-party&rsquo;s privacy policy. &nbsp;You should review
-          this privacy policy to understand what information will be collected
-          and what technology the third-party uses to collect this information.
+          hosted by SRC and activity on the third-party site will be governed by
+          the third-party&rsquo;s privacy policy. &nbsp;You should review this
+          privacy policy to understand what information will be collected and
+          what technology the third-party uses to collect this information.
           &nbsp;</span
         >
       </p>

@@ -41,9 +41,9 @@ const blockchainValidator = {
   },
   active_nodes: 1,
 
-  uptime_percentage: '0',
+  uptime_percentage: "0",
   reminder: 11,
-  average_stake: 11,
+  average_stake: 11
 }
 
 const frontendValidator = {
@@ -116,7 +116,7 @@ export const remapValidator = (
 
     uptime_percentage: validator.uptime_percentage,
     voting_power: validator.voting_power,
-    total_effective_stake: '0',
+    total_effective_stake: "0",
 
     active: validator.active,
     self_stake: validator.self_stake,

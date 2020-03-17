@@ -24,12 +24,10 @@
       v-else-if="validators.delegations.length === 0"
       icon="sentiment_dissatisfied"
     >
-      <div slot="title">
-        No validators in your portfolio
-      </div>
+      <div slot="title">No validators in your portfolio</div>
       <div slot="subtitle">
         Head over to the
-        <router-link to="/validators"> validator list </router-link>&nbsp;to get
+        <router-link to="/validators">validator list</router-link>&nbsp;to get
         staking!
       </div>
     </TmDataMsg>
@@ -73,8 +71,7 @@ export default {
           delegations.push({
             ...remapValidator(delegates.validator_info, true),
             stake: delegates.amount,
-            rewards: delegates.reward,
-            apr: delegates.reward / delegates.amount
+            rewards: delegates.reward
           })
         }
 
@@ -112,17 +109,14 @@ export default {
 }
 </script>
 <style scoped>
-
 .root {
   padding: var(--unit);
   background: white;
   border: 1px solid var(--light2);
   border-radius: var(--half);
-  
 }
 
 .table-title {
-  
   font-size: 16px;
   color: var(--blue);
   padding-bottom: 0;

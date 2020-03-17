@@ -28,10 +28,6 @@
         <h4>Validator Since</h4>
         <span>Block #{{ validator.creation_height }}</span>
       </li>
-      <li class="column">
-        <h4>APR</h4>
-        <span>{{ validator.apr | percent | notAvailable }}</span>
-      </li>
     </ul>
 
     <ul v-show="false" class="row">

@@ -348,7 +348,7 @@ module.exports = function(
                   )
                 )
               : null,
-          apr: _.get(result, 'metrics.current-apr.current-apr', null)
+          apr: _.get(result, 'metrics.current-apr', null)
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]

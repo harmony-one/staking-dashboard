@@ -142,6 +142,11 @@ export default {
           tooltip: `Commission fees`
         },
         {
+          title: `APR %`,
+          value: `apr`,
+          tooltip: `APR %`
+        },
+        {
           title: `Average ONE staked`,
           value: `average_stake_by_bls`,
           tooltip: `Average ONE staked`

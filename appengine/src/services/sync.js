@@ -38,12 +38,7 @@ module.exports = function(
   getCollectionDataWithLimit
 ) {
   // Currently only work for OS network and testnet.
-  if (
-    !(
-      BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
-      BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io')
-    )
-  ) {
+  if (!BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io')) {
     return
   }
   const cache = {
@@ -145,8 +140,10 @@ module.exports = function(
           bodyParams('hmy_getMedianRawStakeSnapshot')
         )
         if (medianStakeRes.data.result) {
-          cache[STAKING_NETWORK_INFO].effective_median_stake =
-            medianStakeRes.data.result
+          cache[STAKING_NETWORK_INFO].effective_median_stake = _.get(
+            medianStakeRes,
+            'data.result.epos-median-stake'
+          )
         }
       }
 
@@ -307,10 +304,12 @@ module.exports = function(
               ? totalStake / (1.0 * res['bls-public-keys'].length)
               : 0,
           remainder,
-          voting_power: _.sumBy(
-            result['current-epoch-voting-power'],
-            item => parseFloat(item['voting-power-raw']) / 4.0
-          ),
+          voting_power: _.get(result, 'metrics.by-shard')
+            ? _.sumBy(
+                _.get(result, 'metrics.by-shard'),
+                item => parseFloat(item['group-percent']) / 4.0
+              )
+            : null,
           signed_blocks: 50,
           blocks_should_sign: 100,
           uctDate: utcDate,
@@ -328,12 +327,28 @@ module.exports = function(
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address),
           uptime_percentage:
-            res.availability &&
-            res.availability['num-blocks-signed'] &&
-            res.availability['num-blocks-to-sign']
-              ? parseFloat(res.availability['num-blocks-signed']) /
-                parseInt(res.availability['num-blocks-to-sign'])
-              : 0
+            _.get(
+              result,
+              'current-epoch-performance.current-epoch-signing-percent.current-epoch-signed'
+            ) &&
+            _.get(
+              result,
+              'current-epoch-performance.current-epoch-signing-percent.current-epoch-to-sign'
+            )
+              ? parseFloat(
+                  _.get(
+                    result,
+                    'current-epoch-performance.current-epoch-signing-percent.current-epoch-signed'
+                  )
+                ) /
+                parseFloat(
+                  _.get(
+                    result,
+                    'current-epoch-performance.current-epoch-signing-percent.current-epoch-to-sign'
+                  )
+                )
+              : null,
+          apr: _.get(result, 'metrics.current-apr.current-apr', null)
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
@@ -468,28 +483,44 @@ module.exports = function(
       )
 
       cache[STAKING_DISTRO] = _.concat(
-        _.get(res, 'data.result.current.quorum-deciders.0.committee-members') ||
-          [],
-        _.get(res, 'data.result.current.quorum-deciders.1.committee-members') ||
-          [],
-        _.get(res, 'data.result.current.quorum-deciders.2.committee-members') ||
-          [],
-        _.get(res, 'data.result.current.quorum-deciders.3.committee-members') ||
-          []
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-0.committee-members'
+        ) || [],
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-1.committee-members'
+        ) || [],
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-2.committee-members'
+        ) || [],
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-3.committee-members'
+        ) || []
       )
         .filter(item => !item['is-harmony-slot'])
         .map(item => item['effective-stake'])
         .sort((a, b) => b - a)
 
       cache[BLS_KEYS] = _.concat(
-        _.get(res, 'data.result.current.quorum-deciders.0.committee-members') ||
-          [],
-        _.get(res, 'data.result.current.quorum-deciders.1.committee-members') ||
-          [],
-        _.get(res, 'data.result.current.quorum-deciders.2.committee-members') ||
-          [],
-        _.get(res, 'data.result.current.quorum-deciders.3.committee-members') ||
-          []
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-0.committee-members'
+        ) || [],
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-1.committee-members'
+        ) || [],
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-2.committee-members'
+        ) || [],
+        _.get(
+          res,
+          'data.result.current.quorum-deciders.shard-3.committee-members'
+        ) || []
       )
         .filter(item => !item['is-harmony-slot'])
         .reduce((cur, item) => {

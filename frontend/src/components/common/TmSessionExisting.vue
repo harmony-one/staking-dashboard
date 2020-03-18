@@ -1,9 +1,7 @@
 <template>
   <SessionFrame>
     <div id="session-existing">
-      <h2 class="session-title">
-        Use an existing address
-      </h2>
+      <h2 class="session-title">Use an existing address</h2>
 
       <div class="session-list">
         <LiSession
@@ -25,8 +23,14 @@
           icon="laptop"
           title="Use Harmony Browser Extension"
           route="extension"
-        >
-        </LiSession>
+        ></LiSession>
+        <LiSession
+          v-if="!isMobileApp"
+          id="use-mathwallet"
+          icon="laptop"
+          title="Use Math Wallet"
+          route="mathwallet"
+        ></LiSession>
         <LiSession
           v-if="session.insecureMode"
           id="recover-with-backup"
@@ -42,9 +46,7 @@
           route="login"
         />
       </div>
-      <router-link to="create" style="padding-left: 16px;">
-        Want to create a new address?
-      </router-link>
+      <router-link to="create" style="padding-left: 16px;">Want to create a new address?</router-link>
     </div>
   </SessionFrame>
 </template>

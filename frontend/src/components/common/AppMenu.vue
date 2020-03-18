@@ -1,6 +1,5 @@
 <template>
   <menu class="app-menu">
-
     <div v-if="session.signedIn" class="user-box">
       <div>
         <h3>Your Address</h3>
@@ -20,7 +19,7 @@
         <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
         Sign In
       </a>
-    </div> -->
+    </div>-->
 
     <div class="app-menu-main">
       <router-link
@@ -131,7 +130,7 @@
       </router-link>
 
       <router-link
-        v-if="session.signedIn" 
+        v-if="session.signedIn"
         to="#"
         class="app-menu-item small"
         exact="exact"
@@ -151,12 +150,7 @@
       >
         <h2 class="app-menu-title">Sign In</h2>
       </router-link>
-
-
     </div>
-
-
-
 
     <ConnectedNetwork />
   </menu>
@@ -191,6 +185,12 @@ export default {
       noScroll.off()
     },
     signOut() {
+      if (this.session.sessionType === "mathwallet") {
+        window.harmony
+          .forgetIdentity()
+          .then(() => {})
+          .catch(err => {})
+      }
       this.$emit(`close`)
       this.$store.dispatch(`signOut`)
     },
@@ -203,13 +203,12 @@ export default {
 </script>
 
 <style scoped>
-
-
 .app-menu-main {
   border-top: 1px solid var(--light);
 }
 
-.sign-out, .session-link {
+.sign-out,
+.session-link {
   margin: var(--unit) 0;
   padding-left: var(--unit);
   font-size: 14px;
@@ -228,7 +227,6 @@ export default {
   font-size: 20px;
 }
 
-
 .user-box {
   margin: var(--unit) 0;
   padding-left: 20px;
@@ -238,7 +236,6 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-
 
 .app-menu {
   position: relative;
@@ -277,7 +274,8 @@ export default {
   padding-right: var(--half);
   align-self: flex-end;
 }
-.app-menu-item:hover, .app-menu-item.router-link-active {
+.app-menu-item:hover,
+.app-menu-item.router-link-active {
   color: var(--link);
   border-left: 4px solid var(--blue);
 }
@@ -286,14 +284,9 @@ export default {
   color: var(--blue);
 }
 
-
-
-
 @media screen and (max-width: 1023px) {
-
 }
 
 @media screen and (min-width: 1023px) {
-
 }
 </style>

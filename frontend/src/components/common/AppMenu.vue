@@ -185,7 +185,7 @@ export default {
       noScroll.off()
     },
     signOut() {
-      if (this.session.sessionType === "mathwallet") {
+      if (this.session.sessionType === "mathwallet" && window.harmony) {
         window.harmony
           .forgetIdentity()
           .then(() => {})

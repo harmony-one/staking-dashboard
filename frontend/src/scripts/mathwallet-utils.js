@@ -6,7 +6,6 @@ import {
   Unit
 } from "@harmony-js/utils"
 export const processMathWalletMessage = async (sendData, networkConfig, from) => {
-  console.log("===========", JSON.stringify(sendData))
   const { type, fee, gasPrice } = sendData
   const { gasEstimate } = fee
   const { chain_id, rpc_url } = networkConfig

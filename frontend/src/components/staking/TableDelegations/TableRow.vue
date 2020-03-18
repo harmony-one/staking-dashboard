@@ -31,6 +31,7 @@
       </div>
     </td>
     <td>{{ data.stake | ones | fourDecimals }} ONE</td>
+    <td v-if="!isUndelegation">{{ data.rewards | ones | fourDecimals }} ONE</td>
     <td v-if="!isUndelegation">{{ data.apr | percent | notAvailable }}</td>
     <td v-if="data.remaining_epoch" class="hide-xs">
       {{ data.remaining_epoch + " epochs" }}

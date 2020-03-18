@@ -144,11 +144,18 @@ module.exports = function(
             medianStakeRes,
             'data.result.epos-median-stake'
           )
+          const staking_distro = _.get(
+            medianStakeRes,
+            'data.result.epos-slot-winners'
+          )
+          if (staking_distro) {
+            cache[STAKING_NETWORK_INFO].staking_distro = staking_distro.map(e =>
+              parseFloat(e['eposed-stake'])
+            )
+          } else {
+            cache[STAKING_NETWORK_INFO].staking_distro = []
+          }
         }
-      }
-
-      if (cache[STAKING_DISTRO]) {
-        cache[STAKING_NETWORK_INFO].staking_distro = cache[STAKING_DISTRO]
       }
 
       if (cache[GLOBAL_SEATS]) {

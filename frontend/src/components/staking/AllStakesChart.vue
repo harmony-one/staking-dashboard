@@ -12,18 +12,8 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import ChartLine from "./PageValidatorCharts/components/ChartLine"
-import { ones, zeroDecimals } from "../../scripts/num"
-
-// function randomScalingFactor(min, number) {
-//   return Math.round(Number(min) + Math.random() * (number || 100))
-// }
-
-=======
 import ChartBar from "./PageValidatorCharts/components/ChartBar"
 import { ones, zeroDecimals } from "../../scripts/num"
->>>>>>> update allstakeschart
 export default {
   name: "AllStakesChart",
   components: { ChartBar },
@@ -38,9 +28,6 @@ export default {
         callbacks: {
           title: (data) => "",
           label: (data, a, b) => 
-<<<<<<< HEAD
-            zeroDecimals(data.yLabel) + " ONE Staked"// by " + a.datasets[0].pointRadius({dataIndex: data.index})
-=======
             zeroDecimals(data.yLabel) + " ONE Staked"
         }
       },
@@ -53,7 +40,6 @@ export default {
         afterUpdate: () => {
           const el = document.querySelector('#bar-chart')
           console.log(el)
->>>>>>> update allstakeschart
         }
       },
       // hover: {
@@ -82,10 +68,6 @@ export default {
   }),
   computed: {
     chartdata() {
-<<<<<<< HEAD
-      // const raw = this.data.map((v) => ones(v))
-      // const cache = []
-=======
       const raw = this.data.map((v) => ones(v))
       const cache = []
       // previous
@@ -94,7 +76,6 @@ export default {
       console.log(median)
       
       // new
->>>>>>> update allstakeschart
       // const data = raw.sort((a, b) => a - b).filter((value) => {
       //   const cached = cache.find((d) => d.value === value)
       //   if (!cached) {
@@ -106,14 +87,7 @@ export default {
       //   return false
       // })
       // const count = cache.map((c) => c.count)
-<<<<<<< HEAD
-      
-      const data = this.data.map((v) => ones(v))
-      const labels = data.map((v, idx) => idx)
-
-=======
       const labels = data.map((v, idx) => idx + 1)
->>>>>>> update allstakeschart
       return {
         labels,
         datasets: [
@@ -124,17 +98,7 @@ export default {
             // maxBarThickness: 8,
             minBarLength: 8,
             label: "Staked ONE distribution",
-<<<<<<< HEAD
-            borderColor: "#0a93eb",
-            borderWidth: 2,
-            fill: false,
-            pointRadius: 5,
-            // pointRadius: function(context) {
-            //   return count[context.dataIndex]
-            // },
-=======
             backgroundColor: "#0a93eb",
->>>>>>> update allstakeschart
             data
           }
         ]

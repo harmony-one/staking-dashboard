@@ -38,7 +38,8 @@ module.exports = function(
   getCollectionDataWithLimit
 ) {
   // Currently only work for OS network and testnet.
-  if (BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io')) {
+  if (BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io') ||
+      BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')) {
     return
   }
   const cache = {
@@ -397,7 +398,7 @@ module.exports = function(
         }
       }
     } catch (e) {
-      console.log('error in getValidatorInfoData:', e)
+      console.log('error in processValidatorInfoData:', e)
     }
   }
 

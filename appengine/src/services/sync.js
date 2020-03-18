@@ -38,7 +38,7 @@ module.exports = function(
   getCollectionDataWithLimit
 ) {
   // Currently only work for OS network and testnet.
-  if (!BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io')) {
+  if (BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io')) {
     return
   }
   const cache = {
@@ -541,7 +541,7 @@ module.exports = function(
       )
       console.log(`total seats: ${cache[GLOBAL_SEATS].total_seats}`)
       console.log(
-        `total seats2: ${res['data']['result']['current']['external-slot-count']}`
+        `total seats2: ${res.data.result.current['external-slot-count']}`
       )
       cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length
       console.log(`total_seats_used: ${cache[GLOBAL_SEATS].total_seats_used}`)

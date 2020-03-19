@@ -39,7 +39,9 @@ export default {
 
 <style scoped>
 @import "./styles.css";
-.validator-info {
+
+.card-white {
+  padding: 0;
   padding-top: var(--unit);
 }
 </style>

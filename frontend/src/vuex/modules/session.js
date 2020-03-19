@@ -5,14 +5,10 @@ function isWindowsPlatform() {
   return window.navigator.platform.match(/win32|win64/i) !== null
 }
 
-const mockSessionState = {
-  // signedIn: true,
-  // address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
-  // sessionType: "extension"
-}
+const mockSessionState = {}
 
 export default () => {
-  const USER_PREFERENCES_KEY = `lunie_user_preferences`
+  const USER_PREFERENCES_KEY = `user_preferences`
 
   const state = {
     developmentMode: config.development, // can't be set in browser

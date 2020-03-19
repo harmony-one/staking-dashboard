@@ -51,7 +51,7 @@ const frontendValidator = {
   customized: false,
   moniker: "iqlusion",
   identity: "DCB176E79AE7D51F",
-  operator_address: "cosmosvaloper1grgelyng2v6v3t8z87wu3sxgt9m5s03xfytvz7",
+  operator_address: "onevaloper1grgelyng2v6v3t8z87wu3sxgt9m5s03xfytvz7",
   update_time: "2019-03-13T23:00:00Z",
   unbonding_time: "1970-01-01T00:00:00Z",
   rate: "0.100000000000000000",

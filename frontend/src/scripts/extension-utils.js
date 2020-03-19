@@ -42,7 +42,7 @@ const filterExtensionMessage = callback => message => {
 }
 
 // exported for easyier testing
-export const processLunieExtensionMessages = store =>
+export const processExtensionMessages = store =>
   filterExtensionMessage(data => {
     const message = unWrapMessageFromContentScript(data)
     processMessage(store, message.type, message.payload)
@@ -50,7 +50,7 @@ export const processLunieExtensionMessages = store =>
 
 // listen to incoming events
 export const listenToExtensionMessages = store => {
-  const handler = processLunieExtensionMessages(store)
+  const handler = processExtensionMessages(store)
   window.addEventListener("message", handler)
 }
 

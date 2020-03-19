@@ -114,7 +114,7 @@ export default {
 .tm-page {
   position: relative;
   width: 100%;
-  background:#F6F7FB;
+  background: var(--background);
 }
 
 .tm-page.small {
@@ -122,7 +122,7 @@ export default {
 }
 
 .tm-page-main {
-  background:#F6F7FB;
+  background:var(--background);
   position: relative;
   padding: var(--double);
   border-bottom: 1px solid var(--light);

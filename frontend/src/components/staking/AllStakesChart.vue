@@ -101,8 +101,9 @@ export default {
 
 <style>
 .chart-container {
+  background: white;
   padding: var(--unit);
-  border-radius: var(--half);
-  border: 1px solid $light2;
+  border-radius: var(--double);
+  border: 1px solid var(--light2);
 }
 </style>

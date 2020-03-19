@@ -105,7 +105,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 1rem 1rem;
+  margin-top: var(--unit);
 
   .page-navigator {
     display: flex;

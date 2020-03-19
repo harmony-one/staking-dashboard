@@ -19,26 +19,26 @@
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
             <!-- <PercentageChange :amount="networkInfo['total-staking-changed']" /> -->
           </div>
-          <div class="networkInfo-item">
+          <!-- <div class="networkInfo-item">
             <h4>Total seats:</h4>
             {{ networkInfo.total_seats }}
           </div>
           <div class="networkInfo-item">
             <h4>Total elected seats:</h4>
             {{ networkInfo.total_seats_used }}
+          </div> -->
+          <div class="networkInfo-item">
+            <h4>Current block number:</h4>
+            <a :href="linkToTransaction" target="_blank">
+              #{{ networkInfo.current_block_number }}
+            </a>
           </div>
         </div>
-        <div class="networkInfo-item">
-          <h4>Current block number:</h4>
-          <a :href="linkToTransaction" target="_blank">
-            #{{ networkInfo.current_block_number }}
-          </a>
-        </div>
       </div>
-      <div v-if="networkInfo.staking_distro" style="margin: 15px 0 30px 0;">
+      <!-- <div v-if="networkInfo.staking_distro">
         <AllStakesChart :data="networkInfo.staking_distro" />
-      </div>
-      <div v-if="isNetworkInfoLoading">
+      </div> -->
+      <div v-if="isNetworkInfoLoading" class="validatorTable">
         <div class="filterOptions">
           <TmField
             v-model="searchTerm"
@@ -47,18 +47,18 @@
           />
           <div class="toggles">
             <TmBtn
-              value="All"
-              :number="total"
-              class="btn-radio secondary"
-              :type="!activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = false"
-            />
-            <TmBtn
               value="Elected"
               :number="totalActive"
               class="btn-radio secondary"
               :type="activeOnly ? `active` : `secondary`"
               @click.native="activeOnly = true"
+            />
+            <TmBtn
+              value="All"
+              :number="total"
+              class="btn-radio secondary"
+              :type="!activeOnly ? `active` : `secondary`"
+              @click.native="activeOnly = false"
             />
           </div>
         </div>
@@ -155,57 +155,81 @@ export default {
 </script>
 
 <style lang="scss">
+
+.validatorTable, .networkInfo {
+  background: white;
+  margin: var(--double) 0;
+  border-radius: var(--unit);
+  border: 1px solid var(--light2);
+}
+.validatorTable {
+  padding: var(--unit);
+}
+
+.networkInfo {
+  
+  &-column {
+    display: flex;
+  }
+
+  &-item {
+    padding: var(--unit);
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+  }
+  &-item:not(:last-child) {
+    border-right: 1px solid var(--light2);
+  }
+
+  h4 {
+    color: var(--gray);
+    font-size: 16px;
+  }
+}
+
+
 .filterOptions {
   display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: center;
-  margin: 0 1rem 20px 1rem !important;
-  flex-direction: column-reverse;
+  justify-content: space-between;
+  flex-direction: row;
 
   .toggles {
-    margin-top: 0;
-    margin-bottom: 1rem;
+    button {
+      background: white ;
+      border: 1px solid var(--light2);
+      border-radius: var(--double) !important;
+      
+      &.secondary {
+        background:white !important;
+        color: var(--gray);
+      }
+      &.active {
+        background: #F4FCFF !important;
+        color: var(--blue);
+      }
+      &.number-circle {
+        margin-right: -var(--unit);
+      }
+    }
+    button:first-child {
+      margin-right: var(--unit);
+    }
   }
 
   label {
     cursor: pointer;
   }
 
-  input {
-    font-size: 14px;
+  input.searchField {
+    width: 200px;
+    padding: 0 var(--unit);
+    border: 1px solid var(--light2);
+    border-radius: var(--double) !important;
+    color: var(--gray);
   }
 }
 
-.filterOptions .btn-radio {
-  border-radius: 0;
-}
-
-.filterOptions .btn-radio:last-child {
-  border-radius: 0 0.5rem 0.5rem 0;
-  margin-left: -1px;
-}
-
-.filterOptions .btn-radio:first-child {
-  border-radius: 0.5rem 0 0 0.5rem;
-  margin-right: -1px;
-}
-
-@media screen and (min-width: 768px) {
-  .filterOptions {
-    justify-content: space-between;
-    flex-direction: row;
-    margin: 0.5rem 2rem 1rem;
-
-    .toggles {
-      margin-bottom: 0;
-    }
-
-    input {
-      max-width: 300px;
-    }
-  }
-}
 
 .no-results {
   text-align: center;
@@ -213,36 +237,26 @@ export default {
   color: var(--dim);
 }
 
-.networkInfo {
-  display: flex;
-  margin: 1rem 0 0;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0.5rem 1rem;
+// @media screen and (min-width: 768px) {
+//   .filterOptions {
+//     justify-content: space-between;
+//     flex-direction: row;
+//     margin: 0.5rem 2rem 1rem;
 
-  &-item {
-    // margin-right: 20px;
-    align-items: center;
-    justify-content: center;
-    // text-align: center;
-  }
+//     .toggles {
+//       margin-bottom: 0;
+//     }
 
-  &-column {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    min-width: 230px;
-  }
+//     input {
+//       max-width: 300px;
+//     }
+//   }
+// }
 
-  h4 {
-    font-size: 16px;
-    display: inline-block;
-  }
-}
 
-@media screen and (max-width: 500px) {
-  .networkInfo {
-    flex-direction: column;
-  }
-}
+// @media screen and (max-width: 500px) {
+//   .networkInfo {
+//     flex-direction: column;
+//   }
+// }
 </style>

@@ -8,7 +8,7 @@
     }"
     :disabled="disabled"
   >
-    {{ value }} <div v-if="number >= 0" class="number-circle">{{ number }}</div>
+    {{ value }} <div v-if="number >= 0" class="number-circle">({{ number }})</div>
   </button>
 </template>
 
@@ -45,8 +45,7 @@ export default {
   font-family: var(--helvetica);
   font-size: 14px;
   font-weight: 400;
-  padding: 8px 16px;
-  min-width: 100px;
+  padding: var(--half) var(--opf);
   min-height: 48px;
   color: var(--bright);
   margin: 0;
@@ -56,6 +55,7 @@ export default {
   border: none;
   white-space: nowrap;
   outline: none;
+  text-align: center;
 }
 
 .button:hover {
@@ -140,13 +140,11 @@ export default {
 }
 
 .number-circle{
-  width: 25px;
   height: 25px;
   display: inline-block;
   border-radius: 50%;
   padding-top: 5px;
   text-align: center;
-  margin-left: 10px;
   /* background: rgba(255, 255, 255, 0.4); */
 }
 </style>

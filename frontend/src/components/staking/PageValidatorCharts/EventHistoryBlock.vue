@@ -64,6 +64,10 @@ export default {
 </script>
 
 <style scoped>
+
+.card-white {
+  padding: var(--unit);
+}
 .line {
   border-bottom: 1px dashed #dedede;
   margin: 20px 0;

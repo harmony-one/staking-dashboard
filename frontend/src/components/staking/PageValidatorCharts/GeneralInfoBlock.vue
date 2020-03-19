@@ -131,4 +131,9 @@ export default {
 
 <style scoped>
 @import "./styles.css";
+
+
+.validator-info {
+  padding-top: var(--unit);
+}
 </style>

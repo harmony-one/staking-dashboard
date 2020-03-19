@@ -2,17 +2,17 @@
   <div class="card-white validator-info">
     <ul class="row">
       <li class="row">
-        <h4>Uptime (Average)</h4>
+        <h4>Uptime (AVG)</h4>
         <span id="page-profile__uptime">
           {{ validator.uptime_percentage | percent | notAvailable }}
         </span>
       </li>
       <li class="row">
-        <h4>Number of nodes</h4>
+        <h4>Nodes</h4>
         <span>{{ validator.active_nodes || 0 }}</span>
       </li>
       <li class="row">
-        <h4>Number of elected nodes</h4>
+        <h4>Elected Nodes</h4>
         <span>{{ validator.elected_nodes || 0 }}</span>
       </li>
       <li class="row">
@@ -39,4 +39,7 @@ export default {
 
 <style scoped>
 @import "./styles.css";
+.validator-info {
+  padding-top: var(--unit);
+}
 </style>

@@ -91,3 +91,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.chart-container {
+  border: none;
+}
+</style>

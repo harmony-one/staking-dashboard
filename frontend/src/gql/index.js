@@ -3,7 +3,7 @@
 import gql from "graphql-tag"
 
 export const schemaMap = {
-  cosmoshub: "",
+  hub: "",
   [`gaia-testnet`]: "gaia_testnet_",
   testnet: "gaia_testnet_"
 }

@@ -113,7 +113,7 @@ export default {
   padding: var(--unit);
   background: white;
   border: 1px solid var(--light2);
-  border-radius: var(--half);
+  border-radius: var(--unit);
 }
 
 .table-title {

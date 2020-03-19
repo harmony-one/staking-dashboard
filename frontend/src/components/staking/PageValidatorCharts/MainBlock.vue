@@ -1,13 +1,6 @@
 <template>
   <div class="validator-main-block">
-    <div class="status-container">
-      <span :class="status | toClassName" class="validator-status">
-        {{ status }}
-      </span>
-      <span v-if="status_detailed" class="validator-status-detailed">
-        {{ status_detailed }}
-      </span>
-    </div>
+    
     <div class="validator">
       <td class="data-table__row__info">
         <ValidatorLogo
@@ -20,16 +13,24 @@
           <h2>{{ validator.moniker }}</h2>
           <div class="validator-amounts">
             <div>
-              <span>Total stake:</span>
+              <span>Total Staked:</span>
               <h4>
                 {{ validator.total_stake | ones | fourDecimals | noBlanks }}
               </h4>
             </div>
-            <div>
+            <div class="status-container">
+              <span :class="status | toClassName" class="validator-status">
+                {{ status }}
+              </span>
+              <span v-if="status_detailed" class="validator-status-detailed">
+                {{ status_detailed }}
+              </span>
+            </div>
+            <!-- <div>
               <span>Delegated stake:</span>
               <h4>{{ delegatedStake | ones | fourDecimals | noBlanks }}</h4>
-            </div>
-            <div>
+            </div> -->
+            <!-- <div>
               <span>Self stake:</span>
               <h4>
                 {{ validatorSelfStakeAmount | ones | fourDecimals | noBlanks }}
@@ -38,7 +39,7 @@
             <div v-if="rewards">
               <span>Your rewards:</span>
               <h5>+{{ rewards | ones | fourDecimals | noBlanks }}</h5>
-            </div>
+            </div> -->
           </div>
         </div>
       </td>
@@ -216,8 +217,39 @@ export default {
 <style scoped>
 @import "./styles.css";
 
-.validator-main-block > .status-container {
-  padding: 0 1rem;
+.status-container {
+  margin-top: var(--unit);
+}
+
+.validator, .button-container {
+  padding: var(--unit) 0;
+  padding-bottom: 0;
+}
+.validator-logo-container {
+  margin-right: var(--unit);
+}
+
+.validator-status {
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: normal;
+  padding: var(--half) var(--half) 6px var(--half);
+  border: 1px solid;
+  border-radius: var(--unit);
+}
+.validator-status-detailed {
+  margin: 0;
+  margin-left: var(--unit);
+}
+
+.validator-status.inactive {
+  color: red;
+  border-color: red;
+}
+
+.validator-status.elected {
+  color: var(--blue);
+  border-color: var(--blue);
 }
 
 .validator-main-block .validator-info > h2 {

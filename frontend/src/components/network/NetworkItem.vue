@@ -56,12 +56,12 @@ export default {
 .network-item {
   display: flex;
   align-items: center;
-  border: 1px solid var(--light);
+  border: 1px solid var(--light2);
   background: white;
   position: relative;
   padding:  var(--unit);
   margin:  var(--unit);
-  border-radius: var(--half);
+  border-radius: var(--unit);
 }
 
 .network-item:hover {

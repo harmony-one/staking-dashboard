@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="slider-block">
+  <div class="card-white">
+    <!-- <div class="slider-block">
       <VueSlider
         v-model="currentRate"
         :max="maxRate"
@@ -20,7 +20,7 @@
           <div class="dot" />
         </template>
       </VueSlider>
-    </div>
+    </div> -->
     <div class="chart-container-commission">
       <ChartLine
         :chartdata="chartdata"
@@ -155,8 +155,12 @@ export default {
 </script>
 
 <style>
+
+.card-white {
+  padding: var(--unit);
+} 
 .chart-container-commission .chartjs-render-monitor {
-  border: 1px solid #dedede;
+  border: none;
 }
 
 .chart-description {

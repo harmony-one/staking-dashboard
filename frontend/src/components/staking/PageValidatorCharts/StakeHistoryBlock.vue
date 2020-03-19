@@ -101,7 +101,6 @@ export default {
 
 <style>
 .chart-container {
-  border-radius: var(--half);
-  border: 1px solid #dedede;
+  border: none;
 }
 </style>

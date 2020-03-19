@@ -109,15 +109,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 7px;
+  margin-bottom: var(--unit);
 }
 
 .validator-info li.column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 7px;
+  margin-bottom: var(--unit);
+}
+.validator-info li.column:last-child {
+  margin-bottom: 0;
+}
+.validator-info li.column .inline {
+  display: inline-block;
 }
 
 .validator-info h4,
@@ -133,4 +136,5 @@
 .validator-info li span {
   font-size: 14px;
   line-height: normal;
+  display: inline-block;
 }

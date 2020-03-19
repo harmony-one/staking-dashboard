@@ -18,7 +18,7 @@
 html,
 body,
 #app {
-  background: #F6F7FB;
+  background: var(--background);
 }
 
 a {

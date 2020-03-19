@@ -1,6 +1,5 @@
 <template>
   <div id="validators_table">
-    <PanelPagination :pagination="pagination" :total="totalFound" />
     <table class="data-table card-white">
       <thead>
         <PanelSort
@@ -19,6 +18,7 @@
         />
       </tbody>
     </table>
+    <PanelPagination :pagination="pagination" :total="totalFound" />
   </div>
 </template>
 
@@ -111,6 +111,7 @@ export default {
       })
     },
     sortedEnrichedValidators() {
+      console.log(this.enrichedValidators)
       return this.enrichedValidators.slice(0)
     },
     startIndex() {
@@ -131,11 +132,11 @@ export default {
           value: `name`,
           tooltip: `The validator's moniker`
         },
-        {
-          title: `Return %`,
-          value: `return`,
-          tooltip: `Rate of return per validator`
-        },
+        // {
+        //   title: `Return %`,
+        //   value: `return`,
+        //   tooltip: `Rate of return per validator`
+        // },
         {
           title: `Fees`,
           value: `rate`,
@@ -147,14 +148,14 @@ export default {
           tooltip: `APR %`
         },
         {
-          title: `Average ONE staked`,
+          title: `Stake`,
           value: `average_stake_by_bls`,
           tooltip: `Average ONE staked`
         },
         {
-          title: `Voting Power`,
-          value: `voting_power`,
-          tooltip: `Percentage of voting shares`
+          title: `Uptime`,
+          value: `uptime_percentage`,
+          tooltip: `Percentage validator has been elected vs. not`
         }
       ]
     }
@@ -210,14 +211,23 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
+
+table {
+  margin-top: var(--unit);
+  thead {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}
+
+
 @media screen and (max-width: 550px) {
   .data-table td {
     overflow: hidden;
   }
 
   .data-table__row__info {
-    max-width: 22rem;
   }
 }
 

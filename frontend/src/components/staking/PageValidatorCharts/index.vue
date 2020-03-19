@@ -57,7 +57,7 @@
       <div slot="title">Validator Not Found</div>
       <div slot="subtitle">
         Please visit the
-        <router-link to="/validators/">Validators</router-link>page to view all
+        <router-link to="/validators/"> Validators </router-link>page to view all
         validators
       </div>
     </template>
@@ -135,24 +135,28 @@ export default {
     fetchValidator: async function() {
       this.loading = true
 
-      if (this.connection.networkConfig.id) {
-        this.validator = await fetchValidatorByAddress(
-          this.connection.networkConfig.id,
-          this.$route.params.validator
-        )
+      try {
+        if (this.connection.networkConfig.id) {
+          this.validator = await fetchValidatorByAddress(
+            this.connection.networkConfig.id,
+            this.$route.params.validator
+          )
 
-        let history = await fetchValidatorHistory(
-          this.connection.networkConfig.id,
-          this.$route.params.validator
-        )
+          let history = await fetchValidatorHistory(
+            this.connection.networkConfig.id,
+            this.$route.params.validator
+          )
 
-        history = history.sort((a, b) => (a.index < b.index ? -1 : 1))
+          history = history.sort((a, b) => (a.index < b.index ? -1 : 1))
 
-        this.allHistory = history
-        this.validatorHistory = history
+          this.allHistory = history
+          this.validatorHistory = history
 
-        // don't need to use
-        // this.validatorHistory = formatByStep(history, SECONDS_PER_EPOCH * 1000)
+          // don't need to use
+          // this.validatorHistory = formatByStep(history, SECONDS_PER_EPOCH * 1000)
+        }
+      } catch (err) {
+        console.error(err)
       }
 
       this.loading = false

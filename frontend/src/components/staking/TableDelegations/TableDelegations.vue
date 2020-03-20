@@ -16,6 +16,7 @@
       >
         <TableRow
           v-for="(row, index) in showingValidators"
+          v-if="row.stake > 0"
           :key="row.operator_address"
           :index="index"
           :data="row"

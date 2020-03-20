@@ -35,47 +35,33 @@
           </div>
         </div>
       </div>
-      <!-- <div v-if="networkInfo.staking_distro">
-        <AllStakesChart :data="networkInfo.staking_distro" />
-      </div> -->
-      <div v-if="isNetworkInfoLoading" class="validatorTable">
-        <div class="filterOptions">
-          <TmField
-            v-model="searchTerm"
-            class="searchField"
-            placeholder="Search"
-          />
-          <div class="toggles">
-            <TmBtn
-              value="Elected"
-              :number="totalActive"
-              class="btn-radio secondary"
-              :type="activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = true"
-            />
-            <TmBtn
-              value="All"
-              :number="total"
-              class="btn-radio secondary"
-              :type="!activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = false"
-            />
-          </div>
-        </div>
-        <TableValidators
-          :data="validators"
-          :active-only="activeOnly"
-          :search="searchTerm"
-          show-on-mobile="expectedReturns"
+      <div v-if="networkInfo.staking_distro">
+        <AllStakesChart
+          :data="networkInfo.staking_distro"
+          :median="networkInfo.effective_median_stake | ones"
+          :networkInfo="networkInfo"
         />
-        <div
-          v-if="validators && validators.length === 0 && searchTerm"
-          class="no-results"
-        >
-          No results for these search terms
-        </div>
       </div>
-      <TmDataLoading v-if="isLoading" />
+
+      <div class="widgets">
+        <LightWidget
+          title="Seats Elected"
+        >
+          <div>
+            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
+          </div>
+        </LightWidget>
+
+        <LightWidget
+          title="Seat Allocation History"
+        >
+          <div>
+            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
+          </div>
+        </LightWidget>
+      </div>
+      
+      <!-- <TmDataLoading v-if="isLoading" /> -->
     </template>
   </PageContainer>
 </template>
@@ -91,6 +77,7 @@ import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import PercentageChange from "./components/PercentageChange"
+import LightWidget from "./../wallet/components/LightWidget"
 
 export default {
   name: `tab-validators`,
@@ -101,7 +88,8 @@ export default {
     TmBtn,
     TmDataLoading,
     AllStakesChart,
-    PercentageChange
+    PercentageChange,
+    LightWidget
   },
   filters: {
     ones,
@@ -149,12 +137,23 @@ export default {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
 
-    console.log(this)
+    console.log(this.networkInfo)
   }
 }
 </script>
 
 <style lang="scss">
+
+.widgets {
+  display: flex;
+  margin-bottom: var(--unit);
+  > div {
+    flex: 0 0 50%;
+  }
+  .widget-body {
+    padding: var(--unit);
+  }
+}
 
 .validatorTable, .networkInfo {
   background: white;
@@ -235,23 +234,6 @@ export default {
   text-align: center;
   margin: 3rem;
   color: var(--dim);
-}
-
-
-@media screen and (max-width: 411px) {
-
-  .validatorTable {
-    margin-left: calc(-2 * var(--unit)) !important;
-    width: calc(100vw);
-    border-left: none !important;
-    border-right: none !important;
-    border-radius: 0 !important;
-  }
-
-  .filterOptions { 
-
-
-  }
 }
 
 // @media screen and (min-width: 768px) {

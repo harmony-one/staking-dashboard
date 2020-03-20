@@ -24,7 +24,7 @@ Vue.use(InfiniteScroll)
 Vue.use(VueMq, {
   breakpoints: {
     // default breakpoints - customize this
-    sm: 450,
+    sm: 412,
     md: 800,
     lg: 1250,
     xlg: Infinity

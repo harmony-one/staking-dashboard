@@ -93,9 +93,6 @@ export default {
 <style>
 .chart-container {
   background: white;
-  padding: var(--unit);
-  border-radius: var(--unit);
-  border: 1px solid var(--light2) !important;
   margin-bottom: var(--double);
 }
 </style>

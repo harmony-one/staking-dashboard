@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div class="container">
     <div class="mobile-menu-button">
       <div v-if="open" class="close-menu" @click="close()">
         <i class="material-icons mobile-menu-action">close</i>
@@ -103,6 +103,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.container {
+    background: white;
+}
 .app-header {
   position: relative;
   .container-mobile, .container-desktop {
@@ -191,7 +195,7 @@ export default {
   .mobile-menu-button {
     z-index: 9999;
     display: block;
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     > div {

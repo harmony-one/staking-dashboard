@@ -2,7 +2,7 @@
   <PageContainer
     :managed="true"
     :data-empty="validators && validators.length === 0"
-    title="Validators"
+    title="Global View"
   >
     <template slot="managed-body">
       <div class="networkInfo">
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div v-if="networkInfo.staking_distro">
+      <div v-if="networkInfo.staking_distro" class="chart">
         <AllStakesChart
           :data="networkInfo.staking_distro"
           :median="networkInfo.effective_median_stake | ones"
@@ -52,13 +52,13 @@
           </div>
         </LightWidget>
 
-        <LightWidget
+        <!-- <LightWidget
           title="Seat Allocation History"
         >
           <div>
             <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
           </div>
-        </LightWidget>
+        </LightWidget> -->
       </div>
       
       <!-- <TmDataLoading v-if="isLoading" /> -->
@@ -144,9 +144,18 @@ export default {
 
 <style lang="scss">
 
+.chart {
+  .chart-container {
+    border: 1px solid var(--light2) !important;
+    border-radius: var(--unit);
+    padding: var(--unit);
+  }
+}
+
 .widgets {
   display: flex;
-  margin-bottom: var(--unit);
+  margin: var(--unit) 0;
+  margin-top: 64px;
   > div {
     flex: 0 0 50%;
   }

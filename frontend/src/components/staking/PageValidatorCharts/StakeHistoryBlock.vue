@@ -4,7 +4,7 @@
       <ChartBar
         :chartdata="chartdata"
         :options="options"
-        style="height: 300px;"
+        style="height: 300px; width: 100%; max-width: 100vw;"
       />
     </div>
     <div class="chart-description">

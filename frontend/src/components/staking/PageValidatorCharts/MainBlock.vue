@@ -214,7 +214,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 @import "./styles.css";
 
 .status-container {
@@ -250,6 +250,7 @@ export default {
 .validator-status.elected {
   color: var(--blue);
   border-color: var(--blue);
+  text-align: center;
 }
 
 .validator-main-block .validator-info > h2 {
@@ -276,4 +277,20 @@ export default {
 .validator-main-block .validator-amounts > div span {
   margin-right: 5px;
 }
+
+
+
+
+@media screen and (max-width: 411px) {
+    
+  .status-container {
+    span {
+      display: block;
+      width: 100%;
+    }
+  }
+
+}
+
+
 </style>

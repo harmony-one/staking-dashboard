@@ -163,6 +163,7 @@ export default {
   border: 1px solid var(--light2);
 }
 .validatorTable {
+    overflow: hidden;
   padding: var(--unit);
 }
 
@@ -242,7 +243,7 @@ export default {
 
   .validatorTable {
     margin-left: calc(-2 * var(--unit)) !important;
-    width: calc(100vw);
+    width: calc(100vw - 1px);
     border-left: none !important;
     border-right: none !important;
     border-radius: 0 !important;

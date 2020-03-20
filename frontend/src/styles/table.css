@@ -22,15 +22,15 @@
   font-size: var(--sm);
 }
 
-.data-table th:nth-child(1) {
+.data-table th:nth-child(3) {
   width: 64px;
 }
 
-.data-table th:nth-child(2) {
+.data-table th:nth-child(4) {
   width: 128px;
 }
 
-.data-table th:nth-child(3) {
+.data-table th:nth-child(5) {
   width: auto;
   padding-left: 60px;
 }

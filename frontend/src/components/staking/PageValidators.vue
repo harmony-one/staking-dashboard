@@ -248,9 +248,15 @@ export default {
     border-radius: 0 !important;
   }
 
-  .filterOptions { 
-
-
+  .filterOptions {
+    width: 100vw; 
+    height: 48px;
+    .toggles {
+      text-align: right;
+      margin-right: 8px;
+      transform: scale(0.8);
+      width: 300px;
+    }
   }
 }
 

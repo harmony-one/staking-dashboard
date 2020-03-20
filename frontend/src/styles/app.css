@@ -30,6 +30,11 @@ a:hover {
   color: var(--link-hover);
 }
 
+
+.vue-tooltip {
+  z-index: 10000;
+}
+
 #app {
   font-size: var(--x);
   line-height: 1.5;
@@ -109,6 +114,7 @@ input.tm-field {
 }
 
 #bar-container {
+  z-index: 9999;
   display: block;
 }
 

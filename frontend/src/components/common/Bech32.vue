@@ -1,7 +1,10 @@
 <template>
   <div class="bech32-address">
     <div
-      v-tooltip.top="copySuccess || `Click to copy`"
+      v-tooltip="{
+        placement: 'top',
+        content: copySuccess || `Click to copy`,
+      }"
       v-clipboard:copy="address"
       v-clipboard:success="() => onCopy()"
       class="address"
@@ -47,6 +50,9 @@ export default {
 }
 </script>
 <style>
+
+
+
 .bech32-address {
   align-items: flex-start;
   display: inline-flex;

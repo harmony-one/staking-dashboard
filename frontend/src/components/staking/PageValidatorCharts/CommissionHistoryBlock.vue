@@ -25,7 +25,7 @@
       <ChartLine
         :chartdata="chartdata"
         :options="options"
-        style="height: 300px;"
+        style="height: 300px; width: 100%;"
       />
     </div>
     <div class="chart-description">Last commission change {{ lastChange }}</div>

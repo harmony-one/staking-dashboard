@@ -104,7 +104,6 @@ export default {
 }
 
 .chart {
-  width: 300px;
   height: 300px;
   margin: 0 auto;
 }

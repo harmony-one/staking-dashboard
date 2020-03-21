@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-bottom">
-    <a
+    <!-- <a
       href="https://docs.google.com/forms/d/1OUALlRVgA6-AQdUf4jaPFx_TaStKALBRTX97xNmDBDY/"
       target="_blank"
     >
@@ -11,7 +11,7 @@
         type="secondary"
         size="small"
       />
-    </a>
+    </a> -->
     <div v-tooltip.top="networkTooltip" id="network_status">
       <div
         v-if="connection.connected"
@@ -89,7 +89,8 @@ export default {
   left: 0;
   color: var(--gray);
   padding: var(--double) var(--unit);
-  width: 100%;
+  width: var(--width-side);
+  overflow: hidden;
 }
 
 .intercom-button {
@@ -161,8 +162,6 @@ export default {
 }
 
 @media screen and (max-width: 767px) {
-  .sidebar-bottom {
-    max-width: 100%;
-  }
+  
 }
 </style>

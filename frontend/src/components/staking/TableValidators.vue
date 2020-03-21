@@ -1,7 +1,7 @@
 <template>
   <div id="validators_table">
     <table class="data-table card-white">
-      <thead>
+      <thead class="table-header">
         <PanelSort
           :sort="sort"
           :properties="properties"
@@ -85,6 +85,7 @@ export default {
       } = this
     ) {
       return data.map(v => {
+
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
@@ -92,10 +93,6 @@ export default {
         return Object.assign({}, v, {
           small_moniker: v.moniker.toLowerCase(),
           my_delegations: delegation ? delegation.amount : 0,
-          // my_delegations:
-          //   session.signedIn && committedDelegations[v.operator_address] > 0
-          //     ? committedDelegations[v.operator_address]
-          //     : 0,
           rewards:
             session.signedIn && distribution.rewards[v.operator_address]
               ? distribution.rewards[v.operator_address][this.bondDenom]
@@ -119,24 +116,14 @@ export default {
     },
     showingValidators() {
       return this.sortedEnrichedValidators
-
-      //         .slice(
-      //   this.startIndex,
-      //   this.startIndex + this.pagination.pageSize
-      // )
     },
     properties() {
-      return [
+      let props = [
         {
           title: `Name`,
           value: `name`,
           tooltip: `The validator's moniker`
         },
-        // {
-        //   title: `Return %`,
-        //   value: `return`,
-        //   tooltip: `Rate of return per validator`
-        // },
         {
           title: `Fees`,
           value: `rate`,
@@ -158,6 +145,11 @@ export default {
           tooltip: `Percentage validator has been elected vs. not`
         }
       ]
+      if (this.$mq === 'sm') {
+        const keep = ['name', 'apr']
+        props = props.filter((p) => keep.includes(p.name))
+      }
+      return props
     }
   },
   watch: {
@@ -221,17 +213,8 @@ table {
   }
 }
 
-
-@media screen and (max-width: 550px) {
-  .data-table td {
-    overflow: hidden;
-  }
-
-  .data-table__row__info {
-  }
+@media screen and (max-width: 411px) {
+  
 }
 
-.flip-list-move {
-  transition: transform 0.3s;
-}
 </style>

@@ -27,7 +27,6 @@
 
         <LightWidget
           title="Stake & Delegation history"
-          style="width: 500px; height: 400px;"
         >
           <StakeHistoryBlock
             :history="validatorHistory"
@@ -36,14 +35,13 @@
         </LightWidget>
         <LightWidget
           title="Reward rate history"
-          style="width: 500px; height: 400px;"
         >
           <RewardHistoryBlock
             :history="validatorHistory"
             :validator="validator"
           />
         </LightWidget>
-        <LightWidget title="Commission" style="width: 500px; height: 490px;">
+        <LightWidget title="Commission">
           <CommissionHistoryBlock
             :history="validatorHistory"
             :validator="validator"
@@ -52,7 +50,6 @@
         <LightWidget
           v-if="allHistory.length"
           title="Event history"
-          style="width: 500px; height: 400px;"
         >
           <EventHistoryBlock :events="eventsHistory" />
         </LightWidget>
@@ -206,5 +203,37 @@ export default {
     text-transform: uppercase;
   }
 }
+
+
+@media screen and (max-width: 411px) {
+    
+  .validator-top {
+    display: flex;
+    flex-direction: column;
+    background: none;
+    border: none;
+    margin-bottom: var(--unit);
+    > div {
+      flex-grow: 1;
+      width: 100%;
+      background: white;
+      border-radius: var(--unit);
+      border: 1px solid var(--light2);
+      margin-bottom: var(--unit);
+      padding: var(--unit);
+    }
+  > div:last-child {
+      border-right: 1px solid var(--light2);
+  }
+    .title {
+      font-size: 16px;
+      color: var(--blue);
+      padding-bottom: 0;
+      text-transform: uppercase;
+    }
+  }
+}
+
+
 
 </style>

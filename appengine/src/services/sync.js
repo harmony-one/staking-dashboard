@@ -342,7 +342,7 @@ module.exports = function(
               ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
                 parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
               : null,
-          apr: _.get(result, 'metrics.current-apr', null)
+          apr: _.get(result, 'lifetime.apr', null)
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]

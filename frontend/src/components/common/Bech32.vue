@@ -12,13 +12,14 @@
       {{ address | formatBech32(longForm, 8, 8) }}
     </div>
 
-    <a
-        v-if="!session.isMobile && session.sessionType === 'ledger'"
-        class="show-on-ledger"
+    <div class="show-on-ledger">
+      <a
+        v-if="true || !session.isMobile && session.sessionType === 'ledger'"
         @click="showAddressOnLedger()"
       >
         Show on Ledger
       </a>
+    </div>
 
       
     <!-- <div :class="{ active: copySuccess }" class="copied">
@@ -30,12 +31,20 @@
 <script>
 import { formatBech32 } from "src/filters"
 
+// ???
+// import { showAddressOnLedger } from "vuex"
+
+
 export default {
   name: `bech32-address`,
   filters: {
     formatBech32
   },
   props: {
+    session: {
+      type: Object,
+      required: true
+    },
     address: {
       type: String,
       required: true
@@ -59,13 +68,14 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped lang="scss">
 
-
+.address, .show-on-ledger {
+  width: 100%;
+  margin-top: var(--half);
+}
 
 .bech32-address {
-  align-items: flex-start;
-  display: inline-flex;
   padding: 0;
   margin: 0;
   font-size: inherit;

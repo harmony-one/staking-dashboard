@@ -4,7 +4,7 @@
     <div v-if="session.signedIn" class="user-box">
       <div>
         <h3>Your Address</h3>
-        <Bech32 :address="session.address || ''" />
+        <Bech32 :session="session" :address="session.address || ''" />
       </div>
     </div>
 

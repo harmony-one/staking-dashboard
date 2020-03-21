@@ -11,6 +11,16 @@
     >
       {{ address | formatBech32(longForm, 8, 8) }}
     </div>
+
+    <a
+        v-if="!session.isMobile && session.sessionType === 'ledger'"
+        class="show-on-ledger"
+        @click="showAddressOnLedger()"
+      >
+        Show on Ledger
+      </a>
+
+      
     <!-- <div :class="{ active: copySuccess }" class="copied">
       <i class="material-icons">check</i>
     </div> -->

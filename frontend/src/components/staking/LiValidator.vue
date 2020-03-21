@@ -9,7 +9,7 @@
       })
     "
   >
-    <td>{{ index + 1 }}</td>
+    <td class="hide-xs">{{ index + 1 }}</td>
     <td class="hide-xs">
       <div class="status-container">
         <span
@@ -36,16 +36,16 @@
     <!-- <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{ 0.00005 | percent }}
     </td> -->
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
+    <td class="hide-xs">
       {{ validator.rate | percent | notAvailable }}
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
+    <td >
       {{ validator.apr | percent | notAvailable }}
     </td>
-    <td class="average_stake_cell">
+    <td class="hide-xs">
       {{ validator.average_stake_by_bls | ones | zeroDecimals }}
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
+    <td class="hide-xs">
       {{ validator.uptime_percentage | percent | notAvailable }}
     </td>
   </tr>
@@ -127,6 +127,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+
 
 .data-table__row__info {
   height: 48px;
@@ -213,4 +214,13 @@ export default {
   color: var(--blue);
   border-color: var(--blue);
 }
+
+
+@media screen and (max-width: 411px) {
+  .hide-xs {
+    display: none;
+  }
+}
+
+
 </style>

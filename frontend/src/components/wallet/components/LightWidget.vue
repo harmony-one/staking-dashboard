@@ -51,8 +51,17 @@ export default {
 }
 
 .widget-body {
-  padding: var(--unit) 0;
+  padding: var(--unit);
 }
 
+@media screen and (max-width: 411px) {
+    .widget-container {
+  max-width: calc(100vw - 2 * var(--double));
+}
+  .widget-body {
+    overflow-x: scroll;
+  }
+
+}
 
 </style>

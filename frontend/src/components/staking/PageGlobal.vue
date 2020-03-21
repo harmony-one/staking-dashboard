@@ -2,7 +2,7 @@
   <PageContainer
     :managed="true"
     :data-empty="validators && validators.length === 0"
-    title="Validators"
+    title="Global View"
   >
     <template slot="managed-body">
       <div class="networkInfo">
@@ -35,47 +35,33 @@
           </div>
         </div>
       </div>
-      <!-- <div v-if="networkInfo.staking_distro">
-        <AllStakesChart :data="networkInfo.staking_distro" />
-      </div> -->
-      <div v-if="isNetworkInfoLoading" class="validatorTable">
-        <div class="filterOptions">
-          <TmField
-            v-model="searchTerm"
-            class="searchField"
-            placeholder="Search"
-          />
-          <div class="toggles">
-            <TmBtn
-              value="Elected"
-              :number="totalActive"
-              class="btn-radio secondary"
-              :type="activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = true"
-            />
-            <TmBtn
-              value="All"
-              :number="total"
-              class="btn-radio secondary"
-              :type="!activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = false"
-            />
-          </div>
-        </div>
-        <TableValidators
-          :data="validators"
-          :active-only="activeOnly"
-          :search="searchTerm"
-          show-on-mobile="expectedReturns"
+      <div v-if="networkInfo.staking_distro" class="chart">
+        <AllStakesChart
+          :data="networkInfo.staking_distro"
+          :median="networkInfo.effective_median_stake | ones"
+          :networkInfo="networkInfo"
         />
-        <div
-          v-if="validators && validators.length === 0 && searchTerm"
-          class="no-results"
-        >
-          No results for these search terms
-        </div>
       </div>
-      <TmDataLoading v-if="isLoading" />
+
+      <div class="widgets">
+        <LightWidget
+          title="Seats Elected"
+        >
+          <div>
+            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
+          </div>
+        </LightWidget>
+
+        <!-- <LightWidget
+          title="Seat Allocation History"
+        >
+          <div>
+            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
+          </div>
+        </LightWidget> -->
+      </div>
+      
+      <!-- <TmDataLoading v-if="isLoading" /> -->
     </template>
   </PageContainer>
 </template>
@@ -91,6 +77,7 @@ import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import PercentageChange from "./components/PercentageChange"
+import LightWidget from "./../wallet/components/LightWidget"
 
 export default {
   name: `tab-validators`,
@@ -101,7 +88,8 @@ export default {
     TmBtn,
     TmDataLoading,
     AllStakesChart,
-    PercentageChange
+    PercentageChange,
+    LightWidget
   },
   filters: {
     ones,
@@ -149,12 +137,32 @@ export default {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
 
-    console.log(this)
+    console.log(this.networkInfo)
   }
 }
 </script>
 
 <style lang="scss">
+
+.chart {
+  .chart-container {
+    border: 1px solid var(--light2) !important;
+    border-radius: var(--unit);
+    padding: var(--unit);
+  }
+}
+
+.widgets {
+  display: flex;
+  margin: var(--unit) 0;
+  margin-top: 64px;
+  > div {
+    flex: 0 0 50%;
+  }
+  .widget-body {
+    padding: var(--unit);
+  }
+}
 
 .validatorTable, .networkInfo {
   background: white;
@@ -163,7 +171,6 @@ export default {
   border: 1px solid var(--light2);
 }
 .validatorTable {
-    overflow: hidden;
   padding: var(--unit);
 }
 
@@ -236,29 +243,6 @@ export default {
   text-align: center;
   margin: 3rem;
   color: var(--dim);
-}
-
-
-@media screen and (max-width: 411px) {
-
-  .validatorTable {
-    margin-left: calc(-2 * var(--unit)) !important;
-    width: calc(100vw - 1px);
-    border-left: none !important;
-    border-right: none !important;
-    border-radius: 0 !important;
-  }
-
-  .filterOptions {
-    width: 100vw; 
-    height: 48px;
-    .toggles {
-      text-align: right;
-      margin-right: 8px;
-      transform: scale(0.8);
-      width: 300px;
-    }
-  }
 }
 
 // @media screen and (min-width: 768px) {

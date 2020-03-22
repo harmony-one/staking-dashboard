@@ -78,19 +78,18 @@ export default {
     async showAddressOnLedger() {
       this.ledgerSuccess = "Please Verify on Ledger"
       setTimeout(() => {
-        this.ledgerSuccess = false
-      }, 25000)
+        this.ledgerSuccess = undefined
+      }, 2500)
       try {
         await this.$store.dispatch(`showLedgerAddress`)
         this.ledgerSuccess = "Address Matches"
       } catch (error) {
+        console.log(error.message)
         this.ledgerSuccess = error.message
-        this.messageTimeout = setTimeout(
-          () => (this.ledgerSuccess = undefined),
-          80000
-        )
-        this.$emit(`close`)
-        this.$store.dispatch(`signOut`)
+        this.messageTimeout = setTimeout(() => {
+          this.$emit(close)
+          this.$store.dispatch(signOut)
+        }, 8000)
       }
     }
   }

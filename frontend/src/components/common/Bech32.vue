@@ -3,7 +3,7 @@
     <div
       v-tooltip="{
         placement: 'top',
-        content: copySuccess || `Click to copy`,
+        content: copySuccess || `Click to copy`
       }"
       v-clipboard:copy="address"
       v-clipboard:success="() => onCopy()"
@@ -12,16 +12,25 @@
       {{ address | formatBech32(longForm, 8, 8) }}
     </div>
 
-    <div class="show-on-ledger">
+    <div
+      v-tooltip="{
+        placement: 'top',
+        content: ledgerSuccess || `Click to show on Ledger`
+      }"
+      class="show-on-ledger"
+    >
       <a
-        v-if="true || !session.isMobile && session.sessionType === 'ledger'"
-        @click="showAddressOnLedger()"
+        v-if="true || (!session.isMobile && session.sessionType === 'ledger')"
+        @click="
+          () => {
+            showAddressOnLedger()
+          }
+        "
       >
         Show on Ledger
       </a>
     </div>
 
-      
     <!-- <div :class="{ active: copySuccess }" class="copied">
       <i class="material-icons">check</i>
     </div> -->
@@ -30,10 +39,6 @@
 
 <script>
 import { formatBech32 } from "src/filters"
-
-// ???
-// import { showAddressOnLedger } from "vuex"
-
 
 export default {
   name: `bech32-address`,
@@ -56,21 +61,44 @@ export default {
     }
   },
   data: () => ({
-    copySuccess: false
+    copySuccess: false,
+    ledgerSuccess: undefined
   }),
   methods: {
     onCopy() {
-      this.copySuccess = 'Copied!'
+      this.copySuccess = "Copied!"
       setTimeout(() => {
         this.copySuccess = false
       }, 2500)
+    },
+    signOut() {
+      this.$emit(`close`)
+      this.$store.dispatch(`signOut`)
+    },
+    async showAddressOnLedger() {
+      this.ledgerSuccess = "Please Verify on Ledger"
+      setTimeout(() => {
+        this.ledgerSuccess = false
+      }, 25000)
+      try {
+        await this.$store.dispatch(`showLedgerAddress`)
+        this.ledgerSuccess = "Address Matches"
+      } catch (error) {
+        this.ledgerSuccess = error.message
+        this.messageTimeout = setTimeout(
+          () => (this.ledgerSuccess = undefined),
+          80000
+        )
+        this.$emit(`close`)
+        this.$store.dispatch(`signOut`)
+      }
     }
   }
 }
 </script>
 <style scoped lang="scss">
-
-.address, .show-on-ledger {
+.address,
+.show-on-ledger {
   width: 100%;
   margin-top: var(--half);
 }

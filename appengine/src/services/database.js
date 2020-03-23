@@ -40,10 +40,25 @@ module.exports = function() {
     return snapshot.docs.map(doc => doc.data())
   }
 
+  const getGlobalDataWithLimit = async (collectionName, orderBy, limit) => {
+    try {
+      const snapshot = await db
+        .collection(collectionName)
+        .orderBy(orderBy, 'desc')
+        .limit(limit)
+        .get()
+      return snapshot.docs.map(doc => doc.data())
+    } catch (err) {
+      console.log(`error when get global data ${collectionName}`)
+      return []
+    }
+  }
+
   return {
     db,
     getCollectionData,
     getCollectionDataWithLimit,
-    updateDocument
+    updateDocument,
+    getGlobalDataWithLimit
   }
 }

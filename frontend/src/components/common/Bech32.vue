@@ -13,16 +13,17 @@
     </div>
 
     <div
+      class="show-on-ledger"
       v-tooltip="{
         placement: 'top',
         content: ledgerSuccess || `Click to show on Ledger`
       }"
-      class="show-on-ledger"
     >
       <a
         v-if="true || (!session.isMobile && session.sessionType === 'ledger')"
         @click="
           () => {
+            onShowLedger()
             showAddressOnLedger()
           }
         "
@@ -62,9 +63,19 @@ export default {
   },
   data: () => ({
     copySuccess: false,
+<<<<<<< HEAD
     ledgerSuccess: undefined
+=======
+    ledgerSuccess: false
+>>>>>>> pull from howard
   }),
   methods: {
+    onShowLedger() {
+      this.ledgerSuccess = 'Some Message'
+      setTimeout(() => {
+        this.ledgerSuccess = false
+      }, 2500)
+    },
     onCopy() {
       this.copySuccess = "Copied!"
       setTimeout(() => {

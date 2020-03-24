@@ -12,10 +12,18 @@
       {{ address | formatBech32(longForm, 8, 8) }}
     </div>
 
-    <div class="show-on-ledger">
+    <div class="show-on-ledger"
+      v-tooltip="{
+        placement: 'top',
+        content: ledgerSuccess || `Click to show on Ledger`,
+      }"
+    >
       <a
         v-if="true || !session.isMobile && session.sessionType === 'ledger'"
-        @click="showAddressOnLedger()"
+        @click="() => {
+          onShowLedger()
+          showAddressOnLedger()
+        }"
       >
         Show on Ledger
       </a>
@@ -56,9 +64,16 @@ export default {
     }
   },
   data: () => ({
-    copySuccess: false
+    copySuccess: false,
+    ledgerSuccess: false
   }),
   methods: {
+    onShowLedger() {
+      this.ledgerSuccess = 'Some Message'  
+      setTimeout(() => {
+        this.ledgerSuccess = false
+      }, 2500)
+    },
     onCopy() {
       this.copySuccess = 'Copied!'
       setTimeout(() => {

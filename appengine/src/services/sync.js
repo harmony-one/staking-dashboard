@@ -651,7 +651,10 @@ module.exports = function(
         })
         .filter(isNotEmpty)
         .filter(
-          v => !search || v.name.toLowerCase().includes(search.toLowerCase())
+          v =>
+            !search ||
+            v.name.toLowerCase().includes(search.toLowerCase()) ||
+            v.address.toLowerCase().includes(search.toLowerCase())
         )
 
       const totalFound = validators.length

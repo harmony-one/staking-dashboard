@@ -19,11 +19,12 @@ import { ones, zeroDecimals } from "../../scripts/num"
 // }
 
 export default {
-  name: "AllStakesChart",
+  name: "SeatAllocationHistory",
   components: { ChartBar },
   props: ["data", "median", "networkInfo"],
   data: () => ({
     options: {
+      responsive: true,
       plugins: {
         labels: false,
       },
@@ -32,11 +33,22 @@ export default {
       tooltips: {
         mode: "index",
         intersect: false,
+        custom: function(tooltip) {
+          if (!tooltip) return;
+          tooltip.displayColors = false;
+        },
         callbacks: {
           title: (data) => "",
-          label: (data, a, b) => 
-            zeroDecimals(data.yLabel) + " ONE Staked"// by " + a.datasets[0].pointRadius({dataIndex: data.index})
+          label: ({datasetIndex, xLabel, yLabel}) => {
+            if (datasetIndex === 0) {
+              return `${yLabel} seats elected out of`
+            }
+            return `${yLabel} total seats at ${xLabel}`
+          }
         }
+      },
+      legend: {
+        display: false
       },
       scales: {
         xAxes: [
@@ -45,6 +57,7 @@ export default {
             gridLines: {
               display: false
             },
+            stacked: true,
           }
         ],
         yAxes: [
@@ -61,28 +74,22 @@ export default {
   computed: {
     chartdata() {
 
-      const data = this.data.map((v) => Math.floor(ones(v))).reverse()
-      const labels = data.map((v, idx) => idx)
-      const even = data.length % 2 === 0
-      const median = Math.floor(data.length/2)
-      const colors = data.map((v, i) => {
-        if (even && (i === median || i === median+1)) {
-          return '#FF0000'
-        } else if (i === median) {
-          return '#FF0000'
-        }
-        // return '#0981cf'
-        return '#00ADE8'
-      })
+      console.log(this.data)
+      
+      const epochs = Object.keys(this.data)
+      const elected = this.data.externalShards.map((s) => s.external)
+      const total = this.data.externalShards.map((s) => s.total)
+
+      const shards = [0, 1, 2, 3].map((s) => 'Shard ' + s)
       
       return {
-        labels,
+        labels: shards,
         datasets: [
           {
-            label: "Staked ONE distribution",
-            backgroundColor: colors,
-            minHeight: 16,
-            data,
+            data: elected
+          }, 
+          {
+            data: total
           }
         ]
       }

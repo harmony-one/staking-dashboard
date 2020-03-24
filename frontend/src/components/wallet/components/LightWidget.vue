@@ -56,11 +56,11 @@ export default {
 
 @media screen and (max-width: 411px) {
     .widget-container {
-  max-width: calc(100vw - 2 * var(--double));
-}
-  .widget-body {
-    overflow-x: scroll;
-  }
+      max-width: calc(100vw - 2 * var(--double));
+    }
+    .widget-body {
+      overflow-x: scroll;
+    }
 
 }
 

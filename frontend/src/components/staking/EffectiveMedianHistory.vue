@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="chart-container">
-      <ChartBar
+      <ChartLine
         :chartdata="chartdata"
         :options="options"
         style="height: 300px; width: 100%;"
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import ChartBar from "./PageValidatorCharts/components/ChartBar"
+import ChartLine from "./PageValidatorCharts/components/ChartLine"
 import { ones, zeroDecimals } from "../../scripts/num"
 
 // function randomScalingFactor(min, number) {
@@ -19,11 +19,12 @@ import { ones, zeroDecimals } from "../../scripts/num"
 // }
 
 export default {
-  name: "AllStakesChart",
-  components: { ChartBar },
+  name: "EffectiveMedianHistory",
+  components: { ChartLine },
   props: ["data", "median", "networkInfo"],
   data: () => ({
     options: {
+      responsive: true,
       plugins: {
         labels: false,
       },
@@ -34,9 +35,11 @@ export default {
         intersect: false,
         callbacks: {
           title: (data) => "",
-          label: (data, a, b) => 
-            zeroDecimals(data.yLabel) + " ONE Staked"// by " + a.datasets[0].pointRadius({dataIndex: data.index})
+          label: (data, a, b) => `${zeroDecimals(data.yLabel)} Seats Elected at epoch ${data.xLabel}`
         }
+      },
+      legend: {
+        display: false
       },
       scales: {
         xAxes: [
@@ -60,29 +63,17 @@ export default {
   }),
   computed: {
     chartdata() {
-
-      const data = this.data.map((v) => Math.floor(ones(v))).reverse()
-      const labels = data.map((v, idx) => idx)
-      const even = data.length % 2 === 0
-      const median = Math.floor(data.length/2)
-      const colors = data.map((v, i) => {
-        if (even && (i === median || i === median+1)) {
-          return '#FF0000'
-        } else if (i === median) {
-          return '#FF0000'
-        }
-        // return '#0981cf'
-        return '#00ADE8'
-      })
+      const epochs = Object.keys(this.data)
+      const elected = epochs.sort().map((k) => ones(this.data[k].effective_median_stake))
       
       return {
-        labels,
+        labels: epochs,
         datasets: [
           {
             label: "Staked ONE distribution",
-            backgroundColor: colors,
+            // backgroundColor: colors,
             minHeight: 16,
-            data,
+            data: elected,
           }
         ]
       }

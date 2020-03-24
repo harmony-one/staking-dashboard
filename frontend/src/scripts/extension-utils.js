@@ -22,11 +22,11 @@ const processMessage = (store, type, payload) => {
       break
     case "GET_SESSION_RESPONSE":
       if (payload) {
-        store.commit(`setCurrrentModalOpen`, true)
+        store.commit(`setActionInProgress`, true)
       }
       break
     case "CLOSE_SESSION_RESPONSE":
-      store.commit(`setCurrrentModalOpen`, false)
+      store.commit(`setActionInProgress`, false)
       break
     default:
       return

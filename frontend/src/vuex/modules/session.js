@@ -29,7 +29,8 @@ export default () => {
     cookiesAccepted: undefined,
     stateLoaded: false, // shows if the persisted state is already loaded. used to prevent overwriting the persisted state before it is loaded
     error: null,
-    currrentModalOpen: false,
+    actionInProgress: false,
+    modalId: false,
     modals: {
       error: { active: false },
       help: { active: false }
@@ -82,8 +83,11 @@ export default () => {
     pauseHistory(state, paused) {
       state.pauseHistory = paused
     },
-    setCurrrentModalOpen(state, modal) {
-      state.currrentModalOpen = modal
+    setActionInProgress(state, modal) {
+      state.actionInProgress = modal
+    },
+    setModalId(state, modalId) {
+      state.modalId = modalId
     }
   }
 

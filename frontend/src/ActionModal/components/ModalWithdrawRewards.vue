@@ -9,10 +9,6 @@
     submission-error-prefix="Withdrawal failed"
     :disable="validatorsWithRewards"
   >
-    <span class="form-message notice withdraw-limit">
-      Harmony will only withdraw rewards from 5 validators at a time because of
-      a limitation with the Ledger Nano&nbsp;S.
-    </span>
     <TmFormGroup
       class="action-modal-form-group"
       field-id="amount"

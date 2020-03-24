@@ -43,22 +43,54 @@
         />
       </div>
 
-      <div class="widgets">
+      <div class="widget-row">
         <LightWidget
-          title="Seats Elected"
+          :title="`Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`"
         >
-          <div>
-            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
+          <div class="chart">
+            <SeatAllocation
+              :data="networkInfo"
+            />
           </div>
         </LightWidget>
 
-        <!-- <LightWidget
+        <LightWidget 
+          v-if="networkInfo.history" 
           title="Seat Allocation History"
         >
-          <div>
-            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
+          <div class="chart">
+            <SeatAllocationHistory
+              :data="networkInfo.history"
+            />
           </div>
-        </LightWidget> -->
+        </LightWidget>
+      </div>
+
+
+      <div class="widget-row">
+        <LightWidget 
+          v-if="networkInfo.history" 
+          title="Total Stake History"
+        >
+          <div class="chart">
+            <TotalStakeHistory
+              :data="networkInfo.history"
+            />
+          </div>
+        </LightWidget>
+
+
+
+        <LightWidget 
+          v-if="networkInfo.history" 
+          title="Effective Median History"
+        >
+          <div class="chart">
+            <EffectiveMedianHistory
+              :data="networkInfo.history"
+            />
+          </div>
+        </LightWidget>
       </div>
       
       <!-- <TmDataLoading v-if="isLoading" /> -->
@@ -69,7 +101,6 @@
 <script>
 import { mapState } from "vuex"
 import TableValidators from "staking/TableValidators"
-import AllStakesChart from "staking/AllStakesChart"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
@@ -78,6 +109,11 @@ import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import PercentageChange from "./components/PercentageChange"
 import LightWidget from "./../wallet/components/LightWidget"
+import AllStakesChart from "staking/AllStakesChart"
+import SeatAllocation from "staking/SeatAllocation"
+import SeatAllocationHistory from "staking/SeatAllocationHistory"
+import TotalStakeHistory from "staking/TotalStakeHistory"
+import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 
 export default {
   name: `tab-validators`,
@@ -87,9 +123,15 @@ export default {
     TmField,
     TmBtn,
     TmDataLoading,
-    AllStakesChart,
+    
     PercentageChange,
-    LightWidget
+    LightWidget,
+    //charts
+    AllStakesChart,
+    SeatAllocation,
+    SeatAllocationHistory,
+    TotalStakeHistory,
+    EffectiveMedianHistory,
   },
   filters: {
     ones,
@@ -137,7 +179,7 @@ export default {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
 
-    console.log(this.networkInfo)
+    console.log(this.networkInfo.staking_distro)
   }
 }
 </script>
@@ -146,23 +188,10 @@ export default {
 
 .chart {
   .chart-container {
-    border: 1px solid var(--light2) !important;
-    border-radius: var(--unit);
-    padding: var(--unit);
+
   }
 }
 
-.widgets {
-  display: flex;
-  margin: var(--unit) 0;
-  margin-top: 64px;
-  > div {
-    flex: 0 0 50%;
-  }
-  .widget-body {
-    padding: var(--unit);
-  }
-}
 
 .validatorTable, .networkInfo {
   background: white;
@@ -245,26 +274,35 @@ export default {
   color: var(--dim);
 }
 
-// @media screen and (min-width: 768px) {
-//   .filterOptions {
-//     justify-content: space-between;
-//     flex-direction: row;
-//     margin: 0.5rem 2rem 1rem;
-
-//     .toggles {
-//       margin-bottom: 0;
-//     }
-
-//     input {
-//       max-width: 300px;
-//     }
-//   }
-// }
 
 
-// @media screen and (max-width: 500px) {
-//   .networkInfo {
-//     flex-direction: column;
-//   }
-// }
+.widget-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: var(--unit) 0;
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+  }
+  > div:last-child {
+    margin-right: 0 !important;
+  }
+}
+.widget-row:not(:first-child) {
+  margin-top: calc(-1 * var(--unit));
+}
+
+@media screen and (max-width: 411px) {
+  .widget-row {
+    > div {
+      margin-right: 0 !important;
+    }
+  }
+}
+
+
 </style>

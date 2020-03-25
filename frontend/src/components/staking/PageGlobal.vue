@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div v-if="networkInfo.staking_distro" class="chart">
+      <div v-if="networkInfo.staking_distro" class="chart-border">
         <AllStakesChart
           :data="networkInfo.staking_distro"
           :median="networkInfo.effective_median_stake | ones"
@@ -186,9 +186,13 @@ export default {
 
 <style lang="scss">
 
-.chart {
+.chart-border {
   .chart-container {
-
+    padding: var(--unit);
+    border-radius: var(--unit);
+    border: 1px solid var(--light2);
+    background: white;
+    margin-bottom: var(--double);
   }
 }
 

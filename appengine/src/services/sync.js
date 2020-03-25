@@ -382,8 +382,9 @@ module.exports = function(
             ? res['bls-public-keys'].length
             : 1,
           elected_nodes: Array.isArray(res['bls-public-keys'])
-            ? res['bls-public-keys'].filter(item => !!cache[BLS_KEYS][item])
-                .length
+            ? res['bls-public-keys'].filter(item =>
+                cache[BLS_KEYS].includes(item)
+              ).length
             : 1,
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
@@ -567,8 +568,10 @@ module.exports = function(
         ) || []
       )
         .filter(item => !item['is-harmony-slot'])
-        .map(item => item['bls-public-key'])
-        .sort((a, b) => b - a)
+        .reduce((cur, item) => {
+          cur[item['bls-public-key']] = item['effective-stake']
+          return cur
+        }, {})
 
       cache[BLS_KEYS] = _.concat(
         _.get(
@@ -589,10 +592,7 @@ module.exports = function(
         ) || []
       )
         .filter(item => !item['is-harmony-slot'])
-        .reduce((cur, item) => {
-          cur[item['bls-public-key']] = true
-          return cur
-        }, {})
+        .map(item => item['bls-public-key'])
 
       const externalShards = [0, 1, 2, 3].map(e => {
         const total = _.get(
@@ -659,9 +659,7 @@ module.exports = function(
       await getAllDelegationsInfo()
 
       // Then get validator info, each call gets 100 validatorinfo.
-      // rawStakeDistro = []
       await getAllValidatorsInfo()
-      // cache[STAKING_DISTRO_RAW] = rawStakeDistro
 
       if (cache[ACTIVE_VALIDATORS]) {
         cache[ACTIVE_VALIDATORS].forEach(async address => {
@@ -704,8 +702,10 @@ module.exports = function(
       : {
           ...cache[STAKING_NETWORK_INFO],
           history: cache[GLOBAL_VIEW],
-          staking_distro: cache[STAKING_DISTRO].map(e => cache[RAW_STAKE][e])
-          // staking_distro_raw: cache[STAKING_DISTRO_RAW]
+          raw_stake_distro: cache[BLS_KEYS].map(e => cache[RAW_STAKE][e]),
+          effective_median_stake_distro: cache[BLS_KEYS].map(
+            e => cache[STAKING_DISTRO][e]
+          )
         }
 
     console.log(stakingNetworkInfo)

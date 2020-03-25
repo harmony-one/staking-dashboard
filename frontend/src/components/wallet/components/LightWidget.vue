@@ -52,6 +52,7 @@ export default {
 
 .widget-body {
   padding: var(--unit);
+  overflow: hidden;
 }
 
 @media screen and (max-width: 411px) {

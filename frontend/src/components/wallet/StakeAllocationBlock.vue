@@ -87,7 +87,7 @@ export default {
         datasets: [
           {
             data: this.delegations.map(v => v.amount),
-            backgroundColor: chartColors
+            backgroundColor: '#00ADE844'
           }
         ]
       }

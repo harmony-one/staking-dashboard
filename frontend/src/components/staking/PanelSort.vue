@@ -128,7 +128,6 @@ export default {
   }
   .mobile:nth-child(2) {
     text-align: right;
-    width: 16px !important;
   }
 }
 

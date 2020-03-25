@@ -130,6 +130,10 @@
 
 @media screen and (max-width: 411px) {
 
+  .data-table .mobile:nth-child(2) {
+    width: 100px;
+  }
+
   .data-table td:nth-child(5) {
     text-align: right;
   }

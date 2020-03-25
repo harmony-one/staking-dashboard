@@ -26,7 +26,7 @@
         <span>{{ validator.apr | percent | notAvailable }}</span>
       </li>
       <li class="row">
-        <h4>Rewards</h4>
+        <h4>Your Rewards</h4>
         <span>+{{ rewards | ones | twoDecimals | noBlanks }}</span>
       </li>
 
@@ -34,6 +34,7 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex"
 import { ones, percent, twoDecimals } from "scripts/num"
 import validators from '../../../vuex/modules/validators'
 
@@ -43,9 +44,30 @@ export default {
     percent
   },
   props: ["validator"],
-  methods: {
+  // methods: {
+  //   ones, percent, twoDecimals, noBlanks
+  // },
+  filters: {
     ones, percent, twoDecimals, 
+    noBlanks: function(value) {
+      if (!value || value === `[do-not-modify]`) return `--`
+      return value
+    }
   },
+  computed: {
+    ...mapState([
+      `session`,
+    ]),
+    selfStake() {
+      const session = this.session
+      return this.validator.delegations.find(
+        d => d["delegator-address"] === session.address
+      )
+    },
+    rewards() {
+      return this.selfStake ? this.selfStake.reward : 0
+    }
+  }
 }
 </script>
 

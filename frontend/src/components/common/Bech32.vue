@@ -3,7 +3,11 @@
     <div
       v-tooltip="{
         placement: 'top',
+<<<<<<< HEAD
         content: copySuccess || `Click to copy`,
+=======
+        content: copySuccess || `Click to copy`
+>>>>>>> e177651932ac92311e789ff6ffad81827ac23c43
       }"
       v-clipboard:copy="address"
       v-clipboard:success="() => onCopy()"
@@ -12,6 +16,7 @@
       {{ address | formatBech32(longForm, 8, 8) }}
     </div>
 
+<<<<<<< HEAD
     <div class="show-on-ledger"
       v-tooltip="{
         placement: 'top',
@@ -24,12 +29,32 @@
           onShowLedger()
           showAddressOnLedger()
         }"
+=======
+    <div
+      class="show-on-ledger"
+      v-tooltip="{
+        placement: 'top',
+        content: ledgerSuccess || `Click to show on Ledger`
+      }"
+    >
+      <a
+        v-if="true || (!session.isMobile && session.sessionType === 'ledger')"
+        @click="
+          () => {
+            onShowLedger()
+            showAddressOnLedger()
+          }
+        "
+>>>>>>> e177651932ac92311e789ff6ffad81827ac23c43
       >
         Show on Ledger
       </a>
     </div>
 
+<<<<<<< HEAD
       
+=======
+>>>>>>> e177651932ac92311e789ff6ffad81827ac23c43
     <!-- <div :class="{ active: copySuccess }" class="copied">
       <i class="material-icons">check</i>
     </div> -->
@@ -69,23 +94,53 @@ export default {
   }),
   methods: {
     onShowLedger() {
+<<<<<<< HEAD
       this.ledgerSuccess = 'Some Message'  
+=======
+      this.ledgerSuccess = 'Some Message'
+>>>>>>> e177651932ac92311e789ff6ffad81827ac23c43
       setTimeout(() => {
         this.ledgerSuccess = false
       }, 2500)
     },
     onCopy() {
-      this.copySuccess = 'Copied!'
+      this.copySuccess = "Copied!"
       setTimeout(() => {
         this.copySuccess = false
       }, 2500)
+    },
+    signOut() {
+      this.$emit(`close`)
+      this.$store.dispatch(`signOut`)
+    },
+    async showAddressOnLedger() {
+      this.ledgerSuccess = "Please Verify on Ledger"
+      setTimeout(() => {
+        this.ledgerSuccess = undefined
+      }, 2500)
+      try {
+        await this.$store.dispatch(`showLedgerAddress`)
+        this.ledgerSuccess = "Address Matches"
+      } catch (error) {
+        console.log(error.message)
+        this.ledgerSuccess = error.message
+        this.messageTimeout = setTimeout(() => {
+          this.$emit(close)
+          this.$store.dispatch(signOut)
+        }, 8000)
+      }
     }
   }
 }
 </script>
 <style scoped lang="scss">
+<<<<<<< HEAD
 
 .address, .show-on-ledger {
+=======
+.address,
+.show-on-ledger {
+>>>>>>> e177651932ac92311e789ff6ffad81827ac23c43
   width: 100%;
   margin-top: var(--half);
 }

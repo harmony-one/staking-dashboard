@@ -39,7 +39,7 @@ export default {
         intersect: false,
         callbacks: {
           title: data =>
-            "Date: " + moment(data[0].xLabel).format("MMM DD, hh:mm"),
+            "Epoch: " + data[0].xLabel,
           label: data => {
             return (
               (!data.datasetIndex ? "Self delegated: " : "Delegated: ") +
@@ -53,10 +53,7 @@ export default {
       scales: {
         xAxes: [
           {
-            stacked: true,
-            ticks: {
-              callback: value => moment(value).format("MM.DD")
-            }
+            stacked: true
           }
         ],
         yAxes: [
@@ -77,9 +74,11 @@ export default {
         : "No limit"
     },
     chartdata() {
+      console.log(this.history);
+
       return {
         labels: this.history.map(
-          v => v.uctDate /* moment(v.uctDate).format("MM.DD") */
+          v => v.epoch /* moment(v.uctDate).format("MM.DD") */
         ),
         datasets: [
           {

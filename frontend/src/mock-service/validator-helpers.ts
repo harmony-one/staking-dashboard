@@ -43,7 +43,7 @@ const blockchainValidator = {
 
   uptime_percentage: "0",
   reminder: 11,
-  average_stake: 11
+  average_stake: 11,
 }
 
 const frontendValidator = {
@@ -81,7 +81,8 @@ const frontendValidator = {
   total_stake: 0,
   address: "one16ugr8apt45js6yfuyknet433fuylf6kkuwfq24",
   reminder: 11,
-  average_stake: 11
+  average_stake: 11,
+  epoch: 11,
 }
 
 export type TBlockchainValidator = typeof blockchainValidator
@@ -122,6 +123,7 @@ export const remapValidator = (
     self_stake: validator.self_stake,
     total_stake: validator.total_stake,
     address: validator.address,
+    epoch: validator["last-epoch-in-committee"],
 
     customized: false,
     identity: "DCB176E79AE7D51F",

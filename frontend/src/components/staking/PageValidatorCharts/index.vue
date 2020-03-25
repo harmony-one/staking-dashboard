@@ -149,7 +149,7 @@ export default {
             this.$route.params.validator
           )
 
-          history = history.sort((a, b) => (a.index < b.index ? -1 : 1))
+          history = history.sort((a, b) => (a.epoch < b.epoch ? -1 : 1))
 
           this.allHistory = history
           this.validatorHistory = history
@@ -206,7 +206,7 @@ export default {
 
 
 @media screen and (max-width: 411px) {
-    
+
   .validator-top {
     display: flex;
     flex-direction: column;

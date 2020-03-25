@@ -45,6 +45,7 @@
 
       <div class="widget-row">
         <LightWidget
+          v-if="networkInfo.total_seats_used" 
           :title="`Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`"
         >
           <div class="chart">

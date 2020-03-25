@@ -61,18 +61,18 @@ export default {
   computed: {
     chartdata() {
 
-      const data = this.data.map((v) => Math.floor(ones(v))).reverse()
+      const data = this.data.map((v) => Math.floor(ones(v))).sort()
       const labels = data.map((v, idx) => idx)
       const even = data.length % 2 === 0
       const median = Math.floor(data.length/2)
       const colors = data.map((v, i) => {
         if (even && (i === median || i === median+1)) {
-          return '#FF0000'
+          return '#FF0000BB'
         } else if (i === median) {
-          return '#FF0000'
+          return '#FF0000BB'
         }
         // return '#0981cf'
-        return '#00ADE8'
+        return '#00ADE8BB'
       })
       
       return {

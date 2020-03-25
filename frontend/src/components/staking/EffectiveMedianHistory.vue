@@ -71,7 +71,9 @@ export default {
         datasets: [
           {
             label: "Staked ONE distribution",
-            // backgroundColor: colors,
+            backgroundColor: '#00ADE888',
+            borderColor: 'transparent',
+            pointRadius: 0,
             minHeight: 16,
             data: elected,
           }

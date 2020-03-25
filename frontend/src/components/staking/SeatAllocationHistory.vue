@@ -39,7 +39,7 @@ export default {
         }
       },
       legend: {
-        display: false
+        display: true
       },
       scales: {
         xAxes: [
@@ -67,10 +67,16 @@ export default {
       const elected = epochs.sort().map((k) => this.data[k].total_seats_used)
       const electedPerShard = epochs.sort().map((k) => this.data[k].externalShards.map((s) => s.external))
       
+      const colors = ['#00ADE8', '#4fe7c8', 'rgb(27, 41, 94)', 'rgb(117, 135, 150)']
+
       const datasets = [0, 1, 2, 3].map((i) => ({
-        label: "Shard " + i, //not used in chart
-        data: electedPerShard.map((d) => d[i])
+        label: "S" + i, //not used in chart
+        data: electedPerShard.map((d) => d[i]),
+        borderColor: colors[i],
+        backgroundColor: 'transparent',
+        pointRadius: 0,
       }))
+
 
       return {
         labels: epochs,

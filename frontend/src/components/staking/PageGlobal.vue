@@ -35,9 +35,10 @@
           </div>
         </div>
       </div>
-      <div v-if="networkInfo.staking_distro" class="chart-border">
+      <div v-if="networkInfo.raw_stake_distro" class="chart-border">
         <AllStakesChart
-          :data="networkInfo.staking_distro"
+          :raw="networkInfo.raw_stake_distro"
+          :eff="networkInfo.effective_median_stake_distro"
           :median="networkInfo.effective_median_stake | ones"
           :networkInfo="networkInfo"
         />

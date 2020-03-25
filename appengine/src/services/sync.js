@@ -15,8 +15,10 @@ const VALIDATOR_INFO = 'VALIDATOR_INFO'
 const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
+const STAKING_DISTRO_RAW = 'STAKING_DISTRO_RAW'
 const GLOBAL_SEATS = 'GLOBAL_SEATS'
 const STAKING_DISTRO = 'STAKING_DISTRO'
+const RAW_STAKE = 'RAW_STAKE'
 const MAX_LENGTH = 30
 const GLOBAL_VIEW = 'GLOBAL_VIEW'
 const VOTING_POWER = 'VOTING_POWER'
@@ -57,15 +59,18 @@ module.exports = function(
     STAKING_NETWORK_INFO_PREV_EPOCH: {},
     VOTING_POWER: {},
     STAKING_DISTRO: [],
+    STAKING_DISTRO_RAW: [],
     GLOBAL_SEATS: {},
     BLS_KEYS: {},
-    GLOBAL_VIEW: {}
+    GLOBAL_VIEW: {},
+    RAW_STAKE: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
 
   const historyCollection = `${chainTitle}_history`
   const globalHistory = `${chainTitle}_global`
+  let rawStakeDistro = []
 
   const apiClient = axios.create({
     baseURL: BLOCKCHAIN_SERVER,
@@ -155,17 +160,6 @@ module.exports = function(
             medianStakeRes,
             'data.result.epos-median-stake'
           )
-          // const staking_distro = _.get(
-          //   medianStakeRes,
-          //   'data.result.epos-slot-winners'
-          // )
-          // if (staking_distro) {
-          //   cache[STAKING_NETWORK_INFO].staking_distro = staking_distro.map(e =>
-          //     parseFloat(e['eposed-stake'])
-          //   )
-          // } else {
-          //   cache[STAKING_NETWORK_INFO].staking_distro = []
-          // }
         }
       }
 
@@ -403,6 +397,14 @@ module.exports = function(
           apr: _.get(result, 'lifetime.apr', null)
         }
 
+        if (Array.isArray(res['bls-public-keys'])) {
+          const rawStake =
+            parseFloat(totalStake) / res['bls-public-keys'].length
+          res['bls-public-keys'].forEach(e => {
+            cache[RAW_STAKE][e] = rawStake
+          })
+        }
+
         // Calculating cache[VALIDATOR_INFO_HISTORY]
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
           cache[VALIDATOR_INFO_HISTORY][address] = await getRecentData(address)
@@ -544,7 +546,6 @@ module.exports = function(
         '/',
         bodyParams('hmy_getSuperCommittees')
       )
-
       // const currentEpoch = cache[STAKING_NETWORK_INFO].current_epoch
       // cache[GLOBAL_VIEW].shard0.total_seats =
       cache[STAKING_DISTRO] = _.concat(
@@ -566,7 +567,7 @@ module.exports = function(
         ) || []
       )
         .filter(item => !item['is-harmony-slot'])
-        .map(item => item['effective-stake'])
+        .map(item => item['bls-public-key'])
         .sort((a, b) => b - a)
 
       cache[BLS_KEYS] = _.concat(
@@ -616,7 +617,7 @@ module.exports = function(
       console.log(`total_seats_used: ${cache[GLOBAL_SEATS].total_seats_used}`)
       cache[GLOBAL_SEATS].externalShards = externalShards
 
-      console.log('staking distro: ', cache[STAKING_DISTRO])
+      // console.log('staking distro: ', cache[STAKING_DISTRO])
 
       // _.range(0, 4).forEach(shardID => {
       //   const committeeMembers = _.get(
@@ -658,7 +659,9 @@ module.exports = function(
       await getAllDelegationsInfo()
 
       // Then get validator info, each call gets 100 validatorinfo.
+      // rawStakeDistro = []
       await getAllValidatorsInfo()
+      // cache[STAKING_DISTRO_RAW] = rawStakeDistro
 
       if (cache[ACTIVE_VALIDATORS]) {
         cache[ACTIVE_VALIDATORS].forEach(async address => {
@@ -700,7 +703,9 @@ module.exports = function(
       ? {}
       : {
           ...cache[STAKING_NETWORK_INFO],
-          history: cache[GLOBAL_VIEW]
+          history: cache[GLOBAL_VIEW],
+          staking_distro: cache[STAKING_DISTRO].map(e => cache[RAW_STAKE][e])
+          // staking_distro_raw: cache[STAKING_DISTRO_RAW]
         }
 
     console.log(stakingNetworkInfo)

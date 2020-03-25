@@ -8,6 +8,12 @@
         </span>
       </li>
       <li class="row">
+        <h4>Fees</h4>
+        <span>
+          {{ validator.rate | percent | notAvailable }}
+        </span>
+      </li>
+      <li class="row">
         <h4>Nodes</h4>
         <span>{{ validator.active_nodes || 0 }}</span>
       </li>
@@ -19,11 +25,17 @@
         <h4>APR</h4>
         <span>{{ validator.apr | percent | notAvailable }}</span>
       </li>
+      <li class="row">
+        <h4>Rewards</h4>
+        <span>+{{ rewards | ones | twoDecimals | noBlanks }}</span>
+      </li>
+
     </ul>
   </div>
 </template>
 <script>
-import { percent } from "scripts/num"
+import { ones, percent, twoDecimals } from "scripts/num"
+import validators from '../../../vuex/modules/validators'
 
 export default {
   name: `perfomance-block`,
@@ -32,8 +44,8 @@ export default {
   },
   props: ["validator"],
   methods: {
-    percent
-  }
+    ones, percent, twoDecimals, 
+  },
 }
 </script>
 

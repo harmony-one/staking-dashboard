@@ -143,7 +143,6 @@ export default {
             this.connection.networkConfig.id,
             this.$route.params.validator
           )
-
           let history = await fetchValidatorHistory(
             this.connection.networkConfig.id,
             this.$route.params.validator

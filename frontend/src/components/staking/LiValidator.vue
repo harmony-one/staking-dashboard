@@ -16,9 +16,8 @@
           :class="status | toClassName"
           class="validator-status"
           :title="status_detailed"
+          >{{ status }}</span
         >
-          {{ status }}
-        </span>
       </div>
     </td>
     <td class="data-table__row__info">
@@ -28,23 +27,15 @@
         :logo-url="validator.logo_url"
       />
       <div class="validator-info">
-        <h3 class="li-validator-name">
-          {{ validator.moniker }}
-        </h3>
+        <h3 class="li-validator-name">{{ validator.moniker }}</h3>
       </div>
     </td>
     <!-- <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{ 0.00005 | percent }}
-    </td> -->
-    <td class="hide-xs">
-      {{ validator.rate | percent | notAvailable }}
-    </td>
-    <td >
-      {{ validator.apr | percent | notAvailable }}
-    </td>
-    <td class="hide-xs">
-      {{ validator.average_stake_by_bls | ones | zeroDecimals }}
-    </td>
+    </td>-->
+    <td class="hide-xs">{{ validator.rate | percent | notAvailable }}</td>
+    <td>{{ validator.apr | percent | notAvailable }}</td>
+    <td class="hide-xs">{{ validator.total_stake | ones | zeroDecimals }}</td>
     <td class="hide-xs">
       {{ validator.uptime_percentage | percent | notAvailable }}
     </td>
@@ -104,12 +95,12 @@ export default {
       return `Elected`
     },
     rowClass: state => ({
-      "li-validator": true,
+      "li-validator": true
       // red:
-      //   state.validator.average_stake_by_bls >
+      //   state.validator.total_stake >
       //   state.networkInfo.effective_median_stake,
       // green:
-      //   state.validator.average_stake_by_bls <=
+      //   state.validator.total_stake <=
       //   state.networkInfo.effective_median_stake
       // TODO: currently always green as sahil requested to change
       // green: true
@@ -127,8 +118,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-
-
 .data-table__row__info {
   height: 48px;
 }
@@ -215,12 +204,9 @@ export default {
   border-color: var(--blue);
 }
 
-
 @media screen and (max-width: 411px) {
   .hide-xs {
     display: none;
   }
 }
-
-
 </style>

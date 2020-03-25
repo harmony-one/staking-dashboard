@@ -38,7 +38,10 @@ module.exports = function(
   getCollectionDataWithLimit
 ) {
   // Currently only work for OS network and testnet.
-  if (!BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io')) {
+  if (
+    BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io') ||
+    BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
+  ) {
     return
   }
   const cache = {
@@ -334,28 +337,12 @@ module.exports = function(
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address),
           uptime_percentage:
-            _.get(
-              result,
-              'current-epoch-performance.current-epoch-signing-percent.current-epoch-signed'
-            ) &&
-            _.get(
-              result,
-              'current-epoch-performance.current-epoch-signing-percent.current-epoch-to-sign'
-            )
-              ? parseFloat(
-                  _.get(
-                    result,
-                    'current-epoch-performance.current-epoch-signing-percent.current-epoch-signed'
-                  )
-                ) /
-                parseFloat(
-                  _.get(
-                    result,
-                    'current-epoch-performance.current-epoch-signing-percent.current-epoch-to-sign'
-                  )
-                )
+            _.get(result, 'lifetime.blocks.signed') &&
+            _.get(result, 'lifetime.blocks.to-sign')
+              ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
+                parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
               : null,
-          apr: _.get(result, 'metrics.current-apr', null)
+          apr: _.get(result, 'lifetime.apr', null)
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
@@ -397,7 +384,7 @@ module.exports = function(
         }
       }
     } catch (e) {
-      console.log('error in getValidatorInfoData:', e)
+      console.log('error in processValidatorInfoData:', e)
     }
   }
 
@@ -541,7 +528,7 @@ module.exports = function(
       )
       console.log(`total seats: ${cache[GLOBAL_SEATS].total_seats}`)
       console.log(
-        `total seats2: ${res['data']['result']['current']['external-slot-count']}`
+        `total seats2: ${res.data.result.current['external-slot-count']}`
       )
       cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length
       console.log(`total_seats_used: ${cache[GLOBAL_SEATS].total_seats_used}`)
@@ -664,7 +651,10 @@ module.exports = function(
         })
         .filter(isNotEmpty)
         .filter(
-          v => !search || v.name.toLowerCase().includes(search.toLowerCase())
+          v =>
+            !search ||
+            v.name.toLowerCase().includes(search.toLowerCase()) ||
+            v.address.toLowerCase().includes(search.toLowerCase())
         )
 
       const totalFound = validators.length

@@ -4,7 +4,7 @@
       <ChartBar
         :chartdata="chartdata"
         :options="options"
-        style="height: 300px;"
+        style="height: 300px; width: 100%; max-width: 100vw;"
       />
     </div>
     <div class="chart-description">
@@ -101,7 +101,6 @@ export default {
 
 <style>
 .chart-container {
-  border-radius: var(--half);
-  border: 1px solid #dedede;
+  border: none;
 }
 </style>

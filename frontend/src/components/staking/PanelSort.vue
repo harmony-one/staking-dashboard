@@ -1,13 +1,14 @@
 <template>
   <tr class="panel-sort-container">
-    <th>#</th>
+    <th class="mobile">Validator</th>
+    <th class="mobile">APR</th>
+    <th class="hide-xs">#</th>
     <th class="hide-xs">Status</th>
     <th
       v-for="property in properties"
       :key="property.value"
       :class="{
         'sort-by': sort,
-        'hide-xs': hideXs(property)
       }"
       class="panel-sort-table-header"
     >
@@ -75,6 +76,11 @@ export default {
 </script>
 
 <style>
+
+.mobile {
+  display: none
+}
+
 .panel-sort-container {
   padding: 1rem;
   border-bottom: 1px solid var(--bc-dim);
@@ -114,4 +120,15 @@ export default {
   transform: rotate(180deg);
   color: var(--tertiary);
 }
+
+@media screen and (max-width: 411px) {
+    
+  .mobile {
+    display: table-cell;
+  }
+  .mobile:nth-child(2) {
+    text-align: right;
+  }
+}
+
 </style>

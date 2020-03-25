@@ -1,8 +1,7 @@
 <template>
   <div id="validators_table">
-    <PanelPagination :pagination="pagination" :total="totalFound" />
     <table class="data-table card-white">
-      <thead>
+      <thead class="table-header">
         <PanelSort
           :sort="sort"
           :properties="properties"
@@ -19,6 +18,7 @@
         />
       </tbody>
     </table>
+    <PanelPagination :pagination="pagination" :total="totalFound" />
   </div>
 </template>
 
@@ -85,6 +85,7 @@ export default {
       } = this
     ) {
       return data.map(v => {
+
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
@@ -92,10 +93,6 @@ export default {
         return Object.assign({}, v, {
           small_moniker: v.moniker.toLowerCase(),
           my_delegations: delegation ? delegation.amount : 0,
-          // my_delegations:
-          //   session.signedIn && committedDelegations[v.operator_address] > 0
-          //     ? committedDelegations[v.operator_address]
-          //     : 0,
           rewards:
             session.signedIn && distribution.rewards[v.operator_address]
               ? distribution.rewards[v.operator_address][this.bondDenom]
@@ -111,6 +108,7 @@ export default {
       })
     },
     sortedEnrichedValidators() {
+      console.log(this.enrichedValidators)
       return this.enrichedValidators.slice(0)
     },
     startIndex() {
@@ -118,23 +116,13 @@ export default {
     },
     showingValidators() {
       return this.sortedEnrichedValidators
-
-      //         .slice(
-      //   this.startIndex,
-      //   this.startIndex + this.pagination.pageSize
-      // )
     },
     properties() {
-      return [
+      let props = [
         {
           title: `Name`,
           value: `name`,
           tooltip: `The validator's moniker`
-        },
-        {
-          title: `Return %`,
-          value: `return`,
-          tooltip: `Rate of return per validator`
         },
         {
           title: `Fees`,
@@ -147,16 +135,21 @@ export default {
           tooltip: `APR %`
         },
         {
-          title: `Average ONE staked`,
+          title: `Stake`,
           value: `average_stake_by_bls`,
           tooltip: `Average ONE staked`
         },
         {
-          title: `Voting Power`,
-          value: `voting_power`,
-          tooltip: `Percentage of voting shares`
+          title: `Uptime`,
+          value: `uptime_percentage`,
+          tooltip: `Percentage validator has been elected vs. not`
         }
       ]
+      if (this.$mq === 'sm') {
+        const keep = ['name', 'apr']
+        props = props.filter((p) => keep.includes(p.name))
+      }
+      return props
     }
   },
   watch: {
@@ -210,18 +203,18 @@ export default {
   }
 }
 </script>
-<style scoped>
-@media screen and (max-width: 550px) {
-  .data-table td {
-    overflow: hidden;
-  }
+<style scoped lang="scss">
 
-  .data-table__row__info {
-    max-width: 22rem;
+table {
+  margin-top: var(--unit);
+  thead {
+    text-transform: uppercase;
+    font-weight: bold;
   }
 }
 
-.flip-list-move {
-  transition: transform 0.3s;
+@media screen and (max-width: 411px) {
+  
 }
+
 </style>

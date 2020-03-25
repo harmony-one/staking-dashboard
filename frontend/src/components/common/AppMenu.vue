@@ -3,7 +3,7 @@
     <div v-if="session.signedIn" class="user-box">
       <div>
         <h3>Your Address</h3>
-        <Bech32 :address="session.address || ''" />
+        <Bech32 :session="session" :address="session.address || ''" />
       </div>
     </div>
 
@@ -41,6 +41,16 @@
         @click.native="close"
       >
         <h2 class="app-menu-title">Validators</h2>
+        <i class="material-icons">chevron_right</i>
+      </router-link>
+      <router-link
+        id="menu_item_global"
+        class="app-menu-item"
+        to="/global"
+        title="Global View"
+        @click.native="close"
+      >
+        <h2 class="app-menu-title">Global View</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
 
@@ -203,6 +213,7 @@ export default {
 </script>
 
 <style scoped>
+
 .app-menu-main {
   border-top: 1px solid var(--light);
 }
@@ -256,7 +267,7 @@ export default {
   color: var(--gray);
   border-left: 4px solid var(--gray);
 }
-.app-menu-item:nth-child(4) {
+.app-menu-item:nth-child(5) {
   border-top: 1px solid var(--light);
   padding-top: var(--unit);
 }

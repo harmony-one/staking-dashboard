@@ -1,5 +1,5 @@
 <template>
-  <transition v-if="show" name="slide-fade">
+  <transition v-if="openModalId === transactionData.type" name="slide-fade">
     <div v-focus-last class="action-modal" tabindex="0" @keyup.esc="close">
       <div
         v-if="(step === feeStep || step === signStep) && !sending"
@@ -386,7 +386,6 @@ export default {
     gasEstimate: null,
     gasPrice: config.default_gas_price.toFixed(9),
     submissionError: null,
-    show: false,
     actionManager: new ActionManager(),
     txConfirmResult: null,
     defaultStep,
@@ -408,7 +407,8 @@ export default {
       `bondDenom`,
       `liquidAtoms`,
       `modalContext`,
-      "currrentModalOpen"
+      "actionInProgress",
+      "openModalId"
     ]),
     requiresSignIn() {
       return !this.session.signedIn
@@ -493,7 +493,7 @@ export default {
         }
       }
     },
-    currrentModalOpen(isOpen) {
+    actionInProgress(isOpen) {
       if (!isOpen) {
         this.close()
       }
@@ -511,7 +511,7 @@ export default {
   methods: {
     confirmModalOpen() {
       let confirmResult = false
-      if (this.session.currrentModalOpen) {
+      if (this.session.actionInProgress) {
         confirmResult = window.confirm(
           "You are in the middle of creating a transaction already. Are you sure you want to cancel this action?"
         )
@@ -523,27 +523,26 @@ export default {
     open() {
       this.confirmModalOpen()
 
-      if (this.session.currrentModalOpen) {
+      if (this.session.actionInProgress) {
         return
       }
 
-      this.show = true
+      this.$store.commit(`setModalId`, this.transactionData.type)
       this.gasPrice = config.default_gas_price.toFixed(9)
 
       // this.trackEvent(`event`, `modal`, this.title)
       // this.checkFeatureAvailable()
       // this.gasPrice = config.default_gas_price.toFixed(9)
-      // this.show = true
     },
     close() {
-      if (this.session.currrentModalOpen) {
+      if (this.session.actionInProgress) {
         closeExtensionSession()
-        this.$store.commit(`setCurrrentModalOpen`, false)
+        this.$store.commit(`setActionInProgress`, false)
       }
       this.submissionError = null
       this.password = null
       this.step = defaultStep
-      this.show = false
+      this.$store.commit(`setModalId`, null)
       this.sending = false
       this.includedHeight = undefined
 
@@ -665,7 +664,7 @@ export default {
             this.wallet.address
           )
         } else {
-          this.$store.commit(`setCurrrentModalOpen`, true)
+          this.$store.commit(`setActionInProgress`, true)
 
           sendResponse = await this.actionManager.send(
             memo,
@@ -684,7 +683,7 @@ export default {
 
         this.onSendingFailed(message)
         this.txConfirmResult = null
-        // this.session.currrentModalOpen.close()
+        // this.session.actionInProgress.close()
         this.close()
       }
     },

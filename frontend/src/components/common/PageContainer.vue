@@ -84,8 +84,11 @@ export default {
 
 <style scoped>
 .tm-page {
+  border-bottom: 1px solid var(--light);
+  background:var(--background);
   position: relative;
   width: 100%;
+
 }
 
 .tm-page.small {

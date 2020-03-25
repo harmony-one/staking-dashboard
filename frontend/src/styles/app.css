@@ -18,7 +18,7 @@
 html,
 body,
 #app {
-  background: #F6F7FB;
+  background: var(--background);
 }
 
 a {
@@ -28,6 +28,11 @@ a {
 
 a:hover {
   color: var(--link-hover);
+}
+
+
+.vue-tooltip {
+  z-index: 10000;
 }
 
 #app {
@@ -54,7 +59,6 @@ a:hover {
 
 .card-white {
   background: white;
-  border-radius: 0.25em;
 }
 
 input[readonly],
@@ -110,6 +114,7 @@ input.tm-field {
 }
 
 #bar-container {
+  z-index: 9999;
   display: block;
 }
 

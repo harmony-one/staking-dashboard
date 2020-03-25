@@ -13,6 +13,7 @@ import modules from "./modules"
 
 Vue.use(Vuex)
 
+
 /**
  * Module Store
  * @param opts

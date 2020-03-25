@@ -2,7 +2,7 @@
   <PageContainer
     :managed="true"
     :data-empty="validators && validators.length === 0"
-    title="Validators"
+    title="Global View"
   >
     <template slot="managed-body">
       <div class="networkInfo">
@@ -35,47 +35,65 @@
           </div>
         </div>
       </div>
-      <!-- <div v-if="networkInfo.staking_distro">
-        <AllStakesChart :data="networkInfo.staking_distro" />
-      </div> -->
-      <div v-if="isNetworkInfoLoading" class="validatorTable">
-        <div class="filterOptions">
-          <TmField
-            v-model="searchTerm"
-            class="searchField"
-            placeholder="Search"
-          />
-          <div class="toggles">
-            <TmBtn
-              value="Elected"
-              :number="totalActive"
-              class="btn-radio secondary"
-              :type="activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = true"
-            />
-            <TmBtn
-              value="All"
-              :number="total"
-              class="btn-radio secondary"
-              :type="!activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = false"
+      <div v-if="networkInfo.staking_distro" class="chart-border">
+        <AllStakesChart
+          :data="networkInfo.staking_distro"
+          :median="networkInfo.effective_median_stake | ones"
+          :networkInfo="networkInfo"
+        />
+      </div>
+
+      <div class="widget-row">
+        <LightWidget
+          :title="`Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`"
+        >
+          <div class="chart">
+            <SeatAllocation
+              :data="networkInfo"
             />
           </div>
-        </div>
-        <TableValidators
-          :data="validators"
-          :active-only="activeOnly"
-          :search="searchTerm"
-          show-on-mobile="expectedReturns"
-        />
-        <div
-          v-if="validators && validators.length === 0 && searchTerm"
-          class="no-results"
+        </LightWidget>
+
+        <LightWidget 
+          v-if="networkInfo.history" 
+          title="Seat Allocation History"
         >
-          No results for these search terms
-        </div>
+          <div class="chart">
+            <SeatAllocationHistory
+              :data="networkInfo.history"
+            />
+          </div>
+        </LightWidget>
       </div>
-      <TmDataLoading v-if="isLoading" />
+
+
+      <div class="widget-row">
+        <LightWidget 
+          v-if="networkInfo.history" 
+          title="Total Stake History"
+        >
+          <div class="chart">
+            <TotalStakeHistory
+              :data="networkInfo.history"
+            />
+          </div>
+        </LightWidget>
+
+
+
+        <LightWidget 
+          v-if="networkInfo.history" 
+          title="Effective Median History"
+        >
+          <div class="chart">
+            <EffectiveMedianHistory
+              :data="networkInfo.history"
+            />
+          </div>
+        </LightWidget>
+      </div>
+      
+      <!-- <TmDataLoading v-if="isLoading" /> -->
     </template>
   </PageContainer>
 </template>
@@ -83,7 +101,6 @@
 <script>
 import { mapState } from "vuex"
 import TableValidators from "staking/TableValidators"
-import AllStakesChart from "staking/AllStakesChart"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
@@ -91,6 +108,12 @@ import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import PercentageChange from "./components/PercentageChange"
+import LightWidget from "./../wallet/components/LightWidget"
+import AllStakesChart from "staking/AllStakesChart"
+import SeatAllocation from "staking/SeatAllocation"
+import SeatAllocationHistory from "staking/SeatAllocationHistory"
+import TotalStakeHistory from "staking/TotalStakeHistory"
+import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 
 export default {
   name: `tab-validators`,
@@ -100,8 +123,15 @@ export default {
     TmField,
     TmBtn,
     TmDataLoading,
+    
+    PercentageChange,
+    LightWidget,
+    //charts
     AllStakesChart,
-    PercentageChange
+    SeatAllocation,
+    SeatAllocationHistory,
+    TotalStakeHistory,
+    EffectiveMedianHistory,
   },
   filters: {
     ones,
@@ -149,12 +179,23 @@ export default {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
 
-    console.log(this)
+    console.log(this.networkInfo.staking_distro)
   }
 }
 </script>
 
 <style lang="scss">
+
+.chart-border {
+  .chart-container {
+    padding: var(--unit);
+    border-radius: var(--unit);
+    border: 1px solid var(--light2);
+    background: white;
+    margin-bottom: var(--double);
+  }
+}
+
 
 .validatorTable, .networkInfo {
   background: white;
@@ -163,7 +204,6 @@ export default {
   border: 1px solid var(--light2);
 }
 .validatorTable {
-    overflow: hidden;
   padding: var(--unit);
 }
 
@@ -239,48 +279,34 @@ export default {
 }
 
 
-@media screen and (max-width: 411px) {
 
-  .validatorTable {
-    margin-left: calc(-2 * var(--unit)) !important;
-    width: calc(100vw - 1px);
-    border-left: none !important;
-    border-right: none !important;
-    border-radius: 0 !important;
+.widget-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: var(--unit) 0;
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
   }
+  > div:last-child {
+    margin-right: 0 !important;
+  }
+}
+.widget-row:not(:first-child) {
+  margin-top: calc(-1 * var(--unit));
+}
 
-  .filterOptions {
-    width: 100vw; 
-    height: 48px;
-    .toggles {
-      text-align: right;
-      margin-right: 8px;
-      transform: scale(0.8);
-      width: 300px;
+@media screen and (max-width: 411px) {
+  .widget-row {
+    > div {
+      margin-right: 0 !important;
     }
   }
 }
 
-// @media screen and (min-width: 768px) {
-//   .filterOptions {
-//     justify-content: space-between;
-//     flex-direction: row;
-//     margin: 0.5rem 2rem 1rem;
 
-//     .toggles {
-//       margin-bottom: 0;
-//     }
-
-//     input {
-//       max-width: 300px;
-//     }
-//   }
-// }
-
-
-// @media screen and (max-width: 500px) {
-//   .networkInfo {
-//     flex-direction: column;
-//   }
-// }
 </style>

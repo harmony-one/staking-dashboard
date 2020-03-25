@@ -46,6 +46,14 @@ export default [
     },
     component: require(`./components/staking/PageValidators`).default
   },
+  {
+    path: `/global`,
+    name: `Global View`,
+    meta: {
+      feature: "Global View"
+    },
+    component: require(`./components/staking/PageGlobal`).default
+  },
   // for depredecated routes
   {
     path: `/staking/validators`,

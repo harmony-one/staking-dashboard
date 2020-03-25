@@ -95,9 +95,28 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
   actions: {
     async connectLedgerApp() {
       const app = await getHarmonyApp()
-      let response: any = await app.publicKey(false)
+      let response: any = await app.publicKey(true)
       if (response.return_code === SW_ERR) {
         throw new Error("Authorization request rejected")
+      }
+
+      if (!response.one_address) {
+        throw new Error("Address Not Found")
+      }
+
+      if (response.one_address.indexOf(`1`) === -1) {
+        throw new Error("Not A Valid Bech32 Address")
+      }
+
+      return response.one_address.toString()
+    },
+
+    async showLedgerAddress() {
+      const app = await getHarmonyApp()
+      let response: any = await app.publicKey(false)
+
+      if (response.return_code === SW_ERR) {
+        throw new Error("Address Rejected")
       }
 
       if (!response.one_address) {

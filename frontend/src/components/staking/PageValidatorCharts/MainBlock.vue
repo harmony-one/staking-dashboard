@@ -18,6 +18,18 @@
                 {{ validator.total_stake | ones | fourDecimals | noBlanks }}
               </h4>
             </div>
+
+            <div>
+              <span>Delegated stake:</span>
+              <h4>{{ delegatedStake | ones | fourDecimals | noBlanks }}</h4>
+            </div>
+            <div>
+              <span>Self stake:</span>
+              <h4>
+                {{ validatorSelfStakeAmount | ones | fourDecimals | noBlanks }}
+              </h4>
+            </div>
+            
             <div class="status-container">
               <span :class="status | toClassName" class="validator-status">
                 {{ status }}
@@ -26,31 +38,19 @@
                 {{ status_detailed }}
               </span>
             </div>
-            <!-- <div>
-              <span>Delegated stake:</span>
-              <h4>{{ delegatedStake | ones | fourDecimals | noBlanks }}</h4>
-            </div> -->
-            <!-- <div>
-              <span>Self stake:</span>
-              <h4>
-                {{ validatorSelfStakeAmount | ones | fourDecimals | noBlanks }}
-              </h4>
-            </div>
-            <div v-if="rewards">
-              <span>Your rewards:</span>
-              <h5>+{{ rewards | ones | fourDecimals | noBlanks }}</h5>
-            </div> -->
+
+            
           </div>
         </div>
       </td>
     </div>
 
     <div class="button-container">
-      <TmBtn id="delegation-btn" value="Stake" @click.native="onDelegation" />
+      <TmBtn id="delegation-btn" value="Delegate" @click.native="onDelegation" />
       <TmBtn
         id="undelegation-btn"
         :disabled="!selfStakeAmount"
-        value="Unstake"
+        value="Undelegate"
         type="secondary"
         @click.native="onUndelegation"
       />

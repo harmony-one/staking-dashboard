@@ -838,8 +838,7 @@ export default {
   font-weight: 500;
   font-style: italic;
   color: var(--dim);
-  display: inline-block;
-  border-left: 2px solid var(--warning);
+  display: block;
   padding: 0.5rem 0 0.5rem 1rem;
   font-size: 14px;
 }

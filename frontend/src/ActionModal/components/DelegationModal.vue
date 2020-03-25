@@ -83,12 +83,12 @@
         />
       </TmFieldGroup>
       <span v-if="!isRedelegation()" class="form-message">
-        Available to Delegate:
+        Available to Stake:
         {{ getFromBalance() }}
         {{ denom | viewDenom }}s
       </span>
       <div v-if="!isRedelegation()" class="form-message">
-        Remaining available stakes
+        Available for this Validator: 
         {{ validator.remainder | ones | shortDecimals }}
         {{ denom | viewDenom }}s
       </div>

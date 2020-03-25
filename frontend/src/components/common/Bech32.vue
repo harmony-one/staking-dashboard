@@ -63,11 +63,7 @@ export default {
   },
   data: () => ({
     copySuccess: false,
-<<<<<<< HEAD
-    ledgerSuccess: undefined
-=======
     ledgerSuccess: false
->>>>>>> pull from howard
   }),
   methods: {
     onShowLedger() {

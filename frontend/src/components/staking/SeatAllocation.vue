@@ -81,14 +81,20 @@ export default {
       const total = this.data.externalShards.map((s) => s.total)
 
       const shards = [0, 1, 2, 3].map((s) => 'Shard ' + s)
+
+      const colors = data.map((v, i) => {
+        return '#00ADE8'
+      })
       
       return {
         labels: shards,
         datasets: [
           {
+            backgroundColor: colors,
             data: elected
           }, 
           {
+            backgroundColor: colors,
             data: total
           }
         ]

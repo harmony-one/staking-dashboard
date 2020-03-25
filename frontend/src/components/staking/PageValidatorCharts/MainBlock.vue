@@ -20,16 +20,16 @@
             </div>
 
             <div>
-              <span>Delegated stake:</span>
+              <span>Delegated:</span>
               <h4>{{ delegatedStake | ones | fourDecimals | noBlanks }}</h4>
             </div>
             <div>
-              <span>Self stake:</span>
+              <span>Self Stake:</span>
               <h4>
                 {{ validatorSelfStakeAmount | ones | fourDecimals | noBlanks }}
               </h4>
             </div>
-            
+
             <div class="status-container">
               <span :class="status | toClassName" class="validator-status">
                 {{ status }}

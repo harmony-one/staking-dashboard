@@ -20,7 +20,7 @@
       }"
     >
       <a
-        v-if="true || !session.isMobile && session.sessionType === 'ledger'"
+        v-if="!session.isMobile && session.sessionType === 'ledger'"
         @click="() => {
           onShowLedger()
           showAddressOnLedger()
@@ -31,15 +31,6 @@
         content: ledgerSuccess || `Click to show on Ledger`
       }"
     >
-      <a
-        v-if="true || (!session.isMobile && session.sessionType === 'ledger')"
-        @click="
-          () => {
-            onShowLedger()
-            showAddressOnLedger()
-          }
-        "
-      >
         Show on Ledger
       </a>
     </div>

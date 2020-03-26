@@ -173,7 +173,7 @@ export default {
       const blocksUrl = this.networkConfig.explorer_url
         ? this.networkConfig.explorer_url.replace("tx", "block")
         : ""
-
+      
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },

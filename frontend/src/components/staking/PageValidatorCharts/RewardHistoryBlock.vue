@@ -45,7 +45,7 @@ export default {
       scales: {
         xAxes: [
           {
-            display: true,
+            display: true
           }
         ],
         yAxes: [
@@ -77,10 +77,7 @@ export default {
             label: "Rate",
             borderColor: "#0a93eb",
             fill: false,
-            data: this.history.map(
-              // v => Math.round(v.commission.rate * 10000) / 100
-              v => Math.round(Math.random() * 30)
-            )
+            data: this.history.map(v => v.apr)
           }
         ]
       }

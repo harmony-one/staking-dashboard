@@ -73,6 +73,8 @@ export default {
   }),
   computed: {
     chartdata() {
+
+      console.log(this.data)
       
       const epochs = Object.keys(this.data)
       const shards = this.data.externalShards || []
@@ -80,6 +82,7 @@ export default {
       const total = shards.map((s) => s.total)
 
       const labels = [0, 1, 2, 3].map((s) => 'Shard ' + s)
+
       const colors = ['#00ADE844', '#00ADE844']
       
       return {

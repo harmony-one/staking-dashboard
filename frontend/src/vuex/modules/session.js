@@ -166,30 +166,24 @@ export default () => {
     loadLocalPreferences({ state, dispatch }) {
       const localPreferences = localStorage.getItem(USER_PREFERENCES_KEY)
 
-      // don't track in development
-      if (state.developmentMode) return
+      if (localPreferences) {
+        const { cookiesAccepted } = JSON.parse(localPreferences)
 
-      if (!localPreferences) {
-        state.cookiesAccepted = false
-        return
+        state.cookiesAccepted = Boolean(cookiesAccepted)
       }
-      state.cookiesAccepted = true
 
-      const { errorCollection, analyticsCollection } = JSON.parse(
-        localPreferences
-      )
-      if (state.errorCollection !== errorCollection)
-        dispatch(`setErrorCollection`, errorCollection)
-      if (state.analyticsCollection !== analyticsCollection)
-        dispatch(`setAnalyticsCollection`, analyticsCollection)
+      // if (state.errorCollection !== errorCollection)
+      //   dispatch(`setErrorCollection`, errorCollection)
+      // if (state.analyticsCollection !== analyticsCollection)
+      //   dispatch(`setAnalyticsCollection`, analyticsCollection)
     },
     storeLocalPreferences({ state }) {
       state.cookiesAccepted = true
+
       localStorage.setItem(
         USER_PREFERENCES_KEY,
         JSON.stringify({
-          errorCollection: state.errorCollection,
-          analyticsCollection: state.analyticsCollection
+          cookiesAccepted: true
         })
       )
     },

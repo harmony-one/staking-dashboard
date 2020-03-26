@@ -8,7 +8,7 @@ function isWindowsPlatform() {
 const mockSessionState = {}
 
 export default () => {
-  const USER_PREFERENCES_KEY = `user_preferences`
+  const USER_PREFERENCES_KEY = `harmony_user_preferences`
 
   const state = {
     developmentMode: config.development, // can't be set in browser

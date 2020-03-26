@@ -70,7 +70,7 @@ module.exports = function(
 
   const historyCollection = `${chainTitle}_history`
   const globalHistory = `${chainTitle}_global`
-  let rawStakeDistro = []
+  const rawStakeDistro = []
 
   const apiClient = axios.create({
     baseURL: BLOCKCHAIN_SERVER,
@@ -610,7 +610,7 @@ module.exports = function(
       console.log(
         `total seats2: ${res.data.result.current['external-slot-count']}`
       )
-      cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length
+      cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length || 0
       console.log(`total_seats_used: ${cache[GLOBAL_SEATS].total_seats_used}`)
       cache[GLOBAL_SEATS].externalShards = externalShards
 

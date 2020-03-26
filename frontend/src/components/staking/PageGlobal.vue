@@ -180,8 +180,6 @@ export default {
   async mounted() {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
-
-    console.log(this.networkInfo.staking_distro)
   }
 }
 </script>

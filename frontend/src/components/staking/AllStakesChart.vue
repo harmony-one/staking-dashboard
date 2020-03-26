@@ -82,7 +82,8 @@ export default {
 
 
       const data = this.raw.map((v, i) => ({ raw: Math.floor(ones(v)), eff: Math.floor(ones(this.eff[i])) }))
-        .sort((a, b) => a.eff - b.eff)
+        .sort((a, b) => a.raw - b.raw)
+        //.sort((a, b) => a.eff - b.eff)
       //labels
       const labels = data.map((v, i) => i)
       //map out indiv stakes

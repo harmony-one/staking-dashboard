@@ -232,9 +232,6 @@ module.exports = function(
     }
   }
 
-  const getDayIndex = utcDate =>
-    Math.floor(utcDate.getTime() / (1000 * 60 * 60 * 24))
-
   const getRecentData = async address => {
     const res = new Map()
     try {
@@ -357,6 +354,7 @@ module.exports = function(
         const epochIndex = parseInt(res['last-epoch-in-committee'])
 
         const validatorInfo = {
+          ...res,
           self_stake: selfStake,
           total_stake: totalStake,
           average_stake: averageStake,
@@ -377,7 +375,6 @@ module.exports = function(
           uctDate: utcDate,
           index: epochIndex,
           address: res['one-address'] || res.address,
-          ...res,
           active_nodes: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].length
             : 1,
@@ -804,7 +801,7 @@ module.exports = function(
     getValidatorInfo: address => cache[VALIDATOR_INFO][address],
     getValidatorHistory: address =>
       _.values(cache[VALIDATOR_INFO_HISTORY][address]).sort(
-        (a, b) => new Date(a.utcDate) - new Date(b.utcDate)
+        (a, b) => a.index - b.index
       ),
     getDelegationsByDelegator,
     getDelegationsByValidator: address =>

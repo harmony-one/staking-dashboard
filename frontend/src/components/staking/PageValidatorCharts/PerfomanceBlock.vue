@@ -29,35 +29,38 @@
         <h4>Your Rewards</h4>
         <span>+{{ rewards | ones | twoDecimals | noBlanks }}</span>
       </li>
-
+      <li class="row">
+        <h4>Shards</h4>
+        <span>{{ shardIDs }}</span>
+      </li>
     </ul>
   </div>
 </template>
 <script>
 import { mapState } from "vuex"
 import { ones, percent, twoDecimals } from "scripts/num"
-import validators from '../../../vuex/modules/validators'
+import validators from "../../../vuex/modules/validators"
 
 export default {
   name: `perfomance-block`,
   filters: {
     percent
   },
-  props: ["validator"],
   // methods: {
   //   ones, percent, twoDecimals, noBlanks
   // },
   filters: {
-    ones, percent, twoDecimals, 
+    ones,
+    percent,
+    twoDecimals,
     noBlanks: function(value) {
       if (!value || value === `[do-not-modify]`) return `--`
       return value
     }
   },
+  props: ["validator"],
   computed: {
-    ...mapState([
-      `session`,
-    ]),
+    ...mapState([`session`]),
     selfStake() {
       const session = this.session
       return this.validator.delegations.find(
@@ -66,6 +69,11 @@ export default {
     },
     rewards() {
       return this.selfStake ? this.selfStake.reward : 0
+    },
+    shardIDs() {
+      return this.validator["bls-public-keys"]
+        .map(e => parseInt(e[e.length - 1]) % 4)
+        .toString()
     }
   }
 }

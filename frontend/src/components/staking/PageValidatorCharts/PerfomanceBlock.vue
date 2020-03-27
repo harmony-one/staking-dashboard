@@ -14,7 +14,7 @@
         </span>
       </li>
       <li class="row">
-        <h4>Nodes</h4>
+        <h4>Slots</h4>
         <span>{{ validator.active_nodes || 0 }}</span>
       </li>
       <li class="row">

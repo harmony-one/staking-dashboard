@@ -43,8 +43,10 @@ module.exports = function(
 ) {
   // Currently only work for OS network and testnet.
   if (
-    !BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io')
-    // BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
+    !(
+      BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
+      BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
+    )
   ) {
     return
   }
@@ -70,7 +72,6 @@ module.exports = function(
 
   const historyCollection = `${chainTitle}_history`
   const globalHistory = `${chainTitle}_global`
-  const rawStakeDistro = []
 
   const apiClient = axios.create({
     baseURL: BLOCKCHAIN_SERVER,

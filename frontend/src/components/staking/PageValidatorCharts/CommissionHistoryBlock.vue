@@ -129,11 +129,13 @@ export default {
         labels: this.history.map(
           v => v.epoch /* moment(v.uctDate).format("MM.DD") */
         ),
+        lineTension: 0,
         datasets: [
           {
             label: "Rate",
             fill: false,
             borderColor: "#0a93eb",
+            lineTension: 0,
             data: this.history.map(
               v => Math.round(v.rate * 10000) / 100
               // v => Math.round(Math.random() * 30)

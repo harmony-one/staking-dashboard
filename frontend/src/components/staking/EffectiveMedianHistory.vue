@@ -56,6 +56,9 @@ export default {
             gridLines: {
               display: true
             },
+            ticks: {
+              min: 0
+            }
           }
         ]
       }
@@ -74,6 +77,7 @@ export default {
             backgroundColor: '#00ADE888',
             borderColor: 'transparent',
             pointRadius: 0,
+        lineTension: 0,
             minHeight: 16,
             data: elected,
           }

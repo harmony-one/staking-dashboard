@@ -20,7 +20,7 @@
       }"
     >
       <a
-        v-if="!session.isMobile && session.sessionType === 'ledger'"
+        v-if="session && !session.isMobile && session.sessionType === 'ledger'"
         @click="() => {
           onShowLedger()
           showAddressOnLedger()
@@ -52,7 +52,7 @@ export default {
   props: {
     session: {
       type: Object,
-      required: true
+      required: false
     },
     address: {
       type: String,

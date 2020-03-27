@@ -148,8 +148,6 @@ export default {
   async mounted() {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
-
-    console.log(this)
   }
 }
 </script>

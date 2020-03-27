@@ -66,6 +66,9 @@ export default {
             gridLines: {
               display: true
             },
+            ticks: {
+              min: 0,
+            }
           }
         ]
       }

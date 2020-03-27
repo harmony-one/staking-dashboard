@@ -80,7 +80,7 @@ export default {
             borderColor: 'transparent',
             pointRadius: 0,
             minHeight: 100,
-            // lineTension: 0,
+            lineTension: 0,
             data
           }
         ]

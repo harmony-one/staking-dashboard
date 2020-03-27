@@ -85,7 +85,7 @@ export default {
         .sort((a, b) => a.raw - b.raw)
         //.sort((a, b) => a.eff - b.eff)
       //labels
-      const labels = data.map((v, i) => i)
+      const labels = data.map((v, i) => i+1)
       //map out indiv stakes
       const rawStake = data.map((v) => v.raw)
       const effStake = data.map((v) => v.eff)

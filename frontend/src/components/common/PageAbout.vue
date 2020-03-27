@@ -25,7 +25,7 @@
         This software is developed by the team at Harmony Staking International Software
         Systems Inc. We're
         <a
-          href="https://github.com/luniehq/lunie"
+          href="https://github.com/harmony-one"
           target="_blank"
           rel="noopener norefferer"
         >
@@ -99,7 +99,7 @@
       <p>
         Please let us know what you think! You can find us on
         <a
-          href="https://github.com/cosmos/lunie"
+          href="https://github.com/harmony-one"
           target="_blank"
           rel="noopener norefferer"
         >
@@ -107,11 +107,11 @@
         >
         and
         <a
-          href="https://twitter.com/luniehq"
+          href="https://twitter.com/harmonyprotocol"
           target="_blank"
           rel="noopener norefferer"
           >Twitter</a
-        >, email us at contact@lunie.io, or click the <i>feedback</i> button on
+        >, email us at contact@harmony.one, or click the <i>feedback</i> button on
         the left.
       </p>
     </div>

@@ -7,12 +7,12 @@ function isWindowsPlatform() {
 
 const mockSessionState = {
   // signedIn: true,
-  // address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
+  // address: "one1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
   // sessionType: "extension"
 }
 
 export default () => {
-  const USER_PREFERENCES_KEY = `lunie_user_preferences`
+  const USER_PREFERENCES_KEY = `harmony_user_preferences`
 
   const state = {
     developmentMode: config.development, // can't be set in browser

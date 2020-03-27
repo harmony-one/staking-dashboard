@@ -82,12 +82,14 @@ export default {
       //   0
       // )
 
+      colors = ['#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466']
+
       return {
         labels: this.delegations.map(v => v.validator),
         datasets: [
           {
             data: this.delegations.map(v => v.amount),
-            backgroundColor: '#00ADE844'
+            backgroundColor: colors
           }
         ]
       }

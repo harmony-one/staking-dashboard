@@ -107,7 +107,6 @@ export default {
       })
     },
     sortedEnrichedValidators() {
-      console.log(this.enrichedValidators)
       return this.enrichedValidators.slice(0)
     },
     startIndex() {
@@ -134,9 +133,9 @@ export default {
           tooltip: `APR %`
         },
         {
-          title: `Stake`,
-          value: `total_stake`,
-          tooltip: `Total ONE staked`
+          title: `AVG Stake`,
+          value: `average_stake`,
+          tooltip: `AVG Stake by BLS`
         },
         {
           title: `Uptime`,

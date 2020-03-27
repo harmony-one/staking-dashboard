@@ -610,8 +610,10 @@ module.exports = function(
       console.log(
         `total seats2: ${res.data.result.current['external-slot-count']}`
       )
-      cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length || 0
-      console.log(`total_seats_used: ${cache[GLOBAL_SEATS].total_seats_used}`)
+      cache[GLOBAL_SEATS].total_seats_used = _.sumBy(
+        externalShards,
+        e => e.external
+      )
       cache[GLOBAL_SEATS].externalShards = externalShards
 
       // console.log('staking distro: ', cache[STAKING_DISTRO])

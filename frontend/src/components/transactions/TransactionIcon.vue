@@ -2,8 +2,8 @@
   <div class="tx__icon">
     <img
       :class="transactionGroup"
-      src="~assets/images/cosmos-logo.png"
-      alt="cosmic atom token"
+      src="~assets/images/logo.png"
+      alt="harmony one token"
     />
   </div>
 </template>

@@ -18,42 +18,16 @@ export default () => {
 
   const actions = {
     async loadAccounts({ commit }) {
-      const { getWalletIndex } = await import("@lunie/cosmos-keys")
-      const keys = getWalletIndex()
-      commit(`setAccounts`, keys)
+      commit(`setAccounts`, [])
     },
     async testLogin(store, { password, address }) {
-      const { testPassword } = await import("@lunie/cosmos-keys")
-      try {
-        testPassword(address, password)
-        return true
-      } catch (err) {
-        return false
-      }
+      return null
     },
     async createSeed() {
-      const { getSeed } = await import("@lunie/cosmos-keys")
-      return getSeed()
+      return null
     },
     async createKey({ dispatch, state }, { seedPhrase, password, name }) {
-      const { getNewWalletFromSeed, storeWallet } = await import(
-        "@lunie/cosmos-keys"
-      )
-
-      state.externals.track(`event`, `session`, `create-keypair`)
-
-      const wallet = getNewWalletFromSeed(seedPhrase)
-      storeWallet(wallet, name, password)
-
-      // reload accounts as we just added a new one
-      dispatch("loadAccounts")
-
-      await dispatch("signIn", {
-        address: wallet.cosmosAddress,
-        sessionType: "local"
-      })
-
-      return wallet.cosmosAddress
+      return null
     }
   }
 

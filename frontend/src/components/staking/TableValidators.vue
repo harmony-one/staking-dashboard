@@ -133,9 +133,9 @@ export default {
           tooltip: `APR %`
         },
         {
-          title: `AVG Stake`,
+          title: `STAKE`,
           value: `average_stake`,
-          tooltip: `AVG Stake by BLS`
+          tooltip: `Stake of validator`
         },
         {
           title: `Uptime`,

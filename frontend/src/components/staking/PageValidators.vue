@@ -204,8 +204,8 @@ export default {
         color: var(--gray);
       }
       &.active {
-        background: #F4FCFF !important;
-        color: var(--blue);
+        background: var(--blue) !important;
+        color: white;
       }
       &.number-circle {
         margin-right: -var(--unit);

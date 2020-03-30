@@ -24,7 +24,7 @@
               <h4>{{ delegatedStake | ones | zeroDecimals | noBlanks }}</h4>
             </div>
             <div>
-              <span>Your Stake:</span>
+              <span>Self Stake:</span>
               <h4>
                 {{ validatorSelfStakeAmount | ones | zeroDecimals | noBlanks }}
               </h4>

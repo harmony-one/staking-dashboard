@@ -56,7 +56,7 @@ export default {
   data: () => ({
     query: ``,
     sort: {
-      property: `expectedReturns`,
+      property: `apr`,
       order: `desc`
     },
     pagination: {

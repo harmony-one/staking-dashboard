@@ -72,7 +72,11 @@ export default {
     },
     shardIDs() {
       return this.validator["bls-public-keys"]
-        .map(e => parseInt(e[e.length - 1]) % 4)
+        .map(e =>
+          e[e.length - 1] >= "a"
+            ? (e.charCodeAt(e.length - 1) - 87) % 4
+            : parseInt(e[e.length - 1]) % 4
+        )
         .toString()
     }
   }

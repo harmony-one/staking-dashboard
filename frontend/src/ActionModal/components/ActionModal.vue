@@ -3,6 +3,7 @@
     <div>
       <div class="action-modal-overlay"></div>
       <div v-focus-last class="action-modal" tabindex="0" @keyup.esc="close">
+        
         <div
           v-if="(step === feeStep || step === signStep) && !sending"
           id="prevBtn"
@@ -19,6 +20,7 @@
           <i class="material-icons">close</i>
         </div>
         <div class="action-modal-header">
+
           <span class="action-modal-title">{{
             requiresSignIn ? `Sign in required` : title
           }}</span>
@@ -747,6 +749,10 @@ export default {
 }
 </script>
 
+
+
+
+
 <style lang="scss">
 
 .action-modal-overlay {
@@ -764,14 +770,23 @@ export default {
   top: calc(50vh - 200px);
   right: calc(50vw - 250px);
   width: 100%;
+  width: 500px;
   max-width: 500px;
-  max-height: 400px;
+  height: auto;
+  max-height: 500px;
+  overflow: hidden;
+  overflow-y: scroll;
   border-radius: var(--unit);
   border: 1px solid var(--light2);
   background: var(--white);
   box-shadow: 0 0 var(--unit) rgba(0, 0, 0, 0.25);
   padding: var(--unit);
   z-index: var(--z-modal);
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
   > #closeBtn {
     position: absolute;
     top: 0;
@@ -794,6 +809,15 @@ export default {
       display: none;
     }
   }
+
+  .action-modal-group.tm-form-group {
+    padding: 0;
+    margin-bottom: var(--unit);
+  }
+  .action-modal-group.tm-form-group:last-child {
+    margin-bottom: 0;
+  }
+
 }
 /* 
 .action-modal-header {

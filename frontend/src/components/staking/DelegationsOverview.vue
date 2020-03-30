@@ -88,6 +88,11 @@ export default {
               remaining_epoch = 7 + parseInt(un.Epoch) - parseInt(current_epoch)
             }
 
+            if (remaining_epoch < 0) {
+              // TODO - fix for negative epoch
+              return
+            }
+
             undelegations.push({
               ...remapValidator(delegates.validator_info, true),
               stake: un.Amount,

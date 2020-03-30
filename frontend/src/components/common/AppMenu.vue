@@ -61,7 +61,7 @@
         @click.native="close"
       >
         <svgicon
-          name="network"
+          name="world"
           width="20"
           height="20"
         ></svgicon>
@@ -100,6 +100,11 @@
         title="Networks"
         @click.native="close"
       >
+        <svgicon
+          name="network"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -296,7 +301,7 @@ export default {
 }
 .app-menu-item:hover,
 .app-menu-item.router-link-active {
-  color: var(--link);
+  color: var(--blue);
   border-left: 4px solid var(--blue);
 }
 

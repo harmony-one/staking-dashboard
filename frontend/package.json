@@ -77,7 +77,7 @@
     "@ascendancyy/vue-cli-plugin-stylelint": "^1.1.2",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@capacitor/android": "1.1.1",
-    "@capacitor/cli": "1.1.1",
+    "@capacitor/cli": "1.5.2",
     "@capacitor/core": "1.1.1",
     "@capacitor/ios": "1.1.1",
     "@types/jest": "^23.1.4",

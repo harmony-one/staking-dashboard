@@ -74,7 +74,6 @@ export default {
         : "No limit"
     },
     chartdata() {
-      console.log(this.history);
 
       return {
         labels: this.history.map(

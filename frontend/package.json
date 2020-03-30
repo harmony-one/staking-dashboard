@@ -25,7 +25,8 @@
     "test:e2e:serve": "kill-port 9080 && cross-env VUE_APP_E2E=true STARGATE=http://localhost:9070 RPC=http://localhost:26657 vue-cli-service serve --mode production --port 9080 --https",
     "testnet:start": "npm run testnet:start:container && npm run proxy",
     "testnet:start:container": "docker run --rm -p 26657:26657 --name testnet -p 9070:9070 --detach -e MAX_NODES=${MAX_NODES:-2} -e SPEEDY=${SPEEDY:-false} lunieio/testnet:v0.34.7_speedy",
-    "testnet:stop": "docker stop testnet"
+    "testnet:stop": "docker stop testnet",
+    "svg": "vsvg -s ./src/assets/icons -t ./src/icons"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
@@ -121,6 +122,7 @@
     "stylelint-config-standard": "^18.2.0",
     "ts-jest": "^23.0.0",
     "typescript": "~3.5.3",
+    "vue-svgicon": "3.2.6",
     "vue-template-compiler": "^2.6.10"
   },
   "engines": {

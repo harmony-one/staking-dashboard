@@ -46,4 +46,5 @@ export default {
 
 <style>
 @import "./styles/app.css";
+@import "./styles/icons.css";
 </style>

@@ -11,8 +11,12 @@ import init from "./initializeApp"
 import { getURLParams } from "./scripts/url"
 import "./registerServiceWorker"
 import "@babel/polyfill"
+import SvgIcon from 'vue-svgicon'
 // @ts-ignore
 import VueMq from "vue-mq"
+
+import './icons'
+
 
 Vue.config.productionTip = false
 
@@ -20,6 +24,11 @@ Vue.use(Tooltip, { delay: 1 })
 Vue.use(Vuelidate)
 Vue.use(VueClipboard)
 Vue.use(InfiniteScroll)
+
+// Default tag name is 'svgicon'
+Vue.use(SvgIcon, {
+  tagName: 'svgicon'
+})
 
 Vue.use(VueMq, {
   breakpoints: {

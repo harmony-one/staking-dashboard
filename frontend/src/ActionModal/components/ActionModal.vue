@@ -767,7 +767,7 @@ export default {
 
 .action-modal {
   position: fixed;
-  top: calc(50vh - 200px);
+  top: calc(50vh - 250px);
   right: calc(50vw - 250px);
   width: 100%;
   width: 500px;
@@ -798,6 +798,10 @@ export default {
       font-size: 16px;
     }
   }
+  .material-icons {
+      font-size: 16px;
+  }
+
   > .action-modal-header {
     text-align: center;
     > .step--container {
@@ -805,18 +809,29 @@ export default {
     }
   }
   > .action-modal-form {
-    > div:nth-child(1) {
-      display: none;
+    .form-message {
+      font-size: 12px;
     }
   }
 
-  .action-modal-group.tm-form-group {
+  .table-invoice, .tm-hardware-state {
+      margin-bottom: var(--unit);
+  }
+
+  .action-modal-group.tm-form-group, .action-modal-form-group.tm-form-group {
     padding: 0;
     margin-bottom: var(--unit);
   }
   .action-modal-group.tm-form-group:last-child {
     margin-bottom: 0;
   }
+
+  .action-modal-title {
+    font-weight: bold;
+  }
+
+
+  
 
 }
 /* 

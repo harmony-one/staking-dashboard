@@ -10,7 +10,7 @@
       :class="{
         'sort-by': sort,
       }"
-      class="panel-sort-table-header"
+      class="panel-sort-table-header hide-xs"
     >
       <a
         v-if="sort"

@@ -144,18 +144,15 @@ export default {
   }
 }
 </script>
-<style scoped>
-@media screen and (max-width: 550px) {
-  .data-table td {
-    overflow: hidden;
-  }
-
-  .data-table__row__info {
-    max-width: 22rem;
+<style scoped lang="scss">
+table {
+  margin-top: var(--unit);
+  thead {
+    text-transform: uppercase;
+    font-weight: bold;
   }
 }
 
-.flip-list-move {
-  transition: transform 0.3s;
+@media screen and (max-width: 411px) {
 }
 </style>

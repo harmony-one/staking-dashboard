@@ -72,7 +72,7 @@ export default {
   position: relative;
 }
 .legend {
-  margin-top: -100px;
+  margin-top: -104px;
   padding-bottom: 100px;
   width: 100%;
   text-align: center;

@@ -38,6 +38,10 @@ export default {
         tooltips: {
           mode: "index",
           intersect: false,
+          custom: function(tooltipModel) {
+            var tooltipEl = document.getElementById('chartjs-tooltip')
+            tooltipModel.y = Math.max(35, tooltipModel.y)
+          },
           callbacks: {
             title: (data) => "",
             label: ({datasetIndex, xLabel, yLabel}) => {

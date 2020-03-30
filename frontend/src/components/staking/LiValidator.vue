@@ -35,7 +35,7 @@
     </td>-->
     <td class="hide-xs">{{ validator.rate | percent | notAvailable }}</td>
     <td>{{ validator.apr | percent | notAvailable }}</td>
-    <td class="hide-xs">{{ validator.average_stake | ones | zeroDecimals }}</td>
+    <td class="hide-xs">{{ validator.total_stake | ones | zeroDecimals }}</td>
     <td class="hide-xs">
       {{ validator.uptime_percentage | percent | notAvailable }}
     </td>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="!session.cookiesAccepted">
-    <Bar :show="show" :bar-type="'primary'">
+    <Bar :show="show" :bar-type="'primary'" :on-close="onClose">
       <span class="hide-on-mobile"
         >This site uses cookies to help improve your experience.</span
       >
@@ -32,6 +32,11 @@ export default {
         this.$store.dispatch(`setErrorCollection`, true)
         this.$store.dispatch(`storeLocalPreferences`)
       }
+    }
+  },
+  methods: {
+    onClose: function() {
+      this.show = false
     }
   }
 }

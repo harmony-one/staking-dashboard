@@ -4,7 +4,8 @@ const {
   isNotEmpty,
   bodyParams,
   bodyParams2,
-  changePercentage
+  changePercentage,
+  sortByParams
 } = require('./helpers')
 
 const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
@@ -758,7 +759,9 @@ module.exports = function(
 
       const totalFound = validators.length
 
-      validators = _.orderBy(validators.slice(0), [sortProperty], [sortOrder])
+      if (sortProperty && sortOrder) {
+        validators = sortByParams(validators.slice(0), sortProperty, sortOrder)
+      }
 
       validators = validators.slice(pageInt * sizeInt, (pageInt + 1) * sizeInt)
 

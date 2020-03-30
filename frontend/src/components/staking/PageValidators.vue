@@ -100,8 +100,6 @@ export default {
     TmField,
     TmBtn,
     TmDataLoading,
-    AllStakesChart,
-    PercentageChange
   },
   filters: {
     ones,
@@ -195,16 +193,16 @@ export default {
 
   .toggles {
     button {
-      background: white ;
+      background: white;
       border: 1px solid var(--light2);
       border-radius: var(--double) !important;
       
       &.secondary {
-        background:white !important;
+        background:white;
         color: var(--gray);
       }
       &.active {
-        background: var(--blue) !important;
+        background: var(--blue);
         color: white;
       }
       &.number-circle {
@@ -259,26 +257,4 @@ export default {
   }
 }
 
-// @media screen and (min-width: 768px) {
-//   .filterOptions {
-//     justify-content: space-between;
-//     flex-direction: row;
-//     margin: 0.5rem 2rem 1rem;
-
-//     .toggles {
-//       margin-bottom: 0;
-//     }
-
-//     input {
-//       max-width: 300px;
-//     }
-//   }
-// }
-
-
-// @media screen and (max-width: 500px) {
-//   .networkInfo {
-//     flex-direction: column;
-//   }
-// }
 </style>

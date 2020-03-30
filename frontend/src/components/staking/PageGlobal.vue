@@ -230,48 +230,6 @@ export default {
 }
 
 
-.filterOptions {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-
-  .toggles {
-    button {
-      background: white ;
-      border: 1px solid var(--light2);
-      border-radius: var(--double) !important;
-      
-      &.secondary {
-        background:white !important;
-        color: var(--gray);
-      }
-      &.active {
-        background: #F4FCFF !important;
-        color: var(--blue);
-      }
-      &.number-circle {
-        margin-right: -var(--unit);
-      }
-    }
-    button:first-child {
-      margin-right: var(--unit);
-    }
-  }
-
-  label {
-    cursor: pointer;
-  }
-
-  input.searchField {
-    width: 200px;
-    padding: 0 var(--unit);
-    border: 1px solid var(--light2);
-    border-radius: var(--double) !important;
-    color: var(--gray);
-  }
-}
-
-
 .no-results {
   text-align: center;
   margin: 3rem;
@@ -304,6 +262,9 @@ export default {
   .widget-row {
     > div {
       margin-right: 0 !important;
+    }
+    > .widget-container:nth-child(odd) {
+      margin-right: 0;
     }
   }
 }

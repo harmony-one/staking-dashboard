@@ -34,7 +34,7 @@ export default {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutoutPercentage: 60,
+      cutoutPercentage: 75,
       plugins: {
         labels: {
           render: "percentage",
@@ -109,4 +109,15 @@ export default {
   height: 300px;
   margin: 0 auto;
 }
+
+
+@media screen and (max-width: 411px) {
+  .chart {
+    display: flex;
+    height: 50%;
+    margin: 0 auto;
+    width: 256px;
+  }
+}
+
 </style>

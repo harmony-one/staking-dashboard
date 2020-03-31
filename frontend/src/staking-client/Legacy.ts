@@ -22,7 +22,10 @@ export default class Legacy {
 
   // meta
   connected = () => {
-    return this.nodeVersion().then(() => true, () => false)
+    return this.nodeVersion().then(
+      () => true,
+      () => false
+    )
   }
 
   nodeVersion = () => fetch(this.url + `/node_version`).then(res => res.text())
@@ -37,10 +40,7 @@ export default class Legacy {
   }
 
   bankTxs = (addr: string) => {
-    return Promise.all([
-      this.get(`/txs?sender=${addr}`),
-      this.get(`/txs?recipient=${addr}`)
-    ]).then(([senderTxs, recipientTxs]) => [].concat(senderTxs, recipientTxs))
+    return Promise.resolve([]);
   }
 
   txsByHeight = (height: string) => this.get(`/txs?tx.height=${height}`)
@@ -49,35 +49,7 @@ export default class Legacy {
 
   /* ============ STAKE ============ */
   stakingTxs = async (address: string, valAddress: string = "") => {
-    return Promise.all([
-      this.get(
-        `/txs?action=create_validator&destination-validator=${valAddress}`
-      ),
-      this.get(
-        `/txs?action=edit_validator&destination-validator=${valAddress}`
-      ),
-      this.get(`/txs?action=delegate&delegator=${address}`),
-      this.get(`/txs?action=begin_redelegate&delegator=${address}`),
-      this.get(`/txs?action=begin_unbonding&delegator=${address}`),
-      this.get(`/txs?action=unjail&source-validator=${valAddress}`)
-    ]).then(
-      ([
-        createValidatorTxs,
-        editValidatorTxs,
-        delegationTxs,
-        redelegationTxs,
-        undelegationTxs,
-        unjailTxs
-      ]) =>
-        [].concat(
-          createValidatorTxs,
-          editValidatorTxs,
-          delegationTxs,
-          redelegationTxs,
-          undelegationTxs,
-          unjailTxs
-        )
-    )
+    return Promise.resolve([])
   }
   // Get all delegations information from a delegator
   delegations = async (addr: string) => {
@@ -160,13 +132,7 @@ export default class Legacy {
   govTallyingParameters = () => this.get(`/gov/parameters/tallying`)
   govVotingParameters = () => this.get(`/gov/parameters/voting`)
   governanceTxs = async (address: string) => {
-    return Promise.all([
-      this.get(`/txs?action=submit_proposal&proposer=${address}`),
-      this.get(`/txs?action=deposit&depositor=${address}`),
-      this.get(`/txs?action=vote&voter=${address}`)
-    ]).then(([submitProposalTxs, depositTxs, voteTxs]) =>
-      [].concat(submitProposalTxs, depositTxs, voteTxs)
-    )
+    return Promise.resolve([])
   }
   /* ============ Explorer ============ */
   block = (blockHeight: string) => {
@@ -174,28 +140,8 @@ export default class Legacy {
   }
   /* ============ Distribution ============ */
   distributionTxs = async (address: string, valAddress: string = "") => {
-    return Promise.all([
-      this.get(`/txs?action=set_withdraw_address&delegator=${address}`),
-      this.get(`/txs?action=withdraw_delegator_reward&delegator=${address}`),
-      this.get(
-        `/txs?action=withdraw_validator_rewards_all&source-validator=${valAddress}`
-      )
-    ]).then(
-      ([
-        updateWithdrawAddressTxs,
-        withdrawDelegationRewardsTxs,
-        withdrawValidatorCommissionTxs
-      ]) =>
-        [].concat(
-          updateWithdrawAddressTxs,
-          withdrawDelegationRewardsTxs,
-          withdrawValidatorCommissionTxs
-        )
-    )
+    return Promise.resolve([])
   }
-  // delegatorRewards = (delegatorAddr: string) => {
-  //   return this.get(`/distribution/delegators/${delegatorAddr}/rewards`)
-  // }
   delegatorRewardsFromValidator = async (
     delegatorAddr: string,
     validatorAddr: string
@@ -206,12 +152,6 @@ export default class Legacy {
       )) || []
     )
   }
-  // validatorDistributionInformation = (validatorAddr: string) => {
-  //   return this.get(`/distribution/validators/${validatorAddr}`)
-  // }
-  // validatorRewards = (validatorAddr: string) => {
-  //   return this.get(`/distribution/validators/${validatorAddr}/rewards`)
-  // }
   distributionParameters = () => {
     return this.get(`/distribution/parameters`)
   }
@@ -222,10 +162,4 @@ export default class Legacy {
   annualProvisionedTokens = () => {
     return this.get(`/minting/annual-provisions`)
   }
-  // inflation = () => {
-  //   return this.get(`/minting/inflation`)
-  // }
-  // mintingParameters = () => {
-  //   return this.get(`/minting/parameters`)
-  // }
 }

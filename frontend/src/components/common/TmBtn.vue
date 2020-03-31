@@ -58,17 +58,10 @@ export default {
   text-align: center;
 }
 
-.button:hover {
-}
-
 .button:disabled {
   opacity: 0.25;
   background: var(--blue);
   cursor: default;
-}
-
-.button:disabled:hover {
-  background: var(--blue);
 }
 
 .button.secondary.active {
@@ -77,10 +70,6 @@ export default {
 
 .button.secondary {
   background: var(--blue);
-}
-
-.button.secondary:hover {
-  opacity: 0.75;
 }
 
 .button.secondary.small {

@@ -65,7 +65,7 @@
         <TableValidators
           :data="validators"
           :active-only="activeOnly"
-          :search="searchTerm"
+          :search="searchTerm.trim()"
           show-on-mobile="expectedReturns"
         />
         <div

@@ -134,7 +134,7 @@ export default {
         },
         {
           title: `STAKE`,
-          value: `average_stake`,
+          value: `total_stake`,
           tooltip: `Stake of validator`
         },
         {

@@ -66,7 +66,6 @@
           :data="validators"
           :active-only="activeOnly"
           :search="searchTerm"
-          show-on-mobile="expectedReturns"
         />
         <div
           v-if="validators && validators.length === 0 && searchTerm"
@@ -164,7 +163,7 @@ export default {
 }
 
 .networkInfo {
-  
+
   &-column {
     display: flex;
   }
@@ -196,7 +195,7 @@ export default {
       background: white;
       border: 1px solid var(--light2);
       border-radius: var(--double) !important;
-      
+
       &.secondary {
         background:white;
         color: var(--gray);
@@ -246,7 +245,7 @@ export default {
   }
 
   .filterOptions {
-    width: 100vw; 
+    width: 100vw;
     height: 48px;
     .toggles {
       text-align: right;

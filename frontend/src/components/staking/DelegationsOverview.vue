@@ -4,7 +4,6 @@
       <h2 class="table-title">Delegations</h2>
       <TableDelegations
         :data="validators.delegations"
-        show-on-mobile="expectedReturns"
       />
     </div>
 
@@ -16,7 +15,6 @@
       <TableDelegations
         :data="validators.undelegations"
         :is-undelegation="true"
-        show-on-mobile="expectedReturns"
       />
     </div>
 

@@ -27,7 +27,7 @@ import { mapGetters, mapState } from "vuex"
 import LiValidator from "staking/LiValidator"
 import PanelSort from "staking/PanelSort"
 import PanelPagination from "staking/PanelPagination"
-import { expectedReturns } from "scripts/returns"
+
 export default {
   name: `table-validators`,
   components: {
@@ -74,16 +74,7 @@ export default {
       totalFound: state => state.validators.totalFound
     }),
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
-    enrichedValidators(
-      {
-        data,
-        pool,
-        annualProvision,
-        committedDelegations,
-        session,
-        distribution
-      } = this
-    ) {
+    enrichedValidators({ data, session, distribution } = this) {
       return data.map(v => {
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
@@ -95,14 +86,7 @@ export default {
           rewards:
             session.signedIn && distribution.rewards[v.operator_address]
               ? distribution.rewards[v.operator_address][this.bondDenom]
-              : 0,
-          expectedReturns: annualProvision
-            ? expectedReturns(
-                v,
-                parseInt(pool.pool.bonded_tokens),
-                parseFloat(annualProvision)
-              )
-            : undefined
+              : 0
         })
       })
     },

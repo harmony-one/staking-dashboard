@@ -141,7 +141,7 @@ export default {
             this.$route.params.validator
           )
 
-          console.log(this, this.validator)
+          // console.log(this, this.validator)
 
           history = history.sort((a, b) => (a.epoch < b.epoch ? -1 : 1))
 

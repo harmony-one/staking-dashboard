@@ -4,9 +4,7 @@
       :sort="sort"
       :columns="columns"
       :data="showingValidators"
-      :pagination="pagination"
-      :total="totalFound"
-      mode="server-side"
+      :onRowClick="onClickValidator"
     />
     <PanelPagination :pagination="pagination" :total="totalFound" />
   </div>
@@ -17,6 +15,9 @@ import { mapGetters, mapState } from "vuex"
 import { expectedReturns } from "scripts/returns"
 import BaseGrid from "src/components/ui/BaseGrid"
 import PanelPagination from "./PanelPagination"
+
+import ValidatorStatus from "./components/ValidatorStatus"
+import ValidatorName from "./components/ValidatorName"
 
 import {
   percent,
@@ -112,16 +113,24 @@ export default {
     columns() {
       let props = [
         {
+          title: `Status`,
+          value: `status`,
+          tooltip: `The validator's status`,
+          width: "125px",
+          renderComponent: ValidatorStatus // render as Component - use custom Vue components
+        },
+        {
           title: `Name`,
           value: `name`,
-          tooltip: `The validator's moniker`
+          tooltip: `The validator's moniker`,
+          renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
           title: `Fees`,
           value: `rate`,
           tooltip: `Commission fees`,
           width: "130px",
-          render: value => percent(value)
+          render: value => percent(value) // render as function - do format value here
         },
         {
           title: `APR %`,
@@ -146,10 +155,11 @@ export default {
         }
       ]
 
-      if (this.$mq === "sm") {
+      if (this.$mq === "md") {
         const keep = ["name", "apr"]
-        props = props.filter(p => keep.includes(p.name))
+        props = props.filter(p => keep.includes(p.value))
       }
+
       return props
     }
   },
@@ -191,6 +201,12 @@ export default {
     this.getValidators()
   },
   methods: {
+    onClickValidator(validator) {
+      this.$router.push({
+        name: "validator",
+        params: { validator: validator.operator_address }
+      })
+    },
     getValidators() {
       this.$store.dispatch(`getValidatorsWithParams`, {
         active: this.activeOnly,

@@ -47,11 +47,13 @@ export default {
 
 <style>
 .panel-sort-table-header {
-  font-size: var(--sm);
+  font-size: var(--m);
   padding: 1rem;
   border-bottom: 1px solid var(--bc-dim);
   height: 50px;
   overflow: hidden;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .sort-by i {

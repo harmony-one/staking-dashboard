@@ -7,12 +7,12 @@ function isWindowsPlatform() {
 
 const mockSessionState = {
   // signedIn: true,
-  // address: "cosmos1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
+  // address: "one1r5fknqx36n8vts9wlqufw08u3fh3qklhfwvhg5",
   // sessionType: "extension"
 }
 
 export default () => {
-  const USER_PREFERENCES_KEY = `lunie_user_preferences`
+  const USER_PREFERENCES_KEY = `harmony_user_preferences`
 
   const state = {
     developmentMode: config.development, // can't be set in browser
@@ -166,30 +166,24 @@ export default () => {
     loadLocalPreferences({ state, dispatch }) {
       const localPreferences = localStorage.getItem(USER_PREFERENCES_KEY)
 
-      // don't track in development
-      if (state.developmentMode) return
+      if (localPreferences) {
+        const { cookiesAccepted } = JSON.parse(localPreferences)
 
-      if (!localPreferences) {
-        state.cookiesAccepted = false
-        return
+        state.cookiesAccepted = Boolean(cookiesAccepted)
       }
-      state.cookiesAccepted = true
 
-      const { errorCollection, analyticsCollection } = JSON.parse(
-        localPreferences
-      )
-      if (state.errorCollection !== errorCollection)
-        dispatch(`setErrorCollection`, errorCollection)
-      if (state.analyticsCollection !== analyticsCollection)
-        dispatch(`setAnalyticsCollection`, analyticsCollection)
+      // if (state.errorCollection !== errorCollection)
+      //   dispatch(`setErrorCollection`, errorCollection)
+      // if (state.analyticsCollection !== analyticsCollection)
+      //   dispatch(`setAnalyticsCollection`, analyticsCollection)
     },
     storeLocalPreferences({ state }) {
       state.cookiesAccepted = true
+
       localStorage.setItem(
         USER_PREFERENCES_KEY,
         JSON.stringify({
-          errorCollection: state.errorCollection,
-          analyticsCollection: state.analyticsCollection
+          cookiesAccepted: true
         })
       )
     },

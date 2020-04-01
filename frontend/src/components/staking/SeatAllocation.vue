@@ -66,6 +66,9 @@ export default {
             gridLines: {
               display: true
             },
+            ticks: {
+              min: 0,
+            }
           }
         ]
       }
@@ -77,18 +80,23 @@ export default {
       console.log(this.data)
       
       const epochs = Object.keys(this.data)
-      const elected = this.data.externalShards.map((s) => s.external)
-      const total = this.data.externalShards.map((s) => s.total)
+      const shards = this.data.externalShards || []
+      const elected = shards.map((s) => s.external)
+      const total = shards.map((s) => s.total)
 
-      const shards = [0, 1, 2, 3].map((s) => 'Shard ' + s)
+      const labels = [0, 1, 2, 3].map((s) => 'Shard ' + s)
+
+      const colors = ['#00ADE844', '#00ADE844']
       
       return {
-        labels: shards,
+        labels,
         datasets: [
           {
+            backgroundColor: colors[0],
             data: elected
           }, 
           {
+            backgroundColor: colors[1],
             data: total
           }
         ]

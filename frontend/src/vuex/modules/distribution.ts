@@ -97,38 +97,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       state.loading = false
       state.loaded = true
     },
-    // async getRewardsFromValidator(
-    //   {
-    //     state,
-    //     rootState: { session },
-    //     getters: { bondDenom },
-    //     commit
-    //   },
-    //   validatorAddr
-    // ) {
-    //   state.loading = true
-    //   try {
-    //     // TODO move array fallback into cosmos-api
-    //     const rewardsArray =
-    //       (await node.get.delegatorRewardsFromValidator(
-    //         session.address,
-    //         validatorAddr
-    //       )) || []
-    //     const rewards = coinsToObject(rewardsArray)
-    //
-    //     // if the delegator has 0 rewards for a validator after a withdraw, this is trimmed
-    //     // to properly differentiate between 0 rewards and no delegation,
-    //     // we set the rewards to a 0 value on validators we know the delegator has bond with
-    //     rewards[bondDenom] = rewards[bondDenom] || 0
-    //
-    //     commit(`setDelegationRewards`, { validatorAddr, rewards })
-    //     commit(`setDistributionError`, null)
-    //     state.loaded = true
-    //   } catch (error) {
-    //     commit(`setDistributionError`, error)
-    //   }
-    //   state.loading = false
-    // },
+
     // TODO: move to a common parameters module
     async getDistributionParameters({ commit, state }) {
       state.loading = true

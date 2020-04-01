@@ -56,7 +56,7 @@ export default {
   data: () => ({
     query: ``,
     sort: {
-      property: `expectedReturns`,
+      property: `apr`,
       order: `desc`
     },
     pagination: {
@@ -85,7 +85,6 @@ export default {
       } = this
     ) {
       return data.map(v => {
-
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
@@ -108,7 +107,6 @@ export default {
       })
     },
     sortedEnrichedValidators() {
-      console.log(this.enrichedValidators)
       return this.enrichedValidators.slice(0)
     },
     startIndex() {
@@ -135,9 +133,9 @@ export default {
           tooltip: `APR %`
         },
         {
-          title: `Stake`,
-          value: `average_stake_by_bls`,
-          tooltip: `Average ONE staked`
+          title: `STAKE`,
+          value: `total_stake`,
+          tooltip: `Stake of validator`
         },
         {
           title: `Uptime`,
@@ -145,9 +143,9 @@ export default {
           tooltip: `Percentage validator has been elected vs. not`
         }
       ]
-      if (this.$mq === 'sm') {
-        const keep = ['name', 'apr']
-        props = props.filter((p) => keep.includes(p.name))
+      if (this.$mq === "sm") {
+        const keep = ["name", "apr"]
+        props = props.filter(p => keep.includes(p.name))
       }
       return props
     }
@@ -204,7 +202,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-
 table {
   margin-top: var(--unit);
   thead {
@@ -214,7 +211,5 @@ table {
 }
 
 @media screen and (max-width: 411px) {
-  
 }
-
 </style>

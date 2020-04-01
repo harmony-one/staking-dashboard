@@ -15,9 +15,21 @@
             <div>
               <span>Total Staked:</span>
               <h4>
-                {{ validator.total_stake | ones | fourDecimals | noBlanks }}
+                {{ validator.total_stake | ones | zeroDecimals | noBlanks }}
               </h4>
             </div>
+
+            <div>
+              <span>Delegated:</span>
+              <h4>{{ delegatedStake | ones | zeroDecimals | noBlanks }}</h4>
+            </div>
+            <div>
+              <span>Self Stake:</span>
+              <h4>
+                {{ validatorSelfStakeAmount | ones | zeroDecimals | noBlanks }}
+              </h4>
+            </div>
+
             <div class="status-container">
               <span :class="status | toClassName" class="validator-status">
                 {{ status }}
@@ -26,31 +38,24 @@
                 {{ status_detailed }}
               </span>
             </div>
-            <!-- <div>
-              <span>Delegated stake:</span>
-              <h4>{{ delegatedStake | ones | fourDecimals | noBlanks }}</h4>
-            </div> -->
-            <!-- <div>
-              <span>Self stake:</span>
-              <h4>
-                {{ validatorSelfStakeAmount | ones | fourDecimals | noBlanks }}
-              </h4>
-            </div>
-            <div v-if="rewards">
-              <span>Your rewards:</span>
-              <h5>+{{ rewards | ones | fourDecimals | noBlanks }}</h5>
-            </div> -->
+
+            
           </div>
         </div>
       </td>
     </div>
 
     <div class="button-container">
-      <TmBtn id="delegation-btn" value="Stake" @click.native="onDelegation" />
+      <TmBtn 
+        id="delegation-btn" 
+        value="Delegate"
+        @click.native="onDelegation"
+        :disabled="validator.total_stake >= validator.max_total_delegation"
+      />
       <TmBtn
         id="undelegation-btn"
         :disabled="!selfStakeAmount"
-        value="Unstake"
+        value="Undelegate"
         type="secondary"
         @click.native="onUndelegation"
       />
@@ -77,7 +82,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex"
-import { ones, fourDecimals, percent, uatoms } from "scripts/num"
+import { ones, fourDecimals, zeroDecimals, percent, uatoms } from "scripts/num"
 import { formatBech32 } from "src/filters"
 import TmBtn from "common/TmBtn"
 import DelegationModal from "src/ActionModal/components/DelegationModal"
@@ -96,6 +101,7 @@ export default {
   filters: {
     ones,
     fourDecimals,
+    zeroDecimals,
     percent,
     toLower: text => text.toLowerCase(),
     toClassName: text => text.toLowerCase().replace(/ /g, "_"),

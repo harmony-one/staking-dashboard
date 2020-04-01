@@ -20,14 +20,17 @@
       }"
     >
       <a
-        v-if="true || (!session.isMobile && session.sessionType === 'ledger')"
-        @click="
-          () => {
-            onShowLedger()
-            showAddressOnLedger()
-          }
-        "
-      >
+        v-if="session && !session.isMobile && session.sessionType === 'ledger'"
+        @click="() => {
+          onShowLedger()
+          showAddressOnLedger()
+        }"
+      class="show-on-ledger"
+      v-tooltip="{
+        placement: 'top',
+        content: ledgerSuccess || `Click to show on Ledger`
+      }"
+    >
         Show on Ledger
       </a>
     </div>
@@ -49,7 +52,7 @@ export default {
   props: {
     session: {
       type: Object,
-      required: true
+      required: false
     },
     address: {
       type: String,
@@ -103,8 +106,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.address,
-.show-on-ledger {
+.address, .show-on-ledger {
   width: 100%;
   margin-top: var(--half);
 }

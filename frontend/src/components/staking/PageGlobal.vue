@@ -35,9 +35,10 @@
           </div>
         </div>
       </div>
-      <div v-if="networkInfo.staking_distro" class="chart-border">
+      <div v-if="networkInfo.raw_stake_distro" class="chart-border">
         <AllStakesChart
-          :data="networkInfo.staking_distro"
+          :raw="networkInfo.raw_stake_distro"
+          :eff="networkInfo.effective_median_stake_distro"
           :median="networkInfo.effective_median_stake | ones"
           :networkInfo="networkInfo"
         />
@@ -45,6 +46,7 @@
 
       <div class="widget-row">
         <LightWidget
+          v-if="networkInfo.total_seats_used" 
           :title="`Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`"
         >
           <div class="chart">
@@ -171,15 +173,13 @@ export default {
       const blocksUrl = this.networkConfig.explorer_url
         ? this.networkConfig.explorer_url.replace("tx", "block")
         : ""
-
+      
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },
   async mounted() {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
-
-    console.log(this.networkInfo.staking_distro)
   }
 }
 </script>
@@ -230,48 +230,6 @@ export default {
 }
 
 
-.filterOptions {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-
-  .toggles {
-    button {
-      background: white ;
-      border: 1px solid var(--light2);
-      border-radius: var(--double) !important;
-      
-      &.secondary {
-        background:white !important;
-        color: var(--gray);
-      }
-      &.active {
-        background: #F4FCFF !important;
-        color: var(--blue);
-      }
-      &.number-circle {
-        margin-right: -var(--unit);
-      }
-    }
-    button:first-child {
-      margin-right: var(--unit);
-    }
-  }
-
-  label {
-    cursor: pointer;
-  }
-
-  input.searchField {
-    width: 200px;
-    padding: 0 var(--unit);
-    border: 1px solid var(--light2);
-    border-radius: var(--double) !important;
-    color: var(--gray);
-  }
-}
-
-
 .no-results {
   text-align: center;
   margin: 3rem;
@@ -304,6 +262,9 @@ export default {
   .widget-row {
     > div {
       margin-right: 0 !important;
+    }
+    > .widget-container:nth-child(odd) {
+      margin-right: 0;
     }
   }
 }

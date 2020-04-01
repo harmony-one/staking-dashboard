@@ -95,14 +95,12 @@ export default class ActionManager {
   async send(memo: any, txMetaData: any, networkConfig: INetworkConfig) {
     this.readyCheck()
 
-    const { gasEstimate, gasPrice, submitType, password } = txMetaData
+    const { gasEstimate, gasPrice, submitType } = txMetaData
     const signer: any = await getSigner(config, submitType, {
-      address: this.context.userAddress,
-      password
+      address: this.context.userAddress
     })
 
     try {
-
       const fullMessage = {
         msgs: [this.message],
         fee: {

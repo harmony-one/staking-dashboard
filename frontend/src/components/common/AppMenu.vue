@@ -30,6 +30,11 @@
         title="Portfolio"
         @click.native="close"
       >
+        <svgicon
+          name="profile"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Portfolio</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -40,6 +45,11 @@
         title="Validators"
         @click.native="close"
       >
+        <svgicon
+          name="validators"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Validators</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -50,6 +60,11 @@
         title="Global View"
         @click.native="close"
       >
+        <svgicon
+          name="world"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Global View</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -85,6 +100,11 @@
         title="Networks"
         @click.native="close"
       >
+        <svgicon
+          name="network"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -213,7 +233,6 @@ export default {
 </script>
 
 <style scoped>
-
 .app-menu-main {
   border-top: 1px solid var(--light);
 }
@@ -279,6 +298,7 @@ export default {
 
 .app-menu-item h2 {
   flex: 1;
+  margin-left: 5px;
   display: inline-block;
 }
 .app-menu-item i {
@@ -287,12 +307,20 @@ export default {
 }
 .app-menu-item:hover,
 .app-menu-item.router-link-active {
-  color: var(--link);
+  color: var(--blue);
   border-left: 4px solid var(--blue);
 }
 
 .app-menu-item:hover {
   color: var(--blue);
+}
+
+.app-menu-item:hover > .svg-icon {
+  fill: var(--blue);
+}
+
+.router-link-active > .svg-icon {
+  fill: var(--blue);
 }
 
 @media screen and (max-width: 1023px) {

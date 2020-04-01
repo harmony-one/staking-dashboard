@@ -65,7 +65,7 @@
         <TableValidators
           :data="validators"
           :active-only="activeOnly"
-          :search="searchTerm"
+          :search="searchTerm.trim()"
           show-on-mobile="expectedReturns"
         />
         <div
@@ -100,8 +100,6 @@ export default {
     TmField,
     TmBtn,
     TmDataLoading,
-    AllStakesChart,
-    PercentageChange
   },
   filters: {
     ones,
@@ -148,8 +146,6 @@ export default {
   async mounted() {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
-
-    console.log(this)
   }
 }
 </script>
@@ -197,17 +193,17 @@ export default {
 
   .toggles {
     button {
-      background: white ;
+      background: white;
       border: 1px solid var(--light2);
       border-radius: var(--double) !important;
       
       &.secondary {
-        background:white !important;
+        background:white;
         color: var(--gray);
       }
       &.active {
-        background: #F4FCFF !important;
-        color: var(--blue);
+        background: var(--blue);
+        color: white;
       }
       &.number-circle {
         margin-right: -var(--unit);
@@ -261,26 +257,4 @@ export default {
   }
 }
 
-// @media screen and (min-width: 768px) {
-//   .filterOptions {
-//     justify-content: space-between;
-//     flex-direction: row;
-//     margin: 0.5rem 2rem 1rem;
-
-//     .toggles {
-//       margin-bottom: 0;
-//     }
-
-//     input {
-//       max-width: 300px;
-//     }
-//   }
-// }
-
-
-// @media screen and (max-width: 500px) {
-//   .networkInfo {
-//     flex-direction: column;
-//   }
-// }
 </style>

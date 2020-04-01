@@ -25,17 +25,13 @@
           </div>
         </div>
 
-        <LightWidget
-          title="Stake & Delegation history"
-        >
+        <LightWidget title="Stake & Delegation history">
           <StakeHistoryBlock
             :history="validatorHistory"
             :validator="validator"
           />
         </LightWidget>
-        <LightWidget
-          title="Reward rate history"
-        >
+        <LightWidget title="Reward rate history">
           <RewardHistoryBlock
             :history="validatorHistory"
             :validator="validator"
@@ -47,10 +43,7 @@
             :validator="validator"
           />
         </LightWidget>
-        <LightWidget
-          v-if="allHistory.length"
-          title="Event history"
-        >
+        <LightWidget v-if="allHistory.length" title="Event history">
           <EventHistoryBlock :events="eventsHistory" />
         </LightWidget>
       </div>
@@ -59,8 +52,8 @@
       <div slot="title">Validator Not Found</div>
       <div slot="subtitle">
         Please visit the
-        <router-link to="/validators/"> Validators </router-link>page to view all
-        validators
+        <router-link to="/validators/"> Validators </router-link>page to view
+        all validators
       </div>
     </template>
   </TmPage>
@@ -143,13 +136,14 @@ export default {
             this.connection.networkConfig.id,
             this.$route.params.validator
           )
-
           let history = await fetchValidatorHistory(
             this.connection.networkConfig.id,
             this.$route.params.validator
           )
 
-          history = history.sort((a, b) => (a.index < b.index ? -1 : 1))
+          // console.log(this, this.validator)
+
+          history = history.sort((a, b) => (a.epoch < b.epoch ? -1 : 1))
 
           this.allHistory = history
           this.validatorHistory = history
@@ -204,9 +198,7 @@ export default {
   }
 }
 
-
 @media screen and (max-width: 411px) {
-    
   .validator-top {
     display: flex;
     flex-direction: column;
@@ -222,9 +214,9 @@ export default {
       margin-bottom: var(--unit);
       padding: var(--unit);
     }
-  > div:last-child {
+    > div:last-child {
       border-right: 1px solid var(--light2);
-  }
+    }
     .title {
       font-size: 16px;
       color: var(--blue);
@@ -233,7 +225,4 @@ export default {
     }
   }
 }
-
-
-
 </style>

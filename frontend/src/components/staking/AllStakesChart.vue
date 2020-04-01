@@ -21,68 +21,108 @@ import { ones, zeroDecimals } from "../../scripts/num"
 export default {
   name: "AllStakesChart",
   components: { ChartBar },
-  props: ["data", "median", "networkInfo"],
-  data: () => ({
-    options: {
-      plugins: {
-        labels: false,
-      },
-      responsive: true,
-      maintainAspectRatio: false,
-      tooltips: {
-        mode: "index",
-        intersect: false,
-        callbacks: {
-          title: (data) => "",
-          label: (data, a, b) => 
-            zeroDecimals(data.yLabel) + " ONE Staked"// by " + a.datasets[0].pointRadius({dataIndex: data.index})
+  props: ["raw", "eff", "median", "networkInfo"],
+  computed: {
+    median: function() {
+      console.log('MEDIAN', this.median)
+    }
+  },
+  data: function() {
+    return {
+      options: {
+        plugins: {
+          labels: false,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          mode: "index",
+          intersect: false,
+          custom: function(tooltipModel) {
+            var tooltipEl = document.getElementById('chartjs-tooltip')
+            tooltipModel.y = Math.max(35, tooltipModel.y)
+          },
+          callbacks: {
+            title: (data) => "",
+            label: ({datasetIndex, xLabel, yLabel}) => {
+              if (datasetIndex === 0) {
+                return `${yLabel} effective stake`
+              }
+              return `${yLabel} total ONE staked`
+            }
+          }
+        },
+        legend: {
+          display: true
+        },
+        scales: {
+          xAxes: [
+            {
+              display: true,
+              gridLines: {
+                display: false
+              },
+              stacked: true,
+            }
+          ],
+          yAxes: [
+            {
+              display: true,
+              gridLines: {
+                display: true
+              },
+              ticks: {
+                suggestedMin: 0,
+                max: this.median * 2
+              }
+            }
+          ]
         }
-      },
-      scales: {
-        xAxes: [
-          {
-            display: true,
-            gridLines: {
-              display: false
-            },
-          }
-        ],
-        yAxes: [
-          {
-            display: true,
-            gridLines: {
-              display: true
-            },
-          }
-        ]
       }
     }
-  }),
+  },
   computed: {
     chartdata() {
 
-      const data = this.data.map((v) => Math.floor(ones(v))).reverse()
-      const labels = data.map((v, idx) => idx)
-      const even = data.length % 2 === 0
-      const median = Math.floor(data.length/2)
-      const colors = data.map((v, i) => {
+
+      const data = this.raw.map((v, i) => ({ raw: Math.floor(ones(v)), eff: Math.floor(ones(this.eff[i])) }))
+        .sort((a, b) => a.raw - b.raw).reverse()
+
+        
+        //.sort((a, b) => a.eff - b.eff)
+      //labels
+      const labels = data.map((v, i) => i+1)
+      //map out indiv stakes
+      const rawStake = data.map((v) => v.raw)
+      const effStake = data.map((v) => v.eff)
+      //median and colors
+      const even = effStake.length % 2 === 0
+      const median = Math.floor(effStake.length/2)
+      const colors = effStake.map((v, i) => {
         if (even && (i === median || i === median+1)) {
-          return '#FF0000'
+          return 'rgba(102, 161, 255, 0.75)'
         } else if (i === median) {
-          return '#FF0000'
+          return 'rgba(102, 161, 255, 0.75)'
         }
-        // return '#0981cf'
-        return '#00ADE8'
+        return '#00ADE844'
       })
       
       return {
         labels,
         datasets: [
           {
-            label: "Staked ONE distribution",
+            label: "Effective Stake",
+            data: effStake,
+            borderColor: colors,
             backgroundColor: colors,
+            borderWidth: 1,
+          },
+          {
+            label: "ONE Staked",
+            backgroundColor: '#4fe7c888',
+            data: rawStake,
             minHeight: 16,
-            data,
+            borderWidth: 0,
           }
         ]
       }

@@ -24,7 +24,8 @@
         </span>
       </div>
     </TmFormGroup>
-    <TmFormGroup class="action-modal-form-group" field-id="to" field-label="To">
+    <!-- <TmFormGroup class="action-modal-form-group" field-id="to" field-label="To"> -->
+    <TmFormGroup class="action-modal-form-group" field-id="to">
       <TmField id="to" v-model="to" type="text" readonly />
       <TmFormMsg
         v-if="validatorStatus === 'Inactive' && !isRedelegation()"
@@ -58,11 +59,16 @@
         type="select"
       />
     </TmFormGroup>
-    <TmFormGroup
+    <!-- <TmFormGroup
       :error="$v.amount.$error && $v.amount.$invalid"
       class="action-modal-form-group"
       field-id="amount"
       field-label="Amount"
+    > -->
+    <TmFormGroup
+      :error="$v.amount.$error && $v.amount.$invalid"
+      class="action-modal-form-group"
+      field-id="amount"
     >
       <span class="input-suffix-denom">{{ viewDenom(denom) }}</span>
       <TmFieldGroup>
@@ -83,12 +89,12 @@
         />
       </TmFieldGroup>
       <span v-if="!isRedelegation()" class="form-message">
-        Available to Delegate:
+        Available to Stake:
         {{ getFromBalance() }}
         {{ denom | viewDenom }}s
       </span>
       <div v-if="!isRedelegation()" class="form-message">
-        Remaining available stakes
+        Available for this Validator: 
         {{ validator.remainder | ones | shortDecimals }}
         {{ denom | viewDenom }}s
       </div>

@@ -42,6 +42,7 @@ export default {
 </script>
 <style scoped>
 .network-list {
+  max-width: 500px;
   margin-bottom: 4rem;
 }
 </style>

@@ -34,7 +34,7 @@ export default {
         mode: "index",
         intersect: false,
         callbacks: {
-          title: data => "Date: " + moment(data[0].xLabel).format("MMM DD, hh:mm"),
+          title: data => "Epoch: " + data[0].xLabel,
           label: data => "Rate: " + percent(data.yLabel / 100)
         }
       },
@@ -45,10 +45,7 @@ export default {
       scales: {
         xAxes: [
           {
-            display: true,
-            ticks: {
-              callback: value => moment(value).format("MM.DD")
-            }
+            display: true
           }
         ],
         yAxes: [
@@ -73,17 +70,14 @@ export default {
     chartdata() {
       return {
         labels: this.history.map(
-          v => v.uctDate /* moment(v.uctDate).format("MM.DD") */
+          v => v.epoch /* moment(v.uctDate).format("MM.DD") */
         ),
         datasets: [
           {
             label: "Rate",
             borderColor: "#0a93eb",
             fill: false,
-            data: this.history.map(
-              // v => Math.round(v.commission.rate * 10000) / 100
-              v => Math.round(Math.random() * 30)
-            )
+            data: this.history.map(v => v.apr)
           }
         ]
       }

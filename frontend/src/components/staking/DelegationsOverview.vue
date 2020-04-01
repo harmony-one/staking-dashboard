@@ -81,11 +81,16 @@ export default {
           delegates.Undelegations.length
         ) {
           delegates.Undelegations.forEach(un => {
-            const { current_epoch, time_next_epoch } = state.networkInfo
+            const { current_epoch } = state.networkInfo
             let remaining_epoch
 
-            if (current_epoch && un.Epoch && time_next_epoch) {
+            if (current_epoch && un.Epoch) {
               remaining_epoch = 7 + parseInt(un.Epoch) - parseInt(current_epoch)
+            }
+
+            if (remaining_epoch < 0) {
+              // TODO - fix for negative epoch
+              return
             }
 
             undelegations.push({

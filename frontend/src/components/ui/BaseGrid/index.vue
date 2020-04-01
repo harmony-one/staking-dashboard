@@ -14,6 +14,7 @@
           v-for="item in data"
           :key="item.address"
           @click="() => onRowClick(item)"
+          :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
         >
           <template v-if="column.render">
             {{ column.render(item[column.value], item) }}
@@ -71,7 +72,7 @@ export default {
     .table-cell {
       display: flex;
       align-items: center;
-      padding: 0 1rem;
+      padding: 0 var(--unit) 0 0;
       cursor: pointer;
       border-bottom: 1px solid #ddd;
       height: 60px;

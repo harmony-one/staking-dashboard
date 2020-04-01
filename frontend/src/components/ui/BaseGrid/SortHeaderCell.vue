@@ -1,5 +1,7 @@
 <template>
-  <div :class="classNames" class="panel-sort-table-header">
+  <div :class="classNames" class="panel-sort-table-header"
+    :style="column.align === 'right' ? { textAlign: 'right' } : { textAlign: 'left' }"
+  >
     <a
       v-if="sort"
       v-tooltip.top="column.tooltip"
@@ -48,7 +50,7 @@ export default {
 <style>
 .panel-sort-table-header {
   font-size: var(--m);
-  padding: 1rem;
+  padding: var(--unit) 0;
   border-bottom: 1px solid var(--bc-dim);
   height: 50px;
   overflow: hidden;

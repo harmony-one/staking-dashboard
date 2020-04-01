@@ -116,7 +116,7 @@ export default {
           title: `Status`,
           value: `status`,
           tooltip: `The validator's status`,
-          width: "125px",
+          width: "96px",
           renderComponent: ValidatorStatus // render as Component - use custom Vue components
         },
         {
@@ -126,17 +126,11 @@ export default {
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
-          title: `Fees`,
-          value: `rate`,
-          tooltip: `Commission fees`,
-          width: "130px",
-          render: value => percent(value) // render as function - do format value here
-        },
-        {
           title: `APR %`,
           value: `apr`,
           tooltip: `APR %`,
           width: "130px",
+          align: 'right',
           render: value => percent(value)
         },
         {
@@ -144,18 +138,32 @@ export default {
           value: `total_stake`,
           tooltip: `Stake of validator`,
           width: "130px",
+          align: 'right',
           render: value => zeroDecimals(ones(value))
+        },
+        {
+          title: `Fees`,
+          value: `rate`,
+          tooltip: `Commission fees`,
+          width: "96px",
+          align: 'right',
+          render: value => percent(value) // render as function - do format value here
         },
         {
           title: `Uptime`,
           value: `uptime_percentage`,
           tooltip: `Percentage validator has been elected vs. not`,
-          width: "130px",
+          width: "96px",
+          align: 'right',
           render: value => percent(value)
         }
       ]
 
-      if (this.$mq === "md") {
+      if (this.$mq === "tab") {
+        const keep = ["name", "apr", "total_stake"]
+        props = props.filter(p => keep.includes(p.value))
+      }
+      if (this.$mq === "sm" || this.$mq === "md") {
         const keep = ["name", "apr"]
         props = props.filter(p => keep.includes(p.value))
       }

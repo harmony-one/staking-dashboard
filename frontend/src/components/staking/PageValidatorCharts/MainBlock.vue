@@ -30,13 +30,20 @@
               </h4>
             </div>
 
+            <div>
+              <span>Max Delegation:</span>
+              <h4>
+                {{ validator.max_total_delegation | ones | zeroDecimals | noBlanks }}
+              </h4>
+            </div>
+
             <div class="status-container">
-              <span :class="status | toClassName" class="validator-status">
+              <div :class="status | toClassName" class="validator-status">
                 {{ status }}
-              </span>
-              <span v-if="status_detailed" class="validator-status-detailed">
+              </div>
+              <div v-if="status_detailed" class="validator-status-detailed">
                 {{ status_detailed }}
-              </span>
+              </div>
             </div>
 
             
@@ -226,8 +233,17 @@ export default {
 <style scoped lang="scss">
 @import "./styles.css";
 
+
+.validator-main-block {
+  max-width: 380px;
+}
+
+
 .status-container {
   margin-top: var(--unit);
+  > div:first-child {
+    min-width: 100px;
+  }
 }
 
 .validator, .button-container {
@@ -287,19 +303,6 @@ export default {
   margin-right: 5px;
 }
 
-
-
-
-@media screen and (max-width: 411px) {
-    
-  .status-container {
-    span {
-      display: block;
-      width: 100%;
-    }
-  }
-
-}
 
 
 </style>

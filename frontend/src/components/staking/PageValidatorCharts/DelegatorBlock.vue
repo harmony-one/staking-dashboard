@@ -60,6 +60,7 @@ export default {
 .headings {
   text-transform: uppercase;
   font-weight: bold;
+  border-bottom: 1px solid var(--light2);
 }
 
 .delegation:nth-child(even) {

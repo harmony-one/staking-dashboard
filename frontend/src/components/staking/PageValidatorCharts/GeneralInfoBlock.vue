@@ -131,8 +131,6 @@ export default {
     website() {
       let url = this.validator.website
 
-      console.log(this.validator)
-
       if (!url || url === "[do-not-modify]") {
         return ""
       } else if (!url.match(/http[s]?/)) {

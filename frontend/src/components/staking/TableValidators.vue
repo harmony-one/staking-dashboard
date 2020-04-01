@@ -1,48 +1,42 @@
 <template>
-  <div id="validators_table">
-    <table class="data-table card-white">
-      <thead class="table-header">
-        <PanelSort
-          :sort="sort"
-          :properties="properties"
-          :show-on-mobile="showOnMobile"
-        />
-      </thead>
-      <tbody>
-        <LiValidator
-          v-for="(validator, index) in showingValidators"
-          :key="validator.operator_address"
-          :index="startIndex + index"
-          :validator="validator"
-          :show-on-mobile="showOnMobile"
-        />
-      </tbody>
-    </table>
+  <div id="validators_table" class="table-container">
+    <BaseGrid
+      :sort="sort"
+      :columns="columns"
+      :data="showingValidators"
+      :pagination="pagination"
+      :total="totalFound"
+      mode="server-side"
+    />
     <PanelPagination :pagination="pagination" :total="totalFound" />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex"
-import LiValidator from "staking/LiValidator"
-import PanelSort from "staking/PanelSort"
-import PanelPagination from "staking/PanelPagination"
 import { expectedReturns } from "scripts/returns"
+import BaseGrid from "src/components/ui/BaseGrid"
+import PanelPagination from "./PanelPagination"
+
+import {
+  percent,
+  shortDecimals,
+  atoms,
+  ones,
+  zeroDecimals,
+  twoDecimals
+} from "scripts/num"
+
 export default {
   name: `table-validators`,
   components: {
-    LiValidator,
-    PanelSort,
+    BaseGrid,
     PanelPagination
   },
   props: {
     data: {
       type: Array,
       required: true
-    },
-    showOnMobile: {
-      type: String,
-      default: () => "returns"
     },
     activeOnly: {
       type: Boolean,
@@ -115,7 +109,7 @@ export default {
     showingValidators() {
       return this.sortedEnrichedValidators
     },
-    properties() {
+    columns() {
       let props = [
         {
           title: `Name`,
@@ -125,24 +119,33 @@ export default {
         {
           title: `Fees`,
           value: `rate`,
-          tooltip: `Commission fees`
+          tooltip: `Commission fees`,
+          width: "130px",
+          render: value => percent(value)
         },
         {
           title: `APR %`,
           value: `apr`,
-          tooltip: `APR %`
+          tooltip: `APR %`,
+          width: "130px",
+          render: value => percent(value)
         },
         {
           title: `STAKE`,
           value: `total_stake`,
-          tooltip: `Stake of validator`
+          tooltip: `Stake of validator`,
+          width: "130px",
+          render: value => zeroDecimals(ones(value))
         },
         {
           title: `Uptime`,
           value: `uptime_percentage`,
-          tooltip: `Percentage validator has been elected vs. not`
+          tooltip: `Percentage validator has been elected vs. not`,
+          width: "130px",
+          render: value => percent(value)
         }
       ]
+
       if (this.$mq === "sm") {
         const keep = ["name", "apr"]
         props = props.filter(p => keep.includes(p.name))
@@ -202,12 +205,8 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-table {
+.table-container {
   margin-top: var(--unit);
-  thead {
-    text-transform: uppercase;
-    font-weight: bold;
-  }
 }
 
 @media screen and (max-width: 411px) {

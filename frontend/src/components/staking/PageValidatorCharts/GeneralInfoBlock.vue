@@ -2,11 +2,11 @@
   <div class="card-white validator-info">
     <ul class="row">
       <li class="column">
-        <h4>Description</h4>
+        <h4 class="inline">Description:&nbsp;</h4>
         <span>{{ validator.details | noBlanks }}</span>
       </li>
       <li class="column">
-        <h4>Website</h4>
+        <h4 class="inline">Website:&nbsp;</h4>
         <span v-if="website !== `--`">
           <a
             id="validator-website"
@@ -19,13 +19,13 @@
         <span v-else id="validator-website">{{ website | noBlanks }}</span>
       </li>
       <li class="column">
-        <h4>Validator Address</h4>
+        <h4>Validator Address:&nbsp;</h4>
         <span>
           <Bech32 :address="validator.operator_address" :long-form="true" />
         </span>
       </li>
       <li class="column">
-        <h4>Validator Since</h4>
+        <h4 class="inline">Validator Since:&nbsp;</h4>
         <span>Block #{{ validator.creation_height }}</span>
       </li>
     </ul>
@@ -131,4 +131,16 @@ export default {
 
 <style scoped>
 @import "./styles.css";
+
+.column {
+  margin: 0;
+}
+.inline {
+  display: inline-block;
+}
+
+.card-white {
+  padding: 0;
+  padding-top: var(--unit);
+}
 </style>

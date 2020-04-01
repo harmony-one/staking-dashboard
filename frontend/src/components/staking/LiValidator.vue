@@ -9,16 +9,15 @@
       })
     "
   >
-    <td>{{ index + 1 }}</td>
+    <td class="hide-xs">{{ index + 1 }}</td>
     <td class="hide-xs">
       <div class="status-container">
         <span
           :class="status | toClassName"
           class="validator-status"
           :title="status_detailed"
+          >{{ status }}</span
         >
-          {{ status }}
-        </span>
       </div>
     </td>
     <td class="data-table__row__info">
@@ -28,25 +27,17 @@
         :logo-url="validator.logo_url"
       />
       <div class="validator-info">
-        <h3 class="li-validator-name">
-          {{ validator.moniker }}
-        </h3>
+        <h3 class="li-validator-name">{{ validator.moniker }}</h3>
       </div>
     </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
+    <!-- <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
       {{ 0.00005 | percent }}
-    </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ validator.rate | percent | notAvailable }}
-    </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ validator.apr | percent | notAvailable }}
-    </td>
-    <td class="average_stake_cell">
-      {{ validator.average_stake_by_bls | ones | zeroDecimals }}
-    </td>
-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
-      {{ validator.voting_power | percent | notAvailable }}
+    </td>-->
+    <td class="hide-xs">{{ validator.rate | percent | notAvailable }}</td>
+    <td>{{ validator.apr | percent | notAvailable }}</td>
+    <td class="hide-xs">{{ validator.total_stake | ones | zeroDecimals }}</td>
+    <td class="hide-xs">
+      {{ validator.uptime_percentage | percent | notAvailable }}
     </td>
   </tr>
 </template>
@@ -104,15 +95,15 @@ export default {
       return `Elected`
     },
     rowClass: state => ({
-      "li-validator": true,
+      "li-validator": true
       // red:
-      //   state.validator.average_stake_by_bls >
+      //   state.validator.total_stake >
       //   state.networkInfo.effective_median_stake,
       // green:
-      //   state.validator.average_stake_by_bls <=
+      //   state.validator.total_stake <=
       //   state.networkInfo.effective_median_stake
       // TODO: currently always green as sahil requested to change
-      green: true
+      // green: true
     }),
     status_detailed() {
       if (this.validator.jailed) return `Temporally banned from the network`
@@ -127,7 +118,12 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+.data-table__row__info {
+  height: 48px;
+}
+
 .li-validator {
+  height: 48px;
   font-size: 1rem;
   padding: var(--unit) 0;
   border-bottom: 1px solid #ddd;
@@ -150,6 +146,7 @@ export default {
   display: flex;
   flex-direction: column;
   text-overflow: ellipsis;
+  align-content: center;
   justify-content: center;
 }
 
@@ -185,16 +182,16 @@ export default {
 }
 
 .status-container {
-  margin-top: -3px;
+  margin-top: -2px;
 }
 
 .validator-status {
   text-transform: uppercase;
   font-size: 10px;
-  font-weight: 600;
-  border: 2px solid;
-  padding: 2px 4px 1.5px 4px;
-  border-radius: 8px;
+  font-weight: normal;
+  padding: var(--half) var(--half) 6px var(--half);
+  border: 1px solid;
+  border-radius: var(--unit);
 }
 
 .validator-status.inactive {
@@ -202,8 +199,14 @@ export default {
   border-color: red;
 }
 
-.validator-status.active {
-  color: var(--success);
-  border-color: var(--success);
+.validator-status.elected {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+@media screen and (max-width: 411px) {
+  .hide-xs {
+    display: none;
+  }
 }
 </style>

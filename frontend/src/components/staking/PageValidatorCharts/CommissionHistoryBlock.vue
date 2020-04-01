@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="slider-block">
+  <div class="card-white">
+    <!-- <div class="slider-block">
       <VueSlider
         v-model="currentRate"
         :max="maxRate"
@@ -20,12 +20,12 @@
           <div class="dot" />
         </template>
       </VueSlider>
-    </div>
+    </div> -->
     <div class="chart-container-commission">
       <ChartLine
         :chartdata="chartdata"
         :options="options"
-        style="height: 300px;"
+        style="height: 300px; width: 100%;"
       />
     </div>
     <div class="chart-description">Last commission change {{ lastChange }}</div>
@@ -56,7 +56,7 @@ export default {
         intersect: false,
         callbacks: {
           title: data =>
-            "Date: " + moment(data[0].xLabel).format("MMM DD, hh:mm"),
+            "Epoch: " + data[0].xLabel,
           label: data => "Rate: " + percent(data.yLabel / 100)
         }
       },
@@ -65,9 +65,6 @@ export default {
         xAxes: [
           {
             stacked: true,
-            ticks: {
-              callback: value => moment(value).format("MM.DD")
-            }
           }
         ],
         yAxes: [
@@ -130,13 +127,15 @@ export default {
     chartdata() {
       return {
         labels: this.history.map(
-          v => v.uctDate /* moment(v.uctDate).format("MM.DD") */
+          v => v.epoch /* moment(v.uctDate).format("MM.DD") */
         ),
+        lineTension: 0,
         datasets: [
           {
             label: "Rate",
             fill: false,
             borderColor: "#0a93eb",
+            lineTension: 0,
             data: this.history.map(
               v => Math.round(v.rate * 10000) / 100
               // v => Math.round(Math.random() * 30)
@@ -155,8 +154,12 @@ export default {
 </script>
 
 <style>
+
+.card-white {
+  padding: var(--unit);
+}
 .chart-container-commission .chartjs-render-monitor {
-  border: 1px solid #dedede;
+  border: none;
 }
 
 .chart-description {

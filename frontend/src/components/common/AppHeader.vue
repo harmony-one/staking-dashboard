@@ -1,7 +1,21 @@
 <template>
-  <nav class="app-header">
+
+  <div class="container">
+    <div class="mobile-menu-button">
+      <div v-if="open" class="close-menu" @click="close()">
+        <i class="material-icons mobile-menu-action">close</i>
+      </div>
+      <div v-if="!open" class="open-menu" @click="show()">
+        <i class="material-icons mobile-menu-action">more_vert</i>
+      </div>
+    </div>
+
+
+    <div class="app-mobile-menu-drop" :class="{ open: open }" @click="close()"></div>
+
+  <nav class="app-header" :class="{ open: open }">
   <!-- <nav class="app-header" :class="{ mobile: !desktop }"> -->
-    <div class="container">
+    <div class="container-desktop">
       <div class="header-item" :class="{ open: open }">
         <a href="/">
           <img
@@ -21,7 +35,22 @@
       </div>
       <AppMenu @close="close" />
     </div>
+
+    <div class="container-mobile" :class="{ open: open }">
+      <div class="header-item">
+        <a href="/">
+          <img
+            class="header-item-logo"
+            src="~assets/images/logo-top-right.png"
+            alt="Harmony Staking spaceship accelerating into a colourful space sky"
+          />
+        </a>
+      </div>
+      <AppMenu @close="close" />
+    </div>
   </nav>
+
+</div>
 </template>
 
 <script>
@@ -73,16 +102,39 @@ export default {
 }
 </script>
 
-<style scoped language="sass">
+<style scoped lang="scss">
+
+.container {
+    background: white;
+}
 .app-header {
   position: relative;
-  width: var(--width-side);
-  background: white;
-  min-height: 100vh;
+  .container-mobile, .container-desktop {
+    width: var(--width-side);
+    min-height: 100vh;
+    background: white;
+  }
+  .container-mobile {
+    display: none;
+  }
+}
+
+.app-mobile-menu-drop {
+  opacity: 0;
+  width: 0;
+  height: 100vh;
+  background: black;
+  transition: opacity 0.32s ease-out;
+  position: fixed;
+  z-index: 9997;
 }
 
 .mobile-menu-action {
   font-size: 1.5rem !important;
+}
+
+.mobile-menu-button {
+  display: none;
 }
 
 .app-header > .container {
@@ -112,11 +164,44 @@ export default {
   height: 48px;
 }
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 411px) {
   
-}
+  .app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    .container-desktop {
+      display: none;
+    }
+    .container-mobile {
+      display: block;
+      transition: transform 0.32s ease-out;
+      transform: translateX(-100vw);
+    }
+    .container-mobile.open {
+      transform: translateX(0);
+    }
+  }
 
-@media screen and (min-width: 1024px) {
-  
+  .app-header.open {
+    z-index: 9998;
+  }
+  .app-mobile-menu-drop.open {
+    width: 100vw;
+    opacity: 0.5;
+  }
+
+
+  .mobile-menu-button {
+    z-index: 9999;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    > div {
+      height: 56px;
+      padding: var(--unit);
+    }
+  }
 }
 </style>

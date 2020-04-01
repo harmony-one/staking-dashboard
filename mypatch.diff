@@ -1,0 +1,1259 @@
+diff --git a/frontend/src/components/common/AppHeader.vue b/frontend/src/components/common/AppHeader.vue
+index f9415f1..3838fe1 100644
+--- a/frontend/src/components/common/AppHeader.vue
++++ b/frontend/src/components/common/AppHeader.vue
+@@ -1,7 +1,21 @@
+ <template>
+-  <nav class="app-header">
++
++  <div class="container">
++    <div class="mobile-menu-button">
++      <div v-if="open" class="close-menu" @click="close()">
++        <i class="material-icons mobile-menu-action">close</i>
++      </div>
++      <div v-if="!open" class="open-menu" @click="show()">
++        <i class="material-icons mobile-menu-action">more_vert</i>
++      </div>
++    </div>
++
++
++    <div class="app-mobile-menu-drop" :class="{ open: open }" @click="close()"></div>
++
++  <nav class="app-header" :class="{ open: open }">
+   <!-- <nav class="app-header" :class="{ mobile: !desktop }"> -->
+-    <div class="container">
++    <div class="container-desktop">
+       <div class="header-item" :class="{ open: open }">
+         <a href="/">
+           <img
+@@ -21,7 +35,22 @@
+       </div>
+       <AppMenu @close="close" />
+     </div>
++
++    <div class="container-mobile" :class="{ open: open }">
++      <div class="header-item">
++        <a href="/">
++          <img
++            class="header-item-logo"
++            src="~assets/images/logo-top-right.png"
++            alt="Harmony Staking spaceship accelerating into a colourful space sky"
++          />
++        </a>
++      </div>
++      <AppMenu @close="close" />
++    </div>
+   </nav>
++
++</div>
+ </template>
+ 
+ <script>
+@@ -73,18 +102,41 @@ export default {
+ }
+ </script>
+ 
+-<style scoped language="sass">
++<style scoped lang="scss">
++
++.container {
++    background: white;
++}
+ .app-header {
+   position: relative;
+-  width: var(--width-side);
+-  background: white;
+-  min-height: 100vh;
++  .container-mobile, .container-desktop {
++    width: var(--width-side);
++    min-height: 100vh;
++    background: white;
++  }
++  .container-mobile {
++    display: none;
++  }
++}
++
++.app-mobile-menu-drop {
++  opacity: 0;
++  width: 0;
++  height: 100vh;
++  background: black;
++  transition: opacity 0.32s ease-out;
++  position: fixed;
++  z-index: 9997;
+ }
+ 
+ .mobile-menu-action {
+   font-size: 1.5rem !important;
+ }
+ 
++.mobile-menu-button {
++  display: none;
++}
++
+ .app-header > .container {
+   flex: 1;
+   display: flex;
+@@ -112,11 +164,44 @@ export default {
+   height: 48px;
+ }
+ 
+-@media screen and (max-width: 1023px) {
++@media screen and (max-width: 411px) {
+   
+-}
++  .app-header {
++    position: fixed;
++    top: 0;
++    left: 0;
++    .container-desktop {
++      display: none;
++    }
++    .container-mobile {
++      display: block;
++      transition: transform 0.32s ease-out;
++      transform: translateX(-100vw);
++    }
++    .container-mobile.open {
++      transform: translateX(0);
++    }
++  }
+ 
+-@media screen and (min-width: 1024px) {
+-  
++  .app-header.open {
++    z-index: 9998;
++  }
++  .app-mobile-menu-drop.open {
++    width: 100vw;
++    opacity: 0.5;
++  }
++
++
++  .mobile-menu-button {
++    z-index: 9999;
++    display: block;
++    position: absolute;
++    top: 0;
++    right: 0;
++    > div {
++      height: 56px;
++      padding: var(--unit);
++    }
++  }
+ }
+ </style>
+diff --git a/frontend/src/components/common/AppMenu.vue b/frontend/src/components/common/AppMenu.vue
+index d9aae30..e75bdcb 100644
+--- a/frontend/src/components/common/AppMenu.vue
++++ b/frontend/src/components/common/AppMenu.vue
+@@ -44,6 +44,16 @@
+         <h2 class="app-menu-title">Validators</h2>
+         <i class="material-icons">chevron_right</i>
+       </router-link>
++      <router-link
++        id="menu_item_global"
++        class="app-menu-item"
++        to="/global"
++        title="Global View"
++        @click.native="close"
++      >
++        <h2 class="app-menu-title">Global View</h2>
++        <i class="material-icons">chevron_right</i>
++      </router-link>
+ 
+       <!-- <router-link
+         class="app-menu-item hide-xs"
+@@ -204,7 +214,6 @@ export default {
+ 
+ <style scoped>
+ 
+-
+ .app-menu-main {
+   border-top: 1px solid var(--light);
+ }
+@@ -259,7 +268,7 @@ export default {
+   color: var(--gray);
+   border-left: 4px solid var(--gray);
+ }
+-.app-menu-item:nth-child(4) {
++.app-menu-item:nth-child(5) {
+   border-top: 1px solid var(--light);
+   padding-top: var(--unit);
+ }
+@@ -286,9 +295,6 @@ export default {
+   color: var(--blue);
+ }
+ 
+-
+-
+-
+ @media screen and (max-width: 1023px) {
+ 
+ }
+diff --git a/frontend/src/components/common/Bech32.vue b/frontend/src/components/common/Bech32.vue
+index 8a26c61..2e5d0a0 100644
+--- a/frontend/src/components/common/Bech32.vue
++++ b/frontend/src/components/common/Bech32.vue
+@@ -1,7 +1,10 @@
+ <template>
+   <div class="bech32-address">
+     <div
+-      v-tooltip.top="copySuccess || `Click to copy`"
++      v-tooltip="{
++        placement: 'top',
++        content: copySuccess || `Click to copy`,
++      }"
+       v-clipboard:copy="address"
+       v-clipboard:success="() => onCopy()"
+       class="address"
+@@ -47,6 +50,9 @@ export default {
+ }
+ </script>
+ <style>
++
++
++
+ .bech32-address {
+   align-items: flex-start;
+   display: inline-flex;
+diff --git a/frontend/src/components/common/TmConnectedNetwork.vue b/frontend/src/components/common/TmConnectedNetwork.vue
+index 9155ed1..d653cd8 100644
+--- a/frontend/src/components/common/TmConnectedNetwork.vue
++++ b/frontend/src/components/common/TmConnectedNetwork.vue
+@@ -1,6 +1,6 @@
+ <template>
+   <div class="sidebar-bottom">
+-    <a
++    <!-- <a
+       href="https://docs.google.com/forms/d/1OUALlRVgA6-AQdUf4jaPFx_TaStKALBRTX97xNmDBDY/"
+       target="_blank"
+     >
+@@ -11,7 +11,7 @@
+         type="secondary"
+         size="small"
+       />
+-    </a>
++    </a> -->
+     <div v-tooltip.top="networkTooltip" id="network_status">
+       <div
+         v-if="connection.connected"
+@@ -89,7 +89,8 @@ export default {
+   left: 0;
+   color: var(--gray);
+   padding: var(--double) var(--unit);
+-  width: 100%;
++  width: var(--width-side);
++  overflow: hidden;
+ }
+ 
+ .intercom-button {
+@@ -161,8 +162,6 @@ export default {
+ }
+ 
+ @media screen and (max-width: 767px) {
+-  .sidebar-bottom {
+-    max-width: 100%;
+-  }
++  
+ }
+ </style>
+diff --git a/frontend/src/components/staking/AllStakesChart.vue b/frontend/src/components/staking/AllStakesChart.vue
+index 7ca1562..80d1271 100644
+--- a/frontend/src/components/staking/AllStakesChart.vue
++++ b/frontend/src/components/staking/AllStakesChart.vue
+@@ -1,7 +1,7 @@
+ <template>
+   <div>
+     <div class="chart-container">
+-      <ChartLine
++      <ChartBar
+         :chartdata="chartdata"
+         :options="options"
+         style="height: 300px; width: 100%;"
+@@ -11,7 +11,7 @@
+ </template>
+ 
+ <script>
+-import ChartLine from "./PageValidatorCharts/components/ChartLine"
++import ChartBar from "./PageValidatorCharts/components/ChartBar"
+ import { ones, zeroDecimals } from "../../scripts/num"
+ 
+ // function randomScalingFactor(min, number) {
+@@ -20,10 +20,13 @@ import { ones, zeroDecimals } from "../../scripts/num"
+ 
+ export default {
+   name: "AllStakesChart",
+-  components: { ChartLine },
+-  props: ["data"],
++  components: { ChartBar },
++  props: ["data", "median", "networkInfo"],
+   data: () => ({
+     options: {
++      plugins: {
++        labels: false,
++      },
+       responsive: true,
+       maintainAspectRatio: false,
+       tooltips: {
+@@ -35,17 +38,13 @@ export default {
+             zeroDecimals(data.yLabel) + " ONE Staked"// by " + a.datasets[0].pointRadius({dataIndex: data.index})
+         }
+       },
+-      // hover: {
+-      //   mode: "nearest",
+-      //   intersect: true
+-      // },
+       scales: {
+         xAxes: [
+           {
+             display: true,
+             gridLines: {
+-              display: true
+-            }
++              display: false
++            },
+           }
+         ],
+         yAxes: [
+@@ -53,7 +52,7 @@ export default {
+             display: true,
+             gridLines: {
+               display: true
+-            }
++            },
+           }
+         ]
+       }
+@@ -61,36 +60,28 @@ export default {
+   }),
+   computed: {
+     chartdata() {
+-      // const raw = this.data.map((v) => ones(v))
+-      // const cache = []
+-      // const data = raw.sort((a, b) => a - b).filter((value) => {
+-      //   const cached = cache.find((d) => d.value === value)
+-      //   if (!cached) {
+-      //     cache.push({ value, count: 1 })
+-      //     return true
+-      //   } else {
+-      //     cached.count++
+-      //   }
+-      //   return false
+-      // })
+-      // const count = cache.map((c) => c.count)
+-      
+-      const data = this.data.map((v) => ones(v))
++      const data = this.data.map((v) => Math.floor(ones(v))).reverse()
+       const labels = data.map((v, idx) => idx)
+-
++      const even = data.length % 2 === 0
++      const median = Math.floor(data.length/2)
++      const colors = data.map((v, i) => {
++        if (even && (i === median || i === median+1)) {
++          return '#FF0000'
++        } else if (i === median) {
++          return '#FF0000'
++        }
++        // return '#0981cf'
++        return '#00ADE8'
++      })
++      
+       return {
+         labels,
+         datasets: [
+           {
+             label: "Staked ONE distribution",
+-            borderColor: "#0a93eb",
+-            borderWidth: 2,
+-            fill: false,
+-            pointRadius: 5,
+-            // pointRadius: function(context) {
+-            //   return count[context.dataIndex]
+-            // },
+-            data
++            backgroundColor: colors,
++            minHeight: 16,
++            data,
+           }
+         ]
+       }
+@@ -102,8 +93,6 @@ export default {
+ <style>
+ .chart-container {
+   background: white;
+-  padding: var(--unit);
+-  border-radius: var(--double);
+-  border: 1px solid var(--light2);
++  margin-bottom: var(--double);
+ }
+ </style>
+diff --git a/frontend/src/components/staking/LiValidator.vue b/frontend/src/components/staking/LiValidator.vue
+index 5d25fc3..51c5ac8 100644
+--- a/frontend/src/components/staking/LiValidator.vue
++++ b/frontend/src/components/staking/LiValidator.vue
+@@ -9,7 +9,7 @@
+       })
+     "
+   >
+-    <td>{{ index + 1 }}</td>
++    <td class="hide-xs">{{ index + 1 }}</td>
+     <td class="hide-xs">
+       <div class="status-container">
+         <span
+@@ -36,16 +36,16 @@
+     <!-- <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
+       {{ 0.00005 | percent }}
+     </td> -->
+-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
++    <td class="hide-xs">
+       {{ validator.rate | percent | notAvailable }}
+     </td>
+-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
++    <td >
+       {{ validator.apr | percent | notAvailable }}
+     </td>
+-    <td class="average_stake_cell">
++    <td class="hide-xs">
+       {{ validator.average_stake_by_bls | ones | zeroDecimals }}
+     </td>
+-    <td :class="{ 'hide-xs': showOnMobile !== 'expectedReturns' }">
++    <td class="hide-xs">
+       {{ validator.uptime_percentage | percent | notAvailable }}
+     </td>
+   </tr>
+@@ -128,6 +128,7 @@ export default {
+ </script>
+ <style scoped lang="scss">
+ 
++
+ .data-table__row__info {
+   height: 48px;
+ }
+@@ -213,4 +214,13 @@ export default {
+   color: var(--blue);
+   border-color: var(--blue);
+ }
++
++
++@media screen and (max-width: 411px) {
++  .hide-xs {
++    display: none;
++  }
++}
++
++
+ </style>
+diff --git a/frontend/src/components/staking/PageGlobal.vue b/frontend/src/components/staking/PageGlobal.vue
+new file mode 100644
+index 0000000..151834a
+--- /dev/null
++++ b/frontend/src/components/staking/PageGlobal.vue
+@@ -0,0 +1,270 @@
++<template>
++  <PageContainer
++    :managed="true"
++    :data-empty="validators && validators.length === 0"
++    title="Global View"
++  >
++    <template slot="managed-body">
++      <div class="networkInfo">
++        <div class="networkInfo-column">
++          <div id="validators_median_stake" class="networkInfo-item">
++            <h4>Effective median stake:</h4>
++            {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
++            <!-- <PercentageChange
++              :amount="networkInfo.effective_median_stake_changed"
++            /> -->
++          </div>
++          <div id="validators_total_stake" class="networkInfo-item">
++            <h4>Total stake:</h4>
++            {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
++            <!-- <PercentageChange :amount="networkInfo['total-staking-changed']" /> -->
++          </div>
++          <!-- <div class="networkInfo-item">
++            <h4>Total seats:</h4>
++            {{ networkInfo.total_seats }}
++          </div>
++          <div class="networkInfo-item">
++            <h4>Total elected seats:</h4>
++            {{ networkInfo.total_seats_used }}
++          </div> -->
++          <div class="networkInfo-item">
++            <h4>Current block number:</h4>
++            <a :href="linkToTransaction" target="_blank">
++              #{{ networkInfo.current_block_number }}
++            </a>
++          </div>
++        </div>
++      </div>
++      <div v-if="networkInfo.staking_distro" class="chart">
++        <AllStakesChart
++          :data="networkInfo.staking_distro"
++          :median="networkInfo.effective_median_stake | ones"
++          :networkInfo="networkInfo"
++        />
++      </div>
++
++      <div class="widgets">
++        <LightWidget
++          title="Seats Elected"
++        >
++          <div>
++            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
++          </div>
++        </LightWidget>
++
++        <!-- <LightWidget
++          title="Seat Allocation History"
++        >
++          <div>
++            <p>{{networkInfo.total_seats_used}} / {{networkInfo.total_seats}}</p>
++          </div>
++        </LightWidget> -->
++      </div>
++      
++      <!-- <TmDataLoading v-if="isLoading" /> -->
++    </template>
++  </PageContainer>
++</template>
++
++<script>
++import { mapState } from "vuex"
++import TableValidators from "staking/TableValidators"
++import AllStakesChart from "staking/AllStakesChart"
++import PageContainer from "common/PageContainer"
++import TmField from "common/TmField"
++import TmBtn from "common/TmBtn"
++import TmDataLoading from "common/TmDataLoading"
++import { transactionToShortString } from "src/scripts/transaction-utils"
++import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
++import PercentageChange from "./components/PercentageChange"
++import LightWidget from "./../wallet/components/LightWidget"
++
++export default {
++  name: `tab-validators`,
++  components: {
++    TableValidators,
++    PageContainer,
++    TmField,
++    TmBtn,
++    TmDataLoading,
++    AllStakesChart,
++    PercentageChange,
++    LightWidget
++  },
++  filters: {
++    ones,
++    shortDecimals,
++    zeroDecimals,
++    twoDecimals
++  },
++  data: () => ({
++    searchTerm: "",
++    activeOnly: true
++  }),
++  computed: {
++    ...mapState({ network: state => state.connection.network }),
++    ...mapState({ networkConfig: state => state.connection.networkConfig }),
++    ...mapState({ networkInfo: state => state.connection.networkInfo }),
++    ...mapState({
++      isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
++    }),
++    ...mapState({
++      allValidators: state =>
++        state.validators.loaded ? state.validators.validators : [],
++      total: state => state.validators.total,
++      totalActive: state => state.validators.totalActive
++    }),
++    ...mapState({ isLoading: state => state.validators.loading }),
++    activeValidators: state =>
++      state.allValidators.filter(v => v.active === true),
++    validators: state => {
++      return state.allValidators
++    },
++    prettyTransactionHash() {
++      return this.networkInfo.current_block_hash
++        ? transactionToShortString(this.networkInfo.current_block_hash)
++        : ""
++    },
++    linkToTransaction() {
++      const blocksUrl = this.networkConfig.explorer_url
++        ? this.networkConfig.explorer_url.replace("tx", "block")
++        : ""
++
++      return blocksUrl + this.networkInfo.current_block_hash
++    }
++  },
++  async mounted() {
++    // this.$store.dispatch(`getValidators`)
++    this.$store.dispatch("getDelegates")
++
++    console.log(this.networkInfo)
++  }
++}
++</script>
++
++<style lang="scss">
++
++.chart {
++  .chart-container {
++    border: 1px solid var(--light2) !important;
++    border-radius: var(--unit);
++    padding: var(--unit);
++  }
++}
++
++.widgets {
++  display: flex;
++  margin: var(--unit) 0;
++  margin-top: 64px;
++  > div {
++    flex: 0 0 50%;
++  }
++  .widget-body {
++    padding: var(--unit);
++  }
++}
++
++.validatorTable, .networkInfo {
++  background: white;
++  margin: var(--double) 0;
++  border-radius: var(--unit);
++  border: 1px solid var(--light2);
++}
++.validatorTable {
++  padding: var(--unit);
++}
++
++.networkInfo {
++  
++  &-column {
++    display: flex;
++  }
++
++  &-item {
++    padding: var(--unit);
++    flex: 1;
++    text-align: center;
++    font-weight: bold;
++  }
++  &-item:not(:last-child) {
++    border-right: 1px solid var(--light2);
++  }
++
++  h4 {
++    color: var(--gray);
++    font-size: 16px;
++  }
++}
++
++
++.filterOptions {
++  display: flex;
++  justify-content: space-between;
++  flex-direction: row;
++
++  .toggles {
++    button {
++      background: white ;
++      border: 1px solid var(--light2);
++      border-radius: var(--double) !important;
++      
++      &.secondary {
++        background:white !important;
++        color: var(--gray);
++      }
++      &.active {
++        background: #F4FCFF !important;
++        color: var(--blue);
++      }
++      &.number-circle {
++        margin-right: -var(--unit);
++      }
++    }
++    button:first-child {
++      margin-right: var(--unit);
++    }
++  }
++
++  label {
++    cursor: pointer;
++  }
++
++  input.searchField {
++    width: 200px;
++    padding: 0 var(--unit);
++    border: 1px solid var(--light2);
++    border-radius: var(--double) !important;
++    color: var(--gray);
++  }
++}
++
++
++.no-results {
++  text-align: center;
++  margin: 3rem;
++  color: var(--dim);
++}
++
++// @media screen and (min-width: 768px) {
++//   .filterOptions {
++//     justify-content: space-between;
++//     flex-direction: row;
++//     margin: 0.5rem 2rem 1rem;
++
++//     .toggles {
++//       margin-bottom: 0;
++//     }
++
++//     input {
++//       max-width: 300px;
++//     }
++//   }
++// }
++
++
++// @media screen and (max-width: 500px) {
++//   .networkInfo {
++//     flex-direction: column;
++//   }
++// }
++</style>
+diff --git a/frontend/src/components/staking/PageValidatorCharts/CommissionHistoryBlock.vue b/frontend/src/components/staking/PageValidatorCharts/CommissionHistoryBlock.vue
+index 234834a..4285406 100644
+--- a/frontend/src/components/staking/PageValidatorCharts/CommissionHistoryBlock.vue
++++ b/frontend/src/components/staking/PageValidatorCharts/CommissionHistoryBlock.vue
+@@ -25,7 +25,7 @@
+       <ChartLine
+         :chartdata="chartdata"
+         :options="options"
+-        style="height: 300px;"
++        style="height: 300px; width: 100%;"
+       />
+     </div>
+     <div class="chart-description">Last commission change {{ lastChange }}</div>
+diff --git a/frontend/src/components/staking/PageValidatorCharts/MainBlock.vue b/frontend/src/components/staking/PageValidatorCharts/MainBlock.vue
+index 30f5958..5e6615e 100644
+--- a/frontend/src/components/staking/PageValidatorCharts/MainBlock.vue
++++ b/frontend/src/components/staking/PageValidatorCharts/MainBlock.vue
+@@ -214,7 +214,7 @@ export default {
+   }
+ }
+ </script>
+-<style scoped>
++<style scoped lang="scss">
+ @import "./styles.css";
+ 
+ .status-container {
+@@ -250,6 +250,7 @@ export default {
+ .validator-status.elected {
+   color: var(--blue);
+   border-color: var(--blue);
++  text-align: center;
+ }
+ 
+ .validator-main-block .validator-info > h2 {
+@@ -276,4 +277,20 @@ export default {
+ .validator-main-block .validator-amounts > div span {
+   margin-right: 5px;
+ }
++
++
++
++
++@media screen and (max-width: 411px) {
++    
++  .status-container {
++    span {
++      display: block;
++      width: 100%;
++    }
++  }
++
++}
++
++
+ </style>
+diff --git a/frontend/src/components/staking/PageValidatorCharts/RewardHistoryBlock.vue b/frontend/src/components/staking/PageValidatorCharts/RewardHistoryBlock.vue
+index bde5342..03284f5 100644
+--- a/frontend/src/components/staking/PageValidatorCharts/RewardHistoryBlock.vue
++++ b/frontend/src/components/staking/PageValidatorCharts/RewardHistoryBlock.vue
+@@ -4,7 +4,7 @@
+       <ChartLine
+         :chartdata="chartdata"
+         :options="options"
+-        style="height: 300px;"
++        style="height: 300px; width: 100%;"
+       />
+     </div>
+     <div class="chart-description">
+diff --git a/frontend/src/components/staking/PageValidatorCharts/StakeHistoryBlock.vue b/frontend/src/components/staking/PageValidatorCharts/StakeHistoryBlock.vue
+index e796df1..8a0e07c 100644
+--- a/frontend/src/components/staking/PageValidatorCharts/StakeHistoryBlock.vue
++++ b/frontend/src/components/staking/PageValidatorCharts/StakeHistoryBlock.vue
+@@ -4,7 +4,7 @@
+       <ChartBar
+         :chartdata="chartdata"
+         :options="options"
+-        style="height: 300px;"
++        style="height: 300px; width: 100%; max-width: 100vw;"
+       />
+     </div>
+     <div class="chart-description">
+diff --git a/frontend/src/components/staking/PageValidatorCharts/index.vue b/frontend/src/components/staking/PageValidatorCharts/index.vue
+index d73a7df..afeba14 100644
+--- a/frontend/src/components/staking/PageValidatorCharts/index.vue
++++ b/frontend/src/components/staking/PageValidatorCharts/index.vue
+@@ -27,7 +27,6 @@
+ 
+         <LightWidget
+           title="Stake & Delegation history"
+-          style="width: 500px; height: 400px;"
+         >
+           <StakeHistoryBlock
+             :history="validatorHistory"
+@@ -36,14 +35,13 @@
+         </LightWidget>
+         <LightWidget
+           title="Reward rate history"
+-          style="width: 500px; height: 400px;"
+         >
+           <RewardHistoryBlock
+             :history="validatorHistory"
+             :validator="validator"
+           />
+         </LightWidget>
+-        <LightWidget title="Commission" style="width: 500px; height: 490px;">
++        <LightWidget title="Commission">
+           <CommissionHistoryBlock
+             :history="validatorHistory"
+             :validator="validator"
+@@ -52,7 +50,6 @@
+         <LightWidget
+           v-if="allHistory.length"
+           title="Event history"
+-          style="width: 500px; height: 400px;"
+         >
+           <EventHistoryBlock :events="eventsHistory" />
+         </LightWidget>
+@@ -207,4 +204,36 @@ export default {
+   }
+ }
+ 
++
++@media screen and (max-width: 411px) {
++    
++  .validator-top {
++    display: flex;
++    flex-direction: column;
++    background: none;
++    border: none;
++    margin-bottom: var(--unit);
++    > div {
++      flex-grow: 1;
++      width: 100%;
++      background: white;
++      border-radius: var(--unit);
++      border: 1px solid var(--light2);
++      margin-bottom: var(--unit);
++      padding: var(--unit);
++    }
++  > div:last-child {
++      border-right: 1px solid var(--light2);
++  }
++    .title {
++      font-size: 16px;
++      color: var(--blue);
++      padding-bottom: 0;
++      text-transform: uppercase;
++    }
++  }
++}
++
++
++
+ </style>
+diff --git a/frontend/src/components/staking/PageValidators.vue b/frontend/src/components/staking/PageValidators.vue
+index bff7d81..e2d8447 100644
+--- a/frontend/src/components/staking/PageValidators.vue
++++ b/frontend/src/components/staking/PageValidators.vue
+@@ -163,6 +163,7 @@ export default {
+   border: 1px solid var(--light2);
+ }
+ .validatorTable {
++    overflow: hidden;
+   padding: var(--unit);
+ }
+ 
+@@ -237,6 +238,29 @@ export default {
+   color: var(--dim);
+ }
+ 
++
++@media screen and (max-width: 411px) {
++
++  .validatorTable {
++    margin-left: calc(-2 * var(--unit)) !important;
++    width: calc(100vw - 1px);
++    border-left: none !important;
++    border-right: none !important;
++    border-radius: 0 !important;
++  }
++
++  .filterOptions {
++    width: 100vw; 
++    height: 48px;
++    .toggles {
++      text-align: right;
++      margin-right: 8px;
++      transform: scale(0.8);
++      width: 300px;
++    }
++  }
++}
++
+ // @media screen and (min-width: 768px) {
+ //   .filterOptions {
+ //     justify-content: space-between;
+diff --git a/frontend/src/components/staking/PanelSort.vue b/frontend/src/components/staking/PanelSort.vue
+index a69d567..6823732 100644
+--- a/frontend/src/components/staking/PanelSort.vue
++++ b/frontend/src/components/staking/PanelSort.vue
+@@ -1,13 +1,14 @@
+ <template>
+   <tr class="panel-sort-container">
+-    <th>#</th>
++    <th class="mobile">Validator</th>
++    <th class="mobile">APR</th>
++    <th class="hide-xs">#</th>
+     <th class="hide-xs">Status</th>
+     <th
+       v-for="property in properties"
+       :key="property.value"
+       :class="{
+         'sort-by': sort,
+-        'hide-xs': hideXs(property)
+       }"
+       class="panel-sort-table-header"
+     >
+@@ -75,6 +76,11 @@ export default {
+ </script>
+ 
+ <style>
++
++.mobile {
++  display: none
++}
++
+ .panel-sort-container {
+   padding: 1rem;
+   border-bottom: 1px solid var(--bc-dim);
+@@ -114,4 +120,16 @@ export default {
+   transform: rotate(180deg);
+   color: var(--tertiary);
+ }
++
++@media screen and (max-width: 411px) {
++    
++  .mobile {
++    display: table-cell;
++  }
++  .mobile:nth-child(2) {
++    text-align: right;
++    width: 16px !important;
++  }
++}
++
+ </style>
+diff --git a/frontend/src/components/staking/TableValidators.vue b/frontend/src/components/staking/TableValidators.vue
+index 5ddf3e0..055d5d5 100644
+--- a/frontend/src/components/staking/TableValidators.vue
++++ b/frontend/src/components/staking/TableValidators.vue
+@@ -1,7 +1,7 @@
+ <template>
+   <div id="validators_table">
+     <table class="data-table card-white">
+-      <thead>
++      <thead class="table-header">
+         <PanelSort
+           :sort="sort"
+           :properties="properties"
+@@ -85,6 +85,7 @@ export default {
+       } = this
+     ) {
+       return data.map(v => {
++
+         const delegation = this.delegates.delegates.find(
+           d => d.validator_address === v.operator_address
+         )
+@@ -92,10 +93,6 @@ export default {
+         return Object.assign({}, v, {
+           small_moniker: v.moniker.toLowerCase(),
+           my_delegations: delegation ? delegation.amount : 0,
+-          // my_delegations:
+-          //   session.signedIn && committedDelegations[v.operator_address] > 0
+-          //     ? committedDelegations[v.operator_address]
+-          //     : 0,
+           rewards:
+             session.signedIn && distribution.rewards[v.operator_address]
+               ? distribution.rewards[v.operator_address][this.bondDenom]
+@@ -119,24 +116,14 @@ export default {
+     },
+     showingValidators() {
+       return this.sortedEnrichedValidators
+-
+-      //         .slice(
+-      //   this.startIndex,
+-      //   this.startIndex + this.pagination.pageSize
+-      // )
+     },
+     properties() {
+-      return [
++      let props = [
+         {
+           title: `Name`,
+           value: `name`,
+           tooltip: `The validator's moniker`
+         },
+-        // {
+-        //   title: `Return %`,
+-        //   value: `return`,
+-        //   tooltip: `Rate of return per validator`
+-        // },
+         {
+           title: `Fees`,
+           value: `rate`,
+@@ -158,6 +145,11 @@ export default {
+           tooltip: `Percentage validator has been elected vs. not`
+         }
+       ]
++      if (this.$mq === 'sm') {
++        const keep = ['name', 'apr']
++        props = props.filter((p) => keep.includes(p.name))
++      }
++      return props
+     }
+   },
+   watch: {
+@@ -221,17 +213,8 @@ table {
+   }
+ }
+ 
+-
+-@media screen and (max-width: 550px) {
+-  .data-table td {
+-    overflow: hidden;
+-  }
+-
+-  .data-table__row__info {
+-  }
++@media screen and (max-width: 411px) {
++  
+ }
+ 
+-.flip-list-move {
+-  transition: transform 0.3s;
+-}
+ </style>
+diff --git a/frontend/src/components/wallet/StakeAllocationBlock.vue b/frontend/src/components/wallet/StakeAllocationBlock.vue
+index 8cbe776..b7af5be 100644
+--- a/frontend/src/components/wallet/StakeAllocationBlock.vue
++++ b/frontend/src/components/wallet/StakeAllocationBlock.vue
+@@ -104,7 +104,6 @@ export default {
+ }
+ 
+ .chart {
+-  width: 300px;
+   height: 300px;
+   margin: 0 auto;
+ }
+diff --git a/frontend/src/components/wallet/TimePieBlock.vue b/frontend/src/components/wallet/TimePieBlock.vue
+index c7f7ce1..cd2de35 100644
+--- a/frontend/src/components/wallet/TimePieBlock.vue
++++ b/frontend/src/components/wallet/TimePieBlock.vue
+@@ -4,7 +4,7 @@
+       <ChartPie
+         :chartdata="chartdata"
+         :options="options"
+-        style="height: 200px; width: 200px; margin: auto"
++        style="height: 200px; margin: auto"
+       />
+     </div>
+     <div class="legend">{{ timeNextEpoch / 60 | timeLeft }}</div>
+@@ -71,7 +71,7 @@ export default {
+   position: relative;
+ }
+ .legend {
+-  margin-top: -122px;
++  margin-top: -110px;
+   padding-bottom: 100px;
+   width: 100%;
+   text-align: center;
+diff --git a/frontend/src/components/wallet/components/LightWidget.vue b/frontend/src/components/wallet/components/LightWidget.vue
+index 58fa36b..d86d2ac 100644
+--- a/frontend/src/components/wallet/components/LightWidget.vue
++++ b/frontend/src/components/wallet/components/LightWidget.vue
+@@ -51,8 +51,17 @@ export default {
+ }
+ 
+ .widget-body {
+-  padding: var(--unit) 0;
++  padding: var(--unit);
+ }
+ 
++@media screen and (max-width: 411px) {
++    .widget-container {
++  max-width: calc(100vw - 2 * var(--double));
++}
++  .widget-body {
++    overflow-x: scroll;
++  }
++
++}
+ 
+ </style>
+diff --git a/frontend/src/main.ts b/frontend/src/main.ts
+index 75dccbb..8c3bbe4 100644
+--- a/frontend/src/main.ts
++++ b/frontend/src/main.ts
+@@ -24,7 +24,7 @@ Vue.use(InfiniteScroll)
+ Vue.use(VueMq, {
+   breakpoints: {
+     // default breakpoints - customize this
+-    sm: 450,
++    sm: 412,
+     md: 800,
+     lg: 1250,
+     xlg: Infinity
+diff --git a/frontend/src/routes.js b/frontend/src/routes.js
+index 6cd0e18..20b53d0 100644
+--- a/frontend/src/routes.js
++++ b/frontend/src/routes.js
+@@ -46,6 +46,14 @@ export default [
+     },
+     component: require(`./components/staking/PageValidators`).default
+   },
++  {
++    path: `/global`,
++    name: `Global View`,
++    meta: {
++      feature: "Global View"
++    },
++    component: require(`./components/staking/PageGlobal`).default
++  },
+   // for depredecated routes
+   {
+     path: `/staking/validators`,
+diff --git a/frontend/src/styles/app.css b/frontend/src/styles/app.css
+index 42e7c5e..8355234 100644
+--- a/frontend/src/styles/app.css
++++ b/frontend/src/styles/app.css
+@@ -30,6 +30,11 @@ a:hover {
+   color: var(--link-hover);
+ }
+ 
++
++.vue-tooltip {
++  z-index: 10000;
++}
++
+ #app {
+   font-size: var(--x);
+   line-height: 1.5;
+@@ -109,6 +114,7 @@ input.tm-field {
+ }
+ 
+ #bar-container {
++  z-index: 9999;
+   display: block;
+ }
+ 
+diff --git a/frontend/src/styles/table.css b/frontend/src/styles/table.css
+index 2772ead..2138088 100644
+--- a/frontend/src/styles/table.css
++++ b/frontend/src/styles/table.css
+@@ -18,22 +18,20 @@
+   width: 130px;
+   padding: 0.5rem 10px;
+   text-align: left;
+-}
+-
+-.data-table th:first-child {
+-  width: 5%;
+   color: var(--dim-black);
+   font-size: var(--sm);
+ }
+ 
+-.data-table th:nth-child(2) {
+-  width: 94px;
+-  color: var(--dim-black);
+-  font-size: var(--sm);
++.data-table th:nth-child(3) {
++  width: 64px;
+ }
+ 
+-.data-table th:nth-child(3) {
+-  width: 30%;
++.data-table th:nth-child(4) {
++  width: 128px;
++}
++
++.data-table th:nth-child(5) {
++  width: auto;
+   padding-left: 60px;
+ }
+ 
+@@ -43,13 +41,10 @@
+ 
+ .data-table td:nth-last-child(-n + 1) {
+   text-align: right;
+-  padding-right: 1.5rem;
++  padding-right: 2rem;
+ }
+ 
+ .data-table td {
+-  padding: 0 10px;
+-  height: 40px;
+-  width: 100%;
+   position: relative;
+   vertical-align: middle;
+   overflow: hidden;
+@@ -133,8 +128,15 @@
+   padding-left: 1rem;
+ }
+ 
+-@media screen and (max-width: 667px) {
+-  .data-table th,
++@media screen and (max-width: 411px) {
++
++  .data-table td:nth-child(5) {
++    text-align: right;
++  }
++
++
++
++  /* .data-table th,
+   .data-table td {
+     padding: 0.5rem 1rem;
+   }
+@@ -150,5 +152,5 @@
+ 
+   .data-table th:nth-child(4) {
+     width: 20%;
+-  }
++  } */
+ }
+diff --git a/frontend/src/styles/variables.css b/frontend/src/styles/variables.css
+index 0b25fc5..78a191f 100644
+--- a/frontend/src/styles/variables.css
++++ b/frontend/src/styles/variables.css
+@@ -3,6 +3,7 @@
+ 
+   --background: #F6F7FB;;
+   --blue: #00ADE8;
++  --deep-blue: #0981cf;
+   --dark-blue: #293258;
+   --gray: #777;
+   --light: #EEE;

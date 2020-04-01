@@ -4,10 +4,10 @@
       <ChartPie
         :chartdata="chartdata"
         :options="options"
-        style="height: 200px; width: 200px; margin: auto"
+        style="height: 200px; width: 100%; margin: auto"
       />
     </div>
-    <div class="legend">{{ timeNextEpoch / 60 | timeLeft }}</div>
+    <div class="legend">{{chartdata.legend}}</div>
   </div>
 </template>
 
@@ -44,19 +44,20 @@ export default {
   }),
   computed: {
     chartdata() {
-      let diff = isNaN(this.timeNextEpoch) ? 0 : 36 - this.timeNextEpoch / 3600
+      let diff = isNaN(this.timeNextEpoch) ? 0 : Math.floor((600 - this.timeNextEpoch) / 60)
 
-      diff = diff < 0 ? 0 : diff
+      const data = [...new Array(12)].map((v, i) => 1)
 
       return {
+        legend: `${12-diff} minute${ diff > 1 ? 's' : '' }`,
+        diff,
         datasets: [
           {
-            data: [...Array(12)].map(() => 1),
-            backgroundColor: [...Array(12)].map((v, i) =>
-              i < Math.floor(diff / 3)
-                ? chartColors[0] + "99"
-                : chartColors[0] + "20"
-            )
+            data,
+            backgroundColor: data.map((d, i) => {
+              console.log(i)
+              return i < diff ? '#00ADE888' : '#00ADE844'
+            })
           }
         ]
       }
@@ -71,7 +72,7 @@ export default {
   position: relative;
 }
 .legend {
-  margin-top: -122px;
+  margin-top: -104px;
   padding-bottom: 100px;
   width: 100%;
   text-align: center;

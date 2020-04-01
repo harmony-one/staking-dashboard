@@ -3,8 +3,8 @@ const RETRIES = 4
 export default class Legacy {
   url: string
 
-  constructor(cosmosRESTURL: string) {
-    this.url = cosmosRESTURL
+  constructor(url: string) {
+    this.url = url
   }
 
   // request and retry

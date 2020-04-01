@@ -1,5 +1,5 @@
 const admin = require('firebase-admin')
-var serviceAccount = require('./keys/staking_explorer.json')
+var serviceAccount = require('../keys/staking_explorer.json')
 
 const DATABASE_URL = process.env.DATABASE_URL
 
@@ -10,7 +10,7 @@ admin.initializeApp({
 
 const db = admin.firestore()
 
-const getPath = name => `./mock-data/${name}.js`
+const getPath = name => `../mock-data/${name}.js`
 
 const collections = [
   {

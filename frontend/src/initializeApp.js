@@ -49,7 +49,7 @@ export default function init(urlParams, env = process.env) {
 
   setOptions(urlParams, store)
 
-  // store.dispatch(`loadLocalPreferences`)
+  store.dispatch(`loadLocalPreferences`)
 
   store.dispatch('loadPersistedState');
 

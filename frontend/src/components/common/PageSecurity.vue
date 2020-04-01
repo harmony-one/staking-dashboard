@@ -90,7 +90,7 @@
         Contact Us
       </h2>
       <p>
-        You can contact our team directly at security@lunie.io which is
+        You can contact our team directly at security@harmony.one which is
         monitored by our core team of two engineers. Please avoid filing
         security issues in our public repositories as this method of contact
         fully discloses security bugs to friends and adversaries alike, and

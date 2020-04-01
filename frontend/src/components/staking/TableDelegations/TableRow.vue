@@ -9,7 +9,7 @@
       })
     "
   >
-    <td>{{ index + 1 }}</td>
+    <td class="hide-xs">{{ index + 1 }}</td>
     <td class="hide-xs">
       <div class="status-container">
         <span
@@ -30,10 +30,10 @@
         <h3 class="li-validator-name">{{ data.moniker }}</h3>
       </div>
     </td>
-    <td>{{ data.stake | ones | fourDecimals }} ONE</td>
-    <td v-if="!isUndelegation">{{ data.rewards | ones | fourDecimals }} ONE</td>
+    <td class="hide-xs">{{ data.stake | ones | fourDecimals }} ONE</td>
+    <td class="hide-xs" v-if="!isUndelegation">{{ data.rewards | ones | fourDecimals }} ONE</td>
     <td v-if="!isUndelegation">{{ data.apr | percent | notAvailable }}</td>
-    <td v-if="data.remaining_epoch" class="hide-xs">
+    <td class="hide-xs" v-if="data.remaining_epoch">
       {{ data.remaining_epoch + " epochs" }}
     </td>
   </tr>

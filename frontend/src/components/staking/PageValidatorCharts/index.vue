@@ -5,60 +5,55 @@
     :loaded="!loading"
     :error="validator.error"
     :data-empty="!validator.operator_address"
-    :hide-header="true"
-    data-title="Validator"
+    :hide-header="false"
+    :title="validator.moniker"
   >
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="validator-layout">
-        <Widget style="width: 450px;">
-          <MainBlock :validator="validator" />
-        </Widget>
-        <Widget title="General info" style="width: 280px;">
-          <GeneralInfoBlock :validator="validator" />
-        </Widget>
-        <Widget title="Performance" style="width: 250px;">
-          <PerfomanceBlock :validator="validator" />
-        </Widget>
+        <div class="validator-top">
+          <div>
+            <div class="title">Profile</div>
+            <MainBlock :validator="validator" />
+          </div>
+          <div>
+            <div class="title">General Info</div>
+            <GeneralInfoBlock :validator="validator" />
+          </div>
+          <div>
+            <div class="title">Performance</div>
+            <PerfomanceBlock :validator="validator" />
+          </div>
+        </div>
 
-        <Widget
-          title="Stake & Delegation history"
-          style="width: 500px; height: 400px;"
-        >
+        <LightWidget title="Stake & Delegation history">
           <StakeHistoryBlock
             :history="validatorHistory"
             :validator="validator"
           />
-        </Widget>
-        <Widget
-          title="Reward rate history"
-          style="width: 500px; height: 400px;"
-        >
+        </LightWidget>
+        <LightWidget title="Reward rate history">
           <RewardHistoryBlock
             :history="validatorHistory"
             :validator="validator"
           />
-        </Widget>
-        <Widget title="Commission" style="width: 500px; height: 490px;">
+        </LightWidget>
+        <LightWidget title="Commission">
           <CommissionHistoryBlock
             :history="validatorHistory"
             :validator="validator"
           />
-        </Widget>
-        <Widget
-          v-if="allHistory.length"
-          title="Event history"
-          style="width: 500px; height: 400px;"
-        >
+        </LightWidget>
+        <LightWidget v-if="allHistory.length" title="Event history">
           <EventHistoryBlock :events="eventsHistory" />
-        </Widget>
+        </LightWidget>
       </div>
     </template>
     <template v-else>
       <div slot="title">Validator Not Found</div>
       <div slot="subtitle">
         Please visit the
-        <router-link to="/validators/">Validators</router-link>page to view all
-        validators
+        <router-link to="/validators/"> Validators </router-link>page to view
+        all validators
       </div>
     </template>
   </TmPage>
@@ -66,7 +61,7 @@
 
 <script>
 import { mapState } from "vuex"
-import Widget from "./components/Widget"
+import LightWidget from "./../../wallet/components/LightWidget"
 import GeneralInfoBlock from "./GeneralInfoBlock"
 import PerfomanceBlock from "./PerfomanceBlock"
 import MainBlock from "./MainBlock"
@@ -93,7 +88,7 @@ export default {
     CommissionHistoryBlock,
     EventHistoryBlock,
     TmPage,
-    Widget
+    LightWidget
   },
   props: {
     showOnMobile: {
@@ -135,24 +130,29 @@ export default {
     fetchValidator: async function() {
       this.loading = true
 
-      if (this.connection.networkConfig.id) {
-        this.validator = await fetchValidatorByAddress(
-          this.connection.networkConfig.id,
-          this.$route.params.validator
-        )
+      try {
+        if (this.connection.networkConfig.id) {
+          this.validator = await fetchValidatorByAddress(
+            this.connection.networkConfig.id,
+            this.$route.params.validator
+          )
+          let history = await fetchValidatorHistory(
+            this.connection.networkConfig.id,
+            this.$route.params.validator
+          )
 
-        let history = await fetchValidatorHistory(
-          this.connection.networkConfig.id,
-          this.$route.params.validator
-        )
+          // console.log(this, this.validator)
 
-        history = history.sort((a, b) => (a.index < b.index ? -1 : 1))
+          history = history.sort((a, b) => (a.epoch < b.epoch ? -1 : 1))
 
-        this.allHistory = history
-        this.validatorHistory = history
+          this.allHistory = history
+          this.validatorHistory = history
 
-        // don't need to use
-        // this.validatorHistory = formatByStep(history, SECONDS_PER_EPOCH * 1000)
+          // don't need to use
+          // this.validatorHistory = formatByStep(history, SECONDS_PER_EPOCH * 1000)
+        }
+      } catch (err) {
+        console.error(err)
       }
 
       this.loading = false
@@ -161,7 +161,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
 .validator-layout {
   display: flex;
   flex-flow: row wrap;
@@ -169,9 +169,60 @@ export default {
   justify-content: flex-start;
   flex-wrap: wrap;
   margin-right: calc(var(--unit) * -1);
+  > div {
+    flex-grow: 1;
+  }
 }
 
-.validator-layout > div {
-  flex-grow: 1;
+.validator-top {
+  width: 100%;
+  display: flex;
+  background: white;
+  border: 1px solid var(--light2);
+  border-radius: var(--unit);
+  margin-right: var(--unit);
+  margin-bottom: var(--unit);
+  > div {
+    flex-grow: 1;
+    padding: var(--unit);
+    border-right: 1px solid var(--light2);
+  }
+  > div:last-child {
+    border-right: none;
+  }
+  .title {
+    font-size: 16px;
+    color: var(--blue);
+    padding-bottom: 0;
+    text-transform: uppercase;
+  }
+}
+
+@media screen and (max-width: 411px) {
+  .validator-top {
+    display: flex;
+    flex-direction: column;
+    background: none;
+    border: none;
+    margin-bottom: var(--unit);
+    > div {
+      flex-grow: 1;
+      width: 100%;
+      background: white;
+      border-radius: var(--unit);
+      border: 1px solid var(--light2);
+      margin-bottom: var(--unit);
+      padding: var(--unit);
+    }
+    > div:last-child {
+      border-right: 1px solid var(--light2);
+    }
+    .title {
+      font-size: 16px;
+      color: var(--blue);
+      padding-bottom: 0;
+      text-transform: uppercase;
+    }
+  }
 }
 </style>

@@ -54,8 +54,6 @@ export default {
   align-items: center;
   
   background: white;
-  border: 1px solid var(--light2);
-  border-radius: var(--half);
 }
 
 .tm-data-msg__icon {

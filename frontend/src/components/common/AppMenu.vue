@@ -1,10 +1,9 @@
 <template>
   <menu class="app-menu">
-
     <div v-if="session.signedIn" class="user-box">
       <div>
         <h3>Your Address</h3>
-        <Bech32 :address="session.address || ''" />
+        <Bech32 :session="session" :address="session.address || ''" />
       </div>
     </div>
 
@@ -31,6 +30,11 @@
         title="Portfolio"
         @click.native="close"
       >
+        <svgicon
+          name="profile"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Portfolio</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -41,7 +45,27 @@
         title="Validators"
         @click.native="close"
       >
+        <svgicon
+          name="validators"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Validators</h2>
+        <i class="material-icons">chevron_right</i>
+      </router-link>
+      <router-link
+        id="menu_item_global"
+        class="app-menu-item"
+        to="/global"
+        title="Global View"
+        @click.native="close"
+      >
+        <svgicon
+          name="world"
+          width="20"
+          height="20"
+        ></svgicon>
+        <h2 class="app-menu-title">Global View</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
 
@@ -76,6 +100,11 @@
         title="Networks"
         @click.native="close"
       >
+        <svgicon
+          name="network"
+          width="20"
+          height="20"
+        ></svgicon>
         <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -131,7 +160,7 @@
       </router-link>
 
       <router-link
-        v-if="session.signedIn" 
+        v-if="session.signedIn"
         to="#"
         class="app-menu-item small"
         exact="exact"
@@ -151,12 +180,7 @@
       >
         <h2 class="app-menu-title">Sign In</h2>
       </router-link>
-
-
     </div>
-
-
-
 
     <ConnectedNetwork />
   </menu>
@@ -203,13 +227,12 @@ export default {
 </script>
 
 <style scoped>
-
-
 .app-menu-main {
   border-top: 1px solid var(--light);
 }
 
-.sign-out, .session-link {
+.sign-out,
+.session-link {
   margin: var(--unit) 0;
   padding-left: var(--unit);
   font-size: 14px;
@@ -228,7 +251,6 @@ export default {
   font-size: 20px;
 }
 
-
 .user-box {
   margin: var(--unit) 0;
   padding-left: 20px;
@@ -238,7 +260,6 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-
 
 .app-menu {
   position: relative;
@@ -259,7 +280,7 @@ export default {
   color: var(--gray);
   border-left: 4px solid var(--gray);
 }
-.app-menu-item:nth-child(4) {
+.app-menu-item:nth-child(5) {
   border-top: 1px solid var(--light);
   padding-top: var(--unit);
 }
@@ -271,14 +292,16 @@ export default {
 
 .app-menu-item h2 {
   flex: 1;
+  margin-left: 5px;
   display: inline-block;
 }
 .app-menu-item i {
   padding-right: var(--half);
   align-self: flex-end;
 }
-.app-menu-item:hover, .app-menu-item.router-link-active {
-  color: var(--link);
+.app-menu-item:hover,
+.app-menu-item.router-link-active {
+  color: var(--blue);
   border-left: 4px solid var(--blue);
 }
 
@@ -286,14 +309,17 @@ export default {
   color: var(--blue);
 }
 
+.app-menu-item:hover > .svg-icon {
+  fill: var(--blue);
+}
 
-
+.router-link-active > .svg-icon {
+  fill: var(--blue);
+}
 
 @media screen and (max-width: 1023px) {
-
 }
 
 @media screen and (min-width: 1023px) {
-
 }
 </style>

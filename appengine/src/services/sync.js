@@ -4,7 +4,8 @@ const {
   isNotEmpty,
   bodyParams,
   bodyParams2,
-  changePercentage
+  changePercentage,
+  sortByParams
 } = require('./helpers')
 
 const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
@@ -15,9 +16,12 @@ const VALIDATOR_INFO = 'VALIDATOR_INFO'
 const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
+const STAKING_DISTRO_RAW = 'STAKING_DISTRO_RAW'
 const GLOBAL_SEATS = 'GLOBAL_SEATS'
 const STAKING_DISTRO = 'STAKING_DISTRO'
+const RAW_STAKE = 'RAW_STAKE'
 const MAX_LENGTH = 30
+const GLOBAL_VIEW = 'GLOBAL_VIEW'
 const VOTING_POWER = 'VOTING_POWER'
 const BLS_KEYS = 'BLS_KEYS'
 const SECOND_PER_BLOCK = 8
@@ -35,10 +39,16 @@ module.exports = function(
   BLOCKCHAIN_SERVER,
   chainTitle,
   updateDocument,
-  getCollectionDataWithLimit
+  getCollectionDataWithLimit,
+  getGlobalDataWithLimit
 ) {
   // Currently only work for OS network and testnet.
-  if (!BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io')) {
+  if (
+    !(
+      BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
+      BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
+    )
+  ) {
     return
   }
   const cache = {
@@ -52,13 +62,17 @@ module.exports = function(
     STAKING_NETWORK_INFO_PREV_EPOCH: {},
     VOTING_POWER: {},
     STAKING_DISTRO: [],
+    STAKING_DISTRO_RAW: [],
     GLOBAL_SEATS: {},
-    BLS_KEYS: {}
+    BLS_KEYS: {},
+    GLOBAL_VIEW: {},
+    RAW_STAKE: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
 
   const historyCollection = `${chainTitle}_history`
+  const globalHistory = `${chainTitle}_global`
 
   const apiClient = axios.create({
     baseURL: BLOCKCHAIN_SERVER,
@@ -115,7 +129,7 @@ module.exports = function(
       if (res.data.result) {
         cache[STAKING_NETWORK_INFO] = res.data.result
       }
-
+      let currentEpoch = null
       const res2 = await apiClient.post('/', bodyParams('hmy_latestHeader'))
       if (res2.data.result) {
         cache[STAKING_NETWORK_INFO].current_block_number =
@@ -123,7 +137,11 @@ module.exports = function(
         cache[STAKING_NETWORK_INFO].current_block_hash =
           res2.data.result.blockHash
         cache[STAKING_NETWORK_INFO].current_epoch = res2.data.result.epoch
+        currentEpoch = res2.data.result.epoch
       }
+
+      console.log(`getting current Epoch ${currentEpoch} at `, currentEpoch)
+
       if (
         cache[STAKING_NETWORK_INFO]['epoch-last-block'] &&
         cache[STAKING_NETWORK_INFO].current_block_number
@@ -144,17 +162,6 @@ module.exports = function(
             medianStakeRes,
             'data.result.epos-median-stake'
           )
-          const staking_distro = _.get(
-            medianStakeRes,
-            'data.result.epos-slot-winners'
-          )
-          if (staking_distro) {
-            cache[STAKING_NETWORK_INFO].staking_distro = staking_distro.map(e =>
-              parseFloat(e['eposed-stake'])
-            )
-          } else {
-            cache[STAKING_NETWORK_INFO].staking_distro = []
-          }
         }
       }
 
@@ -163,6 +170,8 @@ module.exports = function(
           cache[GLOBAL_SEATS].total_seats
         cache[STAKING_NETWORK_INFO].total_seats_used =
           cache[GLOBAL_SEATS].total_seats_used
+        cache[STAKING_NETWORK_INFO].externalShards =
+          cache[GLOBAL_SEATS].externalShards
       }
 
       if (
@@ -190,15 +199,40 @@ module.exports = function(
         )
       }
 
+      // Store to firestore the previous global view.
+      if (!cache[GLOBAL_VIEW][currentEpoch]) {
+        if (cache[GLOBAL_VIEW][currentEpoch - 1]) {
+          await updateDocument(
+            globalHistory,
+            `${currentEpoch - 1}`,
+            cache[GLOBAL_VIEW][currentEpoch - 1]
+          )
+        }
+        await updateDocument(
+          globalHistory,
+          `${currentEpoch}`,
+          cache[STAKING_NETWORK_INFO]
+        )
+      }
+
+      cache[GLOBAL_VIEW][currentEpoch] = cache[STAKING_NETWORK_INFO]
+      console.log(
+        `saving current epoch ${currentEpoch} at `,
+        JSON.stringify(cache[GLOBAL_VIEW])
+      )
+      if (cache[GLOBAL_VIEW][currentEpoch - MAX_LENGTH]) {
+        delete cache[GLOBAL_VIEW][currentEpoch - MAX_LENGTH]
+      }
+
       // console.log("getAllValidatorAddressesData", res.data)
-      return cache[STAKING_NETWORK_INFO]
+      return {
+        ...cache[STAKING_NETWORK_INFO],
+        history: cache[GLOBAL_VIEW]
+      }
     } catch (err) {
-      // console.log(err)
+      console.log(err)
     }
   }
-
-  const getDayIndex = utcDate =>
-    Math.floor(utcDate.getTime() / (1000 * 60 * 60 * 24))
 
   const getRecentData = async address => {
     const res = new Map()
@@ -206,6 +240,26 @@ module.exports = function(
       const recent = await getCollectionDataWithLimit(
         historyCollection,
         address,
+        'index',
+        MAX_LENGTH
+      )
+      if (!Array.isArray(recent)) {
+        return
+      }
+      _.forEach(recent, item => {
+        res[item.index] = item
+      })
+    } catch (err) {
+      console.log(`error when getRecentData ${address}`, err)
+    }
+    return res
+  }
+
+  const getRecentGlobalData = async () => {
+    const res = new Map()
+    try {
+      const recent = await getCollectionDataWithLimit(
+        globalHistory,
         'index',
         MAX_LENGTH
       )
@@ -299,9 +353,10 @@ module.exports = function(
         // * blocks_should_sign
         // * total_one_staked
         const utcDate = new Date(Date.now())
-        const dayIndex = getDayIndex(utcDate)
+        const epochIndex = parseInt(res['last-epoch-in-committee'])
 
         const validatorInfo = {
+          ...res,
           self_stake: selfStake,
           total_stake: totalStake,
           average_stake: averageStake,
@@ -320,61 +375,53 @@ module.exports = function(
           signed_blocks: 50,
           blocks_should_sign: 100,
           uctDate: utcDate,
-          index: dayIndex,
+          index: epochIndex,
           address: res['one-address'] || res.address,
-          ...res,
           active_nodes: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].length
             : 1,
           elected_nodes: Array.isArray(res['bls-public-keys'])
-            ? res['bls-public-keys'].filter(item => !!cache[BLS_KEYS][item])
-                .length
+            ? res['bls-public-keys'].filter(item =>
+                cache[BLS_KEYS].includes(item)
+              ).length
             : 1,
           active:
             Array.isArray(cache[ACTIVE_VALIDATORS]) &&
             cache[ACTIVE_VALIDATORS].includes(address),
           uptime_percentage:
-            _.get(
-              result,
-              'current-epoch-performance.current-epoch-signing-percent.current-epoch-signed'
-            ) &&
-            _.get(
-              result,
-              'current-epoch-performance.current-epoch-signing-percent.current-epoch-to-sign'
-            )
-              ? parseFloat(
-                  _.get(
-                    result,
-                    'current-epoch-performance.current-epoch-signing-percent.current-epoch-signed'
-                  )
-                ) /
-                parseFloat(
-                  _.get(
-                    result,
-                    'current-epoch-performance.current-epoch-signing-percent.current-epoch-to-sign'
-                  )
-                )
+            _.get(result, 'lifetime.blocks.signed') &&
+            _.get(result, 'lifetime.blocks.to-sign')
+              ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
+                parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
               : null,
-          apr: _.get(result, 'metrics.current-apr', null)
+          apr: _.get(result, 'lifetime.apr', null)
+        }
+
+        if (Array.isArray(res['bls-public-keys'])) {
+          const rawStake =
+            parseFloat(totalStake) / res['bls-public-keys'].length
+          res['bls-public-keys'].forEach(e => {
+            cache[RAW_STAKE][e] = rawStake
+          })
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
           cache[VALIDATOR_INFO_HISTORY][address] = await getRecentData(address)
         }
-        // update the previous dayIndex if this is the first time dayIndex will be inserted.
-        if (!cache[VALIDATOR_INFO_HISTORY][address][dayIndex]) {
+        // update the previous epochIndex if this is the first time epochIndex will be inserted.
+        if (!cache[VALIDATOR_INFO_HISTORY][address][epochIndex]) {
           await updateDocument(
             historyCollection,
-            `${address}_${dayIndex}`,
+            `${address}_${epochIndex}`,
             validatorInfo
           )
-          // We pick the last data of the previous day.
-          if (cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]) {
+          // We store the last data of the previous epoch.
+          if (cache[VALIDATOR_INFO_HISTORY][address][epochIndex - 1]) {
             await updateDocument(
               historyCollection,
-              `${address}_${dayIndex - 1}`,
-              cache[VALIDATOR_INFO_HISTORY][address][dayIndex - 1]
+              `${address}_${epochIndex - 1}`,
+              cache[VALIDATOR_INFO_HISTORY][address][epochIndex - 1]
             )
           }
         }
@@ -391,13 +438,13 @@ module.exports = function(
             cache[VALIDATOR_INFO][address]['commision-recent-change']
         }
         cache[VALIDATOR_INFO][address] = validatorInfo
-        cache[VALIDATOR_INFO_HISTORY][address][dayIndex] = validatorInfo
-        if (cache[VALIDATOR_INFO_HISTORY][address][dayIndex - MAX_LENGTH]) {
-          delete cache[VALIDATOR_INFO_HISTORY][address][dayIndex - MAX_LENGTH]
+        cache[VALIDATOR_INFO_HISTORY][address][epochIndex] = validatorInfo
+        if (cache[VALIDATOR_INFO_HISTORY][address][epochIndex - MAX_LENGTH]) {
+          delete cache[VALIDATOR_INFO_HISTORY][address][epochIndex - MAX_LENGTH]
         }
       }
     } catch (e) {
-      console.log('error in getValidatorInfoData:', e)
+      console.log('error in processValidatorInfoData:', e)
     }
   }
 
@@ -484,11 +531,23 @@ module.exports = function(
 
   const updateVotingPower = async () => {
     try {
+      // if (!cache[VALIDATOR_INFO_HISTORY][address]) {
+      //   cache[VALIDATOR_INFO_HISTORY][address] = await getRecentData(address)
+      // }
+      // // update the previous epochIndex if this is the first time epochIndex will be inserted.
+      // if (!cache[VALIDATOR_INFO_HISTORY][address][epochIndex]) {
+      //   await updateDocument(
+      //     historyCollection,
+      //     `${address}_${epochIndex}`,
+      //     validatorInfo
+      //   )
+
       const res = await apiClient.post(
         '/',
         bodyParams('hmy_getSuperCommittees')
       )
-
+      // const currentEpoch = cache[STAKING_NETWORK_INFO].current_epoch
+      // cache[GLOBAL_VIEW].shard0.total_seats =
       cache[STAKING_DISTRO] = _.concat(
         _.get(
           res,
@@ -508,8 +567,10 @@ module.exports = function(
         ) || []
       )
         .filter(item => !item['is-harmony-slot'])
-        .map(item => item['effective-stake'])
-        .sort((a, b) => b - a)
+        .reduce((cur, item) => {
+          cur[item['bls-public-key']] = item['effective-stake']
+          return cur
+        }, {})
 
       cache[BLS_KEYS] = _.concat(
         _.get(
@@ -530,23 +591,30 @@ module.exports = function(
         ) || []
       )
         .filter(item => !item['is-harmony-slot'])
-        .reduce((cur, item) => {
-          cur[item['bls-public-key']] = true
-          return cur
-        }, {})
+        .map(item => item['bls-public-key'])
+
+      const externalShards = [0, 1, 2, 3].map(e => {
+        const total = _.get(
+          res,
+          `data.result.current.quorum-deciders.shard-${e}.committee-members`
+        )
+        return {
+          total: total.length,
+          external: total.filter(item => !item['is-harmony-slot']).length
+        }
+      })
 
       cache[GLOBAL_SEATS].total_seats = _.get(
         res,
         'data.result.current.external-slot-count'
       )
-      console.log(`total seats: ${cache[GLOBAL_SEATS].total_seats}`)
-      console.log(
-        `total seats2: ${res['data']['result']['current']['external-slot-count']}`
+      cache[GLOBAL_SEATS].total_seats_used = _.sumBy(
+        externalShards,
+        e => e.external
       )
-      cache[GLOBAL_SEATS].total_seats_used = cache[STAKING_DISTRO].length
-      console.log(`total_seats_used: ${cache[GLOBAL_SEATS].total_seats_used}`)
+      cache[GLOBAL_SEATS].externalShards = externalShards
 
-      console.log('staking distro: ', cache[STAKING_DISTRO])
+      // console.log('staking distro: ', cache[STAKING_DISTRO])
 
       // _.range(0, 4).forEach(shardID => {
       //   const committeeMembers = _.get(
@@ -606,6 +674,18 @@ module.exports = function(
     }
   }
 
+  console.log('minh here')
+  const init = async () => {
+    const res = await getGlobalDataWithLimit(
+      globalHistory,
+      'current_epoch',
+      MAX_LENGTH
+    )
+    _.forEach(res, item => (cache[GLOBAL_VIEW][item.current_epoch] = item))
+
+    console.log(`cache global view: ${JSON.stringify(cache[GLOBAL_VIEW])}`)
+  }
+  init()
   setInterval(async () => {
     console.log('--------- Updating ---------', BLOCKCHAIN_SERVER)
     await update()
@@ -616,7 +696,14 @@ module.exports = function(
   const getStakingNetworkInfo = () => {
     const stakingNetworkInfo = !cache[STAKING_NETWORK_INFO]
       ? {}
-      : cache[STAKING_NETWORK_INFO]
+      : {
+          ...cache[STAKING_NETWORK_INFO],
+          history: cache[GLOBAL_VIEW],
+          raw_stake_distro: cache[BLS_KEYS].map(e => cache[RAW_STAKE][e]),
+          effective_median_stake_distro: cache[BLS_KEYS].map(
+            e => cache[STAKING_DISTRO][e]
+          )
+        }
 
     console.log(stakingNetworkInfo)
     return stakingNetworkInfo
@@ -664,12 +751,17 @@ module.exports = function(
         })
         .filter(isNotEmpty)
         .filter(
-          v => !search || v.name.toLowerCase().includes(search.toLowerCase())
+          v =>
+            !search ||
+            v.name.toLowerCase().includes(search.toLowerCase()) ||
+            v.address.toLowerCase().includes(search.toLowerCase())
         )
 
       const totalFound = validators.length
 
-      validators = _.orderBy(validators.slice(0), [sortProperty], [sortOrder])
+      if (sortProperty && sortOrder) {
+        validators = sortByParams(validators.slice(0), sortProperty, sortOrder)
+      }
 
       validators = validators.slice(pageInt * sizeInt, (pageInt + 1) * sizeInt)
 
@@ -711,7 +803,7 @@ module.exports = function(
     getValidatorInfo: address => cache[VALIDATOR_INFO][address],
     getValidatorHistory: address =>
       _.values(cache[VALIDATOR_INFO_HISTORY][address]).sort(
-        (a, b) => new Date(a.utcDate) - new Date(b.utcDate)
+        (a, b) => a.index - b.index
       ),
     getDelegationsByDelegator,
     getDelegationsByValidator: address =>

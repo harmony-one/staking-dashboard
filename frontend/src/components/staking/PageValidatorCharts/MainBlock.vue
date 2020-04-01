@@ -1,13 +1,6 @@
 <template>
   <div class="validator-main-block">
-    <div class="status-container">
-      <span :class="status | toClassName" class="validator-status">
-        {{ status }}
-      </span>
-      <span v-if="status_detailed" class="validator-status-detailed">
-        {{ status_detailed }}
-      </span>
-    </div>
+    
     <div class="validator">
       <td class="data-table__row__info">
         <ValidatorLogo
@@ -20,36 +13,49 @@
           <h2>{{ validator.moniker }}</h2>
           <div class="validator-amounts">
             <div>
-              <span>Total stake:</span>
+              <span>Total Staked:</span>
               <h4>
-                {{ validator.total_stake | ones | fourDecimals | noBlanks }}
+                {{ validator.total_stake | ones | zeroDecimals | noBlanks }}
               </h4>
             </div>
+
             <div>
-              <span>Delegated stake:</span>
-              <h4>{{ delegatedStake | ones | fourDecimals | noBlanks }}</h4>
+              <span>Delegated:</span>
+              <h4>{{ delegatedStake | ones | zeroDecimals | noBlanks }}</h4>
             </div>
             <div>
-              <span>Self stake:</span>
+              <span>Self Stake:</span>
               <h4>
-                {{ validatorSelfStakeAmount | ones | fourDecimals | noBlanks }}
+                {{ validatorSelfStakeAmount | ones | zeroDecimals | noBlanks }}
               </h4>
             </div>
-            <div v-if="rewards">
-              <span>Your rewards:</span>
-              <h5>+{{ rewards | ones | fourDecimals | noBlanks }}</h5>
+
+            <div class="status-container">
+              <span :class="status | toClassName" class="validator-status">
+                {{ status }}
+              </span>
+              <span v-if="status_detailed" class="validator-status-detailed">
+                {{ status_detailed }}
+              </span>
             </div>
+
+            
           </div>
         </div>
       </td>
     </div>
 
     <div class="button-container">
-      <TmBtn id="delegation-btn" value="Stake" @click.native="onDelegation" />
+      <TmBtn 
+        id="delegation-btn" 
+        value="Delegate"
+        @click.native="onDelegation"
+        :disabled="validator.total_stake >= validator.max_total_delegation"
+      />
       <TmBtn
         id="undelegation-btn"
         :disabled="!selfStakeAmount"
-        value="Unstake"
+        value="Undelegate"
         type="secondary"
         @click.native="onUndelegation"
       />
@@ -76,7 +82,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex"
-import { ones, fourDecimals, percent, uatoms } from "scripts/num"
+import { ones, fourDecimals, zeroDecimals, percent, uatoms } from "scripts/num"
 import { formatBech32 } from "src/filters"
 import TmBtn from "common/TmBtn"
 import DelegationModal from "src/ActionModal/components/DelegationModal"
@@ -95,6 +101,7 @@ export default {
   filters: {
     ones,
     fourDecimals,
+    zeroDecimals,
     percent,
     toLower: text => text.toLowerCase(),
     toClassName: text => text.toLowerCase().replace(/ /g, "_"),
@@ -213,11 +220,43 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 @import "./styles.css";
 
-.validator-main-block > .status-container {
-  padding: 0 1rem;
+.status-container {
+  margin-top: var(--unit);
+}
+
+.validator, .button-container {
+  padding: var(--unit) 0;
+  padding-bottom: 0;
+}
+.validator-logo-container {
+  margin-right: var(--unit);
+}
+
+.validator-status {
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: normal;
+  padding: var(--half) var(--half) 6px var(--half);
+  border: 1px solid;
+  border-radius: var(--unit);
+}
+.validator-status-detailed {
+  margin: 0;
+  margin-left: var(--unit);
+}
+
+.validator-status.inactive {
+  color: red;
+  border-color: red;
+}
+
+.validator-status.elected {
+  color: var(--blue);
+  border-color: var(--blue);
+  text-align: center;
 }
 
 .validator-main-block .validator-info > h2 {
@@ -244,4 +283,20 @@ export default {
 .validator-main-block .validator-amounts > div span {
   margin-right: 5px;
 }
+
+
+
+
+@media screen and (max-width: 411px) {
+    
+  .status-container {
+    span {
+      display: block;
+      width: 100%;
+    }
+  }
+
+}
+
+
 </style>

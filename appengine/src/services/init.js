@@ -13,7 +13,8 @@ module.exports = async function() {
       network.rpc_url,
       network.chain_title,
       dbService.updateDocument,
-      dbService.getCollectionDataWithLimit
+      dbService.getCollectionDataWithLimit,
+      dbService.getGlobalDataWithLimit
     )
   })
 

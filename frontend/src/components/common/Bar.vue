@@ -18,7 +18,8 @@ export default {
       type: String,
       default: "primary"
     },
-    show: Boolean
+    show: Boolean,
+    onClose: Function
   },
   data: function() {
     return {
@@ -28,6 +29,10 @@ export default {
   methods: {
     close() {
       this.showMessage = false
+
+      if (this.onClose) {
+        this.onClose()
+      }
     }
   }
 }

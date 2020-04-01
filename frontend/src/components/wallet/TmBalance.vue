@@ -1,11 +1,18 @@
 <template>
   <div class="balance-header">
     <div class="values-container">
-      <div class="total-atoms">
-        <h3>Total {{ bondDenom | viewDenom }}</h3>
-        <h2 class="total-atoms__value">
-          {{ totalAtomsDisplay | ones | zeroDecimals }}
-        </h2>
+      <div class="top-container">
+        <div class="total-atoms">
+          <h3>Total {{ bondDenom | viewDenom }}</h3>
+          <h2 class="total-atoms__value">
+            {{ totalAtomsDisplay | ones | zeroDecimals }}
+          </h2>
+        </div>
+
+        <div class="available-atoms">
+          <h3>Available</h3>
+          <h2>{{ unbondedAtoms | ones | zeroDecimals }}</h2>
+        </div>
       </div>
 
       <div class="row small-container">
@@ -19,10 +26,6 @@
           <h2>+{{ rewards | ones | zeroDecimals }}</h2>
         </div>
 
-        <div class="available-atoms">
-          <h3>Available</h3>
-          <h2>{{ unbondedAtoms | ones | zeroDecimals }}</h2>
-        </div>
       </div>
       <div class="total-atoms total-undel">
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
@@ -161,7 +164,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .balance-header {
   margin: 0 var(--unit);
 }
@@ -184,13 +187,23 @@ export default {
   white-space: nowrap;
 }
 
-.total-atoms {
+.top-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  
   color: white;
   padding: var(--unit);
   background: var(--blue);
   border-top-left-radius: var(--unit  );
   border-top-right-radius: var(--unit);
+  > div {
+    flex: 1;
+  }
 }
+
+
 
 .total-atoms.total-undel {
   margin-top: var(--unit);
@@ -215,7 +228,6 @@ export default {
 }
 
 .availabgit,
-.available-atoms,
 .rewards {
   flex: 1;
   color: var(--gray);

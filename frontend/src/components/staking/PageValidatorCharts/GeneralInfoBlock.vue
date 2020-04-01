@@ -28,7 +28,25 @@
         <h4 class="inline">Validator Since:&nbsp;</h4>
         <span>Block #{{ validator.creation_height }}</span>
       </li>
+      <li class="column">
+        <h4 class="inline">Commission:&nbsp;</h4>
+        <span>Block #{{ validator.commission }}</span>
+      </li>
+      <li class="column">
+        <h4 class="inline">Commission:&nbsp;</h4>
+        <span>{{ validator.rate | percent | notAvailable }}</span>
+      </li>
+      <li class="column">
+        <h4 class="inline">Max Daily Change:&nbsp;</h4>
+        <span>{{ validator.max_change_rate | percent | notAvailable }}</span>
+      </li>
+      <li v-show="false" class="column">
+        <h4 class="inline">Last Commission Change:&nbsp;</h4>
+        <span>Block #{{ validator.update_height }}</span>
+      </li>
     </ul>
+
+
 
     <ul v-show="false" class="row">
       <li>
@@ -112,6 +130,8 @@ export default {
     },
     website() {
       let url = this.validator.website
+
+      console.log(this.validator)
 
       if (!url || url === "[do-not-modify]") {
         return ""

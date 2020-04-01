@@ -76,8 +76,6 @@ export default {
   }),
   computed: {
     chartdata() {
-
-      console.log(this.data)
       
       const epochs = Object.keys(this.data)
       const shards = this.data.externalShards || []

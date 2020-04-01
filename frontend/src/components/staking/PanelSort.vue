@@ -50,8 +50,6 @@ export default {
       return hideFieldMobile && !primaryFields.includes(property.value)
     },
     orderBy(property) {
-      console.log(property)
-
       const sortBys = this.$el.querySelectorAll(`.sort-by`)
       sortBys.forEach(el => el.classList.remove(`active`, `desc`, `asc`))
       const index = this.properties.findIndex(p => p.value === property)

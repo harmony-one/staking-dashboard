@@ -9,9 +9,13 @@
         />
       </router-link>
 
-      <h2 class="session-title">Welcome to Harmony</h2>
+      <h2 class="session-title">
+        Welcome to Harmony
+      </h2>
 
-      <p class="session-paragraph">The easiest way to send, stake, and vote on the One Blockchain.</p>
+      <p class="session-paragraph">
+        The easiest way to send, stake, and vote on the One Blockchain.
+      </p>
 
       <div class="session-list">
         <LiSession
@@ -30,8 +34,11 @@
 
       <p class="footnote">
         By using Harmony, you accept our
-        <router-link to="/terms" class="link">Terms of Service</router-link>and
-        <router-link to="/privacy" class="link">Privacy Policy</router-link>.
+        <router-link to="/terms" class="link">
+          Terms of Service
+        </router-link>
+        and
+        <router-link to="/privacy" class="link"> Privacy Policy </router-link>.
       </p>
     </div>
   </SessionFrame>

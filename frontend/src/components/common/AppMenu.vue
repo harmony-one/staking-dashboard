@@ -19,7 +19,7 @@
         <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
         Sign In
       </a>
-    </div>-->
+    </div> -->
 
     <div class="app-menu-main">
       <router-link

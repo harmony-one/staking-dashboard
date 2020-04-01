@@ -693,11 +693,7 @@ export default {
         } else {
           this.$store.commit(`setActionInProgress`, true)
 
-          sendResponse = await this.actionManager.send(
-            memo,
-            feeProperties,
-            this.networkConfig
-          )
+          sendResponse = await this.actionManager.send(memo, feeProperties, this.networkConfig)
         }
 
         const { included } = sendResponse

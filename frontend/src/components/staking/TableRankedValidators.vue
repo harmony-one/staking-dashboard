@@ -37,26 +37,26 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true
+      default: () => true
     },
-    raw: {
-      type: Array,
-      required: true
+    activeOnly: {
+      type: Boolean,
+      default: () => true
     },
-    eff: {
-      type: Array,
-      required: true
-    },
+    search: {
+      type: String,
+      default: () => ""
+    }
   },
   data: () => ({
     query: ``,
     sort: {
-      property: `eff`,
+      property: `apr`,
       order: `desc`
     },
     pagination: {
       pageIndex: 0,
-      pageSize: 10
+      pageSize: 20
     },
     fetchTimeoutId: null
   }),
@@ -79,7 +79,9 @@ export default {
         distribution
       } = this
     ) {
+
       return data.map(v => {
+        
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
@@ -108,17 +110,7 @@ export default {
       return this.pagination.pageIndex * this.pagination.pageSize
     },
     showingValidators() {
-      
-      const data = this.raw.map((v, i) => ({ raw: v, eff: this.eff[i] }))
-
-      const ret = this.sortedEnrichedValidators.map((v) => {
-          const d = data.find((d) => d.raw === v.total_stake)
-          console.log(d)
-          return { ...v, ...d }
-      })
-      console.log(ret)
-
-      return ret
+      return this.sortedEnrichedValidators
     },
     columns() {
       let props = [
@@ -129,13 +121,6 @@ export default {
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
-          title: `nodes`,
-          value: `active_nodes`,
-          tooltip: `Active Nodes`,
-          width: "130px",
-          align: 'right',
-        },
-        {
           title: `STAKE`,
           value: `total_stake`,
           tooltip: `Stake of validator`,
@@ -143,11 +128,10 @@ export default {
           align: 'right',
           render: value => zeroDecimals(ones(value))
         },
-        
       ]
 
       if (this.$mq === "tab") {
-        const keep = ["name", "nodes", "total_stake"]
+        const keep = ["name", "apr", "total_stake"]
         props = props.filter(p => keep.includes(p.value))
       }
       if (this.$mq === "sm" || this.$mq === "md") {

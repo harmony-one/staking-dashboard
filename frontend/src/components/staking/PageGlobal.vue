@@ -34,7 +34,7 @@
           />
         </div>
 
-        <div v-if="false" class="table-border">
+        <div class="table-border">
           <TableRankedValidators
             :raw="networkInfo.raw_stake_distro"
             :eff="networkInfo.effective_median_stake_distro"
@@ -119,15 +119,14 @@ import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 export default {
   name: `tab-validators`,
   components: {
-    TableRankedValidators,
     PageContainer,
     TmField,
     TmBtn,
     TmDataLoading,
-    
-    PercentageChange,
-    LightWidget,
+    TableRankedValidators,
+
     //charts
+    LightWidget,
     AllStakesChart,
     SeatAllocation,
     SeatAllocationHistory,
@@ -152,10 +151,8 @@ export default {
       isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
     }),
     ...mapState({
-      allValidators: state => {
-        console.log(state.validators)
-        return state.validators.loaded ? state.validators.validators : []
-      },
+      allValidators: state =>
+        state.validators.loaded ? state.validators.validators : [],
       total: state => state.validators.total,
       totalActive: state => state.validators.totalActive
     }),
@@ -163,6 +160,7 @@ export default {
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
+      console.log(state.allValidators)
       return state.allValidators
     },
     prettyTransactionHash() {
@@ -174,7 +172,7 @@ export default {
       const blocksUrl = this.networkConfig.explorer_url
         ? this.networkConfig.explorer_url.replace("tx", "block")
         : ""
-      
+
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },

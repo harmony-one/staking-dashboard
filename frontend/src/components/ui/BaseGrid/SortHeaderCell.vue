@@ -51,6 +51,7 @@ export default {
 .panel-sort-table-header {
   font-size: var(--m);
   padding: var(--unit) 0;
+  padding-right:  var(--quarter);
   border-bottom: 1px solid var(--bc-dim);
   height: 50px;
   overflow: hidden;

@@ -64,6 +64,7 @@ export default {
   display: flex;
   flex-direction: row;
 
+
   .table-column {
     display: flex;
     flex-direction: column;
@@ -78,6 +79,9 @@ export default {
       height: 60px;
       overflow: hidden;
     }
+  }
+  .table-column:last-child {
+    margin-right: calc(-1*var(--unit));
   }
 }
 </style>

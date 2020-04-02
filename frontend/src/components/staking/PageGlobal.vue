@@ -10,23 +10,11 @@
           <div id="validators_median_stake" class="networkInfo-item">
             <h4>Effective median stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
-            <!-- <PercentageChange
-              :amount="networkInfo.effective_median_stake_changed"
-            /> -->
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
             <h4>Total stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
-            <!-- <PercentageChange :amount="networkInfo['total-staking-changed']" /> -->
           </div>
-          <!-- <div class="networkInfo-item">
-            <h4>Total seats:</h4>
-            {{ networkInfo.total_seats }}
-          </div>
-          <div class="networkInfo-item">
-            <h4>Total elected seats:</h4>
-            {{ networkInfo.total_seats_used }}
-          </div> -->
           <div class="networkInfo-item">
             <h4>Current block number:</h4>
             <a :href="linkToTransaction" target="_blank">
@@ -35,13 +23,24 @@
           </div>
         </div>
       </div>
-      <div v-if="networkInfo.raw_stake_distro" class="chart-border">
-        <AllStakesChart
-          :raw="networkInfo.raw_stake_distro"
-          :eff="networkInfo.effective_median_stake_distro"
-          :median="networkInfo.effective_median_stake | ones"
-          :networkInfo="networkInfo"
-        />
+
+      <div>
+        <div v-if="networkInfo.raw_stake_distro" class="chart-border">
+          <AllStakesChart
+            :raw="networkInfo.raw_stake_distro"
+            :eff="networkInfo.effective_median_stake_distro"
+            :median="networkInfo.effective_median_stake | ones"
+            :networkInfo="networkInfo"
+          />
+        </div>
+
+        <div v-if="false" class="table-border">
+          <TableRankedValidators
+            :raw="networkInfo.raw_stake_distro"
+            :eff="networkInfo.effective_median_stake_distro"
+            :data="validators"
+          />
+        </div>
       </div>
 
       <div class="widget-row">
@@ -102,7 +101,7 @@
 
 <script>
 import { mapState } from "vuex"
-import TableValidators from "staking/TableValidators"
+import TableRankedValidators from "staking/TableRankedValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
@@ -120,7 +119,7 @@ import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 export default {
   name: `tab-validators`,
   components: {
-    TableValidators,
+    TableRankedValidators,
     PageContainer,
     TmField,
     TmBtn,
@@ -153,8 +152,10 @@ export default {
       isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
     }),
     ...mapState({
-      allValidators: state =>
-        state.validators.loaded ? state.validators.validators : [],
+      allValidators: state => {
+        console.log(state.validators)
+        return state.validators.loaded ? state.validators.validators : []
+      },
       total: state => state.validators.total,
       totalActive: state => state.validators.totalActive
     }),
@@ -186,15 +187,24 @@ export default {
 
 <style lang="scss">
 
+@mixin border {
+  padding: var(--unit);
+  border-radius: var(--unit);
+  border: 1px solid var(--light2);
+  background: white;
+}
 .chart-border {
   .chart-container {
-    padding: var(--unit);
-    border-radius: var(--unit);
-    border: 1px solid var(--light2);
-    background: white;
+    @include border;
     margin-bottom: var(--double);
   }
 }
+
+.table-border {
+  @include border;
+  margin-bottom: var(--double);
+}
+
 
 
 .validatorTable, .networkInfo {

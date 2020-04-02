@@ -1,10 +1,7 @@
 import { Harmony, HarmonyExtension } from "@harmony-js/core"
-import { HarmonyAddress } from "@harmony-js/crypto"
+import { HarmonyAddress, BN} from "@harmony-js/crypto"
 import { StakingFactory } from "@harmony-js/staking"
-import {
-  ChainType,
-  Unit
-} from "@harmony-js/utils"
+import { ChainType, Unit } from "@harmony-js/utils"
 export const processMathWalletMessage = async (sendData, networkConfig, from) => {
   const { type, fee, gasPrice } = sendData
   const { gasEstimate } = fee
@@ -14,6 +11,8 @@ export const processMathWalletMessage = async (sendData, networkConfig, from) =>
     chainType: ChainType.Harmony,
     chainId: chain_id
   })
+
+  var signedTxn = null
   switch (type) {
     case "MsgSend": {
       const { toAddress, amounts } = sendData
@@ -26,13 +25,8 @@ export const processMathWalletMessage = async (sendData, networkConfig, from) =>
         gasLimit: gasEstimate,
         gasPrice: Unit.One(gasPrice).toHex()
       })
-      const signedTxn = await window.harmony.signTransaction(txn)
-      const result = await signedTxn.sendTransaction()
-      return {
-        included: () => {
-          return { txhash: result[1] }
-        }
-      }
+      signedTxn = await window.harmony.signTransaction(txn)
+      break
     }
     case "MsgDelegate": {
       const { delegatorAddress, validatorAddress, amount } = sendData
@@ -44,19 +38,14 @@ export const processMathWalletMessage = async (sendData, networkConfig, from) =>
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei("60000").toHex(),
+          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
           chainId: harmony.chainId
         })
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      const signedTxn = await window.harmony.signTransaction(stakingTxn)
-      const result = await signedTxn.sendTransaction()
-      return {
-        included: () => {
-          return { txhash: result[1] }
-        }
-      }
+      signedTxn = await window.harmony.signTransaction(stakingTxn)
+      break
     }
     case "MsgUndelegate": {
       const { validatorAddress, delegatorAddress, amount } = sendData
@@ -64,23 +53,18 @@ export const processMathWalletMessage = async (sendData, networkConfig, from) =>
         .undelegate({
           delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
           validatorAddress: new HarmonyAddress(validatorAddress).checksum,
-          amount: Unit.Szabo(amount).toHex(),
+          amount: Unit.Szabo(amount).toHex()
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei("60000").toHex(),
+          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
           chainId: harmony.chainId
         })
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      const signedTxn = await window.harmony.signTransaction(stakingTxn)
-      const result = await signedTxn.sendTransaction()
-      return {
-        included: () => {
-          return { txhash: result[1] }
-        }
-      }
+      signedTxn = await window.harmony.signTransaction(stakingTxn)
+      break
     }
     case "MsgWithdrawDelegationReward": {
       const { delegatorAddress } = sendData
@@ -90,21 +74,46 @@ export const processMathWalletMessage = async (sendData, networkConfig, from) =>
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei("60000").toHex(),
+          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
           chainId: harmony.chainId
         })
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      const signedTxn = await window.harmony.signTransaction(stakingTxn)
-      const result = await signedTxn.sendTransaction()
-      return {
-        included: () => {
-          return { txhash: result[1] }
+      signedTxn = await window.harmony.signTransaction(stakingTxn)
+      break
+    }
+    default:
+      break
+  }
+  if (!signedTxn) {
+    return {
+      error: true,
+      txhash: "",
+      message: "Unknow message type"
+    }
+  }
+  const [sentTxn, txnHash] = await signedTxn.sendTransaction()
+  return {
+    included: async () => {
+      try {
+        const confiremdTxn = await sentTxn.confirm(txnHash, 5)
+        if (confiremdTxn.isConfirmed()) {
+          return { txhash: txnHash }
+        } else {
+          return {
+            error: true,
+            txhash: txnHash,
+            message: "The transaction is still not confirmed after 5 attempts."
+          }
+        }
+      } catch (error) {
+        return {
+          error: true,
+          txhash: txnHash,
+          message: "The transaction is still not confirmed after 5 attempts."
         }
       }
     }
-    default:
-      return
   }
 }

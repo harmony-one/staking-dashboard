@@ -1,5 +1,5 @@
 import { Harmony, HarmonyExtension } from "@harmony-js/core"
-import { HarmonyAddress, BN} from "@harmony-js/crypto"
+import { HarmonyAddress, BN } from "@harmony-js/crypto"
 import { StakingFactory } from "@harmony-js/staking"
 import { ChainType, Unit } from "@harmony-js/utils"
 export const processMathWalletMessage = async (sendData, networkConfig, from) => {

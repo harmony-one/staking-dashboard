@@ -215,6 +215,12 @@ export default {
       noScroll.off()
     },
     signOut() {
+      if (this.session.sessionType === "mathwallet" && window.harmony) {
+        window.harmony
+          .forgetIdentity()
+          .then(() => {})
+          .catch(err => {})
+      }
       this.$emit(`close`)
       this.$store.dispatch(`signOut`)
     },

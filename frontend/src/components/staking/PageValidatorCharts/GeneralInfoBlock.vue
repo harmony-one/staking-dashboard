@@ -30,10 +30,6 @@
       </li>
       <li class="column">
         <h4 class="inline">Commission:&nbsp;</h4>
-        <span>Block #{{ validator.commission }}</span>
-      </li>
-      <li class="column">
-        <h4 class="inline">Commission:&nbsp;</h4>
         <span>{{ validator.rate | percent | notAvailable }}</span>
       </li>
       <li class="column">

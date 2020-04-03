@@ -186,14 +186,12 @@ export default {
 
 <style scoped lang="scss">
 
-.chart-border {
-  .chart-container {
-    padding: var(--unit);
-    border-radius: var(--unit);
-    border: 1px solid var(--light2);
-    background: white;
-    margin-bottom: var(--double);
-  }
+.chart-container {
+  padding: var(--unit);
+  border-radius: var(--unit);
+  border: 1px solid var(--light2);
+  background: white;
+  margin-bottom: var(--double);
 }
 
 

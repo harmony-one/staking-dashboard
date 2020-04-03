@@ -1,5 +1,5 @@
 <template>
-  <SessionFrame>
+  <SessionFrame title="Use Existing Address" image="account">
     <div id="session-existing">
       <h2 class="session-title">
         Use an existing address

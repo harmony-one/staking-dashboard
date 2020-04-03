@@ -1,5 +1,5 @@
 <template>
-  <SessionFrame>
+  <SessionFrame  title="Create New Address" image="new">
     <TmFormStruct :submit="onSubmit.bind(this)">
       <h2 class="session-title">
         Create a new address

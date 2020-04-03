@@ -37,7 +37,15 @@ export default {
   props: {
     data: {
       type: Array,
-      default: () => true
+      default: () => []
+    },
+    raw: {
+      type: Array,
+      default: () => []
+    },
+    eff: {
+      type: Array,
+      default: () => []
     },
     activeOnly: {
       type: Boolean,
@@ -71,6 +79,7 @@ export default {
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
       {
+        raw, eff,
         data,
         pool,
         annualProvision,
@@ -81,12 +90,20 @@ export default {
     ) {
 
       return data.map(v => {
+
+        const total_stake = zeroDecimals(ones(v.total_stake))
+        const stakes = raw.map((raw, i) => ({ raw: zeroDecimals(ones(raw)), eff: eff[i] }))
+        const stake = stakes.find((s, i) => {
+          console.log(total_stake, s.raw)
+          if (total_stake === s.raw) return true
+        })
         
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
 
         return Object.assign({}, v, {
+          ...stake,
           small_moniker: v.moniker.toLowerCase(),
           my_delegations: delegation ? delegation.amount : 0,
           rewards:
@@ -118,7 +135,13 @@ export default {
           title: `Name`,
           value: `name`,
           tooltip: `The validator's moniker`,
-          renderComponent: ValidatorName // render as Component - use custom Vue components
+          renderComponent: ValidatorName
+        },
+        {
+          title: `EPOS`,
+          value: `eff`,
+          tooltip: `Effective Stake`,
+          render: value => zeroDecimals(ones(value))
         },
         {
           title: `STAKE`,
@@ -164,14 +187,6 @@ export default {
       }, 300)
     }
   },
-  // watch: {
-  //   "sort.property": function() {
-  //     this.showing = 15
-  //   },
-  //   "sort.order": function() {
-  //     this.showing = 15
-  //   }
-  // },
   mounted() {
     this.$store.dispatch(`getPool`)
     this.$store.dispatch(`getRewardsFromMyValidators`)

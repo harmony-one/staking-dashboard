@@ -34,7 +34,7 @@
           />
         </div>
 
-        <div class="table-border">
+        <div v-if="false" class="table-border">
           <TableRankedValidators
             :raw="networkInfo.raw_stake_distro"
             :eff="networkInfo.effective_median_stake_distro"
@@ -160,7 +160,6 @@ export default {
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
-      console.log(state.allValidators)
       return state.allValidators
     },
     prettyTransactionHash() {

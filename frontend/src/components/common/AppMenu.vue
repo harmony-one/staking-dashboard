@@ -233,9 +233,9 @@ export default {
 </script>
 
 <style scoped>
-.app-menu-main {
+/* .app-menu-main {
   border-top: 1px solid var(--light);
-}
+} */
 
 .sign-out,
 .session-link {

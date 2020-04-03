@@ -134,6 +134,9 @@ export default {
 <style>
 .chart-container {
   background: white;
+  border: 1px solid var(--light2);
+  padding: var(--unit);
+  border-radius: var(--unit);
   margin-bottom: var(--double);
 }
 </style>

@@ -1,13 +1,6 @@
 <template>
-  <SessionFrame>
+  <SessionFrame title="Sign In" image="welcome">
     <div id="session-welcome">
-      <router-link to="/">
-        <img
-          class="session-logo-mobile"
-          src="~assets/images/harmony-logo-white.svg"
-          alt="a small spinning circle to display loading"
-        />
-      </router-link>
 
       <h2 class="session-title">
         Welcome to Harmony
@@ -16,6 +9,8 @@
       <p class="session-paragraph">
         The easiest way to send, stake, and vote on the One Blockchain.
       </p>
+      
+      <div class="hr"></div>
 
       <div class="session-list">
         <LiSession
@@ -60,8 +55,10 @@ export default {
   }
 }
 </script>
+
 <style scoped>
-.session-title {
-  padding: 0 1rem;
-}
+  .hr {
+    margin: var(--double);
+    border: 1px solid var(--light2);
+  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <SessionFrame>
+  <SessionFrame title="Sign In" image="account">
     <TmFormStruct :submit="onSubmit" class="session-container">
       <h2 class="session-title">
         Sign in with account

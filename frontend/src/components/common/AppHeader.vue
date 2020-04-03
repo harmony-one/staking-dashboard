@@ -1,6 +1,7 @@
 <template>
 
   <div class="container">
+    
     <div class="mobile-menu-button">
       <div v-if="open" class="close-menu" @click="close()">
         <i class="material-icons mobile-menu-action">close</i>
@@ -90,6 +91,7 @@ export default {
         window.innerWidth || 0
       )
 
+
       if (w >= 1024) {
         this.close()
         this.desktop = true
@@ -106,23 +108,24 @@ export default {
 
 .container {
     background: white;
+    height: 100vh;
+    overflow: hidden;
 }
 .app-header {
   position: relative;
   .container-mobile, .container-desktop {
     width: var(--width-side);
-    min-height: 100vh;
     background: white;
   }
   .container-mobile {
     display: none;
+    border-right: 1px solid var(--light);
   }
 }
 
 .app-mobile-menu-drop {
   opacity: 0;
   width: 0;
-  height: 100vh;
   background: black;
   transition: opacity 0.32s ease-out;
   position: fixed;
@@ -188,6 +191,7 @@ export default {
   }
   .app-mobile-menu-drop.open {
     width: 100vw;
+    height: 100vh;
     opacity: 0.5;
   }
 

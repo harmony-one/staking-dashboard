@@ -31,13 +31,18 @@ module.exports = function() {
     orderBy,
     limit
   ) => {
-    const snapshot = await db
-      .collection(collectionName)
-      .where('address', '==', address)
-      .orderBy(orderBy, 'desc')
-      .limit(limit)
-      .get()
-    return snapshot.docs.map(doc => doc.data())
+    try {
+      const snapshot = await db
+        .collection(collectionName)
+        .where('address', '==', address)
+        .orderBy(orderBy, 'desc')
+        .limit(limit)
+        .get()
+      return snapshot.docs.map(doc => doc.data())
+    } catch (err) {
+      console.log('getCollectionDataWithLimit: ', err)
+      return []
+    }
   }
 
   const getGlobalDataWithLimit = async (collectionName, orderBy, limit) => {

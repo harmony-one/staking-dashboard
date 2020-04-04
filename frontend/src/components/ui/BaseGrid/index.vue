@@ -64,6 +64,8 @@ export default {
   display: flex;
   flex-direction: row;
 
+  /* TODO */
+  width: calc(100% - 15px);
 
   .table-column {
     display: flex;

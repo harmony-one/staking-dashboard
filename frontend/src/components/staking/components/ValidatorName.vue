@@ -5,9 +5,7 @@
       :operator-address="data.operator_address"
       :logo-url="data.logo_url"
     />
-    <div class="validator-info">
-      <h3 class="li-validator-name">{{ data.moniker }}</h3>
-    </div>
+    <h3 class="li-validator-name">{{ data.moniker }}</h3>
   </div>
 </template>
 
@@ -26,6 +24,8 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: flex-start;
+  max-width: 100%;
 }
 
 .validator-info {
@@ -58,6 +58,8 @@ export default {
   font-weight: 500;
   color: var(--txt);
   display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .li-validator-image {

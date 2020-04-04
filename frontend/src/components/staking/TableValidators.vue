@@ -14,7 +14,7 @@
 import { mapGetters, mapState } from "vuex"
 import { expectedReturns } from "scripts/returns"
 import BaseGrid from "src/components/ui/BaseGrid"
-import PanelPagination from "./PanelPagination"
+import PanelPagination from "src/components/ui/BaseGrid/PanelPagination"
 
 import ValidatorStatus from "./components/ValidatorStatus"
 import ValidatorName from "./components/ValidatorName"

@@ -793,6 +793,7 @@ export default {
   height: 100vh;
   background: black;
   opacity: 0.5;
+  z-index: 1;
 }
 
 .action-modal {

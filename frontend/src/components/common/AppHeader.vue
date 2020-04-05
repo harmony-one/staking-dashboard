@@ -25,14 +25,6 @@
             alt="Harmony Staking spaceship accelerating into a colourful space sky"
           />
         </a>
-        <!-- <template v-if="!desktop">
-          <div v-if="open" class="close-menu" @click="close()">
-            <i class="material-icons mobile-menu-action">close</i>
-          </div>
-          <div v-if="!open" class="open-menu" @click="show()">
-            <i class="material-icons mobile-menu-action">more_vert</i>
-          </div>
-        </template> -->
       </div>
       <AppMenu @close="close" />
     </div>
@@ -60,7 +52,9 @@ import noScroll from "no-scroll"
 import AppMenu from "common/AppMenu"
 export default {
   name: `app-header`,
-  components: { AppMenu },
+  components: {
+    AppMenu,
+  },
   data: () => ({
     open: false,
     desktop: false

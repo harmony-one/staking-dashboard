@@ -2,6 +2,7 @@
   <PageContainer
     :managed="true"
     :data-empty="validators && validators.length === 0"
+    :epoch="true"
     title="Global View"
   >
     <template slot="managed-body">

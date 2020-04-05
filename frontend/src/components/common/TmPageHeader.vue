@@ -1,53 +1,87 @@
 <template>
   <header class="tm-page-header">
-    <div class="tm-page-header-container">
+
       <div class="tm-page-header-text">
         <div v-if="$slots['title']" class="tm-page-header-title">
           <slot name="title" />
         </div>
-        <div v-if="$slots['subtitle']" class="tm-page-header-subtitle">
+        <!-- <div v-if="$slots['subtitle']" class="tm-page-header-subtitle">
           <slot name="subtitle" />
         </div>
         <div v-if="$slots['menu-body']" class="tm-page-header-body">
           <slot name="menu-body" />
-        </div>
+        </div> -->
       </div>
+
+      <div v-if="epoch" class="next-epoch">
+        <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" class="time-body" />
+      </div>
+<!-- 
       <menu class="tm-page-header-menu">
         <slot name="menu" />
       </menu>
+      
       <div class="tabs-and-buttons">
         <Tabs v-if="tabs" :tabs="tabs" />
         <div v-if="$slots['header-buttons']" class="header-buttons">
           <slot name="header-buttons" />
         </div>
-      </div>
-    </div>
+      </div> -->
+
+
   </header>
 </template>
 
 <script>
+import { mapState } from "vuex"
 import Tabs from "common/Tabs"
+import TimePieBlock from "./../wallet/TimePieBlock"
 export default {
   name: `tm-page-header`,
-  components: { Tabs },
+  components: { 
+    Tabs,
+    TimePieBlock
+  },
   props: {
     tabs: {
       type: Array,
       default: () => []
+    },
+    epoch: {
+      type: Boolean,
+      default: false
     }
+  },
+  computed: {
+    ...mapState(["connection"]),
+    ...mapState({ networkInfo: state => state.connection.networkInfo }),
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+
 .tm-page-header {
   background: white;
   display: flex;
   align-items: center;
   height: 56px;
+  width: 100%;
   color: var(--gray);
   border-bottom: 1px solid var(--light);
 }
+
+.tm-page-header-text {
+  flex: 1;
+}
+
+
+.next-epoch {
+  height: 56;
+  flex: 0 0 56px;
+}
+
 
 .header-buttons {
   padding: 0 1rem 1rem 0;
@@ -84,33 +118,8 @@ export default {
   color: var(--blue);
 }
 
-@media screen and (max-width: 425px) {
-  /* .header-buttons .tm-btn {
-    width: 100%;
-  } */
+@media screen and (max-width: 414px) {
+  
 }
 
-@media screen and (max-width: 767px) {
-  /* .tm-page-header-body {
-    padding: 0;
-  }
-
-  .tabs {
-    width: 100%;
-  }
-
-  .tabs-and-buttons {
-    flex-direction: column;
-  }
-
-  .header-buttons {
-    width: 100%;
-    padding: 1rem;
-    background: var(--app-bg);
-  }
-
-  .tm-page-header-text .tm-page-header-body {
-    display: block;
-  } */
-}
 </style>

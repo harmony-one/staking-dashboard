@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <div class="chart-container-stake-allocate">
+  <div class="next-epoch">
+    <div class="chart-container-next-epoch">
       <ChartPie
         :chartdata="chartdata"
         :options="options"
-        style="height: 200px; width: 100%; margin: auto"
+        style="height: 48px; width: 48px; margin: auto"
       />
     </div>
-    <div class="legend">{{chartdata.legend}}</div>
+    <div class="legend">next epoch:<br/>{{chartdata.legend}}</div>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutoutPercentage: 92,
+      cutoutPercentage: 60,
       plugins: {
         labels: {
           render: () => ""
@@ -67,15 +67,22 @@ export default {
 </script>
 
 <style>
-.chart-container-stake-allocate {
-  margin: var(--unit) auto;
-  position: relative;
+
+.next-epoch {
+  display: flex;
+  width: 164px;
+  align-items: center;
 }
+
 .legend {
-  margin-top: -104px;
-  padding-bottom: 100px;
-  width: 100%;
-  text-align: center;
+  flex: 0 0 96px;
+  line-height: 1rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.chart-container-next-epoch {
+  margin-top: -10px;
 }
 
 </style>

@@ -256,7 +256,7 @@ export default {
   margin-top: calc(-1 * var(--unit));
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .widget-row {
     > div {
       margin-right: 0 !important;

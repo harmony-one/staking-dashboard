@@ -128,7 +128,7 @@
   padding-left: 1rem;
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
 
   .data-table .mobile:nth-child(2) {
     width: 100px;

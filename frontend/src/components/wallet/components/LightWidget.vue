@@ -55,7 +55,7 @@ export default {
   overflow: hidden;
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
     .widget-container {
       max-width: calc(100vw - 2 * var(--double));
     }

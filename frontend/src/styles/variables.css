@@ -1,7 +1,8 @@
 :root {
   /*  ============================================================================= */
 
-  --background: #F6F7FB;;
+  --phone-breakpoint: 414px;
+  --background: #F6F7FB;
   --blue: #00ADE8;
   --deep-blue: #0981cf;
   --dark-blue: #293258;

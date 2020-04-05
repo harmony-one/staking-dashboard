@@ -33,7 +33,7 @@ Vue.use(SvgIcon, {
 Vue.use(VueMq, {
   breakpoints: {
     // default breakpoints - customize this
-    sm: 412,
+    sm: 414,
     md: 800,
     lg: 1250,
     xlg: Infinity

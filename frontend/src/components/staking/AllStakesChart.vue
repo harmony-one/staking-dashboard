@@ -73,7 +73,8 @@ export default {
               },
               ticks: {
                 suggestedMin: 0,
-                max: this.median * 2
+                max: this.median * 2,
+                callback: (value) => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
               }
             }
           ]

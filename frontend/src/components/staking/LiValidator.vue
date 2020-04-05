@@ -204,7 +204,7 @@ export default {
   border-color: var(--blue);
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .hide-xs {
     display: none;
   }

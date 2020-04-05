@@ -71,7 +71,7 @@ export default {
 
 
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .heading {
     display: none;
   }

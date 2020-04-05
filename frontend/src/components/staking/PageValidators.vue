@@ -235,7 +235,7 @@ export default {
 }
 
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
 
   .validatorTable {
     margin-left: calc(-2 * var(--unit)) !important;

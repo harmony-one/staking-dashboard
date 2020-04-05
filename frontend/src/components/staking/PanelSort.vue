@@ -123,7 +123,7 @@ export default {
   color: var(--tertiary);
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
     
   .mobile {
     display: table-cell;

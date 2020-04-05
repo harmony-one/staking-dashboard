@@ -25,27 +25,40 @@
           </div>
         </div>
 
-        <LightWidget title="Stake & Delegation history">
-          <StakeHistoryBlock
-            :history="validatorHistory"
-            :validator="validator"
-          />
-        </LightWidget>
-        <LightWidget title="Reward rate history">
-          <RewardHistoryBlock
-            :history="validatorHistory"
-            :validator="validator"
-          />
-        </LightWidget>
-        <LightWidget title="Commission">
-          <CommissionHistoryBlock
-            :history="validatorHistory"
-            :validator="validator"
-          />
-        </LightWidget>
-        <LightWidget v-if="allHistory.length" title="Event history">
-          <EventHistoryBlock :events="eventsHistory" />
-        </LightWidget>
+        <div>
+
+          <div class="widget-row">
+
+            <LightWidget title="Stake & Delegation history">
+              <StakeHistoryBlock
+                :history="validatorHistory"
+                :validator="validator"
+              />
+            </LightWidget>
+            <LightWidget title="Reward rate history">
+              <RewardHistoryBlock
+                :history="validatorHistory"
+                :validator="validator"
+              />
+            </LightWidget>
+
+
+          </div>
+          <div class="widget-row">
+
+            <LightWidget title="Delegators">
+              <DelegatorBlock
+                :validator="validator"
+              />
+            </LightWidget>
+            <LightWidget v-if="allHistory.length" title="Event history">
+              <EventHistoryBlock :events="eventsHistory" />
+            </LightWidget>
+
+          </div>
+
+          
+        </div>
       </div>
     </template>
     <template v-else>
@@ -67,7 +80,7 @@ import PerfomanceBlock from "./PerfomanceBlock"
 import MainBlock from "./MainBlock"
 import StakeHistoryBlock from "./StakeHistoryBlock"
 import RewardHistoryBlock from "./RewardHistoryBlock"
-import CommissionHistoryBlock from "./CommissionHistoryBlock"
+import DelegatorBlock from "./DelegatorBlock"
 import EventHistoryBlock from "./EventHistoryBlock"
 import TmPage from "common/TmPage"
 import {
@@ -85,7 +98,7 @@ export default {
     GeneralInfoBlock,
     StakeHistoryBlock,
     RewardHistoryBlock,
-    CommissionHistoryBlock,
+    DelegatorBlock,
     EventHistoryBlock,
     TmPage,
     LightWidget
@@ -162,6 +175,41 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+
+.widget-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0 0 var(--unit) 0;
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+  }
+  > div:last-child {
+    margin-right: 0 !important;
+  }
+}
+
+.widget-row:not(:first-child) {
+  margin-top: calc(-1 * var(--unit));
+}
+
+@media screen and (max-width: 411px) {
+  .widget-row {
+    > div {
+      min-width: 300px;
+      margin-right: 0 !important;
+    }
+    > .widget-container:nth-child(odd) {
+      margin-right: 0;
+    }
+  }
+}
+
 .validator-layout {
   display: flex;
   flex-flow: row wrap;

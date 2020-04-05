@@ -51,7 +51,7 @@ export default {
   data: () => ({
     query: ``,
     sort: {
-      property: `apr`,
+      property: `total_stake`,
       order: `desc`
     },
     pagination: {

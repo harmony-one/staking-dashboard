@@ -236,7 +236,7 @@ export default {
       text-align: right;
       margin-right: 8px;
       transform: scale(0.8);
-      width: 300px;
+      width: 100vw; 
     }
   }
 }

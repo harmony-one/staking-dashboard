@@ -1,6 +1,5 @@
 <template>
-  <SessionFrame>
-    <div class="session-container">
+  <SessionFrame title="Create New Account" image="account">
       <h2 class="session-title">Use Harmony Browser Extension</h2>
       <div v-if="!extension.enabled" class="session-main">
         <p>
@@ -27,7 +26,6 @@
           :button-text="`Use Account`"
         />
       </div>
-    </div>
   </SessionFrame>
 </template>
 
@@ -69,9 +67,5 @@ export default {
 }
 </script>
 <style scoped>
-.session-title,
-.extension-message {
-  padding: 0 1rem;
-  margin: 0;
-}
+
 </style>

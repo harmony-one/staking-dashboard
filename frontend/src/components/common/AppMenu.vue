@@ -215,6 +215,12 @@ export default {
       noScroll.off()
     },
     signOut() {
+      if (this.session.sessionType === "mathwallet" && window.harmony) {
+        window.harmony
+          .forgetIdentity()
+          .then(() => {})
+          .catch(err => {})
+      }
       this.$emit(`close`)
       this.$store.dispatch(`signOut`)
     },
@@ -227,9 +233,9 @@ export default {
 </script>
 
 <style scoped>
-.app-menu-main {
+/* .app-menu-main {
   border-top: 1px solid var(--light);
-}
+} */
 
 .sign-out,
 .session-link {

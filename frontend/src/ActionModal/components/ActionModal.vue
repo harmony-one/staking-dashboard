@@ -159,6 +159,17 @@
                 >.
               </div>
             </HardwareState>
+            <HardwareState
+              v-if="selectedSignMethod === SIGN_METHODS.MATHWALLET"
+              :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
+              :loading="!!sending"
+            >
+              <div v-if="!sending">Please send the transaction to be signed in the Math Wallet.</div>
+              <div v-if="sending">
+                Please open the Math Wallet, review the details, and
+                approve the transaction.
+              </div>
+          </HardwareState>
             <form
               v-else-if="selectedSignMethod === SIGN_METHODS.LOCAL"
               @submit.prevent="validateChangeStep"
@@ -302,6 +313,7 @@ import config from "src/config"
 
 import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
+import { processMathWalletMessage } from "scripts/mathwallet-utils"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -312,7 +324,8 @@ const successStep = `success`
 const SIGN_METHODS = {
   LOCAL: `local`,
   LEDGER: `ledger`,
-  EXTENSION: `extension`
+  EXTENSION: `extension`,
+  MATHWALLET: `mathwallet`
 }
 
 const signMethodOptions = {
@@ -324,6 +337,10 @@ const signMethodOptions = {
     key: `Harmony Browser Extension`,
     value: SIGN_METHODS.EXTENSION
   },
+  MATHWALLET: {
+    key: `Math Wallet`,
+    value: SIGN_METHODS.MATHWALLET
+  },
   LOCAL: {
     key: `Local Account (Unsafe)`,
     value: SIGN_METHODS.LOCAL
@@ -334,7 +351,8 @@ const sessionType = {
   EXPLORE: "explore",
   LOCAL: SIGN_METHODS.LOCAL,
   LEDGER: SIGN_METHODS.LEDGER,
-  EXTENSION: SIGN_METHODS.EXTENSION
+  EXTENSION: SIGN_METHODS.EXTENSION,
+  MATHWALLET: SIGN_METHODS.MATHWALLET
 }
 
 export default {
@@ -455,6 +473,8 @@ export default {
         signMethods.push(signMethodOptions.LEDGER)
       } else if (this.session.sessionType === sessionType.EXTENSION) {
         signMethods.push(signMethodOptions.EXTENSION)
+      } else if (this.session.sessionType === sessionType.MATHWALLET) {
+        signMethods.push(signMethodOptions.MATHWALLET)
       } else {
         signMethods.push(signMethodOptions.LOCAL)
       }
@@ -466,6 +486,8 @@ export default {
           return `Waiting for Ledger`
         case "extension":
           return `Waiting for Extension`
+        case "mathwallet":
+          return `Waiting for Math Wallet`
         default:
           return "Sending..."
       }
@@ -473,6 +495,7 @@ export default {
     hasSigningMethod() {
       return (
         this.session.browserWithLedgerSupport ||
+        this.session.selectedSignMethod === "mathwallet" ||
         (this.selectedSignMethod === "extension" &&
           this.modalContext.isExtensionAccount)
       )
@@ -659,6 +682,13 @@ export default {
           sendResponse = await this.$store.dispatch(
             `signTransactionLeger`,
             sendData
+          )
+        } else if (this.selectedSignMethod === SIGN_METHODS.MATHWALLET) {
+          this.$store.commit(`setActionInProgress`, true)
+          sendResponse = await processMathWalletMessage(
+            sendData,
+            this.networkConfig,
+            this.wallet.address
           )
         } else {
           this.$store.commit(`setActionInProgress`, true)

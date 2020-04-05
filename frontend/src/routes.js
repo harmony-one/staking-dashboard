@@ -176,6 +176,16 @@ export default [
     }
   },
   {
+    path: `/mathwallet`,
+    name: `mathwallet`,
+    components: {
+      session: require(`./components/common/TmSessionMathWallet`).default
+    },
+    meta: {
+      feature: "Session"
+    }
+  },
+  {
     path: `/existing`,
     name: `existing`,
     components: {

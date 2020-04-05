@@ -1,5 +1,5 @@
 <template>
-  <SessionFrame>
+  <SessionFrame title="Use Existing Address" image="account">
     <div id="session-existing">
       <h2 class="session-title">
         Use an existing address
@@ -27,6 +27,13 @@
           route="extension"
         >
         </LiSession>
+        <LiSession
+          v-if="!isMobileApp"
+          id="use-mathwallet"
+          icon="laptop"
+          title="Use Math Wallet"
+          route="mathwallet"
+        />
         <LiSession
           v-if="session.insecureMode"
           id="recover-with-backup"

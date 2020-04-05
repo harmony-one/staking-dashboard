@@ -198,7 +198,7 @@ export default {
   margin-top: calc(-1 * var(--unit));
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .widget-row {
     > div {
       min-width: 300px;
@@ -246,7 +246,7 @@ export default {
   }
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .validator-top {
     display: flex;
     flex-direction: column;

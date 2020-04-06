@@ -89,8 +89,8 @@ export default {
   /* TODO */
   position: relative;
   width: 100%;
-  overflow: hidden !important;
-  overflow-y: scroll !important;
+  overflow: hidden;
+  overflow-y: scroll;
   height: 100%;
   max-height: calc(100vh - 432px);
   border-bottom: 1px solid var(--light2);
@@ -99,6 +99,7 @@ export default {
 @media screen and (max-width: 414px) {
   .table-wrap {
     max-height: none;
+    overflow-y: hidden;
   }
 }
 

@@ -21,7 +21,7 @@
       </li>
       <li class="row">
         <h4>APR</h4>
-        <span>{{ (validator.apr / 100) | percent | notAvailable }}</span>
+        <span>{{ (validator.apr / 10000) | percent | notAvailable }}</span>
       </li>
       <li class="row">
         <h4>Shards</h4>

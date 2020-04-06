@@ -161,7 +161,7 @@ export default {
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
-      
+      // console.log(state.allValidators)
       return state.allValidators
     },
     prettyTransactionHash() {

@@ -186,15 +186,16 @@ export default {
 <style scoped lang="scss">
 
 @mixin border {
-  padding: var(--unit);
   border-radius: var(--unit);
   border: 1px solid var(--light2);
   background: white;
 }
 .chart-border {
-  .chart-container {
-    @include border;
-    margin-bottom: var(--double);
+  margin-bottom: var(--double);
+  > div {
+    .chart-container {
+      border-radius: none;
+    }
   }
 }
 

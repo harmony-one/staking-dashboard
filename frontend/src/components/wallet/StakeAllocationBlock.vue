@@ -98,7 +98,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .chart-container-stake-allocate {
   display: flex;
   height: 50%;

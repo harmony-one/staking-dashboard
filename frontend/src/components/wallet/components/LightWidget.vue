@@ -23,7 +23,15 @@ export default {
   margin-right: var(--unit);
   display: flex;
   flex-direction: column;
+  width: 25%;
 }
+
+@media screen and (max-width: 1000px) {
+  .widget-container {
+    width: 100%;
+  }
+}
+
 
 .widget-container.connected:not(:last-child) {
   margin-right: 0;
@@ -41,7 +49,6 @@ export default {
   overflow: hidden;
   margin-bottom: var(--unit);
 }
-
 .widget-title {
   font-size: 16px;
   color: var(--blue);

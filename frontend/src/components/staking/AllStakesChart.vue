@@ -74,7 +74,7 @@ export default {
               ticks: {
                 suggestedMin: 0,
                 max: this.median * 2,
-                callback: (value) => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                callback: (value) => value < this.median * 2 && value > this.median * 1.9 ? '' : Math.floor(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
               }
             }
           ]
@@ -132,12 +132,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .chart-container {
   background: white;
   border: 1px solid var(--light2);
   padding: var(--unit);
   border-radius: var(--unit);
-  margin-bottom: var(--double);
 }
 </style>

@@ -14,7 +14,7 @@
       </div>
 
       <div v-if="epoch" class="next-epoch">
-        <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" class="time-body" />
+        <TimePieBlock :timeNextEpoch="networkInfo.time_next_epoch" class="time-body" />
       </div>
 <!-- 
       <menu class="tm-page-header-menu">
@@ -54,7 +54,10 @@ export default {
   },
   computed: {
     ...mapState(["connection"]),
-    ...mapState({ networkInfo: state => state.connection.networkInfo }),
+    ...mapState({ networkInfo: state => {
+      // console.log(state.connection.networkInfo)
+      return state.connection.networkInfo
+    } }),
   }
 }
 </script>

@@ -104,7 +104,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .chart-container {
   background: white;
   margin-bottom: var(--double);

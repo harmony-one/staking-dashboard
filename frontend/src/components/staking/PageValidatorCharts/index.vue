@@ -183,6 +183,7 @@ export default {
   flex-wrap: wrap;
   width: 100%;
   margin: 0 0 var(--unit) 0;
+  padding-right: var(--unit);
   > div {
     display: flex;
     flex-direction: column;

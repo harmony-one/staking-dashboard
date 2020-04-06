@@ -12,15 +12,22 @@
         Amount
       </div>
     </div>
+    
     <div class="delegation" v-for="(delegator, index) in delegations">
       <div class="index">
         {{index + 1}}
       </div>
       <div class="address">
-        {{ delegator['delegator-address'] }}
+        <a :href="`https://explorer.os.hmny.io/#/address/${delegator['delegator-address']}`" target="_blank">
+          {{ delegator['delegator-address'] }}
+        </a>
+        {{validator_address === delegator['delegator-address'] ? '(self)' : ''}}
       </div>
       <div class="short-address">
-        {{ shortAddress(delegator['delegator-address']) }}
+        <a :href="`https://explorer.os.hmny.io/#/address/${delegator['delegator-address']}`" target="_blank">
+          {{ shortAddress(delegator['delegator-address']) }}
+        </a>
+        {{validator_address === delegator['delegator-address'] ? '(self)' : ''}}
       </div>
       <div class="amount">
         {{delegator['amount'] | ones | zeroDecimals}}
@@ -42,13 +49,15 @@ export default {
     shortAddress: (a) => a.substring(0, 11) + '...' + a.substring(a.length - 8)
   },
   data: function() {
+    console.log(this.validator)
     const delegations = this.validator.delegations.slice()
 
     const sort = 'amount'
     const dir = -1
-    delegations.sort((a, b) => (a[sort] - b[sort]) * dir)
+    delegations.sort((a, b) => (a[sort] - b[sort]) * dir).filter((d) => d.amount > 0)
 
     return {
+      validator_address: this.validator.operator_address,
       delegations
     }
   }

@@ -26,7 +26,7 @@
         <span>{{ (validator.apr / 10000) | percent | notAvailable }}</span>
       </li>
       <li class="row">
-        <h4>Your Rewards</h4>
+        <h4>Pending Rewards</h4>
         <span>+{{ rewards | ones | twoDecimals | noBlanks }}</span>
       </li>
       <li class="row">

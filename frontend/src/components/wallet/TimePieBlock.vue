@@ -73,6 +73,12 @@ export default {
   width: 164px;
   align-items: center;
 }
+@media screen and (max-width: 414px) {
+  
+  .next-epoch {
+    width: 190px;
+  }
+}
 
 .legend {
   flex: 0 0 96px;

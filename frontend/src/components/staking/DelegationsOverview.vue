@@ -60,7 +60,7 @@ export default {
       return Object.keys(this.committedDelegations)
     },
     ...mapState({
-      allDelegations: state => state.delegates.delegates
+      allDelegations: state => state.delegates.delegates.filter((d) => d.amount > 0)
     }),
     validators: state => {
       const delegations = []

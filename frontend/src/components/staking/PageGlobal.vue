@@ -161,6 +161,7 @@ export default {
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
+      
       return state.allValidators
     },
     prettyTransactionHash() {
@@ -201,9 +202,9 @@ export default {
 
 .table-border {
   @include border;
+  padding: var(--unit);
   margin-bottom: var(--double);
 }
-
 
 
 .validatorTable, .networkInfo {

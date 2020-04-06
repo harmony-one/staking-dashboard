@@ -94,7 +94,7 @@ export default {
         const total_stake = zeroDecimals(ones(v.total_stake))
         const stakes = raw.map((raw, i) => ({ raw: zeroDecimals(ones(raw)), eff: eff[i] }))
         const stake = stakes.find((s, i) => {
-          console.log(total_stake, s.raw)
+          // console.log(total_stake, s.raw)
           if (total_stake === s.raw) return true
         })
 

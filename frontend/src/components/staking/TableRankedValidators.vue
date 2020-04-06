@@ -37,7 +37,15 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true
+      default: () => []
+    },
+    raw: {
+      type: Array,
+      default: () => []
+    },
+    eff: {
+      type: Array,
+      default: () => []
     },
     activeOnly: {
       type: Boolean,
@@ -51,7 +59,7 @@ export default {
   data: () => ({
     query: ``,
     sort: {
-      property: `total_stake`,
+      property: `apr`,
       order: `desc`
     },
     pagination: {
@@ -71,6 +79,7 @@ export default {
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
       {
+        raw, eff,
         data,
         pool,
         annualProvision,
@@ -79,12 +88,22 @@ export default {
         distribution
       } = this
     ) {
+
       return data.map(v => {
+
+        const total_stake = zeroDecimals(ones(v.total_stake))
+        const stakes = raw.map((raw, i) => ({ raw: zeroDecimals(ones(raw)), eff: eff[i] }))
+        const stake = stakes.find((s, i) => {
+          console.log(total_stake, s.raw)
+          if (total_stake === s.raw) return true
+        })
+
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
 
         return Object.assign({}, v, {
+          ...stake,
           small_moniker: v.moniker.toLowerCase(),
           my_delegations: delegation ? delegation.amount : 0,
           rewards:
@@ -113,25 +132,16 @@ export default {
     columns() {
       let props = [
         {
-          title: `Status`,
-          value: `status`,
-          tooltip: `The validator's status`,
-          width: "96px",
-          renderComponent: ValidatorStatus // render as Component - use custom Vue components
-        },
-        {
           title: `Name`,
           value: `name`,
           tooltip: `The validator's moniker`,
-          renderComponent: ValidatorName // render as Component - use custom Vue components
+          renderComponent: ValidatorName
         },
         {
-          title: `APR %`,
-          value: `apr`,
-          tooltip: `APR %`,
-          width: "130px",
-          align: 'right',
-          render: value => percent(value)
+          title: `EPOS`,
+          value: `eff`,
+          tooltip: `Effective Stake`,
+          render: value => zeroDecimals(ones(value))
         },
         {
           title: `STAKE`,
@@ -141,22 +151,6 @@ export default {
           align: 'right',
           render: value => zeroDecimals(ones(value))
         },
-        {
-          title: `Fees`,
-          value: `rate`,
-          tooltip: `Commission fees`,
-          width: "96px",
-          align: 'right',
-          render: value => percent(value) // render as function - do format value here
-        },
-        {
-          title: `Uptime`,
-          value: `uptime_percentage`,
-          tooltip: `Percentage validator has been elected vs. not`,
-          width: "96px",
-          align: 'right',
-          render: value => percent(value)
-        }
       ]
 
       if (this.$mq === "tab") {
@@ -193,14 +187,6 @@ export default {
       }, 300)
     }
   },
-  // watch: {
-  //   "sort.property": function() {
-  //     this.showing = 15
-  //   },
-  //   "sort.order": function() {
-  //     this.showing = 15
-  //   }
-  // },
   mounted() {
     this.$store.dispatch(`getPool`)
     this.$store.dispatch(`getRewardsFromMyValidators`)
@@ -233,6 +219,6 @@ export default {
   margin-top: var(--unit);
 }
 
-@media screen and (max-width: 414px) {
+@media screen and (max-width: 411px) {
 }
 </style>

@@ -35,6 +35,7 @@ Vue.use(VueMq, {
     // default breakpoints - customize this
     sm: 414,
     md: 800,
+    tab: 1024,
     lg: 1250,
     xlg: Infinity
   },

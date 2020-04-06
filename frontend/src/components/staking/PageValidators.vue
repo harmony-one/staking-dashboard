@@ -10,23 +10,11 @@
           <div id="validators_median_stake" class="networkInfo-item">
             <h4>Effective median stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
-            <!-- <PercentageChange
-              :amount="networkInfo.effective_median_stake_changed"
-            /> -->
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
             <h4>Total stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
-            <!-- <PercentageChange :amount="networkInfo['total-staking-changed']" /> -->
           </div>
-          <!-- <div class="networkInfo-item">
-            <h4>Total seats:</h4>
-            {{ networkInfo.total_seats }}
-          </div>
-          <div class="networkInfo-item">
-            <h4>Total elected seats:</h4>
-            {{ networkInfo.total_seats_used }}
-          </div> -->
           <div class="networkInfo-item">
             <h4>Current block number:</h4>
             <a :href="linkToTransaction" target="_blank">
@@ -35,9 +23,6 @@
           </div>
         </div>
       </div>
-      <!-- <div v-if="networkInfo.staking_distro">
-        <AllStakesChart :data="networkInfo.staking_distro" />
-      </div> -->
       <div v-if="isNetworkInfoLoading" class="validatorTable">
         <div class="filterOptions">
           <TmField
@@ -83,7 +68,6 @@
 <script>
 import { mapState } from "vuex"
 import TableValidators from "staking/TableValidators"
-import AllStakesChart from "staking/AllStakesChart"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"

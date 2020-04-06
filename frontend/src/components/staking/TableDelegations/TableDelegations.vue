@@ -1,44 +1,35 @@
 <template>
   <div>
-    <table class="data-table card-white">
-      <thead>
-        <PanelSort
-          :sort="sort"
-          :properties="properties"
-          :show-on-mobile="showOnMobile"
-        />
-      </thead>
-      <tbody
-        is="transition-group"
-        v-infinite-scroll="loadMore"
-        infinite-scroll-distance="400"
-        name="flip-list"
-      >
-        <TableRow
-          v-for="(row, index) in showingValidators"
-          v-if="row.stake > 0"
-          :key="row.operator_address"
-          :index="index"
-          :data="row"
-          :is-undelegation="isUndelegation"
-          :show-on-mobile="showOnMobile"
-        />
-      </tbody>
-    </table>
+    <BaseGrid
+      :sort="sort"
+      :columns="columns"
+      :data="showingValidators"
+      :onRowClick="onClickValidator"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex"
 import orderBy from "lodash.orderby"
-import PanelSort from "staking/PanelSort"
-import TableRow from "./TableRow"
+
+import {
+  percent,
+  shortDecimals,
+  atoms,
+  ones,
+  fourDecimals,
+  twoDecimals
+} from "scripts/num"
+
+import BaseGrid from "src/components/ui/BaseGrid"
+import ValidatorStatus from "../components/ValidatorStatus"
+import ValidatorName from "../components/ValidatorName"
 
 export default {
   name: `table-delegations`,
   components: {
-    TableRow,
-    PanelSort
+    BaseGrid
   },
   props: {
     data: {
@@ -79,49 +70,71 @@ export default {
     showingValidators() {
       return this.sortedEnrichedValidators.slice(0, this.showing)
     },
-    properties() {
+    columns() {
+      let columns = [
+        {
+          title: `Status`,
+          value: `status`,
+          tooltip: `The validator's status`,
+          width: "96px",
+          renderComponent: ValidatorStatus // render as Component - use custom Vue components
+        },
+        {
+          title: `Name`,
+          value: `name`,
+          tooltip: `The validator's moniker`,
+          renderComponent: ValidatorName // render as Component - use custom Vue components
+        },
+        {
+          title: `Stake`,
+          value: `stake`,
+          tooltip: `Stake of validator`,
+          width: "160px",
+          render: value => twoDecimals(ones(value)) + " ONE"
+        }
+      ]
+
       if (this.isUndelegation) {
-        return [
-          {
-            title: `Name`,
-            value: `name`,
-            tooltip: `The validator's moniker`
-          },
-          {
-            title: `Stake`,
-            value: `stake`,
-            tooltip: `Stake`
-          },
+        columns = columns.concat([
           {
             title: `Ending in`,
             value: `remaining_epoch`,
-            tooltip: `Ending in`
+            tooltip: `Ending in`,
+            align: "right",
+            width: "160px",
+            render: value => value + " epochs"
           }
-        ]
+        ])
       } else {
-        return [
-          {
-            title: `Name`,
-            value: `name`,
-            tooltip: `The validator's moniker`
-          },
-          {
-            title: `Stake`,
-            value: `stake`,
-            tooltip: `Stake`
-          },
+        columns = columns.concat([
           {
             title: `Reward (up to date)`,
             value: `rewards`,
-            tooltip: `Reward (up to date)`
+            tooltip: `Reward (up to date)`,
+            width: "200px",
+            render: value => fourDecimals(ones(value)) + " ONE"
           },
           {
             title: `APR %`,
             value: `apr`,
-            tooltip: `APR %`
+            tooltip: `APR %`,
+            width: "140px",
+            align: "right",
+            render: value => percent(value)
           }
-        ]
+        ])
       }
+
+      if (this.$mq === "tab") {
+        const keep = ["name", "apr", "stake", "remaining_epoch", "apr"]
+        columns = columns.filter(p => keep.includes(p.value))
+      }
+      if (this.$mq === "sm" || this.$mq === "md") {
+        const keep = ["name", "remaining_epoch", "apr", "stake"]
+        columns = columns.filter(p => keep.includes(p.value))
+      }
+
+      return columns
     }
   },
   watch: {
@@ -140,6 +153,12 @@ export default {
   methods: {
     loadMore() {
       this.showing += 10
+    },
+    onClickValidator(validator) {
+      this.$router.push({
+        name: "validator",
+        params: { validator: validator.operator_address }
+      })
     }
   }
 }

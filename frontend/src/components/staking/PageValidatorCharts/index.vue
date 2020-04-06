@@ -231,11 +231,13 @@ export default {
   margin-right: var(--unit);
   margin-bottom: var(--unit);
   > div {
+    min-width: 350px;
     flex-grow: 1;
     padding: var(--unit);
     border-right: 1px solid var(--light2);
   }
   > div:last-child {
+    min-width: 250px;
     border-right: none;
   }
   .title {
@@ -246,7 +248,8 @@ export default {
   }
 }
 
-@media screen and (max-width: 414px) {
+// @media screen and (max-width: 414px) {
+@media screen and (max-width: 1200px) {
   .validator-top {
     display: flex;
     flex-direction: column;

@@ -90,7 +90,7 @@ export default {
   position: relative;
   width: 100%;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 100%;
   max-height: calc(100vh - 432px);
   border-bottom: 1px solid var(--light2);

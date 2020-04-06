@@ -44,19 +44,18 @@ export default {
   }),
   computed: {
     chartdata() {
-      let diff = isNaN(this.timeNextEpoch) ? 0 : Math.floor((600 - this.timeNextEpoch) / 60)
+      let diff = isNaN(this.timeNextEpoch) ? 0 : Math.ceil(this.timeNextEpoch / 60)
+      const dataDiff = 12 - (diff / 5 * 12)
 
       const data = [...new Array(12)].map((v, i) => 1)
-
       return {
-        legend: `${12-diff} minute${ diff > 1 ? 's' : '' }`,
+        legend: `${diff} minute${ diff > 1 ? 's' : '' }`,
         diff,
         datasets: [
           {
             data,
             backgroundColor: data.map((d, i) => {
-              console.log(i)
-              return i < diff ? '#00ADE888' : '#00ADE844'
+              return i < dataDiff ? '#00ADE844' : '#00ADE888'
             })
           }
         ]

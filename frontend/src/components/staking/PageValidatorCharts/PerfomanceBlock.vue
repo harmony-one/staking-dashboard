@@ -3,15 +3,13 @@
     <ul class="row">
       <li class="row">
         <h4>Uptime (AVG)</h4>
-        <span id="page-profile__uptime">
-          {{ validator.uptime_percentage | percent | notAvailable }}
-        </span>
+        <span id="page-profile__uptime">{{
+          validator.uptime_percentage | percent | notAvailable
+        }}</span>
       </li>
       <li class="row">
         <h4>Fees</h4>
-        <span>
-          {{ validator.rate | percent | notAvailable }}
-        </span>
+        <span>{{ validator.rate | percent | notAvailable }}</span>
       </li>
       <li class="row">
         <h4>Slots</h4>
@@ -24,10 +22,6 @@
       <li class="row">
         <h4>APR</h4>
         <span>{{ (validator.apr / 100) | percent | notAvailable }}</span>
-      </li>
-      <li class="row">
-        <h4>Your Rewards</h4>
-        <span>+{{ rewards | ones | twoDecimals | noBlanks }}</span>
       </li>
       <li class="row">
         <h4>Shards</h4>

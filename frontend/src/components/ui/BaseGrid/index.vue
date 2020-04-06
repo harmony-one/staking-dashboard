@@ -92,7 +92,7 @@ export default {
   overflow: hidden !important;
   overflow-y: scroll !important;
   height: 100%;
-  max-height: calc(100vh - 382px);
+  max-height: calc(100vh - 432px);
   border-bottom: 1px solid var(--light2);
 }
 

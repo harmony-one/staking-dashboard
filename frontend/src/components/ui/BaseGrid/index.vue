@@ -1,36 +1,48 @@
 <template>
   <div>
-    <div class="table-body">
+    <div class="table-headings-wrap">
+
       <div
-        class="table-column"
+        class="table-headings"
         v-for="column in columns"
         :key="column.value"
         :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
       >
         <SortHeaderCell :column="column" :sort="sort" :onClick="orderBy" />
+      </div>
+    </div>
 
+    <div class="table-wrap">
+      <div class="table-body">
         <div
-          class="table-cell"
-          v-for="item in data"
-          :key="item.address"
-          @click="() => onRowClick(item)"
-          :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
+          class="table-column"
+          v-for="column in columns"
+          :key="column.value"
+          :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
         >
-          <template v-if="column.render">
-            {{ column.render(item[column.value], item) }}
-          </template>
+          <div
+            class="table-cell"
+            v-for="item in data"
+            :key="item.address"
+            @click="() => onRowClick(item)"
+            :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
+          >
+            <template v-if="column.render">
+              {{ column.render(item[column.value], item) }}
+            </template>
 
-          <template v-else-if="column.renderComponent">
-            <component
-              :is="column.renderComponent"
-              :value="item[column.value]"
-              :data="item"
-            />
-          </template>
+            <template v-else-if="column.renderComponent">
+              <component
+                :is="column.renderComponent"
+                :value="item[column.value]"
+                :data="item"
+              />
+            </template>
 
-          <template v-else>
-            {{ item[column.value] }}
-          </template>
+            <template v-else>
+              {{ item[column.value] }}
+            </template>
+          </div>
         </div>
       </div>
     </div>
@@ -60,12 +72,39 @@ export default {
 </script>
 
 <style lang="scss">
-.table-body {
+
+@mixin table-row {
   display: flex;
   flex-direction: row;
+  width: calc(100% - 16px);
+}
 
+.table-headings-wrap {
+  @include table-row;
+  position: relative;
+  height: 50px;
+}
+
+.table-wrap {
   /* TODO */
-  width: calc(100% - 15px);
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+  height: 100%;
+  max-height: calc(100vh - 432px);
+  border-bottom: 1px solid var(--light2);
+}
+
+@media screen and (max-width: 414px) {
+  .table-wrap {
+    max-height: none;
+    overflow-y: hidden;
+  }
+}
+
+.table-body {
+  @include table-row;
 
   .table-column {
     display: flex;
@@ -77,9 +116,12 @@ export default {
       align-items: center;
       padding: 0 var(--unit) 0 0;
       cursor: pointer;
-      border-bottom: 1px solid #ddd;
-      height: 60px;
+      border-bottom: 1px solid var(--light2);
+      min-height: 60px;
       overflow: hidden;
+    }
+    .table-cell:last-child {
+      border-bottom: none;
     }
   }
   .table-column:last-child {

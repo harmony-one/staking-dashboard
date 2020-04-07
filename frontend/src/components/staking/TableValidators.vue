@@ -56,7 +56,7 @@ export default {
     },
     pagination: {
       pageIndex: 0,
-      pageSize: 20
+      pageSize: 50
     },
     fetchTimeoutId: null
   }),
@@ -233,6 +233,6 @@ export default {
   margin-top: var(--unit);
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
 }
 </style>

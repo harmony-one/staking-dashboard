@@ -98,7 +98,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .chart-container-stake-allocate {
   display: flex;
   height: 50%;
@@ -111,7 +111,7 @@ export default {
 }
 
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .chart {
     display: flex;
     height: 50%;

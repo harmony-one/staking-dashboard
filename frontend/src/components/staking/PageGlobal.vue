@@ -2,21 +2,28 @@
   <PageContainer
     :managed="true"
     :data-empty="validators && validators.length === 0"
+    :epoch="true"
     title="Global View"
   >
     <template slot="managed-body">
       <div class="networkInfo">
         <div class="networkInfo-column">
           <div id="validators_median_stake" class="networkInfo-item">
-            <h4>Effective median stake:</h4>
-            {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
+            <h4>Effective Median Stake:</h4>
+            <span v-if=networkInfo.effective_median_stake>
+              {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
+            </span>
+            <span v-else>-</span>
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
-            <h4>Total stake:</h4>
-            {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
+            <h4>Total Stake:</h4>
+            <span v-if=totalStake>
+              {{ totalStake | ones | zeroDecimals }} ONE
+            </span>
+            <span v-else>-</span>
           </div>
           <div class="networkInfo-item">
-            <h4>Current block number:</h4>
+            <h4>Current Block:</h4>
             <a :href="linkToTransaction" target="_blank">
               #{{ networkInfo.current_block_number }}
             </a>
@@ -157,9 +164,14 @@ export default {
       totalActive: state => state.validators.totalActive
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
+    ...mapState({ totalStake: 
+      state => state.connection.networkInfo ? state.connection.networkInfo['total-staking'] : null
+    }),
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
+      // console.log(state.networkInfo)
+      // console.log(state.allValidators)
       return state.allValidators
     },
     prettyTransactionHash() {
@@ -185,23 +197,24 @@ export default {
 <style scoped lang="scss">
 
 @mixin border {
-  padding: var(--unit);
   border-radius: var(--unit);
   border: 1px solid var(--light2);
   background: white;
 }
 .chart-border {
-  .chart-container {
-    @include border;
-    margin-bottom: var(--double);
+  margin-bottom: var(--double);
+  > div {
+    .chart-container {
+      border-radius: none;
+    }
   }
 }
 
 .table-border {
   @include border;
+  padding: var(--unit);
   margin-bottom: var(--double);
 }
-
 
 
 .validatorTable, .networkInfo {
@@ -265,7 +278,7 @@ export default {
   margin-top: calc(-1 * var(--unit));
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .widget-row {
     > div {
       margin-right: 0 !important;

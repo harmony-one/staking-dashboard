@@ -183,6 +183,7 @@ export default {
   flex-wrap: wrap;
   width: 100%;
   margin: 0 0 var(--unit) 0;
+  padding-right: var(--unit);
   > div {
     display: flex;
     flex-direction: column;
@@ -198,7 +199,7 @@ export default {
   margin-top: calc(-1 * var(--unit));
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
   .widget-row {
     > div {
       min-width: 300px;
@@ -231,11 +232,13 @@ export default {
   margin-right: var(--unit);
   margin-bottom: var(--unit);
   > div {
+    min-width: 350px;
     flex-grow: 1;
     padding: var(--unit);
     border-right: 1px solid var(--light2);
   }
   > div:last-child {
+    min-width: 250px;
     border-right: none;
   }
   .title {
@@ -246,7 +249,8 @@ export default {
   }
 }
 
-@media screen and (max-width: 411px) {
+// @media screen and (max-width: 414px) {
+@media screen and (max-width: 1200px) {
   .validator-top {
     display: flex;
     flex-direction: column;

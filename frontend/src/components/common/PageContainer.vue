@@ -1,6 +1,6 @@
 <template>
   <div class="tm-page">
-    <TmPageHeader v-if="!hideHeader" :tabs="tabs">
+    <TmPageHeader v-if="!hideHeader" :tabs="tabs" :epoch="epoch">
       <h2 v-if="title" slot="title">
         {{ title }}
       </h2>
@@ -28,6 +28,10 @@ export default {
   },
   props: {
     hideHeader: {
+      type: Boolean,
+      default: false
+    },
+    epoch: {
       type: Boolean,
       default: false
     },

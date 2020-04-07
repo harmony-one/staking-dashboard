@@ -172,6 +172,6 @@ table {
   }
 }
 
-@media screen and (max-width: 411px) {
+@media screen and (max-width: 414px) {
 }
 </style>

@@ -53,7 +53,7 @@ export default {
   padding: var(--unit) 0;
   padding-right:  var(--quarter);
   border-bottom: 1px solid var(--bc-dim);
-  height: 50px;
+  min-height: 50px;
   overflow: hidden;
   text-transform: uppercase;
   font-weight: bold;

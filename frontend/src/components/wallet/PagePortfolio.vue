@@ -22,13 +22,6 @@
             </div>
             <StakeAllocationBlock v-else :delegations="delegations" class="delegation-body" />
           </LightWidget>
-          <LightWidget
-            v-if="isNetworkInfoLoading"
-            title="Time until next epoch"
-            class="time_next_epoch"
-          >
-            <TimePieBlock :time-next-epoch="networkInfo.time_next_epoch" class="time-body" />
-          </LightWidget>
         </div>
         <DelegationsOverview />
         <template v-if="Object.keys(delegation.unbondingDelegations).length">
@@ -97,7 +90,6 @@ import TmPage from "common/TmPage"
 import TmBalance from "./TmBalance"
 import DelegationsOverview from "staking/DelegationsOverview"
 import Undelegations from "staking/Undelegations"
-import TimePieBlock from "./TimePieBlock"
 import StakeAllocationBlock from "./StakeAllocationBlock"
 import Widget from "./components/Widget"
 import LightWidget from "./components/LightWidget"
@@ -113,7 +105,6 @@ export default {
     TmBalance,
     Widget,
     LightWidget,
-    TimePieBlock
   },
   data: () => ({
     lastUpdate: 0,
@@ -133,7 +124,9 @@ export default {
         return []
       }
 
-      const delegates = this.delegates.delegates
+      const delegates = this.delegates.delegates.filter((d) => d.amount > 0)
+
+      console.log(delegates)
 
       return delegates
         ? delegates.map(d => ({

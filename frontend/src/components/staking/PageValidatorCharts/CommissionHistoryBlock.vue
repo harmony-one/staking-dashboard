@@ -153,7 +153,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .card-white {
   padding: var(--unit);

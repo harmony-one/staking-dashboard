@@ -281,6 +281,7 @@
                   />
                   <TmBtn
                     v-else
+                    ref="send"
                     color="primary"
                     value="Confirm and Sign"
                     :disabled="
@@ -542,11 +543,12 @@ export default {
   },
   updated: function() {
     this.actionManager.setContext(this.modalContext || {})
-    if (
-      (this.title === "Withdraw" || this.step === "fees") &&
-      this.$refs.next
-    ) {
+    if (this.title === "Claim Rewards" && this.$refs.next) {
       this.$refs.next.$el.focus()
+    }
+
+    if (this.step === "fees" && this.$refs.send) {
+      this.$refs.send.$el.focus()
     }
   },
   methods: {

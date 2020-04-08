@@ -1,6 +1,6 @@
 <template>
   <div class="validator-main-block">
-    
+
     <div class="validator">
       <td class="data-table__row__info">
         <ValidatorLogo
@@ -46,15 +46,15 @@
               </div>
             </div>
 
-            
+
           </div>
         </div>
       </td>
     </div>
 
     <div class="button-container">
-      <TmBtn 
-        id="delegation-btn" 
+      <TmBtn
+        id="delegation-btn"
         value="Delegate"
         @click.native="onDelegation"
         :disabled="validator.total_stake >= validator.max_total_delegation"
@@ -75,6 +75,7 @@
       :validator="validator"
       :denom="bondDenom"
       :disabled="validator.remainder === 0"
+      :minAmount="1000"
     />
     <UndelegationModal
       ref="undelegationModal"
@@ -146,9 +147,6 @@ export default {
       return `Elected`
     },
     status_detailed() {
-
-      console.log(this.validator)
-      
       if (
         this.validator.jailed ||
         this.validator.tombstoned ||

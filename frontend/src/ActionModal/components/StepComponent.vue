@@ -5,13 +5,12 @@
         {{ number }}
       </div> -->
 
-
       <svgicon
-          :name="title.toLowerCase()"
-          width="20"
-          height="20"
-        ></svgicon>
-      
+        :name="title.toLowerCase().replace(/ /g, '_')"
+        width="20"
+        height="20"
+      ></svgicon>
+
       <p class="text--default" :class="{ textActive: active }">
         {{ title }}
       </p>
@@ -63,7 +62,6 @@ export default {
     transform: scale(2);
     margin-bottom: var(--unit);
   }
-
 }
 
 .circle--default {
@@ -81,7 +79,8 @@ export default {
   z-index: 1;
 }
 
-.active, .active .svg-icon {
+.active,
+.active .svg-icon {
   color: var(--blue);
   fill: var(--blue);
 }
@@ -95,7 +94,6 @@ export default {
   text-align: center;
   margin: 0 auto;
 }
-
 
 .textActive {
   color: var(--tertiary);

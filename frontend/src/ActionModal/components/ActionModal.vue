@@ -3,7 +3,6 @@
     <div>
       <div class="action-modal-overlay"></div>
       <div v-focus-last class="action-modal" tabindex="0" @keyup.esc="close">
-        
         <div
           v-if="(step === feeStep || step === signStep) && !sending"
           id="prevBtn"
@@ -20,15 +19,15 @@
           <i class="material-icons">close</i>
         </div>
         <div class="action-modal-header">
-
           <span class="action-modal-title">{{
             requiresSignIn ? `Sign in required` : title
           }}</span>
           <Steps
             v-if="
-              [defaultStep, feeStep, signStep].includes(step) && featureAvailable
+              [defaultStep, feeStep, signStep].includes(step) &&
+                featureAvailable
             "
-            :steps="['Details', 'Fees', 'Sign']"
+            :steps="['Details', 'Fees']"
             :active-step="step"
           />
           <p
@@ -103,108 +102,118 @@
               min="0"
               :max="balanceInAtoms"
             />
-          </div>
-          <div v-else-if="step === signStep" class="action-modal-form">
-            <TmFormGroup
-              v-if="signMethods.length > 1"
-              class="action-modal-form-group"
-              field-id="sign-method"
-              field-label="Signing Method"
-            >
-              <TmField
-                id="sign-method"
-                v-model="selectedSignMethod"
-                :options="signMethods"
-                type="select"
-              />
-            </TmFormGroup>
-            <HardwareState
-              v-if="selectedSignMethod === SIGN_METHODS.LEDGER"
-              :icon="session.browserWithLedgerSupport ? 'usb' : 'info'"
-              :loading="!!sending"
-            >
-              <div v-if="session.browserWithLedgerSupport">
-                {{
-                  sending
-                    ? `Please verify and sign the transaction on your Ledger`
-                    : `Please plug in your Ledger&nbsp;Nano and open
-                the Harmony app`
-                }}
-              </div>
-              <div v-else>
-                Please use Chrome, Brave, or Opera. Ledger is not supported in
-                this browser.
-              </div>
-            </HardwareState>
-            <HardwareState
-              v-if="selectedSignMethod === SIGN_METHODS.EXTENSION"
-              :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
-              :loading="!!sending"
-            >
-              <div v-if="extension.enabled && !sending">
-                Please send the transaction to be signed in the Harmony Browser
-                Extension.
-              </div>
-              <div v-if="extension.enabled && sending">
-                Please open the Harmony Browser Extension, review the details, and
-                approve the transaction.
-              </div>
-              <div v-if="!extension.enabled">
-                Please install the Harmony Browser Extension from the
-                <a
-                  href="https://chrome.google.com/webstore/category/extensions"
-                  target="_blank"
-                  rel="noopener norefferer"
-                  >Chrome Web Store</a
-                >.
-              </div>
-            </HardwareState>
-            <HardwareState
-              v-if="selectedSignMethod === SIGN_METHODS.MATHWALLET"
-              :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
-              :loading="!!sending"
-            >
-              <div v-if="!sending">Please send the transaction to be signed in the Math Wallet.</div>
-              <div v-if="sending">
-                Please open the Math Wallet, review the details, and
-                approve the transaction.
-              </div>
-          </HardwareState>
-            <form
-              v-else-if="selectedSignMethod === SIGN_METHODS.LOCAL"
-              @submit.prevent="validateChangeStep"
-            >
+
+            <div style="margin: 50px 0;">
               <TmFormGroup
-                :error="$v.password.$error && $v.password.$invalid"
-                class="action-modal-group"
-                field-id="password"
-                field-label="Password"
+                v-if="signMethods.length > 1"
+                class="action-modal-form-group"
+                field-id="sign-method"
+                field-label="Signing Method"
               >
                 <TmField
-                  id="password"
-                  v-model="password"
-                  v-focus
-                  type="password"
-                  placeholder="Password"
-                />
-                <TmFormMsg
-                  v-if="$v.password.$error && !$v.password.required"
-                  name="Password"
-                  type="required"
+                  id="sign-method"
+                  v-model="selectedSignMethod"
+                  :options="signMethods"
+                  type="select"
                 />
               </TmFormGroup>
-            </form>
+              <HardwareState
+                v-if="selectedSignMethod === SIGN_METHODS.LEDGER"
+                :icon="session.browserWithLedgerSupport ? 'usb' : 'info'"
+                :loading="!!sending"
+              >
+                <div v-if="session.browserWithLedgerSupport">
+                  {{
+                    sending
+                      ? `Please verify and sign the transaction on your Ledger`
+                      : `Please plug in your Ledger&nbsp;Nano and open
+                the Harmony app`
+                  }}
+                </div>
+                <div v-else>
+                  Please use Chrome, Brave, or Opera. Ledger is not supported in
+                  this browser.
+                </div>
+              </HardwareState>
+              <HardwareState
+                v-if="selectedSignMethod === SIGN_METHODS.EXTENSION"
+                :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
+                :loading="!!sending"
+              >
+                <div v-if="extension.enabled && !sending">
+                  Please send the transaction to be signed in the Harmony
+                  Browser Extension.
+                </div>
+                <div v-if="extension.enabled && sending">
+                  Please open the Harmony Browser Extension, review the details,
+                  and approve the transaction.
+                </div>
+                <div v-if="!extension.enabled">
+                  Please install the Harmony Browser Extension from the
+                  <a
+                    href="https://chrome.google.com/webstore/category/extensions"
+                    target="_blank"
+                    rel="noopener norefferer"
+                    >Chrome Web Store</a
+                  >.
+                </div>
+              </HardwareState>
+              <HardwareState
+                v-if="selectedSignMethod === SIGN_METHODS.MATHWALLET"
+                :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
+                :loading="!!sending"
+              >
+                <div v-if="!sending">
+                  Please send the transaction to be signed in the Math Wallet.
+                </div>
+                <div v-if="sending">
+                  Please open the Math Wallet, review the details, and approve
+                  the transaction.
+                </div>
+              </HardwareState>
+              <form
+                v-else-if="selectedSignMethod === SIGN_METHODS.LOCAL"
+                @submit.prevent="validateChangeStep"
+              >
+                <TmFormGroup
+                  :error="$v.password.$error && $v.password.$invalid"
+                  class="action-modal-group"
+                  field-id="password"
+                  field-label="Password"
+                >
+                  <TmField
+                    id="password"
+                    v-model="password"
+                    v-focus
+                    type="password"
+                    placeholder="Password"
+                  />
+                  <TmFormMsg
+                    v-if="$v.password.$error && !$v.password.required"
+                    name="Password"
+                    type="required"
+                  />
+                </TmFormGroup>
+              </form>
+            </div>
           </div>
           <div v-else-if="step === inclusionStep" class="action-modal-form">
-            <TmDataMsg icon="hourglass_empty">
+            <TmDataMsg>
+              <div slot="image">
+                <img
+                  style="width: 40px; height: 40px;"
+                  src="~assets/images/loader.svg"
+                  alt="a small spinning circle to display loading"
+                />
+              </div>
               <div slot="title">
                 Sent and confirming
               </div>
               <div slot="subtitle">
                 The transaction
                 <!-- with the hash {{ txHash }} -->
-                was successfully signed and sent the network. Waiting for it to be
-                confirmed.
+                was successfully signed and sent the network. Waiting for it to
+                be confirmed.
               </div>
             </TmDataMsg>
           </div>
@@ -217,7 +226,9 @@
             >
               <div slot="title">
                 {{
-                  isTransactionFailed ? "Transaction failed" : notifyMessage.title
+                  isTransactionFailed
+                    ? "Transaction failed"
+                    : notifyMessage.title
                 }}
               </div>
               <div slot="subtitle">
@@ -237,7 +248,7 @@
           <div class="action-modal-footer">
             <slot name="action-modal-footer">
               <TmFormGroup
-                v-if="[defaultStep, feeStep, signStep].includes(step)"
+                v-if="[defaultStep, feeStep].includes(step)"
                 class="action-modal-group"
               >
                 <div>
@@ -262,20 +273,22 @@
                     color="primary"
                   />
                   <TmBtn
-                    v-else-if="step !== signStep"
+                    v-else-if="step !== feeStep"
                     ref="next"
                     color="primary"
                     value="Next"
-                    :disabled="
-                      disabled || (step === feeStep && $v.invoiceTotal.$invalid)
-                    "
                     @click.native="validateChangeStep"
                   />
                   <TmBtn
                     v-else
                     color="primary"
-                    value="Send"
-                    :disabled="!hasSigningMethod || !selectedSignMethod"
+                    value="Confirm and Sign"
+                    :disabled="
+                      !hasSigningMethod ||
+                        !selectedSignMethod ||
+                        disabled ||
+                        (step === feeStep && $v.invoiceTotal.$invalid)
+                    "
                     @click.native="validateChangeStep"
                   />
                 </div>
@@ -314,6 +327,7 @@ import config from "src/config"
 import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
 import { processMathWalletMessage } from "scripts/mathwallet-utils"
+import { openExtensionPopup } from "../utils/openExtensionPopup"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -619,7 +633,16 @@ export default {
           if (!this.isValidInput(`invoiceTotal`)) {
             return
           }
-          this.step = signStep
+          //this.step = signStep
+
+          if (!this.isValidInput(`password`)) {
+            return
+          }
+          // submit transaction
+          this.sending = true
+          await this.submit()
+          this.sending = false
+
           return
         case signStep:
           if (!this.isValidInput(`password`)) {
@@ -693,7 +716,13 @@ export default {
         } else {
           this.$store.commit(`setActionInProgress`, true)
 
-          sendResponse = await this.actionManager.send(memo, feeProperties, this.networkConfig)
+          openExtensionPopup(this.session.extensionId)
+
+          sendResponse = await this.actionManager.send(
+            memo,
+            feeProperties,
+            this.networkConfig
+          )
         }
 
         const { included } = sendResponse
@@ -701,6 +730,9 @@ export default {
         await this.waitForInclusion(included)
 
         this.onTxIncluded(type, transactionProperties, feeProperties)
+
+        // close modal in 2 sec after success tx
+        setTimeout(() => this.close(), 2000)
       } catch ({ message }) {
         console.log("[submit] error", message)
 
@@ -779,12 +811,7 @@ export default {
 }
 </script>
 
-
-
-
-
 <style lang="scss">
-
 .action-modal-overlay {
   position: fixed;
   top: 0;
@@ -830,7 +857,7 @@ export default {
     }
   }
   .material-icons {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   > .action-modal-header {
@@ -845,11 +872,13 @@ export default {
     }
   }
 
-  .table-invoice, .tm-hardware-state {
-      margin-bottom: var(--unit);
+  .table-invoice,
+  .tm-hardware-state {
+    margin-bottom: var(--unit);
   }
 
-  .action-modal-group.tm-form-group, .action-modal-form-group.tm-form-group {
+  .action-modal-group.tm-form-group,
+  .action-modal-form-group.tm-form-group {
     padding: 0;
     margin-bottom: var(--unit);
   }
@@ -861,11 +890,11 @@ export default {
     font-weight: bold;
   }
 
-
-  
-
+  .action-modal-icon.action-modal-close {
+    cursor: pointer;
+  }
 }
-/* 
+/*
 .action-modal-header {
   align-items: center;
   flex-direction: column;
@@ -964,7 +993,7 @@ export default {
 #send-modal .tm-data-msg {
   margin: 2rem 0 2rem 0;
 } */
-/* 
+/*
 @media screen and (max-width: 576px) {
   #send-modal {
     text-align: center;

@@ -53,7 +53,7 @@ export default {
           msg = `must contain only numerals`
           break
         case `between`:
-          msg = `must be between ${prettyDecimals(this.min)} and ${this.max}`
+          msg = `must be between ${prettyDecimals(this.min)} and ${prettyDecimals(this.max)}`
           break
         case `date`:
           msg = `must be a valid date`

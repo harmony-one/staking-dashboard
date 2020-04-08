@@ -192,7 +192,7 @@ export default {
   display: flex;
   justify-content: center;
   align-content: space-between;
-  
+
   color: white;
   padding: var(--unit);
   background: var(--blue);

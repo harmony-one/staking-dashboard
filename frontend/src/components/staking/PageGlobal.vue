@@ -41,10 +41,9 @@
           />
         </div>
 
-        <div v-if="false" class="table-border">
+        <div class="table-border validatorTable">
           <TableRankedValidators
-            :raw="networkInfo.raw_stake_distro"
-            :eff="networkInfo.effective_median_stake_distro"
+            :table="networkInfo.table"
             :data="validators"
           />
         </div>
@@ -127,9 +126,6 @@ export default {
   name: `tab-validators`,
   components: {
     PageContainer,
-    TmField,
-    TmBtn,
-    TmDataLoading,
     TableRankedValidators,
 
     //charts
@@ -170,6 +166,7 @@ export default {
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
+      if (state.connection) console.log(state.connection.networkInfo)
       // console.log(state.networkInfo)
       // console.log(state.allValidators)
       return state.allValidators
@@ -203,11 +200,6 @@ export default {
 }
 .chart-border {
   margin-bottom: var(--double);
-  > div {
-    .chart-container {
-      border-radius: none;
-    }
-  }
 }
 
 .table-border {
@@ -286,6 +278,13 @@ export default {
     > .widget-container:nth-child(odd) {
       margin-right: 0;
     }
+  }
+  .validatorTable {
+    margin-left: calc(-2 * var(--unit)) !important;
+    width: calc(100vw - 1px);
+    border-left: none !important;
+    border-right: none !important;
+    border-radius: 0 !important;
   }
 }
 

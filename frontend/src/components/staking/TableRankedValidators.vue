@@ -47,6 +47,10 @@ export default {
       type: Array,
       default: () => []
     },
+    table: {
+      type: Array,
+      default: () => []
+    },
     activeOnly: {
       type: Boolean,
       default: () => true
@@ -79,7 +83,7 @@ export default {
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
       {
-        raw, eff,
+        table,
         data,
         pool,
         annualProvision,
@@ -88,22 +92,16 @@ export default {
         distribution
       } = this
     ) {
-
       return data.map(v => {
 
-        const total_stake = zeroDecimals(ones(v.total_stake))
-        const stakes = raw.map((raw, i) => ({ raw: zeroDecimals(ones(raw)), eff: eff[i] }))
-        const stake = stakes.find((s, i) => {
-          // console.log(total_stake, s.raw)
-          if (total_stake === s.raw) return true
-        })
+        const stake_data = table.find((t) => t.address === v.address)
 
         const delegation = this.delegates.delegates.find(
           d => d.validator_address === v.operator_address
         )
 
         return Object.assign({}, v, {
-          ...stake,
+          ...stake_data,
           small_moniker: v.moniker.toLowerCase(),
           my_delegations: delegation ? delegation.amount : 0,
           rewards:
@@ -132,21 +130,38 @@ export default {
     columns() {
       let props = [
         {
+          title: `Slots`,
+          value: `slot`,
+          tooltip: `The slots occupied by this Validator (in chart above)`,
+          align: 'right',
+          width: "130px",
+        },
+        {
           title: `Name`,
           value: `name`,
           tooltip: `The validator's moniker`,
           renderComponent: ValidatorName
         },
         {
-          title: `EPOS`,
-          value: `eff`,
-          tooltip: `Effective Stake`,
+          title: `Bid`,
+          value: `bid`,
+          tooltip: `Bid per BLS key`,
+          width: "130px",
+          align: 'right',
           render: value => zeroDecimals(ones(value))
         },
         {
-          title: `STAKE`,
+          title: `Effective`,
+          value: `effective_stake`,
+          tooltip: `Validator's effective ONE staked`,
+          width: "130px",
+          align: 'right',
+          render: value => zeroDecimals(ones(value))
+        },
+        {
+          title: `Total`,
           value: `total_stake`,
-          tooltip: `Stake of validator`,
+          tooltip: `Validator's total ONE staked`,
           width: "130px",
           align: 'right',
           render: value => zeroDecimals(ones(value))
@@ -154,11 +169,11 @@ export default {
       ]
 
       if (this.$mq === "tab") {
-        const keep = ["name", "apr", "total_stake"]
+        const keep = ["slot", "name", "effective_stake", "total_stake"]
         props = props.filter(p => keep.includes(p.value))
       }
       if (this.$mq === "sm" || this.$mq === "md") {
-        const keep = ["name", "apr"]
+        const keep = ["name", "total_stake"]
         props = props.filter(p => keep.includes(p.value))
       }
 

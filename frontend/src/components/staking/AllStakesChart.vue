@@ -132,11 +132,22 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .chart-container {
   background: white;
   border: 1px solid var(--light2);
   padding: var(--unit);
   border-radius: var(--unit);
 }
+
+@media screen and (max-width: 414px) {
+  .chart-container {
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    width: 100vw;
+    margin-left: -32px;
+  }
+}
+
 </style>

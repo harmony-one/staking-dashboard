@@ -26,6 +26,10 @@ const removeCollection = collectionId => {
 db.listCollections().then(res => {
   res.reduce((asyncRes, collection) => {
     const { collectionId } = collection._queryOptions
+    if (!collectionId.startsWith('stressnet')) {
+      return
+    }
+    console.log(`delete ${collectionId}`)
 
     if (collectionId.includes(DELETED_COLLECTION_SUFFIX)) {
       return asyncRes

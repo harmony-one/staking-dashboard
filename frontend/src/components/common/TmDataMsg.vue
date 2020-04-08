@@ -1,7 +1,10 @@
 <template>
   <div class="tm-data-msg">
     <div class="tm-data-msg__icon">
-      <i :class="spinnerClass" class="material-icons">{{ icon }}</i>
+      <i v-if="icon" :class="spinnerClass" class="material-icons">{{ icon }}</i>
+      <slot v-else name="image">
+        {{ image }}
+      </slot>
     </div>
     <div class="tm-data-msg__text">
       <h2 class="tm-data-msg__title">
@@ -34,6 +37,10 @@ export default {
       type: String,
       default: null
     },
+    image: {
+      type: String,
+      default: null
+    },
     spin: {
       type: Boolean,
       default: false
@@ -52,7 +59,7 @@ export default {
   padding: var(--unit);
   display: flex;
   align-items: center;
-  
+
   background: white;
 }
 

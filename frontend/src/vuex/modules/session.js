@@ -88,7 +88,10 @@ export default () => {
     },
     setModalId(state, modalId) {
       state.modalId = modalId
-    }
+    },
+    setExtensionId(state, extensionId) {
+      state.extensionId = extensionId
+    },
   }
 
   const actions = {

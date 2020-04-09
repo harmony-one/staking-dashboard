@@ -4,7 +4,7 @@
       :sort="sort"
       :columns="columns"
       :data="showingValidators"
-      :onRowClick="onClickValidator"
+      :on-row-click="onClickValidator"
     />
   </div>
 </template>
@@ -120,7 +120,7 @@ export default {
             tooltip: `APR %`,
             width: "140px",
             align: "right",
-            render: value => percent(value)
+            render: value => percent(value / 100)
           }
         ])
       }

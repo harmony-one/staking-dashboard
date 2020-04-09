@@ -4,7 +4,7 @@
       :sort="sort"
       :columns="columns"
       :data="showingValidators"
-      :onRowClick="onClickValidator"
+      :on-row-click="onClickValidator"
     />
     <PanelPagination :pagination="pagination" :total="totalFound" />
   </div>
@@ -130,15 +130,15 @@ export default {
           value: `apr`,
           tooltip: `APR %`,
           width: "130px",
-          align: 'right',
-          render: value => percent(value)
+          align: "right",
+          render: value => percent(value / 100)
         },
         {
           title: `STAKE`,
           value: `total_stake`,
           tooltip: `Stake of validator`,
           width: "130px",
-          align: 'right',
+          align: "right",
           render: value => zeroDecimals(ones(value))
         },
         {
@@ -146,7 +146,7 @@ export default {
           value: `rate`,
           tooltip: `Commission fees`,
           width: "96px",
-          align: 'right',
+          align: "right",
           render: value => percent(value) // render as function - do format value here
         },
         {
@@ -154,7 +154,7 @@ export default {
           value: `uptime_percentage`,
           tooltip: `Percentage validator has been elected vs. not`,
           width: "96px",
-          align: 'right',
+          align: "right",
           render: value => percent(value)
         }
       ]

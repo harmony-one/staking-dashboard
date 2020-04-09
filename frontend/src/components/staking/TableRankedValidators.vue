@@ -64,9 +64,9 @@ export default {
       //slice it just in case
       data = data.slice()
       if (property === 'name') {
-        data.sort((a, b) => a > b ? 1 : -1)
+        console.log('name sort')
+        data.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
         if (order === 'desc') data.reverse()
-        console.log(data)
         return data
       }
       data = data.sort((a, b) => {

@@ -2,11 +2,14 @@
   <div :class="['widget-container', type ? type : ''].join(' ')">
     <div class="widget-portfolio-light">
       <div
-        v-if="title"
         v-info-style
+        v-if="title && tooltip"
         v-tooltip.top="tooltip"
         class="widget-title"
       >
+        {{ title }}
+      </div>
+      <div v-else-if="title" class="widget-title">
         {{ title }}
       </div>
       <div class="widget-body">

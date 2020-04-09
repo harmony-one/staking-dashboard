@@ -26,38 +26,37 @@
         </div>
 
         <div>
-
           <div class="widget-row">
-
-            <LightWidget title="Stake & Delegation history">
+            <LightWidget
+              title="Stake & Delegation history"
+              :tooltip="tooltips.v_profile.stake_delegation_history"
+            >
               <StakeHistoryBlock
                 :history="validatorHistory"
                 :validator="validator"
               />
             </LightWidget>
-            <LightWidget title="Reward rate history">
+            <LightWidget
+              title="Reward rate history"
+              :tooltip="tooltips.v_profile.reward_rate_history"
+            >
               <RewardHistoryBlock
                 :history="validatorHistory"
                 :validator="validator"
               />
             </LightWidget>
-
-
           </div>
           <div class="widget-row">
-
-            <LightWidget title="Delegators">
-              <DelegatorBlock
-                :validator="validator"
-              />
+            <LightWidget
+              title="Delegators"
+              :tooltip="tooltips.v_profile.delegators"
+            >
+              <DelegatorBlock :validator="validator" />
             </LightWidget>
             <LightWidget v-if="allHistory.length" title="Event history">
               <EventHistoryBlock :events="eventsHistory" />
             </LightWidget>
-
           </div>
-
-          
         </div>
       </div>
     </template>
@@ -89,6 +88,7 @@ import {
 } from "../../../mock-service"
 import { formatByStep, generateEventHistory } from "./helpers"
 import { SECONDS_PER_EPOCH } from "@/constants/time-constants"
+import tooltips from "src/components/tooltips"
 
 export default {
   name: `page-validator-charts`,
@@ -113,7 +113,8 @@ export default {
     loading: true,
     validator: {},
     validatorHistory: [],
-    allHistory: []
+    allHistory: [],
+    tooltips
   }),
   computed: {
     ...mapState([`connection`]),
@@ -175,8 +176,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-
 .widget-row {
   display: flex;
   flex-direction: row;

@@ -2,7 +2,9 @@
   <div class="card-white validator-info">
     <ul class="row">
       <li class="row">
-        <h4>Uptime (AVG)</h4>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.uptime_avg">
+          Uptime (AVG)
+        </h4>
         <span id="page-profile__uptime">{{
           validator.uptime_percentage | percent | notAvailable
         }}</span>
@@ -12,19 +14,23 @@
         <span>{{ validator.rate | percent | notAvailable }}</span>
       </li>
       <li class="row">
-        <h4>Slots</h4>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.slots">Slots</h4>
         <span>{{ validator.active_nodes || 0 }}</span>
       </li>
       <li class="row">
-        <h4>Elected Slots</h4>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.elected_slots">
+          Elected Slots
+        </h4>
         <span>{{ validator.elected_nodes || 0 }}</span>
       </li>
       <li class="row">
-        <h4>APR</h4>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.apr">
+          APR
+        </h4>
         <span>{{ (validator.apr / 100) | percent | notAvailable }}</span>
       </li>
       <li class="row">
-        <h4>Shards</h4>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.shards">Shards</h4>
         <span>{{ shardIDs }}</span>
       </li>
     </ul>
@@ -33,13 +39,10 @@
 <script>
 import { mapState } from "vuex"
 import { ones, percent, twoDecimals } from "scripts/num"
-import validators from "../../../vuex/modules/validators"
+import tooltips from "src/components/tooltips"
 
 export default {
   name: `perfomance-block`,
-  filters: {
-    percent
-  },
   // methods: {
   //   ones, percent, twoDecimals, noBlanks
   // },
@@ -53,6 +56,7 @@ export default {
     }
   },
   props: ["validator"],
+  data: () => ({ tooltips }),
   computed: {
     ...mapState([`session`]),
     selfStake() {

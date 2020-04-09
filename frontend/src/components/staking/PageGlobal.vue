@@ -166,14 +166,23 @@ export default {
     validators: state => state.allValidators,
     enrichedValidators: function() {
       const { table } = this.networkInfo
-      const data = this.allValidators.map((v) => {
-        const stake_data = table.find((t) => t.address === v.address)
-        return Object.assign({}, v, {
-          ...stake_data,
-          name: v.name.toLowerCase(),
-          small_moniker: v.moniker.toLowerCase(),
-        })
+
+      const data = table.map((t) => {
+        const validator = this.allValidators.find((v) => t.address === v.address)
+        return {
+          ...validator, ...t,
+          name: validator.name.toLowerCase(),
+          small_moniker: validator.moniker.toLowerCase(),
+        }
       })
+      // const data = this.allValidators.map((v) => {
+      //   const stake_data = table.find((t) => t.address === v.address)
+      //   return Object.assign({}, v, {
+      //     ...stake_data,
+      //     name: v.name.toLowerCase(),
+      //     small_moniker: v.moniker.toLowerCase(),
+      //   })
+      // })
       return data
     },
   },

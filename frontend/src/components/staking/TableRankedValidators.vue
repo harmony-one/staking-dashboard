@@ -14,7 +14,6 @@
 import { mapGetters, mapState } from "vuex"
 import { expectedReturns } from "scripts/returns"
 import BaseGrid from "src/components/ui/BaseGrid"
-import PanelPagination from "src/components/ui/BaseGrid/PanelPagination"
 
 import ValidatorStatus from "./components/ValidatorStatus"
 import ValidatorName from "./components/ValidatorName"
@@ -32,7 +31,6 @@ export default {
   name: `table-validators`,
   components: {
     BaseGrid,
-    PanelPagination
   },
   props: {
     data: {
@@ -61,6 +59,7 @@ export default {
         sort: { property, order },
       } = this
     ) {
+      
       //slice it just in case
       data = data.slice()
       if (property === 'name') {
@@ -139,8 +138,6 @@ export default {
     this.$store.dispatch(`getPool`)
     this.$store.dispatch(`getRewardsFromMyValidators`)
     this.$store.dispatch(`getMintingParameters`)
-
-    // this.getValidators()
   },
   methods: {
     onClickValidator(validator) {
@@ -149,17 +146,6 @@ export default {
         params: { validator: validator.operator_address }
       })
     },
-    getValidators() {
-      // this.$store.dispatch(`getValidatorsWithParams`, {
-      //   active: this.activeOnly,
-      //   page: 0,
-      //   size: this.validators.totalActive,
-
-      //   sortProperty: this.sort.property,
-      //   sortOrder: this.sort.order,
-      //   search: this.search
-      // })
-    }
   }
 }
 </script>

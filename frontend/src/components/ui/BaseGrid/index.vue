@@ -82,7 +82,7 @@ export default {
 .table-headings-wrap {
   @include table-row;
   position: relative;
-  height: 50px;
+  min-height: 48px;
 }
 
 .table-wrap {
@@ -117,8 +117,11 @@ export default {
       padding: 0 var(--unit) 0 0;
       cursor: pointer;
       border-bottom: 1px solid var(--light2);
-      min-height: 60px;
+      min-height: 48px;
       overflow: hidden;
+    }
+    .table-cell:nth-child(odd) {
+      background: #00ADE810;
     }
     .table-cell:last-child {
       border-bottom: none;

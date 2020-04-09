@@ -91,7 +91,6 @@ import TmBalance from "./TmBalance"
 import DelegationsOverview from "staking/DelegationsOverview"
 import Undelegations from "staking/Undelegations"
 import StakeAllocationBlock from "./StakeAllocationBlock"
-import Widget from "./components/Widget"
 import LightWidget from "./components/LightWidget"
 import moment from "moment"
 
@@ -103,7 +102,6 @@ export default {
     Undelegations,
     DelegationsOverview,
     TmBalance,
-    Widget,
     LightWidget,
   },
   data: () => ({
@@ -123,10 +121,7 @@ export default {
       if (this.delegates.loading) {
         return []
       }
-
       const delegates = this.delegates.delegates.filter((d) => d.amount > 0)
-
-      console.log(delegates)
 
       return delegates
         ? delegates.map(d => ({

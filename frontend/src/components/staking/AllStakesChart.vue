@@ -21,7 +21,7 @@ import { ones, zeroDecimals } from "../../scripts/num"
 export default {
   name: "AllStakesChart",
   components: { ChartBar },
-  props: ["raw", "eff", "median", "networkInfo"],
+  props: ["raw", "eff", "median", "networkInfo", "validators"],
   computed: {
     median: function() {
       console.log('MEDIAN', this.median)
@@ -84,7 +84,6 @@ export default {
   },
   computed: {
     chartdata() {
-
 
       const data = this.raw.map((v, i) => ({ raw: Math.floor(ones(v)), eff: Math.floor(ones(this.eff[i])) }))
         .sort((a, b) => a.raw - b.raw).reverse()

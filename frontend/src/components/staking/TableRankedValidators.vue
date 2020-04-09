@@ -3,10 +3,10 @@
     <BaseGrid
       :sort="sort"
       :columns="columns"
-      :data="showingValidators"
+      :data="enrichedValidators"
       :onRowClick="onClickValidator"
     />
-    <PanelPagination :pagination="pagination" :total="totalFound" />
+    <!-- <PanelPagination :pagination="pagination" :total="totalFound" /> -->
   </div>
 </template>
 
@@ -39,93 +39,48 @@ export default {
       type: Array,
       default: () => []
     },
-    raw: {
-      type: Array,
-      default: () => []
-    },
-    eff: {
-      type: Array,
-      default: () => []
-    },
-    table: {
-      type: Array,
-      default: () => []
-    },
-    activeOnly: {
-      type: Boolean,
-      default: () => true
-    },
-    search: {
-      type: String,
-      default: () => ""
-    }
   },
   data: () => ({
-    query: ``,
     sort: {
-      property: `apr`,
-      order: `desc`
+      property: `slot`,
+      order: `asc`
     },
-    pagination: {
-      pageIndex: 0,
-      pageSize: 20
-    },
-    fetchTimeoutId: null
   }),
+  watch: {
+    "sort.order": function() {
+      return this.enrichedValidators
+    },
+    "sort.property": function() {
+      return this.enrichedValidators
+    },
+  },
   computed: {
-    ...mapState([`distribution`, `pool`, `session`, "delegates", "validators"]),
-    ...mapState({
-      annualProvision: state => state.minting.annualProvision
-    }),
-    ...mapState({
-      totalFound: state => state.validators.totalFound
-    }),
-    ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
       {
-        table,
         data,
-        pool,
-        annualProvision,
-        committedDelegations,
-        session,
-        distribution
+        sort: { property, order },
       } = this
     ) {
-      return data.map(v => {
-
-        const stake_data = table.find((t) => t.address === v.address)
-
-        const delegation = this.delegates.delegates.find(
-          d => d.validator_address === v.operator_address
-        )
-
-        return Object.assign({}, v, {
-          ...stake_data,
-          small_moniker: v.moniker.toLowerCase(),
-          my_delegations: delegation ? delegation.amount : 0,
-          rewards:
-            session.signedIn && distribution.rewards[v.operator_address]
-              ? distribution.rewards[v.operator_address][this.bondDenom]
-              : 0,
-          expectedReturns: annualProvision
-            ? expectedReturns(
-                v,
-                parseInt(pool.pool.bonded_tokens),
-                parseFloat(annualProvision)
-              )
-            : undefined
-        })
+      //slice it just in case
+      data = data.slice()
+      if (property === 'name') {
+        data.sort((a, b) => a > b ? 1 : -1)
+        if (order === 'desc') data.reverse()
+        console.log(data)
+        return data
+      }
+      data = data.sort((a, b) => {
+        a = a[property]
+        b = b[property]
+        try {
+          if (property === 'slot') {
+            a = parseInt(a.split('-')[0])
+            b = parseInt(b.split('-')[0])
+          }
+        } catch(e) {} //don't interfere if slot data isn't perfect
+        return order === 'asc' ? a - b : b - a
       })
-    },
-    sortedEnrichedValidators() {
-      return this.enrichedValidators.slice(0)
-    },
-    startIndex() {
-      return this.pagination.pageIndex * this.pagination.pageSize
-    },
-    showingValidators() {
-      return this.sortedEnrichedValidators
+      return data
     },
     columns() {
       let props = [
@@ -134,7 +89,7 @@ export default {
           value: `slot`,
           tooltip: `The slots occupied by this Validator (in chart above)`,
           align: 'right',
-          width: "130px",
+          width: "96px",
         },
         {
           title: `Name`,
@@ -180,34 +135,12 @@ export default {
       return props
     }
   },
-  watch: {
-    activeOnly: function() {
-      this.getValidators()
-    },
-    "sort.order": function() {
-      this.getValidators()
-    },
-    "sort.property": function() {
-      this.getValidators()
-    },
-    "pagination.pageIndex": function() {
-      this.getValidators()
-    },
-    search: function() {
-      clearTimeout(this.fetchTimeoutId)
-
-      this.fetchTimeoutId = setTimeout(() => {
-        this.pagination.pageIndex = 0
-        this.getValidators()
-      }, 300)
-    }
-  },
   mounted() {
     this.$store.dispatch(`getPool`)
     this.$store.dispatch(`getRewardsFromMyValidators`)
     this.$store.dispatch(`getMintingParameters`)
 
-    this.getValidators()
+    // this.getValidators()
   },
   methods: {
     onClickValidator(validator) {
@@ -217,14 +150,15 @@ export default {
       })
     },
     getValidators() {
-      this.$store.dispatch(`getValidatorsWithParams`, {
-        active: this.activeOnly,
-        page: this.pagination.pageIndex,
-        size: this.pagination.pageSize,
-        sortProperty: this.sort.property,
-        sortOrder: this.sort.order,
-        search: this.search
-      })
+      // this.$store.dispatch(`getValidatorsWithParams`, {
+      //   active: this.activeOnly,
+      //   page: 0,
+      //   size: this.validators.totalActive,
+
+      //   sortProperty: this.sort.property,
+      //   sortOrder: this.sort.order,
+      //   search: this.search
+      // })
     }
   }
 }

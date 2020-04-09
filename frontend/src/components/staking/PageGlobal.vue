@@ -38,13 +38,13 @@
             :eff="networkInfo.effective_median_stake_distro"
             :median="networkInfo.effective_median_stake | ones"
             :networkInfo="networkInfo"
+            :validators="validators"
           />
         </div>
 
         <div class="table-border validatorTable">
           <TableRankedValidators
-            :table="networkInfo.table"
-            :data="validators"
+            :data="enrichedValidators"
           />
         </div>
       </div>
@@ -142,10 +142,6 @@ export default {
     zeroDecimals,
     twoDecimals
   },
-  data: () => ({
-    searchTerm: "",
-    activeOnly: true
-  }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
@@ -163,30 +159,35 @@ export default {
     ...mapState({ totalStake: 
       state => state.connection.networkInfo ? state.connection.networkInfo['total-staking'] : null
     }),
-    activeValidators: state =>
-      state.allValidators.filter(v => v.active === true),
-    validators: state => {
-      if (state.connection) console.log(state.connection.networkInfo)
-      // console.log(state.networkInfo)
-      // console.log(state.allValidators)
-      return state.allValidators
-    },
-    prettyTransactionHash() {
-      return this.networkInfo.current_block_hash
-        ? transactionToShortString(this.networkInfo.current_block_hash)
-        : ""
-    },
-    linkToTransaction() {
-      const blocksUrl = this.networkConfig.explorer_url
-        ? this.networkConfig.explorer_url.replace("tx", "block")
-        : ""
 
-      return blocksUrl + this.networkInfo.current_block_hash
-    }
+    //computed
+
+    activeValidators: state => state.allValidators.filter(v => v.active === true),
+    validators: state => state.allValidators,
+    enrichedValidators: function() {
+      const { table } = this.networkInfo
+      const data = this.allValidators.map((v) => {
+        const stake_data = table.find((t) => t.address === v.address)
+        return Object.assign({}, v, {
+          ...stake_data,
+          name: v.name.toLowerCase(),
+          small_moniker: v.moniker.toLowerCase(),
+        })
+      })
+      return data
+    },
   },
   async mounted() {
-    // this.$store.dispatch(`getValidators`)
+    console.log(this.totalActive)
     this.$store.dispatch("getDelegates")
+    this.$store.dispatch(`getValidatorsWithParams`, {
+        active: true,
+        page: 0,
+        size: this.totalActive,
+        sortProperty: 'slot',
+        sortOrder: 'asc',
+        search: ''
+      })
   }
 }
 </script>

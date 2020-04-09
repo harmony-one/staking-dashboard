@@ -8,15 +8,19 @@
       <div class="networkInfo">
         <div class="networkInfo-column">
           <div id="validators_median_stake" class="networkInfo-item">
-            <h4>Effective median stake:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
+              Effective median stake:
+            </h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
-            <h4>Total stake:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
-            <h4>Current block number:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.current_block_number">
+              Current block number:
+            </h4>
             <a :href="linkToTransaction" target="_blank">
               #{{ networkInfo.current_block_number }}
             </a>
@@ -33,6 +37,7 @@
           <div class="toggles">
             <TmBtn
               value="Elected"
+              v-tooltip.top="tooltips.v_list.elected"
               :number="totalActive"
               class="btn-radio secondary"
               :type="activeOnly ? `active` : `secondary`"
@@ -40,6 +45,7 @@
             />
             <TmBtn
               value="All"
+              v-tooltip.top="tooltips.v_list.all"
               :number="total"
               class="btn-radio secondary"
               :type="!activeOnly ? `active` : `secondary`"
@@ -74,6 +80,7 @@ import TmBtn from "common/TmBtn"
 import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
+import tooltips from "src/components/tooltips"
 import PercentageChange from "./components/PercentageChange"
 
 export default {
@@ -83,7 +90,7 @@ export default {
     PageContainer,
     TmField,
     TmBtn,
-    TmDataLoading,
+    TmDataLoading
   },
   filters: {
     ones,
@@ -92,6 +99,7 @@ export default {
     twoDecimals
   },
   data: () => ({
+    tooltips,
     searchTerm: "",
     activeOnly: true
   }),
@@ -135,20 +143,19 @@ export default {
 </script>
 
 <style lang="scss">
-
-.validatorTable, .networkInfo {
+.validatorTable,
+.networkInfo {
   background: white;
   margin: var(--double) 0;
   border-radius: var(--unit);
   border: 1px solid var(--light2);
 }
 .validatorTable {
-    overflow: hidden;
+  overflow: hidden;
   padding: var(--unit);
 }
 
 .networkInfo {
-  
   &-column {
     display: flex;
   }
@@ -169,7 +176,6 @@ export default {
   }
 }
 
-
 .filterOptions {
   display: flex;
   justify-content: space-between;
@@ -180,9 +186,9 @@ export default {
       background: white;
       border: 1px solid var(--light2);
       border-radius: var(--double) !important;
-      
+
       &.secondary {
-        background:white;
+        background: white;
         color: var(--gray);
       }
       &.active {
@@ -211,16 +217,13 @@ export default {
   }
 }
 
-
 .no-results {
   text-align: center;
   margin: 3rem;
   color: var(--dim);
 }
 
-
 @media screen and (max-width: 414px) {
-
   .validatorTable {
     margin-left: calc(-2 * var(--unit)) !important;
     width: calc(100vw - 1px);
@@ -230,15 +233,14 @@ export default {
   }
 
   .filterOptions {
-    width: 100vw; 
+    width: 100vw;
     height: 48px;
     .toggles {
       text-align: right;
       margin-right: 8px;
       transform: scale(0.8);
-      width: 100vw; 
+      width: 100vw;
     }
   }
 }
-
 </style>

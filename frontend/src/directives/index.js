@@ -12,3 +12,10 @@ export const focusParentLast = {
     }
   }
 }
+
+export const tooltipStyles = {
+  update: function(el) {
+    el.style.display = "inline-block"
+    el.style.userSelect = "none"
+  }
+}

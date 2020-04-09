@@ -12,6 +12,7 @@
 <script>
 import { mapGetters, mapState } from "vuex"
 import orderBy from "lodash.orderby"
+import tooltips from 'src/components/tooltips';
 
 import {
   percent,
@@ -75,14 +76,14 @@ export default {
         {
           title: `Status`,
           value: `status`,
-          tooltip: `The validator's status`,
+          tooltip: tooltips.portfolio.status,
           width: "96px",
           renderComponent: ValidatorStatus // render as Component - use custom Vue components
         },
         {
           title: `Name`,
           value: `name`,
-          tooltip: `The validator's moniker`,
+          tooltip: tooltips.portfolio.name,
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
@@ -99,7 +100,7 @@ export default {
           {
             title: `Ending in`,
             value: `remaining_epoch`,
-            tooltip: `Ending in`,
+            tooltip: tooltips.portfolio.ending_in,
             align: "right",
             width: "160px",
             render: value => value + " epochs"
@@ -110,14 +111,14 @@ export default {
           {
             title: `Reward (up to date)`,
             value: `rewards`,
-            tooltip: `Reward (up to date)`,
+            tooltip: tooltips.portfolio.reward_up_to_date,
             width: "200px",
             render: value => fourDecimals(ones(value)) + " ONE"
           },
           {
-            title: `APR %`,
+            title: `APR % (AVG)`,
             value: `apr`,
-            tooltip: `APR %`,
+            tooltip: tooltips.portfolio.apr_avg,
             width: "140px",
             align: "right",
             render: value => percent(value / 100)

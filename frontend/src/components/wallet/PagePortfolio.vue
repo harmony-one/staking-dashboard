@@ -13,14 +13,22 @@
           <LightWidget title="Summary" class="balance">
             <TmBalance />
           </LightWidget>
-          <LightWidget title="Stake allocation" class="delegations">
+          <LightWidget
+            :tooltip="tooltips.portfolio.portfolio_allocation"
+            title="Portfolio allocation"
+            class="delegations"
+          >
             <div v-if="delegation.loading" class="delegation-body">
               Loading...
             </div>
             <div v-else-if="!delegations.length" class="delegation-body">
               No delegations in your portfolio
             </div>
-            <StakeAllocationBlock v-else :delegations="delegations" class="delegation-body" />
+            <StakeAllocationBlock
+              v-else
+              :delegations="delegations"
+              class="delegation-body"
+            />
           </LightWidget>
         </div>
         <DelegationsOverview />
@@ -63,8 +71,8 @@
     }
   }
 
-
-  .delegation-body, .time-body {
+  .delegation-body,
+  .time-body {
     padding: 0 var(--unit);
     text-align: center;
   }
@@ -93,6 +101,7 @@ import Undelegations from "staking/Undelegations"
 import StakeAllocationBlock from "./StakeAllocationBlock"
 import LightWidget from "./components/LightWidget"
 import moment from "moment"
+import tooltips from "src/components/tooltips"
 
 export default {
   name: `page-portfolio`,
@@ -102,9 +111,11 @@ export default {
     Undelegations,
     DelegationsOverview,
     TmBalance,
-    LightWidget,
+    Widget,
+    LightWidget
   },
   data: () => ({
+    tooltips,
     lastUpdate: 0,
     lastEpochTime: moment()
       .add(-1, "day")
@@ -121,7 +132,8 @@ export default {
       if (this.delegates.loading) {
         return []
       }
-      const delegates = this.delegates.delegates.filter((d) => d.amount > 0)
+
+      const delegates = this.delegates.delegates.filter(d => d.amount > 0)
 
       return delegates
         ? delegates.map(d => ({

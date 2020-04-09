@@ -1,7 +1,8 @@
 <template>
   <div class="status-container">
     <span
-      :class="status | toClassName"
+      v-tooltip.top="tooltips.v_list[status_class]"
+      :class="status_class"
       class="validator-status"
       :title="status_detailed"
       >{{ status }}</span
@@ -10,12 +11,16 @@
 </template>
 
 <script>
+import tooltips from "src/components/tooltips"
+
+const toClassName = text => text.toLowerCase().replace(/ /g, "_")
+
 export default {
   name: `validator-status`,
   props: ["data"],
-  filters: {
-    toClassName: text => text.toLowerCase().replace(/ /g, "_")
-  },
+  data: () => ({
+    tooltips
+  }),
   computed: {
     status() {
       if (
@@ -26,6 +31,9 @@ export default {
       )
         return `Not elected`
       return `Elected`
+    },
+    status_class() {
+      return toClassName(this.status)
     },
     status_detailed() {
       if (this.data.jailed) return `Temporally banned from the network`

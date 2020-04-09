@@ -171,18 +171,13 @@ export default {
       const { table } = this.networkInfo
       if (!table) return []
 
-      const data = table.map((t) => {
-
-        const validator = this.allValidators && this.allValidators.find((v) => t.address === v.address)
-        if (!validator) return {
-          name: 'not found', operator_address: t.address, ...t
-        }
-        return {
-          ...validator, ...t,
-          name: validator.name.toLowerCase(),
-          small_moniker: validator.moniker.toLowerCase(),
-        }
-      })
+      const data = table.map((t) => ({
+        ...t,
+        moniker: t.name,
+        small_moniker: t.name.toLowerCase(),
+        operator_address: t.address,
+      }))
+      console.log(data)
       return data
     },
     linkToTransaction() {
@@ -192,23 +187,22 @@ export default {
       return blocksUrl + this.networkInfo.current_block_hash
     },
   },
-  watch: {
-    totalActive: function() {
-      console.log(this.totalActive)
-      console.log(this)
-    },
-  },
+  // watch: {
+  //   totalActive: function() {
+  //     console.log(this.totalActive)
+  //   },
+  // },
   async mounted() {
     console.log(this.networkInfo.table.length)
     this.$store.dispatch("getDelegates")
-    this.$store.dispatch(`getValidatorsWithParams`, {
-      active: true,
-      page: 0,
-      size: 200,
-      sortProperty: "slot",
-      sortOrder: "asc",
-      search: "",
-    })
+    // this.$store.dispatch(`getValidatorsWithParams`, {
+    //   active: true,
+    //   page: 0,
+    //   size: 200,
+    //   sortProperty: "slot",
+    //   sortOrder: "asc",
+    //   search: "",
+    // })
   }
 }
 </script>

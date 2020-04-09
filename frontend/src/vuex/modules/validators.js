@@ -14,6 +14,7 @@ export default () => {
     async getValidatorsWithParams({ commit, rootState }, params) {
       // commit("setLoading", true)
       let data
+      // API has hard cap, this will split requests and concat results after all requests are back
       if (params.size > 100) {
         const pages = Math.ceil(params.size / 100)
         data = []

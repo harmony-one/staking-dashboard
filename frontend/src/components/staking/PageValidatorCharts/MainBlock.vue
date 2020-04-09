@@ -1,6 +1,5 @@
 <template>
   <div class="validator-main-block">
-
     <div class="validator">
       <td class="data-table__row__info">
         <ValidatorLogo
@@ -13,27 +12,44 @@
           <h2>{{ validator.moniker }}</h2>
           <div class="validator-amounts">
             <div>
-              <span>Total Staked:</span>
+              <span
+                v-info-style
+                v-tooltip.left="tooltips.v_profile.total_staked"
+                >Total Staked:</span
+              >
               <h4>
                 {{ validator.total_stake | ones | zeroDecimals | noBlanks }}
               </h4>
             </div>
 
             <div>
-              <span>Delegated:</span>
+              <span v-info-style v-tooltip.left="tooltips.v_profile.delegated"
+                >Delegated:</span
+              >
               <h4>{{ delegatedStake | ones | zeroDecimals | noBlanks }}</h4>
             </div>
             <div>
-              <span>Self Stake:</span>
+              <span v-info-style v-tooltip.left="tooltips.v_profile.self_stake"
+                >Self Stake:</span
+              >
               <h4>
                 {{ validatorSelfStakeAmount | ones | zeroDecimals | noBlanks }}
               </h4>
             </div>
 
             <div>
-              <span>Max Delegation:</span>
+              <span
+                v-info-style
+                v-tooltip.left="tooltips.v_profile.max_delegation"
+                >Max Delegation:</span
+              >
               <h4>
-                {{ validator.max_total_delegation | ones | zeroDecimals | noBlanks }}
+                {{
+                  validator.max_total_delegation
+                    | ones
+                    | zeroDecimals
+                    | noBlanks
+                }}
               </h4>
             </div>
 
@@ -45,8 +61,6 @@
                 {{ status_detailed }}
               </div>
             </div>
-
-
           </div>
         </div>
       </td>
@@ -97,6 +111,7 @@ import DelegationModal from "src/ActionModal/components/DelegationModal"
 import UndelegationModal from "src/ActionModal/components/UndelegationModal"
 import ValidatorLogo from "../components/ValidatorLogo"
 import isEmpty from "lodash.isempty"
+import tooltips from "src/components/tooltips"
 
 export default {
   name: `main-block`,
@@ -175,6 +190,7 @@ export default {
       return this.selfStake ? this.selfStake.reward : 0
     }
   },
+  data: () => ({ tooltips }),
   methods: {
     percent,
     onDelegation(options) {
@@ -231,11 +247,9 @@ export default {
 <style scoped lang="scss">
 @import "./styles.css";
 
-
 .validator-main-block {
   max-width: 380px;
 }
-
 
 .status-container {
   margin-top: var(--unit);
@@ -244,7 +258,8 @@ export default {
   }
 }
 
-.validator, .button-container {
+.validator,
+.button-container {
   padding: var(--unit) 0;
   padding-bottom: 0;
 }
@@ -300,7 +315,4 @@ export default {
 .validator-main-block .validator-amounts > div span {
   margin-right: 5px;
 }
-
-
-
 </style>

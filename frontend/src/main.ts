@@ -5,7 +5,7 @@ import Tooltip from "vue-directive-tooltip"
 import Vuelidate from "vuelidate"
 import InfiniteScroll from "vue-infinite-scroll"
 import VueClipboard from "vue-clipboard2"
-import { focusElement, focusParentLast } from "src/directives"
+import { tooltipStyles, focusElement, focusParentLast } from "src/directives"
 import App from "./App.vue"
 import init from "./initializeApp"
 import { getURLParams } from "./scripts/url"
@@ -43,6 +43,7 @@ Vue.use(VueMq, {
 })
 
 Vue.directive(`focus`, focusElement)
+Vue.directive(`info-style`, tooltipStyles)
 Vue.directive(`focus-last`, focusParentLast)
 
 const urlParams = getURLParams(window)

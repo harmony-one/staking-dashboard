@@ -19,6 +19,8 @@ import PanelPagination from "src/components/ui/BaseGrid/PanelPagination"
 import ValidatorStatus from "./components/ValidatorStatus"
 import ValidatorName from "./components/ValidatorName"
 
+import tooltips from 'src/components/tooltips';
+
 import {
   percent,
   shortDecimals,
@@ -115,28 +117,28 @@ export default {
         {
           title: `Status`,
           value: `status`,
-          tooltip: `The validator's status`,
+          tooltip: tooltips.v_list.status,
           width: "96px",
           renderComponent: ValidatorStatus // render as Component - use custom Vue components
         },
         {
           title: `Name`,
           value: `name`,
-          tooltip: `The validator's moniker`,
+          tooltip: tooltips.v_list.name,
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
           title: `APR %`,
           value: `apr`,
-          tooltip: `APR %`,
+          tooltip: tooltips.v_list.apr,
           width: "130px",
           align: "right",
           render: value => percent(value / 100)
         },
         {
-          title: `STAKE`,
+          title: `Stake`,
           value: `total_stake`,
-          tooltip: `Stake of validator`,
+          tooltip: tooltips.v_list.stake,
           width: "130px",
           align: "right",
           render: value => zeroDecimals(ones(value))
@@ -144,7 +146,7 @@ export default {
         {
           title: `Fees`,
           value: `rate`,
-          tooltip: `Commission fees`,
+          tooltip: tooltips.v_list.fees,
           width: "96px",
           align: "right",
           render: value => percent(value) // render as function - do format value here
@@ -152,7 +154,7 @@ export default {
         {
           title: `Uptime`,
           value: `uptime_percentage`,
-          tooltip: `Percentage validator has been elected vs. not`,
+          tooltip: tooltips.v_list.uptime,
           width: "96px",
           align: "right",
           render: value => percent(value)

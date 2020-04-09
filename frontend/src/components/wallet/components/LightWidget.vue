@@ -1,7 +1,12 @@
 <template>
   <div :class="['widget-container', type ? type : ''].join(' ')">
     <div class="widget-portfolio-light">
-      <div class="widget-title" v-if="title">
+      <div
+        v-if="title"
+        v-info-style
+        v-tooltip.top="tooltip"
+        class="widget-title"
+      >
         {{ title }}
       </div>
       <div class="widget-body">
@@ -14,7 +19,7 @@
 <script>
 export default {
   name: `widget`,
-  props: ["title", "type"]
+  props: ["title", "type", "tooltip"]
 }
 </script>
 
@@ -31,7 +36,6 @@ export default {
     width: 100%;
   }
 }
-
 
 .widget-container.connected:not(:last-child) {
   margin-right: 0;
@@ -63,13 +67,11 @@ export default {
 }
 
 @media screen and (max-width: 414px) {
-    .widget-container {
-      max-width: calc(100vw - 2 * var(--double));
-    }
-    .widget-body {
-      overflow-x: scroll;
-    }
-
+  .widget-container {
+    max-width: calc(100vw - 2 * var(--double));
+  }
+  .widget-body {
+    overflow-x: scroll;
+  }
 }
-
 </style>

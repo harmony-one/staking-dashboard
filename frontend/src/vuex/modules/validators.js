@@ -13,11 +13,21 @@ export default () => {
   const actions = {
     async getValidatorsWithParams({ commit, rootState }, params) {
       // commit("setLoading", true)
-
-      let data = await fetchValidatorsWithParams(
-        rootState.connection.networkConfig.id,
-        params
-      )
+      let data
+      if (params.size > 100) {
+        const pages = Math.ceil(params.size / 100)
+        data = []
+        for (let i = 0; i < pages; i++) {
+          data.push(await fetchValidatorsWithParams(rootState.connection.networkConfig.id, {
+            ...params, page: i, size: 100
+          }))
+        }
+        const validators = data.reduce((a, c) => a.concat(...c.validators), [])
+        data = data[0]
+        data.validators = validators
+      } else {
+        data = await fetchValidatorsWithParams(rootState.connection.networkConfig.id, params)
+      }
 
       commit("setLoaded", true)
 
@@ -25,6 +35,7 @@ export default () => {
       commit("setTotal", data.total)
       commit("setTotalActive", data.total_active)
       commit("setTotalFound", data.totalFound)
+
 
       return data.validators
     },
@@ -35,7 +46,6 @@ export default () => {
       let validators = await fetchValidators(
         rootState.connection.networkConfig.id
       )
-
       // @ts-ignore
       // window.validators = validators
 

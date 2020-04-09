@@ -153,7 +153,10 @@ export default {
       allValidators: state =>
         state.validators.loaded ? state.validators.validators : [],
       total: state => state.validators.total,
-      totalActive: state => state.validators.totalActive
+      totalActive: state => {
+        console.log(state.validators.totalActive)
+        return state.validators.totalActive
+      }
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
     ...mapState({ totalStake: 
@@ -166,37 +169,46 @@ export default {
     validators: state => state.allValidators,
     enrichedValidators: function() {
       const { table } = this.networkInfo
+      if (!table) return []
 
       const data = table.map((t) => {
-        const validator = this.allValidators.find((v) => t.address === v.address)
+
+        const validator = this.allValidators && this.allValidators.find((v) => t.address === v.address)
+        if (!validator) return {
+          name: 'not found', operator_address: t.address, ...t
+        }
         return {
           ...validator, ...t,
           name: validator.name.toLowerCase(),
           small_moniker: validator.moniker.toLowerCase(),
         }
       })
-      // const data = this.allValidators.map((v) => {
-      //   const stake_data = table.find((t) => t.address === v.address)
-      //   return Object.assign({}, v, {
-      //     ...stake_data,
-      //     name: v.name.toLowerCase(),
-      //     small_moniker: v.moniker.toLowerCase(),
-      //   })
-      // })
       return data
+    },
+    linkToTransaction() {
+      const blocksUrl = this.networkConfig.explorer_url
+        ? this.networkConfig.explorer_url.replace("tx", "block")
+        : ""
+      return blocksUrl + this.networkInfo.current_block_hash
+    },
+  },
+  watch: {
+    totalActive: function() {
+      console.log(this.totalActive)
+      console.log(this)
     },
   },
   async mounted() {
-    console.log(this.totalActive)
+    console.log(this.networkInfo.table.length)
     this.$store.dispatch("getDelegates")
     this.$store.dispatch(`getValidatorsWithParams`, {
-        active: true,
-        page: 0,
-        size: this.totalActive,
-        sortProperty: 'slot',
-        sortOrder: 'asc',
-        search: ''
-      })
+      active: true,
+      page: 0,
+      size: 200,
+      sortProperty: "slot",
+      sortOrder: "asc",
+      search: "",
+    })
   }
 }
 </script>

@@ -1,13 +1,13 @@
 <template>
   <div :class="containerClasses">
     <img
-      v-if="!isImageLoaded && !loadedWithError"
+      v-if="this.name && !isImageLoaded && !loadedWithError"
       class="loader li-validator-image"
       src="~assets/images/loader.svg"
       alt="a small spinning circle to display loading"
     />
     <img
-      v-if="!loadedWithError"
+      v-if="this.name && !loadedWithError"
       :src="this.imageSrc"
       :style="{ display: isImageLoaded ? 'block' : 'none' }"
       class="li-validator-image"
@@ -16,7 +16,7 @@
       @load="isImageLoaded = true"
     />
     <Avatar
-      v-if="loadedWithError"
+      v-if="!this.name || loadedWithError"
       class="li-validator-image"
       alt="generic validator logo - generated avatar from address"
       :address="operatorAddress"

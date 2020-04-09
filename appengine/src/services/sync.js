@@ -105,7 +105,8 @@ module.exports = function (
       return 0
     }
   }
-  const numOfShards = getNumberOfShards()
+
+  let numOfShards = 0
 
   const getActiveValidatorAddressesData = async () => {
     try {
@@ -139,6 +140,19 @@ module.exports = function (
     } catch (err) {
       console.log('error when doing getAllValidatorAddressesData:', err)
     }
+  }
+
+  const filterGlobalCache = async (currentEpoch) => {
+    epoch = parseInt(currentEpoch)
+    while (cache[GLOBAL_VIEW][epoch]) {
+      epoch -= 1
+    }
+    _.keys(cache[GLOBAL_VIEW]).forEach((k) => {
+      const key = parseInt(k)
+      if (key < epoch) {
+        delete cache[GLOBAL_VIEW][key]
+      }
+    })
   }
 
   const syncStakingNetworkInfo = async () => {
@@ -243,6 +257,7 @@ module.exports = function (
       if (cache[GLOBAL_VIEW][currentEpoch - MAX_LENGTH]) {
         delete cache[GLOBAL_VIEW][currentEpoch - MAX_LENGTH]
       }
+      await filterGlobalCache(currentEpoch)
 
       // console.log("getAllValidatorAddressesData", res.data)
       return {
@@ -602,14 +617,18 @@ module.exports = function (
         cur[item] = true
         return cur
       }, new Map())
-      console.log(`KEYS: ${cache[ELECTED_KEYS].keys()}`)
 
+      if (numOfShards === 0) {
+        numOfShards = await getNumberOfShards()
+        console.log(`numOfShards ${numOfShards}`)
+      }
       const externalShards = _.range(numOfShards).map((e) => {
         const total = _.get(
           res,
           `data.result.current.quorum-deciders.shard-${e}.committee-members`
         )
         if (total) {
+          console.log(`total: ${total.length}`)
           return {
             total: total.length,
             external: total.filter((item) => !item['is-harmony-slot']).length,

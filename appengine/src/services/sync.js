@@ -143,16 +143,21 @@ module.exports = function (
   }
 
   const filterGlobalCache = async (currentEpoch) => {
-    epoch = parseInt(currentEpoch)
+    let epoch = parseInt(currentEpoch)
+    const lastEpoch = epoch
     while (cache[GLOBAL_VIEW][epoch]) {
       epoch -= 1
     }
+    console.log(`latest ${epoch}`)
     _.keys(cache[GLOBAL_VIEW]).forEach((k) => {
       const key = parseInt(k)
-      if (key < epoch) {
+      if (key < epoch || key > lastEpoch) {
+        console.log(`delete key ${key}`)
         delete cache[GLOBAL_VIEW][key]
       }
     })
+    console.log(`current ${lastEpoch}, last: ${epoch}`)
+    console.log(`array: ${_.keys(cache[GLOBAL_VIEW])}`)
   }
 
   const syncStakingNetworkInfo = async () => {
@@ -678,6 +683,7 @@ module.exports = function (
       })
       return {
         address,
+        name: cache[VALIDATOR_INFO][address].name,
         effective_stake: total_effective_stake,
         bid: parseFloat(total) / key_num,
         total_stake: parseFloat(total),

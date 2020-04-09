@@ -177,7 +177,6 @@ export default {
         small_moniker: t.name.toLowerCase(),
         operator_address: t.address,
       }))
-      console.log(data)
       return data
     },
     linkToTransaction() {

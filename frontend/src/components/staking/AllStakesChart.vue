@@ -48,7 +48,7 @@ export default {
               if (datasetIndex === 0) {
                 return `${yLabel} effective stake`
               }
-              return `${yLabel} total bids`
+              return `${yLabel} bid`
             }
           }
         },

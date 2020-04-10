@@ -48,7 +48,7 @@ export default {
               if (datasetIndex === 0) {
                 return `${yLabel} effective stake`
               }
-              return `${yLabel} total ONE staked`
+              return `${yLabel} total bids`
             }
           }
         },
@@ -118,7 +118,7 @@ export default {
             borderWidth: 1,
           },
           {
-            label: "ONE Staked",
+            label: "Bid",
             backgroundColor: '#4fe7c888',
             data: rawStake,
             minHeight: 16,

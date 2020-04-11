@@ -1,9 +1,6 @@
 #!/bin/bash
 # Run command: . <path_to_script>/deploy.sh dev/prod [-y]
 
-# 1. Check that firebase service account key file exists
-
-
 _CURR_LOC=$PWD
 _ROOT="$(git rev-parse --show-toplevel)"
 cd $_ROOT/appengine   # Must change to the google cloud app engine project location

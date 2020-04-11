@@ -11,7 +11,9 @@
     "lint": "samples lint",
     "pretest": "npm run lint",
     "test": "samples test app",
-    "database": "node ./db_utils/db.js"
+    "database": "node ./db_utils/db.js",
+    "deploy": ". scripts/deploy.sh process.env.target",
+    "deploy-quiet": ". scripts/deploy.sh process.env.target -y"
   },
   "repository": {
     "type": "git",

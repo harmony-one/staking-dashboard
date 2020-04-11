@@ -16,14 +16,12 @@ const VALIDATOR_INFO = 'VALIDATOR_INFO'
 const VALIDATOR_INFO_HISTORY = 'VALIDATOR_INFO_HISTORY'
 const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
-const STAKING_DISTRO_RAW = 'STAKING_DISTRO_RAW'
 const STAKING_DISTRO_TABLE = 'STAKING_DISTRO_TABLE'
 const GLOBAL_SEATS = 'GLOBAL_SEATS'
 const STAKING_DISTRO = 'STAKING_DISTRO'
 const RAW_STAKE = 'RAW_STAKE'
 const MAX_LENGTH = 30
 const GLOBAL_VIEW = 'GLOBAL_VIEW'
-const VOTING_POWER = 'VOTING_POWER'
 const ELECTED_KEYS = 'ELECTED_KEYS'
 const BLS_KEYS = 'BLS_KEYS'
 const SECOND_PER_BLOCK = 8
@@ -437,13 +435,13 @@ module.exports = function (
           apr: _.get(result, 'lifetime.apr', null),
         }
 
-        if (Array.isArray(res['bls-public-keys'])) {
-          const rawStake =
-            parseFloat(totalStake) / res['bls-public-keys'].length
-          res['bls-public-keys'].forEach((e) => {
-            cache[RAW_STAKE][e] = rawStake
-          })
-        }
+        // if (Array.isArray(res['bls-public-keys'])) {
+        //   const rawStake =
+        //     parseFloat(totalStake) / res['bls-public-keys'].length
+        //   res['bls-public-keys'].forEach(e => {
+        //     cache[RAW_STAKE][e] = rawStake
+        //   })
+        // }
         // Calculating cache[VALIDATOR_INFO_HISTORY]
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
           cache[VALIDATOR_INFO_HISTORY][address] = await getRecentData(address)
@@ -572,57 +570,6 @@ module.exports = function (
         '/',
         bodyParams('hmy_getSuperCommittees')
       )
-      // const currentEpoch = cache[STAKING_NETWORK_INFO].current_epoch
-      // cache[GLOBAL_VIEW].shard0.total_seats =
-      cache[STAKING_DISTRO] = _.concat(
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-0.committee-members'
-        ) || [],
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-1.committee-members'
-        ) || [],
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-2.committee-members'
-        ) || [],
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-3.committee-members'
-        ) || []
-      )
-        .filter((item) => !item['is-harmony-slot'])
-        .reduce((cur, item) => {
-          cur[item['bls-public-key']] = item['effective-stake']
-          return cur
-        }, new Map())
-
-      cache[BLS_KEYS] = _.concat(
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-0.committee-members'
-        ) || [],
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-1.committee-members'
-        ) || [],
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-2.committee-members'
-        ) || [],
-        _.get(
-          res,
-          'data.result.current.quorum-deciders.shard-3.committee-members'
-        ) || []
-      )
-        .filter((item) => !item['is-harmony-slot'])
-        .map((item) => item['bls-public-key'])
-      cache[ELECTED_KEYS] = cache[BLS_KEYS].reduce((cur, item) => {
-        cur[item] = true
-        return cur
-      }, new Map())
-
       if (numOfShards === 0) {
         numOfShards = await getNumberOfShards()
         console.log(`numOfShards ${numOfShards}`)
@@ -658,6 +605,42 @@ module.exports = function (
     } catch (err) {
       console.log(
         `error when updatingVotingPower for ${BLOCKCHAIN_SERVER}`,
+        err
+      )
+    }
+    try {
+      const res = await apiClient.post(
+        '/',
+        bodyParams('hmy_getMedianRawStakeSnapshot')
+      )
+      cache[STAKING_DISTRO] = _.get(
+        res,
+        'data.result.epos-slot-winners'
+      ).reduce((cur, item) => {
+        cur[item['bls-public-key']] = item['eposed-stake']
+        return cur
+      }, new Map())
+
+      cache[RAW_STAKE] = _.get(res, 'data.result.epos-slot-candidates').reduce(
+        (cur, item) => {
+          item['keys-at-auction'].forEach((key) => {
+            cur[key] = parseFloat(item['stake-per-key'])
+          })
+          return cur
+        },
+        new Map()
+      )
+
+      cache[BLS_KEYS] = _.get(res, 'data.result.epos-slot-winners').map(
+        (item) => item['bls-public-key']
+      )
+      cache[ELECTED_KEYS] = cache[BLS_KEYS].reduce((cur, item) => {
+        cur[item] = true
+        return cur
+      }, new Map())
+    } catch (err) {
+      console.log(
+        `error when getMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
         err
       )
     }

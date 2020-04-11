@@ -7,7 +7,9 @@ cd $_ROOT/appengine   # Must change to the google cloud app engine project locat
 
 _KEY_FILE=$_ROOT/appengine/keys/staking-explorer.json # default where key file is expected
 
+_PROJECT=''
 _TARGET=$1
+
 if [[ $_TARGET == "dev" ]];
 then
     _PROJECT=staking-explorer

@@ -28,8 +28,7 @@
     "testnet:stop": "docker stop testnet",
     "svg": "vsvg -s ./src/assets/icons -t ./src/icons",
     "deploy": ". scripts/deploy.sh process.env.target",
-    "db-reset": "sh scripts/clear_db.sh -n process.env.network",
-    "db-reset-quiet": "sh ./scripts/clear_db.sh -n process.env.network -y"
+    "db-reset": "sh scripts/clear_db.sh"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",

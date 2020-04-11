@@ -1,5 +1,6 @@
 #!/bin/bash
 
+AUTO_CONFIRM=false
 while getopts :n:y option
 do
     case "${option}" in
@@ -15,20 +16,20 @@ do
     esac
 done
 
-echo "Deleting database for" $NETWORK "(auto_confirm:" $AUTO_CONFIRM ")"
+echo "Deleting database for" $NETWORK "(auto_confirm:" $AUTO_CONFIRM")"
 
 if [ -z $NETWORK ]
 then
     echo "Usage: sh clear_db.sh [-n] ostn/pstn/stn [-y]"
-    exit 1
+    exit 0
 fi
 
 NETWORK_GLOBAL=$NETWORK"_global"
 NETWORK_HISTORY=$NETWORK"_history"
 
-echo $NETWORK_GLOBAL $NETWORK_HISTORY
+echo "Clearing db" $NETWORK_GLOBAL "and" $NETWORK_HISTORY
 
-if [ $AUTO_CONFIRM ]
+if [ $AUTO_CONFIRM == true ]
 then
     firebase firestore:delete --project  staking-explorer -r $NETWORK_GLOBAL -y
 else

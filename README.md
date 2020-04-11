@@ -3,29 +3,35 @@
 #### In appengine folder
 
 ```
-yarn dev
+npm run dev
 ```
 
 #### In frontend folder
 
 ```
-yarn serve
+npm run serve
 ```
 
 # Production Deployment
 
-## In appengine folder
+## In frontend folder
 
-### Clear the db
+### Clearing the db d uring network hard reset
 
 ```
-yarn clear-db
+npm run db-reset -- -n [ostn|pstn|stn] (-y)
+
+-n: required. network indicator. Allowed values: ostn, pstn, stn
+-y: optional. If present, auto-confirms db delete process. Used for auto-recovery during hard reset.
 ```
 
 ### Deployment
 
 ```
-./deploy1.sh
+npm run deploy -- [dev|prod] (-y)
+
+1st arg: required. project target. Allowed values: dev, prod
+-y: optional. If present, auto-confirms db delete process. Used for auto-recovery during hard reset.
 ```
 
 # Update networks table in firebase
@@ -33,6 +39,9 @@ yarn clear-db
 - Go to mock-data/networks.js and edit the table.
 - node db.js to update the networks table in firebase
 
-# Currently backend project:
+# Current appengine backend project:
 
 - staking-explorer2-268108
+
+```npm run deploy -- prod (-y)``` will deploy the current project.
+

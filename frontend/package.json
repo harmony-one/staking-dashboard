@@ -26,7 +26,9 @@
     "testnet:start": "npm run testnet:start:container && npm run proxy",
     "testnet:start:container": "docker run --rm -p 26657:26657 --name testnet -p 9070:9070 --detach -e MAX_NODES=${MAX_NODES:-2} -e SPEEDY=${SPEEDY:-false} lunieio/testnet:v0.34.7_speedy",
     "testnet:stop": "docker stop testnet",
-    "svg": "vsvg -s ./src/assets/icons -t ./src/icons"
+    "svg": "vsvg -s ./src/assets/icons -t ./src/icons",
+    "db-reset": "vsvg -s ./src/assets/icons -t ./src/icons",
+    "db-reset-autoconfirm": "sh appengine/clear_openstaking.sh"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",

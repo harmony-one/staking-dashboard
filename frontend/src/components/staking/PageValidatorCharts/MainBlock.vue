@@ -112,6 +112,7 @@ import UndelegationModal from "src/ActionModal/components/UndelegationModal"
 import ValidatorLogo from "../components/ValidatorLogo"
 import isEmpty from "lodash.isempty"
 import tooltips from "src/components/tooltips"
+import BigNumber from "bignumber.js"
 
 export default {
   name: `main-block`,
@@ -184,7 +185,9 @@ export default {
       return this.validator.self_stake
     },
     delegatedStake() {
-      return this.validator.total_stake - this.validatorSelfStakeAmount
+      return BigNumber(this.validator.total_stake)
+        .minus(this.validatorSelfStakeAmount)
+        .toNumber()
     },
     rewards() {
       return this.selfStake ? this.selfStake.reward : 0

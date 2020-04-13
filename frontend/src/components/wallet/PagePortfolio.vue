@@ -111,7 +111,6 @@ export default {
     Undelegations,
     DelegationsOverview,
     TmBalance,
-    Widget,
     LightWidget
   },
   data: () => ({

@@ -689,7 +689,7 @@ module.exports = function (
         total_stake: parseFloat(total),
         num: key_num,
       }
-    })
+    }).filter(v => !!v.bid)
 
     table = _.sortBy(table, (e) => -e.bid)
     let slot = 0

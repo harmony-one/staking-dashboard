@@ -12,7 +12,7 @@
 <script>
 import { mapGetters, mapState } from "vuex"
 import orderBy from "lodash.orderby"
-import tooltips from 'src/components/tooltips';
+import tooltips from "src/components/tooltips"
 
 import {
   percent,
@@ -121,7 +121,7 @@ export default {
             tooltip: tooltips.portfolio.apr_avg,
             width: "140px",
             align: "right",
-            render: value => percent(value / 100)
+            render: value => percent(value)
           }
         ])
       }

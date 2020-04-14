@@ -432,6 +432,7 @@ module.exports = function(
               : null,
           apr: _.get(result, 'lifetime.apr', null)
         }
+        validatorInfo.active = validatorInfo.elected_nodes > 0
 
         // if (Array.isArray(res['bls-public-keys'])) {
         //   const rawStake =

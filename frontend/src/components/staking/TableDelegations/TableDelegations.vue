@@ -120,7 +120,7 @@ export default {
             tooltip: tooltips.portfolio.apr_avg,
             width: "140px",
             align: "right",
-            render: value => percent(value / 100)
+            render: value => percent(value)
           }
         ])
       }

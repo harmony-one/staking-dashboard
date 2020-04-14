@@ -19,7 +19,7 @@ import PanelPagination from "src/components/ui/BaseGrid/PanelPagination"
 import ValidatorStatus from "./components/ValidatorStatus"
 import ValidatorName from "./components/ValidatorName"
 
-import tooltips from 'src/components/tooltips';
+import tooltips from "src/components/tooltips"
 
 import {
   percent,
@@ -133,7 +133,7 @@ export default {
           tooltip: tooltips.v_list.apr,
           width: "130px",
           align: "right",
-          render: value => percent(value / 100)
+          render: value => percent(value)
         },
         {
           title: `Stake`,

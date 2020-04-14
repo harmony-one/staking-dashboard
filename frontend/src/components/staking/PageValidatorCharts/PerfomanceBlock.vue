@@ -27,7 +27,7 @@
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.apr">
           APR
         </h4>
-        <span>{{ (validator.apr / 100) | percent | notAvailable }}</span>
+        <span>{{ validator.apr | percent | notAvailable }}</span>
       </li>
       <li class="row">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.shards">Shards</h4>

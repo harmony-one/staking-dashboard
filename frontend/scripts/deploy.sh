@@ -6,7 +6,7 @@ _ROOT="$(git rev-parse --show-toplevel)"
 
 cd $_ROOT/frontend   # Must change to the firebase project location
 
-HARMONY_STAKING_DASHBOARD_TARGET=$1
+_TARGET=$1
 if [[ ! $_TARGET == "dev" ]] && [[ ! $_TARGET == "prod" ]] ;
 then
     echo "Error: invalid target" $_TARGET

@@ -77,7 +77,7 @@ export default {
             label: "Rate",
             borderColor: "#0a93eb",
             fill: false,
-            data: this.history.map(v => v.apr)
+            data: this.history.map(v => v.apr * 100)
           }
         ]
       }

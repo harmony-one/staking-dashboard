@@ -71,7 +71,9 @@ export default {
     reward_rate_history:
       "Expected annual percentage return rate for validator at every epoch",
     delegators:
-      "List of accounts that delegated to this validator and delegation amount"
+      "List of accounts that delegated to this validator and delegation amount",
+
+    rewards: `Validator rewards (unclaimed) to this date`
   },
 
   v_global: {

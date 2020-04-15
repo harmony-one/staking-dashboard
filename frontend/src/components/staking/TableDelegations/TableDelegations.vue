@@ -19,6 +19,7 @@ import {
   shortDecimals,
   atoms,
   ones,
+  zeroDecimals,
   fourDecimals,
   twoDecimals
 } from "scripts/num"
@@ -90,7 +91,8 @@ export default {
           value: `stake`,
           tooltip: `Stake of validator`,
           width: "160px",
-          render: value => twoDecimals(ones(value)) + " ONE"
+            align: "right",
+          render: value => zeroDecimals(ones(value)) + " ONE"
         }
       ]
 
@@ -100,7 +102,6 @@ export default {
             title: `Ending in`,
             value: `remaining_epoch`,
             tooltip: tooltips.portfolio.ending_in,
-            align: "right",
             width: "160px",
             render: value => value + " epochs"
           }
@@ -108,14 +109,15 @@ export default {
       } else {
         columns = columns.concat([
           {
-            title: `Reward (up to date)`,
+            title: `Reward (to date)`,
             value: `rewards`,
             tooltip: tooltips.portfolio.reward_up_to_date,
-            width: "200px",
-            render: value => fourDecimals(ones(value)) + " ONE"
+            width: "220px",
+            align: "right",
+            render: value => zeroDecimals(ones(value)) + " ONE"
           },
           {
-            title: `APR % (AVG)`,
+            title: `APR`,
             value: `apr`,
             tooltip: tooltips.portfolio.apr_avg,
             width: "140px",

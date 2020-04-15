@@ -33,12 +33,16 @@
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.shards">Shards</h4>
         <span>{{ shardIDs }}</span>
       </li>
+      <li class="row">
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">Rewards (to date)</h4>
+        <span>{{ rewards }}</span>
+      </li>
     </ul>
   </div>
 </template>
 <script>
 import { mapState } from "vuex"
-import { ones, percent, twoDecimals } from "scripts/num"
+import { ones, percent, twoDecimals, zeroDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
 
 export default {
@@ -61,12 +65,15 @@ export default {
     ...mapState([`session`]),
     selfStake() {
       const session = this.session
+      console.log(this.validator)
       return this.validator.delegations.find(
         d => d["delegator-address"] === session.address
       )
     },
     rewards() {
-      return this.selfStake ? this.selfStake.reward : 0
+      // return this.selfStake ? zeroDecimals(ones(this.selfStake.reward)) : 0
+      // total rewards to date based on all delegations
+      return zeroDecimals(ones(this.validator.delegations.reduce((a, c) => a += c.reward, 0)))
     },
     shardIDs() {
       return this.validator["bls-public-keys"]

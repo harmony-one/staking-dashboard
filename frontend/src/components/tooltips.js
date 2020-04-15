@@ -72,9 +72,18 @@ export default {
       "Expected annual percentage return rate for validator at every epoch",
     delegators:
       "List of accounts that delegated to this validator and delegation amount"
-  }
+  },
 
   v_global: {
-    
+    committee_allocation:``,
+    next_epoch:``,
+    slots:``,
+    bid:``,
+    effective_stake:``,
+    total_stake:``,
+    seats_elected:``,
+    seat_allocation_history:``,
+    total_stake_history:``,
+    effective_median_history:``,
   }
 }

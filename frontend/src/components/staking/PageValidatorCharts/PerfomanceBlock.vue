@@ -34,7 +34,7 @@
         <span>{{ shardIDs }}</span>
       </li>
       <li class="row">
-        <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">Rewards (to date)</h4>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">Lifetime Rewards</h4>
         <span>{{ validator.lifetime_reward_accumulated | ones | zeroDecimals }}</span>
       </li>
     </ul>

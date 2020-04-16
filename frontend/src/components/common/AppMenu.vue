@@ -145,7 +145,7 @@
         @click="close"
         target="_blank"
       >
-        <h2 class="app-menu-title">Run a Node</h2>
+        <h2 class="app-menu-title">Become a Validator</h2>
       </a>
 
 

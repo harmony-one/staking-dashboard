@@ -197,6 +197,8 @@ export default {
   methods: {
     percent,
     onDelegation(options) {
+      window.ga('send', 'pageview', '/delegate')
+      window.ga('send', 'event', 'delegate', 'open', 'modal')
       this.$refs.delegationModal.open(options)
     },
     onUndelegation() {

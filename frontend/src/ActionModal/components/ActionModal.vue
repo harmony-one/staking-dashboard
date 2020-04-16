@@ -1,7 +1,7 @@
 <template>
   <transition v-if="openModalId === transactionData.type" name="slide-fade">
     <div>
-      <div class="action-modal-overlay"></div>
+      <div class="action-modal-overlay" @click="close"></div>
       <div v-focus-last class="action-modal" tabindex="0" @keyup.esc="close">
         <div
           v-if="(step === feeStep || step === signStep) && !sending"
@@ -564,6 +564,10 @@ export default {
       }
     },
     open() {
+      console.log(this.title.toLowerCase(), 'open')
+      window.ga('send', 'event', this.title.toLowerCase(), 'open', 'modal')
+
+
       this.confirmModalOpen()
 
       if (this.session.actionInProgress) {
@@ -578,6 +582,9 @@ export default {
       // this.gasPrice = config.default_gas_price.toFixed(9)
     },
     close() {
+      console.log(this.title.toLowerCase(), 'close')
+      window.ga('send', 'event', this.title.toLowerCase(), 'close', 'modal')
+
       if (this.session.actionInProgress) {
         closeExtensionSession()
         this.$store.commit(`setActionInProgress`, false)
@@ -619,6 +626,10 @@ export default {
     async validateChangeStep() {
       if (this.disabled) return
       // An ActionModal is only the prototype of a parent modal
+
+      console.log(this.title.toLowerCase(), this.step.toLowerCase())
+      window.ga('send', 'event', this.title.toLowerCase(), this.step.toLowerCase(), 'modal')
+
       switch (this.step) {
         case defaultStep:
           if (!this.isValidChildForm) {
@@ -756,12 +767,14 @@ export default {
     },
     onTxIncluded(txType, transactionProperties, feeProperties) {
       this.step = successStep
-      this.trackEvent(
-        `event`,
-        `successful-submit`,
-        this.title,
-        this.selectedSignMethod
-      )
+      // this.trackEvent(
+      //   `event`,
+      //   `successful-submit`,
+      //   this.title,
+      //   this.selectedSignMethod
+      // )
+      window.ga('send', 'event', this.title.toLowerCase(), 'success', 'modal')
+
       this.$store.dispatch(`post${txType}`, {
         txProps: transactionProperties,
         txMeta: feeProperties
@@ -770,7 +783,8 @@ export default {
     onSendingFailed(message) {
       this.step = signStep
       this.submissionError = `${this.submissionErrorPrefix}: ${message}.`
-      this.trackEvent(`event`, `failed-submit`, this.title, message)
+      // this.trackEvent(`event`, `failed-submit`, this.title, message)
+      window.ga('send', 'event', this.title.toLowerCase(), 'failed', 'modal')
     },
     async checkFeatureAvailable() {
       return true // Temp

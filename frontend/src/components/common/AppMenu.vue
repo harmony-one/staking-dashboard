@@ -139,6 +139,16 @@
         <h2 class="app-menu-title">Security</h2>
       </router-link>-->
 
+      <a
+        class="app-menu-item small"
+        href="https://docs.harmony.one/home/validators"
+        @click="close"
+        target="_blank"
+      >
+        <h2 class="app-menu-title">Run a Node</h2>
+      </a>
+
+
       <router-link
         class="app-menu-item small"
         to="/terms"

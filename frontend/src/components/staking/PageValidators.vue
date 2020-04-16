@@ -9,17 +9,17 @@
         <div class="networkInfo-column">
           <div id="validators_median_stake" class="networkInfo-item">
             <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
-              Effective median stake:
+              Effective Median Stake:
             </h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total stake:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
             <h4 v-tooltip.top="tooltips.v_list.current_block_number">
-              Current block number:
+              Current Block Height:
             </h4>
             <a :href="linkToTransaction" target="_blank">
               #{{ networkInfo.current_block_number }}

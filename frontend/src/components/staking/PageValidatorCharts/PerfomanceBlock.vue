@@ -9,10 +9,10 @@
           validator.uptime_percentage | percent | notAvailable
         }}</span>
       </li>
-      <li class="row">
-        <h4>Fees</h4>
+      <!-- <li class="row">
+        <h4>Fee</h4>
         <span>{{ validator.rate | percent | notAvailable }}</span>
-      </li>
+      </li> -->
       <li class="row">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.slots">Slots</h4>
         <span>{{ validator.active_nodes || 0 }}</span>
@@ -25,7 +25,7 @@
       </li>
       <li class="row">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.apr">
-          APR
+          Expected Return
         </h4>
         <span>{{ validator.apr | percent | notAvailable }}</span>
       </li>

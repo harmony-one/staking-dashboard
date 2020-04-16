@@ -128,10 +128,10 @@ export default {
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
-          title: `APR %`,
+          title: `Expected Return`,
           value: `apr`,
           tooltip: tooltips.v_list.apr,
-          width: "130px",
+          width: "160px",
           align: "right",
           render: value => percent(value)
         },

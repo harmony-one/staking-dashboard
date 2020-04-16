@@ -1,3 +1,5 @@
+const BigNumber = require('bignumber.js')
+
 const axios = require('axios')
 const _ = require('lodash')
 const {
@@ -375,13 +377,20 @@ module.exports = function(
             selfStake = elem.amount
           }
           totalStake = cache[DELEGATIONS_BY_VALIDATOR][address].reduce(
-            (acc, val) => acc + val.amount,
+            (acc, val) =>
+              BigNumber(acc)
+                .plus(val.amount)
+                .toNumber(),
             0
           )
 
-          averageStake =
-            totalStake / cache[DELEGATIONS_BY_VALIDATOR][address].length
-          remainder = remainder - totalStake
+          averageStake = BigNumber(totalStake)
+            .div(cache[DELEGATIONS_BY_VALIDATOR][address].length)
+            .toNumber()
+
+          remainder = BigNumber(remainder)
+            .minus(totalStake)
+            .toNumber()
         }
 
         // fields below are included in the validator.
@@ -399,7 +408,7 @@ module.exports = function(
           average_stake_by_bls:
             Array.isArray(res['bls-public-keys']) &&
             res['bls-public-keys'].length > 0
-              ? totalStake / (1.0 * res['bls-public-keys'].length)
+              ? BigNumber(totalStake).div(1.0 * res['bls-public-keys'].length).toNumber()
               : 0,
           remainder,
           voting_power: _.get(result, 'metrics.by-shard')
@@ -661,7 +670,7 @@ module.exports = function(
       cache[VALIDATOR_INFO][address]['bls-public-keys'].forEach(key => {
         if (cache[ELECTED_KEYS][key]) {
           key_num++
-          total += cache[RAW_STAKE][key]
+          total = BigNumber(total).plus(cache[RAW_STAKE][key]).toNumber()
           total_effective_stake = parseFloat(cache[STAKING_DISTRO][key])
         }
       })
@@ -669,7 +678,7 @@ module.exports = function(
         address,
         name: cache[VALIDATOR_INFO][address].name,
         effective_stake: total_effective_stake,
-        bid: parseFloat(total) / key_num,
+        bid: BigNumber(parseFloat(total)).div(key_num).toNumber(),
         total_stake: parseFloat(total),
         num: key_num
       }

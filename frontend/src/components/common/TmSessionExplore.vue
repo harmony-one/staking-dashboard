@@ -138,6 +138,10 @@ export default {
       if (addressType === "extension") return `Harmony Browser Extension`
     },
     exploreWith(address) {
+      window.ga(`send`, {
+        hitType: 'pageview',
+        page: '/explore/' + address
+      })
       this.address = address
       this.onSubmit()
     }

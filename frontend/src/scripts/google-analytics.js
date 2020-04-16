@@ -39,6 +39,7 @@ module.exports.track = function track(...args) {
 }
 
 module.exports.setGoogleAnalyticsPage = function track(...args) {
+  console.log('page', ...args)
   if (window.ga) {
     window.ga(`set`, `page`, ...args)
     window.ga(`send`, `pageview`)

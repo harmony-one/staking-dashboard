@@ -56,8 +56,8 @@
       <router-link
         id="menu_item_global"
         class="app-menu-item"
-        to="/global"
-        title="Global View"
+        to="/analytics"
+        title="Analytics"
         @click.native="close"
       >
         <svgicon
@@ -65,7 +65,7 @@
           width="20"
           height="20"
         ></svgicon>
-        <h2 class="app-menu-title">Global View</h2>
+        <h2 class="app-menu-title">Analytics</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
 
@@ -139,6 +139,7 @@
         <h2 class="app-menu-title">Security</h2>
       </router-link>-->
 
+
       <a
         class="app-menu-item small"
         href="https://docs.harmony.one/home/validators"
@@ -147,7 +148,7 @@
       >
         <h2 class="app-menu-title">Become a Validator</h2>
       </a>
-
+      
 
       <router-link
         class="app-menu-item small"
@@ -168,6 +169,19 @@
       >
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
+
+<!-- 
+      <router-link
+        class="app-menu-item small"
+        to="#"
+        exact="exact"
+        title="Terms"
+        @click.native="feedback"
+      >
+        <h2 class="app-menu-title">Feedback</h2>
+      </router-link> -->
+
+
 
       <router-link
         v-if="session.signedIn"
@@ -220,6 +234,9 @@ export default {
     ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`])
   },
   methods: {
+    feedback() {
+      console.log('feedback')
+    },
     close() {
       this.$emit(`close`)
       noScroll.off()
@@ -270,11 +287,13 @@ export default {
 .user-box {
   margin: var(--unit) 0;
   padding-left: 20px;
+  padding-bottom: 12px;
   font-size: 14px;
   color: var(--gray);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid var(--light);
 }
 
 .app-menu {

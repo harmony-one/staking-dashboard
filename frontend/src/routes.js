@@ -47,10 +47,10 @@ export default [
     component: require(`./components/staking/PageValidators`).default
   },
   {
-    path: `/global`,
-    name: `Global View`,
+    path: `/analytics`,
+    name: `Analytics`,
     meta: { 
-      feature: "Global View"
+      feature: "Analytics"
     },
     component: require(`./components/staking/PageGlobal`).default
   },

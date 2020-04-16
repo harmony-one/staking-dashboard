@@ -3,7 +3,7 @@
     :managed="true"
     :data-empty="validators && validators.length === 0"
     :epoch="true"
-    title="Global View"
+    title="Analytics"
   >
     <template slot="managed-body">
       <div class="networkInfo">

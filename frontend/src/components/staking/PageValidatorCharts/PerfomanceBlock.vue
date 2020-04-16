@@ -35,7 +35,7 @@
       </li>
       <li class="row">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">Rewards (to date)</h4>
-        <span>{{ rewards }}</span>
+        <span>{{ validator.lifetime_reward_accumulated | ones | zeroDecimals }}</span>
       </li>
     </ul>
   </div>
@@ -53,6 +53,7 @@ export default {
   filters: {
     ones,
     percent,
+    zeroDecimals,
     twoDecimals,
     noBlanks: function(value) {
       if (!value || value === `[do-not-modify]`) return `--`
@@ -65,7 +66,7 @@ export default {
     ...mapState([`session`]),
     selfStake() {
       const session = this.session
-      console.log(this.validator)
+      // console.log(this.validator)
       return this.validator.delegations.find(
         d => d["delegator-address"] === session.address
       )

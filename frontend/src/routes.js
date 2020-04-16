@@ -49,7 +49,7 @@ export default [
   {
     path: `/global`,
     name: `Global View`,
-    meta: {
+    meta: { 
       feature: "Global View"
     },
     component: require(`./components/staking/PageGlobal`).default

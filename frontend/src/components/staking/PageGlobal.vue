@@ -9,21 +9,25 @@
       <div class="networkInfo">
         <div class="networkInfo-column">
           <div id="validators_median_stake" class="networkInfo-item">
-            <h4>Effective Median Stake:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
+              Effective Median Stake:
+            </h4>
             <span v-if=networkInfo.effective_median_stake>
               {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
             </span>
             <span v-else>-</span>
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
-            <h4>Total Stake:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Stake:</h4>
             <span v-if=totalStake>
               {{ totalStake | ones | zeroDecimals }} ONE
             </span>
             <span v-else>-</span>
           </div>
           <div class="networkInfo-item">
-            <h4>Current Block:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.current_block_number">
+              Current Block Height:
+            </h4>
             <a :href="linkToTransaction" target="_blank">
               #{{ networkInfo.current_block_number }}
             </a>
@@ -121,6 +125,7 @@ import SeatAllocation from "staking/SeatAllocation"
 import SeatAllocationHistory from "staking/SeatAllocationHistory"
 import TotalStakeHistory from "staking/TotalStakeHistory"
 import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
+import tooltips from "src/components/tooltips"
 
 export default {
   name: `tab-validators`,
@@ -135,7 +140,9 @@ export default {
     SeatAllocationHistory,
     TotalStakeHistory,
     EffectiveMedianHistory,
-  },
+  },data: () => ({
+    tooltips,
+  }),
   filters: {
     ones,
     shortDecimals,

@@ -134,8 +134,6 @@ export default {
 
       const delegates = this.delegates.delegates.filter(d => d.amount > 0)
 
-      console.log(delegates)
-
       return delegates
         ? delegates.map(d => ({
             ...d,

@@ -73,7 +73,7 @@ export default {
     delegators:
       "List of accounts that delegated to this validator and delegation amount",
 
-    rewards: `Validator rewards (unclaimed) to this date`
+    rewards: `All rewards earned by the validator`
   },
 
   v_global: {

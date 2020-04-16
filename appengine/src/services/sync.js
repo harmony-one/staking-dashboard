@@ -5,7 +5,7 @@ const {
   bodyParams,
   bodyParams2,
   changePercentage,
-  sortByParams
+  sortByParams,
 } = require('./helpers')
 
 const STAKING_NETWORK_INFO = 'STAKING_NETWORK_INFO'
@@ -22,7 +22,8 @@ const STAKING_DISTRO = 'STAKING_DISTRO'
 const RAW_STAKE = 'RAW_STAKE'
 const MAX_LENGTH = 30
 const GLOBAL_VIEW = 'GLOBAL_VIEW'
-const ELECTED_KEYS = 'ELECTED_KEYS'
+// const ELECTED_KEYS = 'ELECTED_KEYS'
+const ELECTED_NODES = 'ELECTED_NODES'
 const BLS_KEYS = 'BLS_KEYS'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
@@ -30,10 +31,10 @@ const VALIDATOR_PAGE_SIZE = 100
 const SLEEP_TIME = 5
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-module.exports = function(
+module.exports = function (
   BLOCKCHAIN_SERVER,
   chainTitle,
   updateDocument,
@@ -67,7 +68,8 @@ module.exports = function(
     GLOBAL_VIEW: {},
     RAW_STAKE: {},
     ELECTED_KEYS: {},
-    STAKING_DISTRO_TABLE: {}
+    STAKING_DISTRO_TABLE: {},
+    ELECTED_NODES: {},
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -80,8 +82,8 @@ module.exports = function(
     // baseURL: process.env.SERVER,
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   })
 
   const getNumberOfShards = async () => {
@@ -138,14 +140,14 @@ module.exports = function(
     }
   }
 
-  const filterGlobalCache = async currentEpoch => {
+  const filterGlobalCache = async (currentEpoch) => {
     let epoch = parseInt(currentEpoch)
     const lastEpoch = epoch
     while (cache[GLOBAL_VIEW][epoch]) {
       epoch -= 1
     }
     console.log(`latest ${epoch}`)
-    _.keys(cache[GLOBAL_VIEW]).forEach(k => {
+    _.keys(cache[GLOBAL_VIEW]).forEach((k) => {
       const key = parseInt(k)
       if (key < epoch || key > lastEpoch) {
         console.log(`delete key ${key}`)
@@ -263,14 +265,14 @@ module.exports = function(
       // console.log("getAllValidatorAddressesData", res.data)
       return {
         ...cache[STAKING_NETWORK_INFO],
-        history: cache[GLOBAL_VIEW]
+        history: cache[GLOBAL_VIEW],
       }
     } catch (err) {
       console.log(err)
     }
   }
 
-  const getRecentData = async address => {
+  const getRecentData = async (address) => {
     const res = new Map()
     try {
       const recent = await getCollectionDataWithLimit(
@@ -282,7 +284,7 @@ module.exports = function(
       if (!Array.isArray(recent)) {
         return
       }
-      _.forEach(recent, item => {
+      _.forEach(recent, (item) => {
         res[item.index] = item
       })
     } catch (err) {
@@ -302,7 +304,7 @@ module.exports = function(
       if (!Array.isArray(recent)) {
         return
       }
-      _.forEach(recent, item => {
+      _.forEach(recent, (item) => {
         res[item.index] = item
       })
     } catch (err) {
@@ -311,7 +313,7 @@ module.exports = function(
     return res
   }
 
-  const processValidatorWithPage = async page => {
+  const processValidatorWithPage = async (page) => {
     try {
       const res = await apiClient.post(
         '/',
@@ -328,7 +330,7 @@ module.exports = function(
           res.data.result.length
         )
 
-        res.data.result.forEach(elem => {
+        res.data.result.forEach((elem) => {
           if (elem && elem.validator && elem.validator.address) {
             processValidatorInfoData(elem.validator.address, elem)
           }
@@ -340,18 +342,6 @@ module.exports = function(
     } catch (err) {
       console.log('error when processValidatorWithPage: ', err)
       return 0
-    }
-  }
-
-  const getValidatorInfoData = async address => {
-    try {
-      const res = await apiClient.post(
-        '/',
-        bodyParams('hmy_getValidatorInformation', address)
-      )
-      processValidatorInfoData(address, res)
-    } catch (err) {
-      console.log('error when getValidatorInfoData: ', err)
     }
   }
 
@@ -369,7 +359,7 @@ module.exports = function(
           cache[DELEGATIONS_BY_VALIDATOR][address].length
         ) {
           const elem = cache[DELEGATIONS_BY_VALIDATOR][address].find(
-            e => e.validator_address === e.delegator_address
+            (e) => e.validator_address === e.delegator_address
           )
           if (elem) {
             selfStake = elem.amount
@@ -384,10 +374,6 @@ module.exports = function(
           remainder = remainder - totalStake
         }
 
-        // fields below are included in the validator.
-        // * signed_blocks
-        // * blocks_should_sign
-        // * total_one_staked
         const utcDate = new Date(Date.now())
         const epochIndex = parseInt(res['last-epoch-in-committee'])
 
@@ -405,7 +391,7 @@ module.exports = function(
           voting_power: _.get(result, 'metrics.by-shard')
             ? _.sumBy(
                 _.get(result, 'metrics.by-shard'),
-                item => parseFloat(item['group-percent']) / 4.0
+                (item) => parseFloat(item['group-percent']) / 4.0
               )
             : null,
           signed_blocks: 50,
@@ -417,8 +403,8 @@ module.exports = function(
             ? res['bls-public-keys'].length
             : 1,
           elected_nodes: Array.isArray(res['bls-public-keys'])
-            ? res['bls-public-keys'].filter(item =>
-                cache[BLS_KEYS].includes(item)
+            ? res['bls-public-keys'].filter((item) =>
+                cache[ELECTED_NODES].has(item)
               ).length
             : 0,
           active:
@@ -430,17 +416,15 @@ module.exports = function(
               ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
                 parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
               : null,
-          apr: _.get(result, 'lifetime.apr', null)
+          apr: _.get(result, 'lifetime.apr', null),
+          lifetime_reward_accumulated: _.get(
+            result,
+            'lifetime.reward-accumulated',
+            null
+          ),
         }
         validatorInfo.active = validatorInfo.elected_nodes > 0
 
-        // if (Array.isArray(res['bls-public-keys'])) {
-        //   const rawStake =
-        //     parseFloat(totalStake) / res['bls-public-keys'].length
-        //   res['bls-public-keys'].forEach(e => {
-        //     cache[RAW_STAKE][e] = rawStake
-        //   })
-        // }
         // Calculating cache[VALIDATOR_INFO_HISTORY]
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
           cache[VALIDATOR_INFO_HISTORY][address] = await getRecentData(address)
@@ -488,14 +472,14 @@ module.exports = function(
     }
   }
 
-  const getDelegationsByDelegatorData = async address => {
+  const getDelegationsByDelegatorData = async (address) => {
     const res = await apiClient.post(
       '/',
       bodyParams('hmy_getDelegationsByDelegator', address)
     )
 
     let result = res.data.result
-    result = _.forEach(result, elem => {
+    result = _.forEach(result, (elem) => {
       elem.validator_info = cache[VALIDATOR_INFO][elem.validator_address]
     })
     if (isNotEmpty(result)) {
@@ -523,7 +507,7 @@ module.exports = function(
             `hmy_getAllDelegationInformation with page ${page}: `,
             res.data.result.length
           )
-          res.data.result.forEach(elem => {
+          res.data.result.forEach((elem) => {
             if (Array.isArray(elem) && elem[0] && elem[0].validator_address) {
               cache[DELEGATIONS_BY_VALIDATOR][elem[0].validator_address] = elem
             }
@@ -553,7 +537,7 @@ module.exports = function(
     }
   }
 
-  const getDelegationsByValidatorData = async address => {
+  const getDelegationsByValidatorData = async (address) => {
     const res = await apiClient.post(
       '/',
       bodyParams('hmy_getDelegationsByValidator', address)
@@ -576,7 +560,17 @@ module.exports = function(
         numOfShards = await getNumberOfShards()
         console.log(`numOfShards ${numOfShards}`)
       }
-      const externalShards = _.range(numOfShards).map(e => {
+      const externalShardKeys = _.range(numOfShards).map((e) => {
+        const total = _.get(
+          res,
+          `data.result.current.quorum-deciders.shard-${e}.committee-members`
+        )
+        return total
+          .filter((item) => !item['is-harmony-slot'])
+          .map((e) => e['bls-public-key'])
+      })
+
+      const externalShards = _.range(numOfShards).map((e) => {
         const total = _.get(
           res,
           `data.result.current.quorum-deciders.shard-${e}.committee-members`
@@ -585,7 +579,7 @@ module.exports = function(
           console.log(`total: ${total.length}`)
           return {
             total: total.length,
-            external: total.filter(item => !item['is-harmony-slot']).length
+            external: total.filter((item) => !item['is-harmony-slot']).length,
           }
         } else {
           console.log(
@@ -601,9 +595,15 @@ module.exports = function(
       )
       cache[GLOBAL_SEATS].total_seats_used = _.sumBy(
         externalShards,
-        e => e.external
+        (e) => e.external
       )
       cache[GLOBAL_SEATS].externalShards = externalShards
+      cache[ELECTED_NODES] = null
+
+      cache[ELECTED_NODES] = externalShardKeys.reduce((cur, elem) => {
+        elem.forEach((key) => cur.add(key))
+        return cur
+      }, new Set())
     } catch (err) {
       console.log(
         `error when updatingVotingPower for ${BLOCKCHAIN_SERVER}`,
@@ -625,7 +625,7 @@ module.exports = function(
 
       cache[RAW_STAKE] = _.get(res, 'data.result.epos-slot-candidates').reduce(
         (cur, item) => {
-          item['keys-at-auction'].forEach(key => {
+          item['keys-at-auction'].forEach((key) => {
             cur[key] = parseFloat(item['stake-per-key'])
           })
           return cur
@@ -634,12 +634,8 @@ module.exports = function(
       )
 
       cache[BLS_KEYS] = _.get(res, 'data.result.epos-slot-winners').map(
-        item => item['bls-public-key']
+        (item) => item['bls-public-key']
       )
-      cache[ELECTED_KEYS] = cache[BLS_KEYS].reduce((cur, item) => {
-        cur[item] = true
-        return cur
-      }, new Map())
     } catch (err) {
       console.log(
         `error when getMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
@@ -650,16 +646,16 @@ module.exports = function(
 
   const calculateDistroTable = async () => {
     let table = cache[ACTIVE_VALIDATORS].filter(
-      address => cache[VALIDATOR_INFO][address].elected_nodes > 0
+      (address) => cache[VALIDATOR_INFO][address].elected_nodes > 0
     )
     let count = 0
-    table = table.map(address => {
+    table = table.map((address) => {
       count += 1
       let key_num = 0
       let total = 0
       let total_effective_stake = 0
-      cache[VALIDATOR_INFO][address]['bls-public-keys'].forEach(key => {
-        if (cache[ELECTED_KEYS][key]) {
+      cache[VALIDATOR_INFO][address]['bls-public-keys'].forEach((key) => {
+        if (cache[ELECTED_NODES].has(key)) {
           key_num++
           total += cache[RAW_STAKE][key]
           total_effective_stake = parseFloat(cache[STAKING_DISTRO][key])
@@ -671,18 +667,18 @@ module.exports = function(
         effective_stake: total_effective_stake,
         bid: parseFloat(total) / key_num,
         total_stake: parseFloat(total),
-        num: key_num
+        num: key_num,
       }
     })
 
-    table = _.sortBy(table, e => -e.bid)
+    table = _.sortBy(table, (e) => -e.bid)
     let slot = 0
 
-    table = table.map(e => {
+    table = table.map((e) => {
       slot += e.num
       return {
         ...e,
-        slot: e.num === 1 ? `${slot}` : `${slot - e.num + 1}-${slot}`
+        slot: e.num === 1 ? `${slot}` : `${slot - e.num + 1}-${slot}`,
       }
     })
     cache[STAKING_DISTRO_TABLE] = table
@@ -718,7 +714,7 @@ module.exports = function(
       'current_epoch',
       MAX_LENGTH
     )
-    _.forEach(res, item => (cache[GLOBAL_VIEW][item.current_epoch] = item))
+    _.forEach(res, (item) => (cache[GLOBAL_VIEW][item.current_epoch] = item))
   }
   init()
   setInterval(async () => {
@@ -734,11 +730,11 @@ module.exports = function(
       : {
           ...cache[STAKING_NETWORK_INFO],
           history: cache[GLOBAL_VIEW],
-          raw_stake_distro: cache[BLS_KEYS].map(e => cache[RAW_STAKE][e]),
+          raw_stake_distro: cache[BLS_KEYS].map((e) => cache[RAW_STAKE][e]),
           effective_median_stake_distro: cache[BLS_KEYS].map(
-            e => cache[STAKING_DISTRO][e]
+            (e) => cache[STAKING_DISTRO][e]
           ),
-          table: cache[STAKING_DISTRO_TABLE]
+          table: cache[STAKING_DISTRO_TABLE],
         }
 
     return stakingNetworkInfo
@@ -748,13 +744,13 @@ module.exports = function(
     const validators = !cache[VALIDATORS] ? [] : cache[VALIDATORS]
 
     return validators
-      .map(address => {
+      .map((address) => {
         return { ...cache[VALIDATOR_INFO][address] }
       })
       .filter(isNotEmpty)
   }
 
-  const getValidatorsWithPage = async params => {
+  const getValidatorsWithPage = async (params) => {
     const { page, size, active, sortProperty, sortOrder, search } = params
 
     const pageInt = parseInt(page, 10)
@@ -762,7 +758,7 @@ module.exports = function(
     let validators
 
     cache[ACTIVE_VALIDATORS] = cache[ACTIVE_VALIDATORS].filter(
-      e => cache[VALIDATOR_INFO][e].elected_nodes > 0
+      (e) => cache[VALIDATOR_INFO][e].elected_nodes > 0
     )
     if (active === 'true') {
       validators = !cache[ACTIVE_VALIDATORS] ? [] : cache[ACTIVE_VALIDATORS]
@@ -780,16 +776,16 @@ module.exports = function(
         validators: [],
         totalFound: 0,
         total: cache[VALIDATORS].length,
-        total_active: cache[ACTIVE_VALIDATORS].length
+        total_active: cache[ACTIVE_VALIDATORS].length,
       }
     } else {
       validators = validators
-        .map(address => {
+        .map((address) => {
           return { ...cache[VALIDATOR_INFO][address] }
         })
         .filter(isNotEmpty)
         .filter(
-          v =>
+          (v) =>
             !search ||
             v.name.toLowerCase().includes(search.toLowerCase()) ||
             v.address.toLowerCase().includes(search.toLowerCase())
@@ -807,7 +803,7 @@ module.exports = function(
         validators,
         totalFound,
         total: cache[VALIDATORS].length,
-        total_active: cache[ACTIVE_VALIDATORS].length
+        total_active: cache[ACTIVE_VALIDATORS].length,
       }
     }
   }
@@ -815,7 +811,7 @@ module.exports = function(
   const getValidatorsSizes = async () => {
     return {
       total: cache[VALIDATORS].length,
-      total_active: cache[ACTIVE_VALIDATORS].length
+      total_active: cache[ACTIVE_VALIDATORS].length,
     }
   }
 
@@ -824,12 +820,12 @@ module.exports = function(
       return []
     }
 
-    return cache[ACTIVE_VALIDATORS].map(address => {
+    return cache[ACTIVE_VALIDATORS].map((address) => {
       return cache[VALIDATOR_INFO][address]
     }).filter(isNotEmpty)
   }
 
-  const getDelegationsByDelegator = async address =>
+  const getDelegationsByDelegator = async (address) =>
     await getDelegationsByDelegatorData(address)
 
   return {
@@ -838,13 +834,13 @@ module.exports = function(
     getValidatorsWithPage,
     getValidatorsSizes,
     getActiveValidators,
-    getValidatorInfo: address => cache[VALIDATOR_INFO][address],
-    getValidatorHistory: address =>
+    getValidatorInfo: (address) => cache[VALIDATOR_INFO][address],
+    getValidatorHistory: (address) =>
       _.values(cache[VALIDATOR_INFO_HISTORY][address]).sort(
         (a, b) => a.index - b.index
       ),
     getDelegationsByDelegator,
-    getDelegationsByValidator: address =>
-      cache[DELEGATIONS_BY_VALIDATOR][address]
+    getDelegationsByValidator: (address) =>
+      cache[DELEGATIONS_BY_VALIDATOR][address],
   }
 }

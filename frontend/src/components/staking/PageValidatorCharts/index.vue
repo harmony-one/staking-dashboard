@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-    </template>
+    </template> 
     <template v-else>
       <div slot="title">Validator Not Found</div>
       <div slot="subtitle">

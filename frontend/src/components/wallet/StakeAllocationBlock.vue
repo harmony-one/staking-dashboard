@@ -1,11 +1,7 @@
 <template>
   <div>
     <div class="chart-container-stake-allocate">
-      <ChartPie
-        :chartdata="chartdata"
-        :options="options"
-        class="chart"
-      />
+      <ChartPie :chartdata="chartdata" :options="options" class="chart" />
     </div>
   </div>
 </template>
@@ -67,7 +63,7 @@ export default {
       //   intersect: true
       // },
       legend: {
-        position: 'bottom'
+        position: "bottom"
       },
       scales: {
         xAxes: [{ display: false }],
@@ -82,14 +78,12 @@ export default {
       //   0
       // )
 
-      const colors = ['#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466']
-
       return {
         labels: this.delegations.map(v => v.validator),
         datasets: [
           {
             data: this.delegations.map(v => v.amount),
-            backgroundColor: colors
+            backgroundColor: chartColors
           }
         ]
       }
@@ -110,7 +104,6 @@ export default {
   margin: 0 auto;
 }
 
-
 @media screen and (max-width: 414px) {
   .chart {
     display: flex;
@@ -119,5 +112,4 @@ export default {
     width: 256px;
   }
 }
-
 </style>

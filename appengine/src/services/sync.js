@@ -1,5 +1,11 @@
 const BigNumber = require('bignumber.js')
 
+BigNumber.config({
+  FORMAT: {
+    groupSeparator: ''
+  }
+})
+
 const axios = require('axios')
 const _ = require('lodash')
 const {
@@ -380,17 +386,17 @@ module.exports = function(
             (acc, val) =>
               BigNumber(acc)
                 .plus(val.amount)
-                .toNumber(),
+                .toFormat(),
             0
           )
 
           averageStake = BigNumber(totalStake)
             .div(cache[DELEGATIONS_BY_VALIDATOR][address].length)
-            .toNumber()
+            .toFormat()
 
           remainder = BigNumber(remainder)
             .minus(totalStake)
-            .toNumber()
+            .toFormat()
         }
 
         // fields below are included in the validator.
@@ -408,7 +414,7 @@ module.exports = function(
           average_stake_by_bls:
             Array.isArray(res['bls-public-keys']) &&
             res['bls-public-keys'].length > 0
-              ? BigNumber(totalStake).div(1.0 * res['bls-public-keys'].length).toNumber()
+              ? BigNumber(totalStake).div(1.0 * res['bls-public-keys'].length).toFormat()
               : 0,
           remainder,
           voting_power: _.get(result, 'metrics.by-shard')
@@ -670,7 +676,7 @@ module.exports = function(
       cache[VALIDATOR_INFO][address]['bls-public-keys'].forEach(key => {
         if (cache[ELECTED_KEYS][key]) {
           key_num++
-          total = BigNumber(total).plus(cache[RAW_STAKE][key]).toNumber()
+          total = BigNumber(total).plus(cache[RAW_STAKE][key]).toFormat()
           total_effective_stake = parseFloat(cache[STAKING_DISTRO][key])
         }
       })
@@ -678,7 +684,7 @@ module.exports = function(
         address,
         name: cache[VALIDATOR_INFO][address].name,
         effective_stake: total_effective_stake,
-        bid: BigNumber(parseFloat(total)).div(key_num).toNumber(),
+        bid: BigNumber(parseFloat(total)).div(key_num).toFormat(),
         total_stake: parseFloat(total),
         num: key_num
       }

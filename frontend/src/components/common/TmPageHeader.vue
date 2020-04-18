@@ -49,7 +49,7 @@ export default {
     },
     epoch: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   computed: {

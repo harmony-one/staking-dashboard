@@ -144,12 +144,12 @@ export default {
             moniker: d.validator_info.name,
             operator_address: d.validator_info.address,
             ...d,
-            stake: d.Undelegations[j].Amount,
-            remaining_epoch: d.Undelegations[j].Epoch - epoch + 8,
+            stake: ud.Amount,
+            remaining_epoch: Math.min(7, ud.Epoch - epoch + 8),
           })
         }
       }
-      console.log(this.networkInfo, undelegations)
+      // console.log(this.networkInfo, undelegations)
       return undelegations
     }
   },

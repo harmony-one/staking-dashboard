@@ -21,7 +21,7 @@
             <div v-if="delegation.loading" class="delegation-body">
               Loading...
             </div>
-            <div v-else-if="!delegations.length" class="delegation-body">
+            <div v-else-if="!delegations.length && !Object.keys(delegation.unbondingDelegations).length" class="delegation-body">
               No delegations in your portfolio
             </div>
             <StakeAllocationBlock
@@ -31,13 +31,13 @@
             />
           </LightWidget>
         </div>
-        <DelegationsOverview />
-        <template v-if="Object.keys(delegation.unbondingDelegations).length">
+        <DelegationsOverview :undelegations="undelegations" />
+        <!-- <template v-if="undelegations.length">
           <h3 class="tab-header">
             Pending Undelegations
           </h3>
           <Undelegations />
-        </template>
+        </template> -->
       </template>
     </TmPage>
   </div>
@@ -128,18 +128,29 @@ export default {
       isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
     }),
     delegations() {
-      if (this.delegates.loading) {
-        return []
-      }
-
-      const delegates = this.delegates.delegates.filter(d => d.amount > 0)
-
-      return delegates
-        ? delegates.map(d => ({
+      return this.delegates.loading ? [] : this.delegates.delegates.filter(d => d.amount > 0)
+    },
+    undelegations() {
+      const epoch = this.connection.networkInfo.current_epoch
+      const delegates = this.delegates.loading ? [] : this.delegates.delegates
+      const undelegations = []
+      for (let i = 0; i < delegates.length; i++) {
+        const d = delegates[i]
+        for (let j = 0; j < d.Undelegations.length; j++) {
+          const ud = d.Undelegations[j]
+          if (ud.Epoch + 7 < epoch) continue
+          undelegations.push({
+            ...d.validator_info,
+            moniker: d.validator_info.name,
+            operator_address: d.validator_info.address,
             ...d,
-            validator: d.validator_info.name
-          }))
-        : []
+            stake: d.Undelegations[j].Amount,
+            remaining_epoch: d.Undelegations[j].Epoch - epoch + 8,
+          })
+        }
+      }
+      console.log(this.networkInfo, undelegations)
+      return undelegations
     }
   },
   watch: {

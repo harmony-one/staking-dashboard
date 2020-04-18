@@ -16,14 +16,14 @@
       <div class="table-body">
         <div
           class="table-column"
-          v-for="column in columns"
-          :key="column.value"
+          v-for="(column, index) in columns"
+          :key="index"
           :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
         >
           <div
             class="table-cell"
-            v-for="item in data"
-            :key="item.address"
+            v-for="(item, index) in data"
+            :key="index"
             @click="() => onRowClick(item)"
             :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
           >
@@ -92,7 +92,7 @@ export default {
   overflow: hidden;
   overflow-y: auto;
   height: 100%;
-  max-height: calc(100vh - 432px);
+  max-height: calc(100vh - 442px);
   border-bottom: 1px solid var(--light2);
 }
 

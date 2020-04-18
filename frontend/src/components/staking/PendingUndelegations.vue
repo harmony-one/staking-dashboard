@@ -11,8 +11,8 @@
 </template>
 
 <script>
-
 import BaseGrid from "src/components/ui/BaseGrid"
+
 import ValidatorStatus from "./components/ValidatorStatus"
 import ValidatorName from "./components/ValidatorName"
 
@@ -25,20 +25,17 @@ import {
   twoDecimals
 } from "scripts/num"
 
-
 export default {
-  name: `undelegations`,
+  name: `table-validators`,
   components: {
-    BaseGrid
+    BaseGrid,
   },
-
   props: {
     data: {
       type: Array,
       default: () => []
     },
   },
-
   data: () => ({
     sort: {
       property: `slot`,
@@ -53,12 +50,44 @@ export default {
       return this.enrichedValidators
     },
   },
-
-
   computed: {
-    
+    enrichedValidators(
+      {
+        data,
+        sort: { property, order },
+      } = this
+    ) {
+      
+      //slice it just in case
+      data = data.slice()
+      if (property === 'name') {
+        console.log('name sort')
+        data.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+        if (order === 'desc') data.reverse()
+        return data
+      }
+      data = data.sort((a, b) => {
+        a = a[property]
+        b = b[property]
+        try {
+          if (property === 'slot') {
+            a = parseInt(a.split('-')[0])
+            b = parseInt(b.split('-')[0])
+          }
+        } catch(e) {} //don't interfere if slot data isn't perfect
+        return order === 'asc' ? a - b : b - a
+      })
+      return data
+    },
     columns() {
       let props = [
+        {
+          title: `Slots`,
+          value: `slot`,
+          tooltip: `The slots occupied by this Validator (in chart above)`,
+          align: 'right',
+          width: "96px",
+        },
         {
           title: `Name`,
           value: `name`,
@@ -103,6 +132,11 @@ export default {
       return props
     }
   },
+  mounted() {
+    this.$store.dispatch(`getPool`)
+    this.$store.dispatch(`getRewardsFromMyValidators`)
+    this.$store.dispatch(`getMintingParameters`)
+  },
   methods: {
     onClickValidator(validator) {
       this.$router.push({
@@ -113,7 +147,6 @@ export default {
   }
 }
 </script>
-
 <style scoped lang="scss">
 .table-container {
   margin-top: var(--unit);

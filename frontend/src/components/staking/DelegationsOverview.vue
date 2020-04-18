@@ -9,12 +9,12 @@
     </div>
 
     <div
-      v-if="!loading && validators.undelegations.length > 0"
+      v-if="!loading && undelegations.length > 0"
       style="margin-top: 20px;"
     >
       <h2 class="table-title">Pending undelegations</h2>
       <TableDelegations
-        :data="validators.undelegations"
+        :data="undelegations"
         :is-undelegation="true"
         show-on-mobile="expectedReturns"
       />
@@ -47,6 +47,13 @@ export default {
     TableDelegations,
     TmDataMsg
   },
+  props: {
+    undelegations: {
+      type: Array,
+      default: () => []
+    },
+  },
+
   data: () => ({
     loading: false
     // validators: []
@@ -64,7 +71,7 @@ export default {
     }),
     validators: state => {
       const delegations = []
-      const undelegations = []
+      // const undelegations = []
 
       state.allDelegations.forEach(delegates => {
         if (delegates) {
@@ -75,36 +82,36 @@ export default {
           })
         }
 
-        if (
-          delegates &&
-          delegates.Undelegations &&
-          delegates.Undelegations.length
-        ) {
-          delegates.Undelegations.forEach(un => {
-            const { current_epoch } = state.networkInfo
-            let remaining_epoch
+        // if (
+        //   delegates &&
+        //   delegates.Undelegations &&
+        //   delegates.Undelegations.length
+        // ) {
+        //   delegates.Undelegations.forEach(un => {
+        //     const { current_epoch } = state.networkInfo
+        //     let remaining_epoch
 
-            if (current_epoch && un.Epoch) {
-              remaining_epoch = 7 + parseInt(un.Epoch) - parseInt(current_epoch)
-            }
+        //     if (current_epoch && un.Epoch) {
+        //       remaining_epoch = 7 + parseInt(un.Epoch) - parseInt(current_epoch)
+        //     }
 
-            if (remaining_epoch < 0) {
-              // TODO - fix for negative epoch
-              return
-            }
+        //     if (remaining_epoch < 0) {
+        //       // TODO - fix for negative epoch
+        //       return
+        //     }
 
-            undelegations.push({
-              ...remapValidator(delegates.validator_info, true),
-              stake: un.Amount,
-              rewards: delegates.reward,
-              apr: delegates.reward / un.Amount,
-              remaining_epoch
-            })
-          })
-        }
+        //     undelegations.push({
+        //       ...remapValidator(delegates.validator_info, true),
+        //       stake: un.Amount,
+        //       rewards: delegates.reward,
+        //       apr: delegates.reward / un.Amount,
+        //       remaining_epoch
+        //     })
+        //   })
+        // }
       })
 
-      return { delegations, undelegations }
+      return { delegations }
     }
   },
   async mounted() {

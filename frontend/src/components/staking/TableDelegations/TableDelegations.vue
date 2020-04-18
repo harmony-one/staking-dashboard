@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table-delegations">
     <BaseGrid
       :sort="sort"
       :columns="columns"
@@ -90,7 +90,7 @@ export default {
           title: `Stake`,
           value: `stake`,
           tooltip: `Stake of validator`,
-          width: "160px",
+          width: "120px",
             align: "right",
           render: value => zeroDecimals(ones(value)) + " ONE"
         }
@@ -99,10 +99,11 @@ export default {
       if (this.isUndelegation) {
         columns = columns.concat([
           {
-            title: `Ending in`,
+            title: `Returned in`,
             value: `remaining_epoch`,
             tooltip: tooltips.portfolio.ending_in,
             width: "160px",
+            align: "right",
             render: value => value + " epochs"
           }
         ])
@@ -112,15 +113,15 @@ export default {
             title: `Reward (to date)`,
             value: `rewards`,
             tooltip: tooltips.portfolio.reward_up_to_date,
-            width: "220px",
+            width: "200px",
             align: "right",
             render: value => zeroDecimals(ones(value)) + " ONE"
           },
           {
-            title: `APR`,
+            title: `Expected Return`,
             value: `apr`,
             tooltip: tooltips.portfolio.apr_avg,
-            width: "140px",
+            width: "200px",
             align: "right",
             render: value => percent(value)
           }
@@ -154,15 +155,13 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-table {
-  margin-top: var(--unit);
-  thead {
-    text-transform: uppercase;
-    font-weight: bold;
+<style lang="scss">
+
+.table-delegations {
+  .table-headings-wrap {
+    width: 100%;
   }
 }
-
 @media screen and (max-width: 414px) {
 }
 </style>

@@ -44,6 +44,10 @@ export default {
       scales: {
         xAxes: [
           {
+            scaleLabel: {
+              display: true,
+              labelString: 'epochs'
+            },
             display: true,
             gridLines: {
               display: false
@@ -52,6 +56,10 @@ export default {
         ],
         yAxes: [
           {
+            scaleLabel: {
+              display: true,
+              labelString: '% elected'
+            },
             display: true,
             gridLines: {
               display: true

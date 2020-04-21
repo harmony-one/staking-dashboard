@@ -58,7 +58,7 @@
                 {{ status }}
               </div>
               <div v-if="status_detailed" class="validator-status-detailed">
-                {{ status_detailed }}
+                {{ validator.epos_status.substring(0, 1).toUpperCase() + validator.epos_status.substring(1) }}
               </div>
             </div>
           </div>

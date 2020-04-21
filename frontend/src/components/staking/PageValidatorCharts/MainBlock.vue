@@ -182,6 +182,7 @@ export default {
       return this.selfStake ? this.selfStake.amount : 0
     },
     validatorSelfStakeAmount() {
+      console.log(this.validator)
       return this.validator.self_stake
     },
     delegatedStake() {

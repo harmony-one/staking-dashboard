@@ -129,6 +129,10 @@ export default {
     }),
     delegations() {
       return this.delegates.loading ? [] : this.delegates.delegates.filter(d => d.amount > 0)
+        .map((d) => ({
+          ...d,
+          validator: d.validator_info.name
+        }))
     },
     undelegations() {
       const epoch = this.connection.networkInfo.current_epoch

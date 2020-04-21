@@ -57,8 +57,13 @@
               <div :class="status | toClassName" class="validator-status">
                 {{ status }}
               </div>
+<<<<<<< Updated upstream
               <div v-if="status_detailed" class="validator-status-detailed">
                 {{ status_detailed }}
+=======
+              <div v-if="status_detailed && validator.epos_status" class="validator-status-detailed">
+                {{ validator.epos_status.substring(0, 1).toUpperCase() + validator.epos_status.substring(1) }}
+>>>>>>> Stashed changes
               </div>
             </div>
           </div>

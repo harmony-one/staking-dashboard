@@ -57,17 +57,8 @@
               <div :class="status | toClassName" class="validator-status">
                 {{ status }}
               </div>
-<<<<<<< Updated upstream
-              <div v-if="status_detailed" class="validator-status-detailed">
-<<<<<<< HEAD
-                {{ status_detailed }}
-=======
               <div v-if="status_detailed && validator.epos_status" class="validator-status-detailed">
                 {{ validator.epos_status.substring(0, 1).toUpperCase() + validator.epos_status.substring(1) }}
->>>>>>> Stashed changes
-=======
-                {{ validator.epos_status.substring(0, 1).toUpperCase() + validator.epos_status.substring(1) }}
->>>>>>> 9d0b385743557c8ec88334731d6566d3c2388394
               </div>
             </div>
           </div>
@@ -191,7 +182,6 @@ export default {
       return this.selfStake ? this.selfStake.amount : 0
     },
     validatorSelfStakeAmount() {
-      console.log(this.validator)
       return this.validator.self_stake
     },
     delegatedStake() {

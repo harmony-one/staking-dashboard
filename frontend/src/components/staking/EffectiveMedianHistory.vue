@@ -44,6 +44,10 @@ export default {
       scales: {
         xAxes: [
           {
+            scaleLabel: {
+              display: true,
+              labelString: 'epochs'
+            },
             display: true,
             gridLines: {
               display: false
@@ -52,6 +56,10 @@ export default {
         ],
         yAxes: [
           {
+            scaleLabel: {
+              display: true,
+              labelString: 'ONE'
+            },
             display: true,
             gridLines: {
               display: true
@@ -73,7 +81,7 @@ export default {
         labels: epochs,
         datasets: [
           {
-            label: "Staked ONE distribution",
+            label: "epoch",
             backgroundColor: '#00ADE888',
             borderColor: 'transparent',
             pointRadius: 0,

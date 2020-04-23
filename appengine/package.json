@@ -8,6 +8,7 @@
     "dev": "NODE_ENV=development node server.js",
     "start": "NODE_ENV=development node server.js",
     "prod": "NODE_ENV=production node server.js",
+    "prod-ssl": "sudo NODE_ENV=production SSL_CERT_FILE=/etc/letsencrypt/live/staking.hmny.io/fullchain.pem SSL_KEY_FILE=/etc/letsencrypt/live/staking.hmny.io/privkey.pem node server_ssl.js",
     "lint": "samples lint",
     "pretest": "npm run lint",
     "test": "samples test app",
@@ -29,6 +30,8 @@
     "dotenv-expand": "^5.1.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.7.0",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {

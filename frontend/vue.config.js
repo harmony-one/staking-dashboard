@@ -88,5 +88,10 @@ module.exports = {
   pluginOptions: {
     lintStyleOnBuild: false,
     stylelint: {}
+  },
+
+  devServer: {
+    disableHostCheck: true,
+    // https: true
   }
 }

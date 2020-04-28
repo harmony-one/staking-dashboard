@@ -15,10 +15,7 @@
       <div class="form-message notice">
         <span>
           Undelegations take 7 epochs to complete and cannot be undone. Please
-          make sure you understand the rules of delegation. Would you prefer to
-          <a id="switch-to-redelgation" href="#" @click="switchToRedelegation()"
-            >redelegate?</a
-          >
+          make sure you understand the rules of delegation.
         </span>
       </div>
     </TmFormGroup>
@@ -86,6 +83,15 @@
 </template>
 
 <script>
+
+
+//  removed from <div class="form-message notice">
+//          Would you prefer to
+//           <a id="switch-to-redelgation" href="#" @click="switchToRedelegation()"
+//             >redelegate?</a
+//           >
+
+
 import { mapGetters } from "vuex"
 import num, { uatoms, atoms, SMALLEST } from "src/scripts/num"
 import { between, decimal } from "vuelidate/lib/validators"

@@ -140,7 +140,11 @@ export default {
     this.$store.dispatch(`getMintingParameters`)
   },
   methods: {
-    onClickValidator(validator) {
+    onClickValidator(validator, newTab = false) {
+      if (newTab) {
+        window.open(window.location.origin + '/validators/' + validator.operator_address, '_blank')
+        return
+      }
       this.$router.push({
         name: "validator",
         params: { validator: validator.operator_address }

@@ -88,6 +88,15 @@
           @click.native="setMaxAmount()"
         />
       </TmFieldGroup>
+
+      
+      
+      <div class="slider">
+        <div class="value">{{sliderValueOutput}}%</div>
+        <input type="range" min="0" max="100" step="10" v-model="sliderValue" @input="change" /> 
+      </div>
+
+
       <span v-if="!isRedelegation()" class="form-message">
         Available to Stake:
         {{ getFromBalance() }}
@@ -194,7 +203,10 @@ export default {
   },
   data: () => ({
     amount: null,
-    selectedIndex: 0
+    selectedIndex: 0,
+    slideValue: 50,
+    slideValueOutput: 50,
+    sliderValueOutput: 50,
   }),
   computed: {
     ...mapState([`session`]),
@@ -266,6 +278,10 @@ export default {
     }
   },
   methods: {
+    change() {
+      this.sliderValueOutput = this.sliderValue
+      this.amount = atoms(this.balance * this.sliderValue/100)
+    },
     viewDenom,
     open(options) {
       if (options && options.redelegation && this.fromOptions.length > 1) {
@@ -317,3 +333,71 @@ export default {
   }
 }
 </script>
+<style scoped="true" lang="scss">
+
+
+.slider {
+  margin: var(--unit);
+
+  .value {
+    text-align: center;
+  }
+
+  input[type=range] {
+    padding: 0;
+    border: none;
+    -webkit-appearance: none;
+    margin: 0;
+    width: 100%;
+  }
+  input[type=range]:focus {
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #ddd;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 2px solid var(--blue);
+    height: 32px;
+    width: 32px;
+    border-radius: 16px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -12px;
+  }
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #eee;
+    border: none;
+    outline: none;
+  }
+  input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #ddd;
+  }
+  input[type=range]::-moz-range-thumb {
+    -webkit-appearance: none;
+    border: 2px solid var(--blue);
+    height: 32px;
+    width: 32px;
+    border-radius: 16px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -12px;
+  }
+  input[type=range]::-ms-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #ddd;
+  }
+}
+
+
+
+</style>

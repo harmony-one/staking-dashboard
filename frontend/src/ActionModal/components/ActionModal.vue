@@ -847,7 +847,7 @@ export default {
   width: 500px;
   max-width: 500px;
   height: auto;
-  max-height: 500px;
+  max-height: 550;
   overflow: hidden;
   overflow-y: scroll;
   border-radius: var(--unit);

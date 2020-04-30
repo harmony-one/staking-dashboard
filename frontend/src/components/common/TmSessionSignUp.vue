@@ -1,9 +1,7 @@
 <template>
-  <SessionFrame  title="Create New Address" image="new">
+  <SessionFrame title="Create New Address" image="new">
     <TmFormStruct :submit="onSubmit.bind(this)">
-      <h2 class="session-title">
-        Create a new address
-      </h2>
+      <h2 class="session-title">Create a new address</h2>
       <div v-if="session.insecureMode" class="session-main">
         <div class="danger-zone">
           <h2>DANGER ZONE</h2>
@@ -88,11 +86,7 @@
             type="match"
           />
         </TmFormGroup>
-        <TmFormGroup
-          field-id="sign-up-seed"
-          class="sign-up-seed-group"
-          field-label="Seed Phrase"
-        >
+        <TmFormGroup field-id="sign-up-seed" class="sign-up-seed-group" field-label="Seed Phrase">
           <FieldSeed id="sign-up-seed" v-model="fields.signUpSeed" />
         </TmFormGroup>
         <TmFormGroup
@@ -103,13 +97,9 @@
         >
           <div class="field-checkbox-input">
             <label class="field-checkbox-label" for="sign-up-warning">
-              <input
-                id="sign-up-warning"
-                v-model="fields.signUpWarning"
-                type="checkbox"
-              />
-              I understand that lost seeds cannot be recovered.</label
-            >
+              <input id="sign-up-warning" v-model="fields.signUpWarning" type="checkbox" />
+              I understand that lost seeds cannot be recovered.
+            </label>
           </div>
           <TmFormMsg
             v-if="
@@ -129,9 +119,8 @@
           Creating an address in the browser is unsafe. Please install our
           <a
             target="_blank"
-            href="https://chrome.google.com/webstore/detail/harmony/dmknnpkhnockodmnclcellfiilmklimd?hl=en"
-            >browser extension</a
-          >
+            href="https://chrome.google.com/webstore/detail/harmony/bjaeebonnimhcakeckbnemejhdpngdmd"
+          >browser extension</a>
         </p>
         <!--        <p>-->
         <!--          Creating an address in the browser is unsafe. To offer you a secure-->
@@ -145,19 +134,15 @@
             href="https://shop.ledger.com/?r=3dd204ef7508"
             target="_blank"
             rel="noopener norefferer"
-            >Ledger Nano</a
-          >
+          >Ledger Nano</a>
           or the
           <a
             href="https://docs.harmony.one/home/wallet-guides/harmony-cli/create-import-wallet"
             target="_blank"
             rel="noopener norefferer"
-            >command line</a
-          >.
+          >command line</a>.
         </p>
-        <router-link to="existing"
-          >Want to use an existing address?</router-link
-        >
+        <router-link to="existing">Want to use an existing address?</router-link>
       </div>
     </TmFormStruct>
   </SessionFrame>

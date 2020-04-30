@@ -1,31 +1,26 @@
 <template>
   <SessionFrame title="Create New Account" image="account">
-      <h2 class="session-title">Use Harmony Browser Extension</h2>
-      <div v-if="!extension.enabled" class="session-main">
-        <p>
-          Looks like you don't have the Harmony browser extension installed yet.
-          Head over to the
-          <a
-            href="https://chrome.google.com/webstore/detail/harmony/dmknnpkhnockodmnclcellfiilmklimd"
-            target="_blank"
-            rel="noopener norefferer"
-            >Harmony Chrome Extension</a
-          >
-          to quickly install the extension.
-        </p>
-      </div>
+    <h2 class="session-title">Use Harmony Browser Extension</h2>
+    <div v-if="!extension.enabled" class="session-main">
+      <p>
+        Looks like you don't have the Harmony browser extension installed yet.
+        Head over to the
+        <a
+          href="https://chrome.google.com/webstore/detail/harmony/bjaeebonnimhcakeckbnemejhdpngdmd"
+          target="_blank"
+          rel="noopener norefferer"
+        >Harmony Chrome Extension</a>
+        to quickly install the extension.
+      </p>
+    </div>
 
-      <div v-else class="session-main">
-        <p class="extension-message">
-          Below is a list of accounts we've received from the Harmony browser
-          extension.
-        </p>
-        <AccountList
-          :accounts="accounts"
-          :button-action="signIn"
-          :button-text="`Use Account`"
-        />
-      </div>
+    <div v-else class="session-main">
+      <p class="extension-message">
+        Below is a list of accounts we've received from the Harmony browser
+        extension.
+      </p>
+      <AccountList :accounts="accounts" :button-action="signIn" :button-text="`Use Account`" />
+    </div>
   </SessionFrame>
 </template>
 
@@ -66,6 +61,4 @@ export default {
   }
 }
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

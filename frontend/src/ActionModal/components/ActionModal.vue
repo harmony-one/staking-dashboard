@@ -207,7 +207,7 @@
                 />
               </div>
               <div slot="title">
-                Sent and confirming
+                Signed and sent to the network
               </div>
               <div slot="subtitle">
                 The transaction
@@ -745,7 +745,7 @@ export default {
         this.onTxIncluded(type, transactionProperties, feeProperties)
 
         // close modal in 2 sec after success tx
-        setTimeout(() => this.close(), 2000)
+        setTimeout(() => this.close(), 10000)
       } catch ({ message }) {
         console.log("[submit] error", message)
 
@@ -847,7 +847,7 @@ export default {
   width: 500px;
   max-width: 500px;
   height: auto;
-  max-height: 500px;
+  max-height: 550;
   overflow: hidden;
   overflow-y: scroll;
   border-radius: var(--unit);

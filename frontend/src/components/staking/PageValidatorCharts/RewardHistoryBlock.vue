@@ -59,7 +59,7 @@ export default {
             },
             scaleLabel: {
               display: true,
-              labelString: "Rate, %"
+              labelString: "Expected Return %"
             }
           }
         ]

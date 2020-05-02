@@ -5,115 +5,117 @@
     :epoch="true"
     title="Analytics"
   >
-    <template slot="managed-body">
-      <div class="networkInfo">
-        <div class="networkInfo-column">
-          <div id="validators_median_stake" class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
-              Effective Median Stake:
-            </h4>
-            <span v-if="networkInfo.effective_median_stake">
-              {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
-            </span>
-            <span v-else>-</span>
-          </div>
-          <div id="validators_total_stake" class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Stake:</h4>
-            <span v-if="totalStake">
-              {{ totalStake | ones | zeroDecimals }} ONE
-            </span>
-            <span v-else>-</span>
-          </div>
-          <div class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.current_block_number">
-              Current Block Height:
-            </h4>
-            <a :href="linkToTransaction" target="_blank">
-              #{{ networkInfo.current_block_number }}
-            </a>
-          </div>
+    <template>
+      <template slot="managed-body">
+        <div class="tabsPlane">
+          <AnalyticsToggle
+            :value="isLiveMode"
+            :onChange="value => (isLiveMode = value)"
+          />
         </div>
-      </div>
-
-      <div class="networkInfo" style="padding: 20px 30px;">
-        <AnalyticsToggle
-          :value="isLiveMode"
-          :onChange="value => (isLiveMode = value)"
-        />
-      </div>
-
-      <template v-if="!isLiveMode">
-        <div>
-          <div v-if="networkInfo.raw_stake_distro" class="chart-border">
-            <AllStakesChart
-              :raw="networkInfo.raw_stake_distro"
-              :eff="networkInfo.effective_median_stake_distro"
-              :median="networkInfo.effective_median_stake | ones"
-            />
-
-            <!--            <AllStakesChart-->
-            <!--              :raw="networkInfo.live_raw_stake_distro"-->
-            <!--              :eff="networkInfo.live_effective_median_stake_distro"-->
-            <!--              :median="networkInfo.effective_median_stake | ones"-->
-            <!--            />-->
-          </div>
-
-          <div class="table-border validatorTable">
-            <TableRankedValidators :data="enrichedValidators" />
+        <div class="networkInfo">
+          <div class="networkInfo-column">
+            <div id="validators_median_stake" class="networkInfo-item">
+              <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
+                Effective Median Stake:
+              </h4>
+              <span v-if="networkInfo.effective_median_stake">
+                {{ networkInfo.effective_median_stake | ones | zeroDecimals }}
+                ONE
+              </span>
+              <span v-else>-</span>
+            </div>
+            <div id="validators_total_stake" class="networkInfo-item">
+              <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Stake:</h4>
+              <span v-if="totalStake">
+                {{ totalStake | ones | zeroDecimals }} ONE
+              </span>
+              <span v-else>-</span>
+            </div>
+            <div class="networkInfo-item">
+              <h4 v-tooltip.top="tooltips.v_list.current_block_number">
+                Current Block Height:
+              </h4>
+              <a :href="linkToTransaction" target="_blank">
+                #{{ networkInfo.current_block_number }}
+              </a>
+            </div>
           </div>
         </div>
 
-        <div class="widget-row">
-          <LightWidget
-            v-if="networkInfo.total_seats_used"
-            :title="
-              `Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`
-            "
-          >
-            <div class="chart">
-              <SeatAllocation :data="networkInfo" />
-            </div>
-          </LightWidget>
+        <template v-if="!isLiveMode">
+          <div>
+            <div v-if="networkInfo.raw_stake_distro" class="chart-border">
+              <AllStakesChart
+                :raw="networkInfo.raw_stake_distro"
+                :eff="networkInfo.effective_median_stake_distro"
+                :median="networkInfo.effective_median_stake | ones"
+              />
 
-          <LightWidget v-if="networkInfo.history" title="Seat Allocation">
-            <div class="chart">
-              <SeatAllocationHistory :data="networkInfo.history" />
+              <!--            <AllStakesChart-->
+              <!--              :raw="networkInfo.live_raw_stake_distro"-->
+              <!--              :eff="networkInfo.live_effective_median_stake_distro"-->
+              <!--              :median="networkInfo.effective_median_stake | ones"-->
+              <!--            />-->
             </div>
-          </LightWidget>
-        </div>
 
-        <div class="widget-row">
-          <LightWidget v-if="networkInfo.history" title="Total Stake">
-            <div class="chart">
-              <TotalStakeHistory :data="networkInfo.history" />
+            <div class="table-border validatorTable">
+              <TableRankedValidators :data="enrichedValidators" />
             </div>
-          </LightWidget>
+          </div>
 
-          <LightWidget v-if="networkInfo.history" title="Effective Median">
-            <div class="chart">
-              <EffectiveMedianHistory :data="networkInfo.history" />
+          <div class="widget-row">
+            <LightWidget
+              v-if="networkInfo.total_seats_used"
+              :title="
+                `Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`
+              "
+            >
+              <div class="chart">
+                <SeatAllocation :data="networkInfo" />
+              </div>
+            </LightWidget>
+
+            <LightWidget v-if="networkInfo.history" title="Seat Allocation">
+              <div class="chart">
+                <SeatAllocationHistory :data="networkInfo.history" />
+              </div>
+            </LightWidget>
+          </div>
+
+          <div class="widget-row">
+            <LightWidget v-if="networkInfo.history" title="Total Stake">
+              <div class="chart">
+                <TotalStakeHistory :data="networkInfo.history" />
+              </div>
+            </LightWidget>
+
+            <LightWidget v-if="networkInfo.history" title="Effective Median">
+              <div class="chart">
+                <EffectiveMedianHistory :data="networkInfo.history" />
+              </div>
+            </LightWidget>
+          </div>
+        </template>
+
+        <template v-else>
+          <div>
+            <div v-if="networkInfo.live_raw_stake_distro" class="chart-border">
+              <AllStakesChart
+                :raw="networkInfo.live_raw_stake_distro"
+                :eff="networkInfo.live_effective_median_stake_distro"
+                :median="networkInfo.effective_median_stake | ones"
+              />
             </div>
-          </LightWidget>
-        </div>
+
+            <div class="table-border validatorTable">
+              <TableRankedValidators :data="enrichedLiveValidators" />
+            </div>
+          </div>
+        </template>
+
+        <!-- <TmDataLoading v-if="isLoading" /> -->
       </template>
-
-      <template v-else>
-        <div>
-          <div v-if="networkInfo.live_raw_stake_distro" class="chart-border">
-            <AllStakesChart
-              :raw="networkInfo.live_raw_stake_distro"
-              :eff="networkInfo.live_effective_median_stake_distro"
-              :median="networkInfo.effective_median_stake | ones"
-            />
-          </div>
-
-          <div class="table-border validatorTable">
-            <TableRankedValidators :data="enrichedLiveValidators" />
-          </div>
-        </div>
-      </template>
-
-      <!-- <TmDataLoading v-if="isLoading" /> -->
     </template>
   </PageContainer>
 </template>

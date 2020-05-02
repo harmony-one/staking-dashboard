@@ -6,6 +6,7 @@
     >
       {{ titlePrefix }} Last Epoch
     </span>
+    <div class="divider" />
     <span
       :class="{ tabItem: true, active: value }"
       @click="() => onChange(true)"
@@ -27,28 +28,32 @@ export default {
   flex-grow: 1;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: baseline;
+
+  .divider {
+    display: inline-block;
+    height: 25px;
+    width: 1px;
+    margin: 5px 20px -7px 20px;
+    background: #ddd;
+  }
 
   .tabItem {
     cursor: pointer;
     color: rgba(85, 91, 104, 0.7);
     // margin-right: 20px;
-    font-size: 1.1em;
+    font-size: 0.9em;
     font-weight: 500;
-    padding: 0 20px;
-
-    &.first {
-      padding: 0 20px 0 0;
-      border-right: 1px solid #ddd;
-    }
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
 
     &.active {
-      // position: relative;
-      // display: inline-block;
       // color: #1b295e;
       color: var(--blue);
 
       &:after {
-        display: none;
+        display: block;
         content: '';
         position: absolute;
         width: 100%;
@@ -57,7 +62,7 @@ export default {
         // background-color: #1b295e;
         opacity: 0.8;
         border-radius: 10px;
-        bottom: -17px;
+        bottom: -16px;
       }
     }
   }

@@ -82,7 +82,9 @@ export default {
       //   0
       // )
 
-      const colors = ['#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466']
+      const colors = ['#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466',
+      '#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466',
+      '#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466']
 
       return {
         labels: this.delegations.map(v => v.validator),

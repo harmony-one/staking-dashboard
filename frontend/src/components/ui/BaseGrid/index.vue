@@ -24,6 +24,7 @@
             v-for="(item, index) in data"
             :key="index"
             @click="column.value === 'select' ? '' : onRowClick(item)"
+            @contextmenu.prevent="() => onRowClick(item, true)"
             :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
           >
             <template v-if="column.render">{{ column.render(item[column.value], item)}}</template>
@@ -54,10 +55,6 @@ export default {
   },
   props: ["data", "columns", "sort", "onRowClick"],
   methods: {
-    columnClick(e) {
-      e.stopPropagation()
-      console.log(e)
-    },
     orderBy(property) {
       if (this.sort.property === property) {
         this.sort.order = this.sort.order === `asc` ? `desc` : "asc"
@@ -116,6 +113,7 @@ export default {
       cursor: pointer;
       border-bottom: 1px solid var(--light2);
       min-height: 48px;
+      max-height: 48px;
       overflow: hidden;
     }
     .table-cell:nth-child(odd) {

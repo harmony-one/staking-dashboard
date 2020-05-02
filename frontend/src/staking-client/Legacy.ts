@@ -127,8 +127,6 @@ export default class Legacy {
 
   pool = () => this.get(`/staking/pool`)
 
-  stakingParameters = () => this.get(`/staking/parameters`)
-
   /* ============ Slashing ============ */
 
   // validatorSigningInfo = (pubKey: string) => {

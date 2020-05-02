@@ -6,6 +6,7 @@ import { waitTransactionConfirm } from "src/scripts/extension-utils"
 
 import {
   MsgDelegate,
+  MsgMultiDelegate,
   MsgSend,
   MsgUndelegate,
   MsgWithdrawDelegationReward
@@ -14,6 +15,7 @@ import { INetworkConfig } from "@/vuex/modules/connection"
 
 type TMessage =
   | "MsgDelegate"
+  | "MsgMultiDelegate"
   | "MsgSend"
   | "MsgUndelegate"
   | "MsgWithdrawDelegationReward"
@@ -63,6 +65,12 @@ export default class ActionManager {
         this.message = MsgSend(this.context.userAddress, transactionProperties)
         break
 
+      case "MsgMultiDelegate":
+        this.message = MsgMultiDelegate(
+          this.context.userAddress,
+          transactionProperties
+        )
+        break
       case "MsgDelegate":
         this.message = MsgDelegate(
           this.context.userAddress,

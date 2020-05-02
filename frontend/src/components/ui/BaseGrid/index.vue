@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="table-headings-wrap">
-
       <div
         class="table-headings"
         v-for="column in columns"
@@ -24,24 +23,21 @@
             class="table-cell"
             v-for="(item, index) in data"
             :key="index"
-            @click="() => onRowClick(item)"
+            @click="column.value === 'select' ? '' : onRowClick(item)"
             :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
           >
-            <template v-if="column.render">
-              {{ column.render(item[column.value], item) }}
-            </template>
+            <template v-if="column.render">{{ column.render(item[column.value], item)}}</template>
 
             <template v-else-if="column.renderComponent">
               <component
                 :is="column.renderComponent"
                 :value="item[column.value]"
+                :id="index"
                 :data="item"
               />
             </template>
 
-            <template v-else>
-              {{ item[column.value] }}
-            </template>
+            <template v-else>{{ item[column.value] }}</template>
           </div>
         </div>
       </div>
@@ -51,7 +47,6 @@
 
 <script>
 import SortHeaderCell from "./SortHeaderCell"
-
 export default {
   name: `base-grid`,
   components: {
@@ -59,6 +54,10 @@ export default {
   },
   props: ["data", "columns", "sort", "onRowClick"],
   methods: {
+    columnClick(e) {
+      e.stopPropagation()
+      console.log(e)
+    },
     orderBy(property) {
       if (this.sort.property === property) {
         this.sort.order = this.sort.order === `asc` ? `desc` : "asc"
@@ -72,7 +71,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 @mixin table-row {
   display: flex;
   flex-direction: row;
@@ -121,14 +119,14 @@ export default {
       overflow: hidden;
     }
     .table-cell:nth-child(odd) {
-      background: #00ADE810;
+      background: #00ade810;
     }
     .table-cell:last-child {
       border-bottom: none;
     }
   }
   .table-column:last-child {
-    margin-right: calc(-1*var(--unit));
+    margin-right: calc(-1 * var(--unit));
   }
 }
 </style>

@@ -8,9 +8,7 @@
       <div class="networkInfo">
         <div class="networkInfo-column">
           <div id="validators_median_stake" class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
-              Effective Median Stake:
-            </h4>
+            <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">Effective Median Stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
@@ -18,23 +16,22 @@
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.current_block_number">
-              Current Block Height:
-            </h4>
-            <a :href="linkToTransaction" target="_blank">
-              #{{ networkInfo.current_block_number }}
-            </a>
+            <h4 v-tooltip.top="tooltips.v_list.current_block_number">Current Block Height:</h4>
+            <a :href="linkToTransaction" target="_blank">#{{ networkInfo.current_block_number }}</a>
           </div>
         </div>
       </div>
       <div v-if="isNetworkInfoLoading" class="validatorTable">
         <div class="filterOptions">
-          <TmField
-            v-model="searchTerm"
-            class="searchField"
-            placeholder="Search"
-          />
+          <TmField v-model="searchTerm" class="searchField" placeholder="Search" />
           <div class="toggles">
+            <TmBtn
+              value="Delegate"
+              v-tooltip.top="tooltips.v_list.multi_delegate"
+              class="btn-radio secondary"
+              @click.native="multidelgate"
+              v-bind:disabled="selectedItem.length === 0"
+            />
             <TmBtn
               value="Elected"
               v-tooltip.top="tooltips.v_list.elected"
@@ -62,30 +59,41 @@
         <div
           v-if="validators && validators.length === 0 && searchTerm"
           class="no-results"
-        >
-          No results for these search terms
-        </div>
+        >No results for these search terms</div>
       </div>
       <TmDataLoading v-if="isLoading" />
+
+      <MultidelegationModal
+        ref="multidelegationModal"
+        :from-options="delegationTargetOptions()"
+        :to="selectedValidators"
+        :denom="bondDenom"
+        :minAmount="1000"
+      />
     </template>
   </PageContainer>
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapState, mapGetters } from "vuex"
 import TableValidators from "staking/TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
+import { formatBech32 } from "src/filters"
 import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
+import { EventBus } from "src/components/event-bus.js"
 import PercentageChange from "./components/PercentageChange"
+import isEmpty from "lodash.isempty"
+import MultidelegationModal from "src/ActionModal/components/MultidelegationModal"
 
 export default {
   name: `tab-validators`,
   components: {
+    MultidelegationModal,
     TableValidators,
     PageContainer,
     TmField,
@@ -101,9 +109,12 @@ export default {
   data: () => ({
     tooltips,
     searchTerm: "",
-    activeOnly: true
+    activeOnly: true,
+    selectedItem: []
   }),
   computed: {
+    ...mapState([`session`, `delegates`]),
+    ...mapGetters([`bondDenom`, `committedDelegations`, `liquidAtoms`]),
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
@@ -117,6 +128,7 @@ export default {
       totalActive: state => state.validators.totalActive
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
+    ...mapGetters([`bondDenom`]),
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
     validators: state => {
@@ -133,11 +145,78 @@ export default {
       //   : ""
       const blocksUrl = `https://explorer.os.hmny.io/#/block/`
       return blocksUrl + this.networkInfo.current_block_hash
+    },
+    selectedValidators() {
+      let selected = []
+      this.selectedItem.forEach((item, index) => {
+        selected.push({
+          name: this.validators[item.id].name,
+          address: this.validators[item.id].address
+        })
+      })
+      return selected
+    }
+  },
+  methods: {
+    multidelgate() {
+      window.ga("send", "pageview", "/multidelegate")
+      window.ga("send", "event", "multidelegate", "open", "modal")
+      this.$refs.multidelegationModal.open()
+    },
+    delegationTargetOptions(
+      { session, liquidAtoms, committedDelegations, $route, delegates } = this
+    ) {
+      if (!session.signedIn) return []
+
+      //- First option should always be your wallet (i.e normal delegation)
+      const myWallet = [
+        {
+          address: session.address,
+          maximum: Math.floor(liquidAtoms),
+          key: `My Wallet - ${formatBech32(session.address, false, 20)}`,
+          value: 0
+        }
+      ]
+      const bondedValidators = Object.keys(committedDelegations)
+      if (isEmpty(bondedValidators)) {
+        return myWallet
+      }
+      //- The rest of the options are from your other bonded validators
+      //- We skip the option of redelegating to the same address
+      const redelegationOptions = bondedValidators
+        .filter(address => address != $route.params.validator)
+        .reduce((validators, address) => {
+          const delegate = delegates.delegates.find(function(validator) {
+            return validator.operator_address === address
+          })
+
+          const name = delegate.validator_info && delegate.validator_info.name
+
+          return validators.concat({
+            address: address,
+            maximum: Math.floor(committedDelegations[address]),
+            key: `${name} - ${formatBech32(
+              delegate.delegator_address,
+              false,
+              20
+            )}`,
+            value: validators.length + 1
+          })
+        }, [])
+      return myWallet.concat(redelegationOptions)
     }
   },
   async mounted() {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
+    EventBus.$on("validator-selected", (id, checked) => {
+      const matchedID = this.selectedItem.findIndex(item => item.id === id)
+      if (matchedID >= 0) {
+        this.selectedItem.splice(matchedID, 1)
+      }
+      if (checked) this.selectedItem.push({ id, checked })
+      this.selectedItem.sort((a, b) => a.id - b.id)
+    })
   }
 }
 </script>

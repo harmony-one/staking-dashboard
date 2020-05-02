@@ -1,5 +1,8 @@
 <template>
-  <div :class="classNames" class="panel-sort-table-header"
+  <div
+    :class="classNames"
+    v-if="column.value != 'select'"
+    class="panel-sort-table-header"
     :style="column.align === 'right' ? { textAlign: 'right' } : { textAlign: 'left' }"
   >
     <a
@@ -51,7 +54,7 @@ export default {
 .panel-sort-table-header {
   font-size: var(--m);
   padding: var(--unit) 0;
-  padding-right:  var(--quarter);
+  padding-right: var(--quarter);
   border-bottom: 1px solid var(--bc-dim);
   min-height: 48px;
   overflow: hidden;

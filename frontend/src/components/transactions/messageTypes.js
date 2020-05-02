@@ -3,6 +3,7 @@ const messageType = {
   CREATE_VALIDATOR: "harmony-sdk/MsgCreateValidator",
   EDIT_VALIDATOR: "harmony-sdk/MsgEditValidator",
   DELEGATE: "harmony-sdk/MsgDelegate",
+  MULTIDELEGATE: "harmony-sdk/MsgMultiDelegate",
   UNDELEGATE: "harmony-sdk/MsgUndelegate",
   BEGIN_REDELEGATE: "harmony-sdk/MsgBeginRedelegate",
   UNJAIL: "harmony-sdk/MsgUnjail",

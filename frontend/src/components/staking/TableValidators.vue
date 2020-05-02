@@ -17,8 +17,9 @@ import BaseGrid from "src/components/ui/BaseGrid"
 import PanelPagination from "src/components/ui/BaseGrid/PanelPagination"
 
 import ValidatorStatus from "./components/ValidatorStatus"
+import ValidatorSelect from "./components/ValidatorSelect"
 import ValidatorName from "./components/ValidatorName"
-
+import ValidatorViewBtn from "./components/ValidatorViewBtn"
 import tooltips from "src/components/tooltips"
 
 import {
@@ -34,7 +35,7 @@ export default {
   name: `table-validators`,
   components: {
     BaseGrid,
-    PanelPagination
+    PanelPagination,
   },
   props: {
     data: {
@@ -60,12 +61,16 @@ export default {
       pageIndex: 0,
       pageSize: 50
     },
-    fetchTimeoutId: null
+    fetchTimeoutId: null,
+    selected:false
   }),
   computed: {
     ...mapState([`distribution`, `pool`, `session`, "delegates", "validators"]),
     ...mapState({
       annualProvision: state => state.minting.annualProvision
+    }),
+    ...mapState({
+      delegationQue: state => state.delegationque.delegationList
     }),
     ...mapState({
       totalFound: state => state.validators.totalFound
@@ -115,10 +120,18 @@ export default {
     columns() {
       let props = [
         {
+          title: `#`,
+          value: `#`,
+          tooltip: tooltips.v_list.status,
+          width: "50px",
+          renderComponent: ValidatorSelect // render as Component - use custom Vue components
+
+        },
+        {
           title: `Status`,
           value: `status`,
           tooltip: tooltips.v_list.status,
-          width: "110px",
+          width: "96px",
           renderComponent: ValidatorStatus // render as Component - use custom Vue components
         },
         {
@@ -128,10 +141,10 @@ export default {
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
-          title: `Expected Return`,
+          title: `APR %`,
           value: `apr`,
           tooltip: tooltips.v_list.apr,
-          width: "160px",
+          width: "130px",
           align: "right",
           render: value => percent(value)
         },
@@ -158,6 +171,14 @@ export default {
           width: "96px",
           align: "right",
           render: value => percent(value)
+        },
+        {
+          title: `Action`,
+          value: `action`,
+          tooltip: `Click to view more`,
+          width: "100px",
+          align: "center", 
+          renderComponent:ValidatorViewBtn
         }
       ]
 

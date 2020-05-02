@@ -1,21 +1,35 @@
 <template>
   <div class="validator-info-container">
-    <ValidatorLogo
-      :name="data.moniker"
-      :operator-address="data.operator_address"
-      :logo-url="data.logo_url"
-    />
-    <h3 class="li-validator-name">{{ data.moniker }}</h3>
+    
+    <span 
+      class="validator-status elected"
+      title="view"
+      @click="onClickValidator(data)"
+      >View</span
+    >
+    
   </div>
 </template>
 
 <script>
-import ValidatorLogo from "./ValidatorLogo"
 
 export default {
   name: `li-validator`,
-  components: { ValidatorLogo },
-  props: ["data"]
+  filters: {
+    
+  },
+  components: {  },
+  props: ["data"],
+  
+  
+  methods: {
+    onClickValidator(validator) {
+      this.$router.push({
+        name: "validator",
+        params: { validator: validator.operator_address }
+      })
+    }
+  },
 }
 </script>
 

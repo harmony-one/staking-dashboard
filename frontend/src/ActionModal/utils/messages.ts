@@ -19,18 +19,20 @@ export function MsgSend(
 // Staking
 export function MsgDelegate(
   senderAddress: string,
-  { validatorAddress, amount, denom }: any
+  { validatorAddress, multi_delegate, amount,  denom }: any
 ) {
   return {
     type: `harmony-sdk/MsgDelegate`,
     value: {
       delegator_address: senderAddress,
       validator_address: validatorAddress,
-      amount: Coin({ amount, denom })
+      multi_delegate: multi_delegate,
+      amount: Coin({ amount, denom }),
+      validators: validatorAddress
     }
   }
 }
-
+ 
 export function MsgUndelegate(
   senderAddress: string,
   { validatorAddress, amount, denom }: any

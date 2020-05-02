@@ -1,10 +1,11 @@
 <template>
-  <div class="table-delegations">
+  <div >
     <BaseGrid
       :sort="sort"
       :columns="columns"
       :data="showingValidators"
       :on-row-click="onClickValidator"
+      style="max-height:150px;overflow:scroll"
     />
   </div>
 </template>
@@ -13,7 +14,6 @@
 import { mapGetters, mapState } from "vuex"
 import orderBy from "lodash.orderby"
 import tooltips from "src/components/tooltips"
-import ValidatorViewBtn from "../components/ValidatorViewBtn"
 
 import {
   percent,
@@ -24,10 +24,12 @@ import {
   fourDecimals,
   twoDecimals
 } from "scripts/num"
-
+import config from "src/config"
 import BaseGrid from "src/components/ui/BaseGrid"
 import ValidatorStatus from "../components/ValidatorStatus"
 import ValidatorName from "../components/ValidatorName"
+import ValidatorAddress from "../components/ValidatorAddress"
+import ValidatorInvoice from "../components/ValidatorInvoice"
 
 export default {
   name: `table-delegations`,
@@ -50,6 +52,7 @@ export default {
   },
   data: () => ({
     query: ``,
+    gasPrice: config.default_gas_price.toFixed(9),
     sort: {
       property: `stake`,
       order: `desc`
@@ -74,79 +77,25 @@ export default {
     },
     columns() {
       let columns = [
-        {
-          title: `Status`,
-          value: `status`,
-          tooltip: tooltips.portfolio.status,
-          width: "110px",
-          renderComponent: ValidatorStatus // render as Component - use custom Vue components
-        },
+       
         {
           title: `Name`,
           value: `name`,
+          width: "300px",
+
           tooltip: tooltips.portfolio.name,
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
-          title: `Stake`,
-          value: `stake`,
-          tooltip: `Stake of validator`,
-          width: "120px",
-            align: "right",
-          render: value => zeroDecimals(ones(value)) + " ONE"
+          title: `Address`,
+          value: `address`,
+          tooltip: `Address of validator`,
+          width: "200px",
+          align: "right",
+          renderComponent: ValidatorAddress
         }
         
       ]
-
-      if (this.isUndelegation) {
-        columns = columns.concat([
-          {
-            title: `Returned in`,
-            value: `remaining_epoch`,
-            tooltip: tooltips.portfolio.ending_in,
-            width: "160px",
-            align: "right",
-            render: value => value + " epoch" + value > 1 ? "s" : ""
-          }
-        ])
-      } else {
-        columns = columns.concat([
-          {
-            title: `Reward (to date)`,
-            value: `rewards`,
-            tooltip: tooltips.portfolio.reward_up_to_date,
-            width: "200px",
-            align: "right",
-            render: value => zeroDecimals(ones(value)) + " ONE"
-          },
-          {
-            title: `Expected Return`,
-            value: `apr`,
-            tooltip: tooltips.portfolio.apr_avg,
-            width: "200px",
-            align: "right",
-            render: value => percent(value)
-          }
-        ])
-      }
-
-      if (this.$mq === "tab") {
-        const keep = ["name", "apr", "stake", "remaining_epoch", "apr"]
-        columns = columns.filter(p => keep.includes(p.value))
-      }
-      if (this.$mq === "sm" || this.$mq === "md") {
-        const keep = ["name", "remaining_epoch", "apr", "stake"]
-        columns = columns.filter(p => keep.includes(p.value))
-      }
-      columns = columns.concat([{
-          title: `Action`,
-          value: `action`,
-          tooltip: `Click to view more`,
-          width: "100px",
-          align: "center", 
-          renderComponent:ValidatorViewBtn
-        }])
-        
       return columns
     }
   },
@@ -165,13 +114,15 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-
-.table-delegations {
-  .table-headings-wrap {
-    width: 100%;
+<style scoped lang="scss">
+table {
+  margin-top: var(--unit);
+  thead {
+    text-transform: uppercase;
+    font-weight: bold;
   }
 }
+
 @media screen and (max-width: 414px) {
 }
 </style>

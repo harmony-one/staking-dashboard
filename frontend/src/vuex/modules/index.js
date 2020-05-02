@@ -25,4 +25,5 @@ export default opts => ({
   keystore: require(`./keystore.js`).default(opts),
   notifications: require(`./notifications.js`).default(opts),
   validators: require(`./validators.js`).default(opts),
+  delegationque: require(`./delegationque.js`).default(opts),
 })

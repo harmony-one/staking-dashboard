@@ -36,6 +36,16 @@
           />
           <div class="toggles">
             <TmBtn
+              value="Delegate"
+              v-if="delegationQue.length>0"
+              :number="delegationQue.length"
+              :type="activeOnly ? `active` : `secondary`"
+              @click.native="onDelegation()"
+              class="btn-radio secondary active"
+            >
+              Delegate
+            </TmBtn>
+            <TmBtn
               value="Elected"
               v-tooltip.top="tooltips.v_list.elected"
               :number="totalActive"
@@ -67,16 +77,27 @@
         </div>
       </div>
       <TmDataLoading v-if="isLoading" />
+      <MultiDelegationModal
+        ref="multidelegationModal"
+        :from-options="delegationTargetOptions()"
+        :validators="delegationQue"
+        :denom="bondDenom"
+        :minAmount="1000"
+      />
     </template>
   </PageContainer>
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapState, mapGetters} from "vuex"
 import TableValidators from "staking/TableValidators"
+import MultiDelegationModal from "src/ActionModal/components/MultiDelegationModal"
+
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
+import { formatBech32 } from "src/filters"
+import isEmpty from "lodash.isempty"
 import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
@@ -90,7 +111,8 @@ export default {
     PageContainer,
     TmField,
     TmBtn,
-    TmDataLoading
+    TmDataLoading,
+    MultiDelegationModal
   },
   filters: {
     ones,
@@ -104,11 +126,28 @@ export default {
     activeOnly: true
   }),
   computed: {
+    ...mapState([
+      `delegates`,
+      `delegation`,
+      `distribution`,
+      `session`,
+      `pool`, // ??
+      `connection` // ??
+    ]),
+    ...mapGetters([
+      `bondDenom`,
+      `committedDelegations`,
+      `liquidAtoms`,
+      `connected`
+    ]),
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
       isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
+    }),
+    ...mapState({
+      delegationQue: state => state.delegationque.delegationList
     }),
     ...mapState({
       allValidators: state =>
@@ -128,17 +167,66 @@ export default {
         : ""
     },
     linkToTransaction() {
-      // const blocksUrl = this.networkConfig.explorer_url
-      //   ? this.networkConfig.explorer_url.replace("tx", "block")
-      //   : ""
-      const blocksUrl = `https://explorer.os.hmny.io/#/block/`
+      const blocksUrl = this.networkConfig.explorer_url
+        ? this.networkConfig.explorer_url.replace("tx", "block")
+        : ""
+
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },
   async mounted() {
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
-  }
+  },
+  methods: {
+    onDelegation(options) {
+      window.ga('send', 'pageview', '/delegate')
+      window.ga('send', 'event', 'multi-delegate', 'open', 'modal')
+      this.$refs.multidelegationModal.open(options)
+    },
+     delegationTargetOptions(
+      { session, liquidAtoms, committedDelegations, $route, delegates } = this
+    ) {
+      if (!session.signedIn) return []
+
+      //- First option should always be your wallet (i.e normal delegation)
+      const myWallet = [
+        {
+          address: session.address,
+          maximum: Math.floor(liquidAtoms),
+          key: `My Wallet - ${formatBech32(session.address, false, 20)}`,
+          value: 0
+        }
+      ]
+      const bondedValidators = Object.keys(committedDelegations)
+      if (isEmpty(bondedValidators)) {
+        return myWallet
+      }
+      //- The rest of the options are from your other bonded validators
+      //- We skip the option of redelegating to the same address
+      const redelegationOptions = bondedValidators
+        .filter(address => address != $route.params.validator)
+        .reduce((validators, address) => {
+          const delegate = delegates.delegates.find(function(validator) {
+            return validator.operator_address === address
+          })
+
+          const name = delegate.validator_info && delegate.validator_info.name
+
+          return validators.concat({
+            address: address,
+            maximum: Math.floor(committedDelegations[address]),
+            key: `${name} - ${formatBech32(
+              delegate.delegator_address,
+              false,
+              20
+            )}`,
+            value: validators.length + 1
+          })
+        }, [])
+      return myWallet.concat(redelegationOptions)
+    }
+  },
 }
 </script>
 

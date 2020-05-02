@@ -1,20 +1,20 @@
 <template>
   <div class="validator-info-container">
-    <ValidatorLogo
-      :name="data.moniker"
-      :operator-address="data.operator_address"
-      :logo-url="data.logo_url"
-    />
-    <h3 class="li-validator-name">{{ data.moniker }}</h3>
+    {{data.address| formatBech32(false, 8, 8) }}
+
   </div>
 </template>
 
 <script>
-import ValidatorLogo from "./ValidatorLogo"
+
+import { formatBech32 } from "src/filters"
 
 export default {
   name: `li-validator`,
-  components: { ValidatorLogo },
+  filters: {
+    formatBech32
+  },
+  components: {  },
   props: ["data"]
 }
 </script>

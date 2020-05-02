@@ -16,16 +16,14 @@
       <div class="table-body">
         <div
           class="table-column"
-          v-for="(column, index) in columns"
-          :key="index"
+          v-for="column in columns"
+          :key="column.value"
           :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
         >
           <div
             class="table-cell"
-            v-for="(item, index) in data"
-            :key="index"
-            @click="(e) => onRowClick(item)"
-            @contextmenu.prevent="() => onRowClick(item, true)"
+            v-for="item in data"
+            :key="item.address"
             :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
           >
             <template v-if="column.render">
@@ -51,6 +49,8 @@
 </template>
 
 <script>
+//            @click="() => onRowClick(item)"
+
 import SortHeaderCell from "./SortHeaderCell"
 
 export default {
@@ -93,7 +93,7 @@ export default {
   overflow: hidden;
   overflow-y: auto;
   height: 100%;
-  max-height: calc(100vh - 442px);
+  max-height: calc(100vh - 432px);
   border-bottom: 1px solid var(--light2);
 }
 
@@ -119,7 +119,6 @@ export default {
       cursor: pointer;
       border-bottom: 1px solid var(--light2);
       min-height: 48px;
-      max-height: 48px;
       overflow: hidden;
     }
     .table-cell:nth-child(odd) {

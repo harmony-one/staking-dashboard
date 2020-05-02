@@ -709,20 +709,35 @@ module.exports = function(
     })
     cache[STAKING_DISTRO_TABLE] = table
 
-    const liveCalculation = Object.keys(cache[LIVE_KEYS_PER_NODE]).map(
+    // Live TABLE
+
+    let liveTable = Object.keys(cache[LIVE_KEYS_PER_NODE]).map(
       nodeAddress => {
         const blsKeys = cache[LIVE_KEYS_PER_NODE][nodeAddress]
+
         return {
           address: nodeAddress,
           name: cache[VALIDATOR_INFO][nodeAddress].name,
           effective_stake: cache[LIVE_EFFECTIVE_STAKES][blsKeys[0]],
-          bid: _.sumBy(blsKeys, k => LIVE_RAW_STAKES[k]) / blsKeys.length,
-          total_stake: _.sumBy(blsKeys, k => LIVE_RAW_STAKES[k]),
+          bid: _.sumBy(blsKeys, k => cache[LIVE_RAW_STAKES][k]) / blsKeys.length,
+          total_stake: _.sumBy(blsKeys, k => cache[LIVE_RAW_STAKES][k]),
           num: blsKeys.length
         }
       }
     )
-    cache[LIVE_STAKING_DISTRO_TABLE] = liveCalculation
+
+    liveTable = _.sortBy(liveTable, e => -e.bid)
+    slot = 0
+
+    liveTable = liveTable.map(e => {
+      slot += e.num
+      return {
+        ...e,
+        slot: e.num === 1 ? `${slot}` : `${slot - e.num + 1}-${slot}`
+      }
+    })
+
+    cache[LIVE_STAKING_DISTRO_TABLE] = liveTable
   }
 
   const update = async () => {

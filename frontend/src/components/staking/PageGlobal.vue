@@ -12,14 +12,14 @@
             <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
               Effective Median Stake:
             </h4>
-            <span v-if=networkInfo.effective_median_stake>
+            <span v-if="networkInfo.effective_median_stake">
               {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
             </span>
             <span v-else>-</span>
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
             <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Stake:</h4>
-            <span v-if=totalStake>
+            <span v-if="totalStake">
               {{ totalStake | ones | zeroDecimals }} ONE
             </span>
             <span v-else>-</span>
@@ -35,75 +35,84 @@
         </div>
       </div>
 
-      <div>
-        <div v-if="networkInfo.raw_stake_distro" class="chart-border">
-          <AllStakesChart
-            :raw="networkInfo.raw_stake_distro"
-            :eff="networkInfo.effective_median_stake_distro"
-            :median="networkInfo.effective_median_stake | ones"
-            :networkInfo="networkInfo"
-            :validators="validators"
-          />
+      <div class="networkInfo" style="padding: 20px 30px;">
+        <AnalyticsToggle
+          :value="isLiveMode"
+          :onChange="value => (isLiveMode = value)"
+        />
+      </div>
+
+      <template v-if="!isLiveMode">
+        <div>
+          <div v-if="networkInfo.raw_stake_distro" class="chart-border">
+            <AllStakesChart
+              :raw="networkInfo.raw_stake_distro"
+              :eff="networkInfo.effective_median_stake_distro"
+              :median="networkInfo.effective_median_stake | ones"
+            />
+
+            <!--            <AllStakesChart-->
+            <!--              :raw="networkInfo.live_raw_stake_distro"-->
+            <!--              :eff="networkInfo.live_effective_median_stake_distro"-->
+            <!--              :median="networkInfo.effective_median_stake | ones"-->
+            <!--            />-->
+          </div>
+
+          <div class="table-border validatorTable">
+            <TableRankedValidators :data="enrichedValidators" />
+          </div>
         </div>
 
-        <div class="table-border validatorTable">
-          <TableRankedValidators
-            :data="enrichedValidators"
-          />
+        <div class="widget-row">
+          <LightWidget
+            v-if="networkInfo.total_seats_used"
+            :title="
+              `Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`
+            "
+          >
+            <div class="chart">
+              <SeatAllocation :data="networkInfo" />
+            </div>
+          </LightWidget>
+
+          <LightWidget v-if="networkInfo.history" title="Seat Allocation">
+            <div class="chart">
+              <SeatAllocationHistory :data="networkInfo.history" />
+            </div>
+          </LightWidget>
         </div>
-      </div>
 
-      <div class="widget-row">
-        <LightWidget
-          v-if="networkInfo.total_seats_used" 
-          :title="`Seats Elected ${networkInfo.total_seats_used} / ${networkInfo.total_seats}`"
-        >
-          <div class="chart">
-            <SeatAllocation
-              :data="networkInfo"
+        <div class="widget-row">
+          <LightWidget v-if="networkInfo.history" title="Total Stake">
+            <div class="chart">
+              <TotalStakeHistory :data="networkInfo.history" />
+            </div>
+          </LightWidget>
+
+          <LightWidget v-if="networkInfo.history" title="Effective Median">
+            <div class="chart">
+              <EffectiveMedianHistory :data="networkInfo.history" />
+            </div>
+          </LightWidget>
+        </div>
+      </template>
+
+      <template v-else>
+        <div>
+          <div v-if="networkInfo.live_raw_stake_distro" class="chart-border">
+            <AllStakesChart
+              :raw="networkInfo.live_raw_stake_distro"
+              :eff="networkInfo.live_effective_median_stake_distro"
+              :median="networkInfo.effective_median_stake | ones"
             />
           </div>
-        </LightWidget>
 
-        <LightWidget 
-          v-if="networkInfo.history" 
-          title="Seat Allocation"
-        >
-          <div class="chart">
-            <SeatAllocationHistory
-              :data="networkInfo.history"
-            />
+          <div class="table-border validatorTable">
+            <TableRankedValidators :data="enrichedLiveValidators" />
           </div>
-        </LightWidget>
-      </div>
+        </div>
+      </template>
 
-
-      <div class="widget-row">
-        <LightWidget 
-          v-if="networkInfo.history" 
-          title="Total Stake"
-        >
-          <div class="chart">
-            <TotalStakeHistory
-              :data="networkInfo.history"
-            />
-          </div>
-        </LightWidget>
-
-
-
-        <LightWidget 
-          v-if="networkInfo.history" 
-          title="Effective Median"
-        >
-          <div class="chart">
-            <EffectiveMedianHistory
-              :data="networkInfo.history"
-            />
-          </div>
-        </LightWidget>
-      </div>
-      
       <!-- <TmDataLoading v-if="isLoading" /> -->
     </template>
   </PageContainer>
@@ -113,12 +122,7 @@
 import { mapState } from "vuex"
 import TableRankedValidators from "staking/TableRankedValidators"
 import PageContainer from "common/PageContainer"
-import TmField from "common/TmField"
-import TmBtn from "common/TmBtn"
-import TmDataLoading from "common/TmDataLoading"
-import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
-import PercentageChange from "./components/PercentageChange"
 import LightWidget from "./../wallet/components/LightWidget"
 import AllStakesChart from "staking/AllStakesChart"
 import SeatAllocation from "staking/SeatAllocation"
@@ -126,10 +130,12 @@ import SeatAllocationHistory from "staking/SeatAllocationHistory"
 import TotalStakeHistory from "staking/TotalStakeHistory"
 import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 import tooltips from "src/components/tooltips"
+import AnalyticsToggle from "./components/AnalyticsToggle"
 
 export default {
   name: `tab-validators`,
   components: {
+    AnalyticsToggle,
     PageContainer,
     TableRankedValidators,
 
@@ -139,9 +145,11 @@ export default {
     SeatAllocation,
     SeatAllocationHistory,
     TotalStakeHistory,
-    EffectiveMedianHistory,
-  },data: () => ({
+    EffectiveMedianHistory
+  },
+  data: () => ({
     tooltips,
+    isLiveMode: false
   }),
   filters: {
     ones,
@@ -166,24 +174,41 @@ export default {
       }
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
-    ...mapState({ totalStake: 
-      state => state.connection.networkInfo ? state.connection.networkInfo['total-staking'] : null
+    ...mapState({
+      totalStake: state =>
+        state.connection.networkInfo
+          ? state.connection.networkInfo["total-staking"]
+          : null
     }),
 
     //computed
 
-    activeValidators: state => state.allValidators.filter(v => v.active === true),
+    activeValidators: state =>
+      state.allValidators.filter(v => v.active === true),
     validators: state => state.allValidators,
     enrichedValidators: function() {
       const { table } = this.networkInfo
       if (!table) return []
 
-      const data = table.map((t) => ({
+      const data = table.map(t => ({
         ...t,
         moniker: t.name,
         small_moniker: t.name.toLowerCase(),
-        operator_address: t.address,
+        operator_address: t.address
       }))
+      return data
+    },
+    enrichedLiveValidators: function() {
+      const { live_table } = this.networkInfo
+      if (!live_table) return []
+
+      const data = live_table.map(t => ({
+        ...t,
+        moniker: t.name,
+        small_moniker: t.name.toLowerCase(),
+        operator_address: t.address
+      }))
+
       return data
     },
     linkToTransaction() {
@@ -192,16 +217,23 @@ export default {
       //   : ""
       const blocksUrl = `https://explorer.os.hmny.io/#/block/`
       return blocksUrl + this.networkInfo.current_block_hash
-    },
+    }
   },
   // watch: {
-  //   totalActive: function() {
-  //     console.log(this.totalActive)
-  //   },
+  //   isLiveMode: function() {
+  //     // this.networkInfo.live_raw_stake_distro.forEach((num, idx) => {
+  //     //   console.log(num / 10e18, Number(this.networkInfo.raw_stake_distro[idx]) / 10e18)
+  //     // })
+  //
+  //     // this.networkInfo.live_effective_median_stake_distro.forEach((num, idx) => {
+  //     //   console.log((num / 10e20).toFixed(0), (Number(this.networkInfo.effective_median_stake_distro[idx]) / 10e20).toFixed(0))
+  //     // })
+  //   }
   // },
   async mounted() {
-    console.log(this.networkInfo.table.length)
+    // console.log(this.networkInfo.table.length)
     this.$store.dispatch("getDelegates")
+
     // this.$store.dispatch(`getValidatorsWithParams`, {
     //   active: true,
     //   page: 0,
@@ -215,101 +247,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-@mixin border {
-  border-radius: var(--unit);
-  border: 1px solid var(--light2);
-  background: white;
-}
-.chart-border {
-  margin-bottom: var(--double);
-}
-
-.table-border {
-  @include border;
-  padding: var(--unit);
-  margin-bottom: var(--double);
-}
-
-
-.validatorTable, .networkInfo {
-  background: white;
-  margin: var(--double) 0;
-  border-radius: var(--unit);
-  border: 1px solid var(--light2);
-}
-.validatorTable {
-  padding: var(--unit);
-}
-
-.networkInfo {
-  
-  &-column {
-    display: flex;
-  }
-
-  &-item {
-    padding: var(--unit);
-    flex: 1;
-    text-align: center;
-    font-weight: bold;
-  }
-  &-item:not(:last-child) {
-    border-right: 1px solid var(--light2);
-  }
-
-  h4 {
-    color: var(--gray);
-    font-size: 16px;
-  }
-}
-
-
-.no-results {
-  text-align: center;
-  margin: 3rem;
-  color: var(--dim);
-}
-
-
-
-.widget-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-  margin: var(--unit) 0;
-  > div {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-  }
-  > div:last-child {
-    margin-right: 0 !important;
-  }
-}
-.widget-row:not(:first-child) {
-  margin-top: calc(-1 * var(--unit));
-}
-
-@media screen and (max-width: 414px) {
-  .widget-row {
-    > div {
-      margin-right: 0 !important;
-    }
-    > .widget-container:nth-child(odd) {
-      margin-right: 0;
-    }
-  }
-  .validatorTable {
-    margin-left: calc(-2 * var(--unit)) !important;
-    width: calc(100vw - 1px);
-    border-left: none !important;
-    border-right: none !important;
-    border-radius: 0 !important;
-  }
-}
-
-
+@import "./page-global.scss";
 </style>

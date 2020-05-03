@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="table-wrap">
+    <div :class="{ 'table-wrap': true, scrollable: scrollable }">
       <div class="table-body">
         <div
           class="table-column"
@@ -58,7 +58,7 @@ export default {
   components: {
     SortHeaderCell
   },
-  props: ["data", "columns", "sort", "onRowClick"],
+  props: ["data", "columns", "sort", "onRowClick", 'scrollable'],
   methods: {
     orderBy(property) {
       if (this.sort.property === property) {
@@ -81,7 +81,9 @@ export default {
 }
 
 .table-headings-wrap {
-  @include table-row;
+  // @include table-row;
+  display: flex;
+  flex-direction: row;
   position: relative;
   min-height: 48px;
 }
@@ -95,6 +97,10 @@ export default {
   height: 100%;
   max-height: calc(100vh - 432px);
   border-bottom: 1px solid var(--light2);
+}
+
+.scrollable {
+  max-height: calc(100vh - 442px);
 }
 
 @media screen and (max-width: 414px) {

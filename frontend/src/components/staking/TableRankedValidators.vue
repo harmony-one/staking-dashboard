@@ -5,6 +5,7 @@
       :columns="columns"
       :data="enrichedValidators"
       :onRowClick="onClickValidator"
+      :scrollable="true"
     />
     <!-- <PanelPagination :pagination="pagination" :total="totalFound" /> -->
   </div>
@@ -59,7 +60,7 @@ export default {
         sort: { property, order },
       } = this
     ) {
-      
+
       //slice it just in case
       data = data.slice()
       if (property === 'name') {

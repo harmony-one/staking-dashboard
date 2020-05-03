@@ -713,6 +713,7 @@ export default {
 
       try {
         let sendResponse
+        this.$store.commit('resetQue',[])
 
         if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
           sendResponse = await this.$store.dispatch(
@@ -728,7 +729,6 @@ export default {
           )
         } else {
           this.$store.commit(`setActionInProgress`, true)
-
           openExtensionPopup(this.session.extensionId)
 
           sendResponse = await this.actionManager.send(
@@ -743,8 +743,7 @@ export default {
         await this.waitForInclusion(included)
 
         this.onTxIncluded(type, transactionProperties, feeProperties)
-        this.$store.commit('resetQue',[])
-
+        
         // close modal in 2 sec after success tx
         setTimeout(() => this.close(), 2000)
       } catch ({ message }) {

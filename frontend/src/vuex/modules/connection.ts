@@ -5,6 +5,7 @@ import { Module } from "vuex"
 import { fetchNetworks, fetchNetworkInfo } from "../../mock-service"
 // import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 import { POLLING_TIMEOUT_SEC } from "@/constants/time-constants"
+import { TFrontendValidator } from "@/mock-service/validator-helpers"
 
 const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK
 
@@ -30,6 +31,19 @@ export interface INetworkInfo {
   "total-staking": string
   "median-raw-stake": string
   time_next_epoch: string
+
+  current_epoch: number
+  total_seats: number
+  total_seats_used: number
+  effective_median_stake_changed: number
+  externalShards: Array<{ total: number; external: number }>
+  history: any
+  raw_stake_distro: number[]
+  effective_median_stake_distro: string[]
+  table: Array<TFrontendValidator>
+  live_table: Array<TFrontendValidator>
+  live_raw_stake_distro: Array<number>
+  live_effective_median_stake_distro: Array<number>
 }
 
 const state = {

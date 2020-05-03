@@ -21,17 +21,17 @@ import { ones, zeroDecimals } from "../../scripts/num"
 export default {
   name: "AllStakesChart",
   components: { ChartBar },
-  props: ["raw", "eff", "median", "networkInfo", "validators"],
+  props: ["raw", "eff", "median"],
   computed: {
     median: function() {
-      console.log('MEDIAN', this.median)
+      console.log("MEDIAN", this.median)
     }
   },
   data: function() {
     return {
       options: {
         plugins: {
-          labels: false,
+          labels: false
         },
         responsive: true,
         maintainAspectRatio: false,
@@ -39,12 +39,12 @@ export default {
           mode: "index",
           intersect: false,
           custom: function(tooltipModel) {
-            var tooltipEl = document.getElementById('chartjs-tooltip')
+            var tooltipEl = document.getElementById("chartjs-tooltip")
             tooltipModel.y = Math.max(35, tooltipModel.y)
           },
           callbacks: {
-            title: (data) => "",
-            label: ({datasetIndex, xLabel, yLabel}) => {
+            title: data => "",
+            label: ({ datasetIndex, xLabel, yLabel }) => {
               if (datasetIndex === 0) {
                 return `${yLabel} effective stake`
               }
@@ -62,7 +62,7 @@ export default {
               gridLines: {
                 display: false
               },
-              stacked: true,
+              stacked: true
             }
           ],
           yAxes: [
@@ -74,7 +74,12 @@ export default {
               ticks: {
                 suggestedMin: 0,
                 max: this.median * 2,
-                callback: (value) => value < this.median * 2 && value > this.median * 1.9 ? '' : Math.floor(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                callback: value =>
+                  value < this.median * 2 && value > this.median * 1.9
+                    ? ""
+                    : Math.floor(value)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
             }
           ]
@@ -84,29 +89,32 @@ export default {
   },
   computed: {
     chartdata() {
+      const data = this.raw
+        .map((v, i) => ({
+          raw: Math.floor(ones(v)),
+          eff: Math.floor(ones(this.eff[i]))
+        }))
+        .sort((a, b) => a.raw - b.raw)
+        .reverse()
 
-      const data = this.raw.map((v, i) => ({ raw: Math.floor(ones(v)), eff: Math.floor(ones(this.eff[i])) }))
-        .sort((a, b) => a.raw - b.raw).reverse()
-
-        
-        //.sort((a, b) => a.eff - b.eff)
+      //.sort((a, b) => a.eff - b.eff)
       //labels
-      const labels = data.map((v, i) => i+1)
+      const labels = data.map((v, i) => i + 1)
       //map out indiv stakes
-      const rawStake = data.map((v) => v.raw)
-      const effStake = data.map((v) => v.eff)
+      const rawStake = data.map(v => v.raw)
+      const effStake = data.map(v => v.eff)
       //median and colors
       const even = effStake.length % 2 === 0
-      const median = Math.floor(effStake.length/2)
+      const median = Math.floor(effStake.length / 2)
       const colors = effStake.map((v, i) => {
-        if (even && (i === median || i === median+1)) {
-          return 'rgba(102, 161, 255, 0.75)'
+        if (even && (i === median || i === median + 1)) {
+          return "rgba(102, 161, 255, 0.75)"
         } else if (i === median) {
-          return 'rgba(102, 161, 255, 0.75)'
+          return "rgba(102, 161, 255, 0.75)"
         }
-        return '#00ADE844'
+        return "#00ADE844"
       })
-      
+
       return {
         labels,
         datasets: [
@@ -115,14 +123,14 @@ export default {
             data: effStake,
             borderColor: colors,
             backgroundColor: colors,
-            borderWidth: 1,
+            borderWidth: 1
           },
           {
             label: "Bid",
-            backgroundColor: '#4fe7c888',
+            backgroundColor: "#4fe7c888",
             data: rawStake,
             minHeight: 16,
-            borderWidth: 0,
+            borderWidth: 0
           }
         ]
       }
@@ -148,5 +156,4 @@ export default {
     margin-left: -32px;
   }
 }
-
 </style>

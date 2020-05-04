@@ -44,6 +44,9 @@ export interface INetworkInfo {
   live_table: Array<TFrontendValidator>
   live_raw_stake_distro: Array<number>
   live_effective_median_stake_distro: Array<number>
+
+  lastEpochTotalStake: number;
+  lastEpochEffectiveStake: number;
 }
 
 const state = {

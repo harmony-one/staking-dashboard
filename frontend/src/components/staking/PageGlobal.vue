@@ -10,7 +10,7 @@
         <div class="tabsPlane">
           <AnalyticsToggle
             :value="isLiveMode"
-            :onChange="value => (isLiveMode = value)"
+            :on-change="value => (isLiveMode = value)"
           />
         </div>
         <div class="networkInfo">
@@ -20,7 +20,7 @@
                 Effective Median Stake:
               </h4>
               <span v-if="networkInfo.effective_median_stake">
-                {{ networkInfo.effective_median_stake | ones | zeroDecimals }}
+                {{ effectiveMedianStake | ones | zeroDecimals }}
                 ONE
               </span>
               <span v-else>-</span>
@@ -149,16 +149,16 @@ export default {
     TotalStakeHistory,
     EffectiveMedianHistory
   },
-  data: () => ({
-    tooltips,
-    isLiveMode: false
-  }),
   filters: {
     ones,
     shortDecimals,
     zeroDecimals,
     twoDecimals
   },
+  data: () => ({
+    tooltips,
+    isLiveMode: false
+  }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
@@ -176,14 +176,28 @@ export default {
       }
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
-    ...mapState({
-      totalStake: state =>
-        state.connection.networkInfo
-          ? state.connection.networkInfo["total-staking"]
-          : null
-    }),
 
     //computed
+
+    totalStake: state => {
+      if (!state.networkInfo) {
+        return null
+      }
+
+      return state.isLiveMode
+        ? state.networkInfo.lastEpochTotalStake
+        : state.networkInfo["total-staking"]
+    },
+
+    effectiveMedianStake: state => {
+      if (!state.networkInfo) {
+        return null
+      }
+
+      return state.isLiveMode
+        ? state.networkInfo.lastEpochEffectiveStake
+        : state.networkInfo.effective_median_stake
+    },
 
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),

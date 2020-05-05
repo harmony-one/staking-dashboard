@@ -195,8 +195,8 @@ export default {
       }
 
       return state.isLiveMode
-        ? state.networkInfo.lastEpochEffectiveStake
-        : state.networkInfo.effective_median_stake
+        ? state.networkInfo.effective_median_stake
+        : state.networkInfo.lastEpochEffectiveStake
     },
 
     activeValidators: state =>

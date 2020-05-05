@@ -31,6 +31,7 @@ const ELECTED_KEYS = 'ELECTED_KEYS'
 const ELECTED_KEYS_SET = 'ELECTED_KEYS_SET'
 const ELECTED_KEYS_PER_NODE = 'ELECTED_KEYS_PER_NODE'
 const LAST_EPOCH_METRICS = 'LAST_EPOCH_METRICS'
+const LIVE_EPOCH_METRICS = 'LIVE_EPOCH_METRICS'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
 const VALIDATOR_PAGE_SIZE = 100
@@ -79,7 +80,8 @@ module.exports = function(
     STAKING_DISTRO_TABLE: {},
     LIVE_STAKING_DISTRO_TABLE: {},
     ELECTED_KEYS_PER_NODE: {},
-    LAST_EPOCH_METRICS: {}
+    LAST_EPOCH_METRICS: {},
+    LIVE_EPOCH_METRICS: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -608,18 +610,35 @@ module.exports = function(
       cache[ELECTED_KEYS_PER_NODE] = null
       cache[ELECTED_KEYS_PER_NODE] = electedKeysPerNode
       cache[LAST_EPOCH_METRICS] = null
+
+      const calculateTotalStakeByShard = (shard, type) => {
+        const committeeMembers = _.get(
+          res,
+          `data.result.${type}.quorum-deciders.shard-${shard}.committee-members`
+        )
+
+        if (!committeeMembers) {
+          console.log('Error: not found committeeMembers')
+
+          return 0
+        }
+
+        return committeeMembers.reduce((acc, e) => {
+          if (e['is-harmony-slot']) {
+            return acc
+          }
+
+          return acc + (e['raw-stake'] ? parseFloat(e['raw-stake']) : 0)
+        }, 0)
+      }
+
       cache[LAST_EPOCH_METRICS] = {
-        lastEpochTotalStake: _.sum(
-          _.range(numOfShards).map(e =>
-            parseFloat(
-              _.get(
-                res,
-                `data.result.current.quorum-deciders.shard-${e}.total-raw-staked`,
-                0
-              )
-            )
-          )
+        lastEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
+          calculateTotalStakeByShard(shard, 'previous')
         ),
+        // currentEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
+        //   calculateTotalStakeByShard(shard, 'current')
+        // ),
         lastEpochEffectiveStake: parseFloat(
           _.get(res, 'data.result.previous.epos-median-stake', 0)
         )
@@ -661,7 +680,11 @@ module.exports = function(
       const liveEffectiveStakes = {}
       const liveKeysPerNode = {}
 
+      let liveEpochTotalStake = 0
+
       res.data.result['epos-slot-winners'].forEach(e => {
+        liveEpochTotalStake += parseFloat(e['raw-stake'])
+
         if (e['slot-owner']) {
           const nodeAddress = e['slot-owner']
           const key = e['bls-public-key']
@@ -675,6 +698,8 @@ module.exports = function(
           }
         }
       })
+
+      cache[LIVE_EPOCH_METRICS] = { liveEpochTotalStake }
       cache[LIVE_ELECTED_KEYS] = null
       cache[LIVE_EFFECTIVE_STAKES] = null
       cache[LIVE_RAW_STAKES] = null
@@ -810,7 +835,8 @@ module.exports = function(
           live_effective_median_stake_distro: cache[LIVE_ELECTED_KEYS].map(
             e => cache[LIVE_EFFECTIVE_STAKES][e]
           ),
-          ...cache[LAST_EPOCH_METRICS]
+          ...cache[LAST_EPOCH_METRICS],
+          ...cache[LIVE_EPOCH_METRICS]
         }
 
     return stakingNetworkInfo

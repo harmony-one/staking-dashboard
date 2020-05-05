@@ -185,8 +185,8 @@ export default {
       }
 
       return state.isLiveMode
-        ? state.networkInfo.lastEpochTotalStake
-        : state.networkInfo["total-staking"]
+        ? state.networkInfo.liveEpochTotalStake
+        : state.networkInfo.lastEpochTotalStake
     },
 
     effectiveMedianStake: state => {

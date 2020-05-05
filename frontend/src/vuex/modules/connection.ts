@@ -46,6 +46,7 @@ export interface INetworkInfo {
   live_effective_median_stake_distro: Array<number>
 
   lastEpochTotalStake: number;
+  liveEpochTotalStake: number;
   lastEpochEffectiveStake: number;
 }
 

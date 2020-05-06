@@ -30,9 +30,7 @@ async function getHarmonyApp() {
   let transport
   if (isWindows(navigator.platform)) {
     if (!navigator.hid) {
-      throw new Error(
-        `Your browser doesn't have HID enabled. Please enable this feature by visiting: chrome://flags/#enable-experimental-web-platform-features`
-      )
+      throw new Error(`BROWSER_HID_DISABLED`)
     }
 
     try {

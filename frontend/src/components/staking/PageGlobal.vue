@@ -228,10 +228,7 @@ export default {
       return data
     },
     linkToTransaction() {
-      // const blocksUrl = this.networkConfig.explorer_url
-      //   ? this.networkConfig.explorer_url.replace("tx", "block")
-      //   : ""
-      const blocksUrl = `https://explorer.os.hmny.io/#/block/`
+      const blocksUrl = this.networkConfig.explorer_url + '/block/'
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },

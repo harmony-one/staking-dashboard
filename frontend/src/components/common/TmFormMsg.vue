@@ -1,8 +1,6 @@
 <template>
   <div :class="cssClass">
-    <template>
-      {{ name }} {{ error }}
-    </template>
+    <template> {{ name }} {{ error }} </template>
   </div>
 </template>
 
@@ -53,7 +51,15 @@ export default {
           msg = `must contain only numerals`
           break
         case `between`:
-          msg = `must be between ${prettyDecimals(this.min)} and ${prettyDecimals(this.max)}`
+          msg = `must be between ${prettyDecimals(
+            this.min
+          )} and ${prettyDecimals(this.max)}`
+          break
+        case `minValue`:
+          msg = `must be more than ${prettyDecimals(this.min)}`
+          break
+        case `maxValue`:
+          msg = `must be less than ${prettyDecimals(this.max)}`
           break
         case `date`:
           msg = `must be a valid date`

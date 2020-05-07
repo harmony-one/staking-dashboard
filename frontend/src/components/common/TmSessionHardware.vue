@@ -8,12 +8,22 @@
       <div class="session-main">
         <HardwareState :loading="status === `connect` ? false : true">
           <template v-if="status === `connect` || status === `detect`">
-            <p>
+            <p style="margin-bottom: 1rem;">
               Please plug in your Ledger&nbsp;Nano and open the Harmony Ledger
               app
             </p>
           </template>
-          <p v-if="connectionError" class="error-message">
+          <p
+            v-if="connectionError === 'BROWSER_HID_DISABLED'"
+            class="error-message-block"
+          >
+            Your browser doesn't have HID enabled. Please enable this feature by
+            visiting: <CopyLink
+              text="chrome://flags/#enable-experimental-web-platform-features"
+              href="chrome://flags/#enable-experimental-web-platform-features"
+            />
+          </p>
+          <p v-else-if="connectionError" class="error-message-block">
             {{ connectionError }}
           </p>
           <TmBtn
@@ -39,9 +49,11 @@ import TmBtn from "common/TmBtn"
 import { mapState } from "vuex"
 import HardwareState from "common/TmHardwareState"
 import SessionFrame from "common/SessionFrame"
+import CopyLink from "./CopyLink"
 export default {
   name: `session-hardware`,
   components: {
+    CopyLink,
     TmBtn,
     SessionFrame,
     HardwareState
@@ -82,12 +94,13 @@ export default {
 }
 </script>
 <style scoped>
-.error-message {
+.error-message-block {
   color: var(--danger);
   font-size: var(--sm);
   font-style: italic;
   margin-bottom: 0;
-  padding-top: 1rem;
+  padding: 0 0 1rem 0;
+  user-select: text;
 }
 
 .install-notes {

@@ -522,7 +522,13 @@ export default {
       return this.txHash ? transactionToShortString(this.txHash) : ""
     },
     linkToTransaction() {
-      return this.networkConfig.explorer_url + this.txHash
+      return this.networkConfig
+        ? this.networkConfig.explorer_url +
+            (this.transactionData.type === "MsgSend"
+              ? "/tx/"
+              : "/staking-tx/") +
+            this.txHash
+        : ""
     }
   },
   watch: {
@@ -564,9 +570,8 @@ export default {
       }
     },
     open() {
-      console.log(this.title.toLowerCase(), 'open')
-      window.ga('send', 'event', this.title.toLowerCase(), 'open', 'modal')
-
+      console.log(this.title.toLowerCase(), "open")
+      window.ga("send", "event", this.title.toLowerCase(), "open", "modal")
 
       this.confirmModalOpen()
 
@@ -582,8 +587,8 @@ export default {
       // this.gasPrice = config.default_gas_price.toFixed(9)
     },
     close() {
-      console.log(this.title.toLowerCase(), 'close')
-      window.ga('send', 'event', this.title.toLowerCase(), 'close', 'modal')
+      console.log(this.title.toLowerCase(), "close")
+      window.ga("send", "event", this.title.toLowerCase(), "close", "modal")
 
       if (this.session.actionInProgress) {
         closeExtensionSession()
@@ -628,7 +633,13 @@ export default {
       // An ActionModal is only the prototype of a parent modal
 
       console.log(this.title.toLowerCase(), this.step.toLowerCase())
-      window.ga('send', 'event', this.title.toLowerCase(), this.step.toLowerCase(), 'modal')
+      window.ga(
+        "send",
+        "event",
+        this.title.toLowerCase(),
+        this.step.toLowerCase(),
+        "modal"
+      )
 
       switch (this.step) {
         case defaultStep:
@@ -773,7 +784,7 @@ export default {
       //   this.title,
       //   this.selectedSignMethod
       // )
-      window.ga('send', 'event', this.title.toLowerCase(), 'success', 'modal')
+      window.ga("send", "event", this.title.toLowerCase(), "success", "modal")
 
       this.$store.dispatch(`post${txType}`, {
         txProps: transactionProperties,
@@ -784,7 +795,7 @@ export default {
       this.step = signStep
       this.submissionError = `${this.submissionErrorPrefix}: ${message}.`
       // this.trackEvent(`event`, `failed-submit`, this.title, message)
-      window.ga('send', 'event', this.title.toLowerCase(), 'failed', 'modal')
+      window.ga("send", "event", this.title.toLowerCase(), "failed", "modal")
     },
     async checkFeatureAvailable() {
       return true // Temp

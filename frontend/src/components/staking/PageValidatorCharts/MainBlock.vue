@@ -89,7 +89,7 @@
       :validator="validator"
       :denom="bondDenom"
       :disabled="validator.remainder === 0"
-      :minAmount="1000"
+      :minAmount="1000 * 1e18"
     />
     <UndelegationModal
       ref="undelegationModal"

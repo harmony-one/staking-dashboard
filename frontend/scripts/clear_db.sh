@@ -32,6 +32,8 @@ echo "Clearing db" $NETWORK_GLOBAL "and" $NETWORK_HISTORY
 if [ $AUTO_CONFIRM == true ]
 then
     firebase firestore:delete --project  staking-explorer -r $NETWORK_GLOBAL -y
+    firebase firestore:delete --project  staking-explorer -r $NETWORK_HISTORY -y
 else
     firebase firestore:delete --project  staking-explorer -r $NETWORK_GLOBAL
+    firebase firestore:delete --project  staking-explorer -r $NETWORK_HISTORY
 fi

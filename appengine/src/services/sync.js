@@ -53,6 +53,7 @@ module.exports = function(
     !(
       BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io') ||
+      BLOCKCHAIN_SERVER.includes('api.s0.dry.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
     )
   ) {

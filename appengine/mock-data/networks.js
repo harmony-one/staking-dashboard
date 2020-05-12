@@ -3,10 +3,10 @@ module.exports = [
     title: 'Harmony Partner Testnet',
     logo_url: 'https://harmony.one/logo',
     testnet: true,
-    rpc_url: 'https://api.s0.ps.hmny.io',
+    rpc_url: 'https://api.s0.dry.hmny.io',
     chain_title: 'partnernet',
     explorer_url: 'https://explorer.ps.hmny.io/#/staking-tx/',
-    chain_id: 2,
+    chain_id: 1,
     id: 'harmony-partnernet',
     __typename: 'networks'
   },

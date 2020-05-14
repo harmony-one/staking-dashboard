@@ -18,7 +18,8 @@ import { ones, zeroDecimals } from "../../scripts/num"
 //   return Math.round(Number(min) + Math.random() * (number || 100))
 // }
 
-const isEqualArr = (a, b) => a.every((item, idx) => item === b[idx])
+const isEqualArr = (a, b) =>
+  a.length === b.length && a.every((item, idx) => item === b[idx])
 
 export default {
   name: "AllStakesChart",

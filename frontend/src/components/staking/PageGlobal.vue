@@ -157,7 +157,7 @@ export default {
   },
   data: () => ({
     tooltips,
-    isLiveMode: false
+    isLiveMode: true
   }),
   computed: {
     ...mapState({ network: state => state.connection.network }),

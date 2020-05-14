@@ -6,7 +6,7 @@
           Uptime (AVG)
         </h4>
         <span id="page-profile__uptime">{{
-          validator.uptime_percentage | percent | notAvailable
+          (validator.uptime_percentage || 0) | percent
         }}</span>
       </li>
       <!-- <li class="row">
@@ -34,8 +34,12 @@
         <span>{{ shardIDs }}</span>
       </li>
       <li class="row">
-        <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">Lifetime Rewards</h4>
-        <span>{{ validator.lifetime_reward_accumulated | ones | zeroDecimals }}</span>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">
+          Lifetime Rewards
+        </h4>
+        <span>{{
+          validator.lifetime_reward_accumulated | ones | zeroDecimals
+        }}</span>
       </li>
     </ul>
   </div>
@@ -74,7 +78,9 @@ export default {
     rewards() {
       // return this.selfStake ? zeroDecimals(ones(this.selfStake.reward)) : 0
       // total rewards to date based on all delegations
-      return zeroDecimals(ones(this.validator.delegations.reduce((a, c) => a += c.reward, 0)))
+      return zeroDecimals(
+        ones(this.validator.delegations.reduce((a, c) => (a += c.reward), 0))
+      )
     },
     shardIDs() {
       return this.validator["bls-public-keys"]

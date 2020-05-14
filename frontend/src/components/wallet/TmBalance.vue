@@ -32,9 +32,9 @@
           <h2>+{{ rewards | ones | zeroDecimals }}</h2>
         </div>
       </div>
-      <div class="total-atoms total-undel">
+      <div class="total-atoms total-undel" v-if="totalUndelegated">
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
-        <h2 class="total-atoms__value">
+        <h2 class="total-atoms__value" style="color: #000000; margin-bottom: 10px;">
           {{ totalUndelegated | ones | zeroDecimals }}
         </h2>
       </div>

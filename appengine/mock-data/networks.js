@@ -21,17 +21,17 @@ module.exports = [
     __typename: 'networks',
     title: 'Open Staking Testnet'
   },
-  {
-    testnet: true,
-    logo_url: 'https://harmony.one/logo',
-    rpc_url: 'https://api.s0.stn.hmny.io',
-    chain_title: 'stressnet',
-    explorer_url: 'https://explorer.stn.hmny.io/#/staking-tx',
-    chain_id: 5,
-    id: 'harmony-stressnet',
-    __typename: 'networks',
-    title: 'Stress Testnet'
-  },
+  // {
+  //   testnet: true,
+  //   logo_url: 'https://harmony.one/logo',
+  //   rpc_url: 'https://api.s0.stn.hmny.io',
+  //   chain_title: 'stressnet',
+  //   explorer_url: 'https://explorer.stn.hmny.io/#/staking-tx',
+  //   chain_id: 5,
+  //   id: 'harmony-stressnet',
+  //   __typename: 'networks',
+  //   title: 'Stress Testnet'
+  // },
   {
     title: 'Harmony Mainnet',
     testnet: false,

@@ -53,8 +53,8 @@ module.exports = function(
     !(
       BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io') ||
-      BLOCKCHAIN_SERVER.includes('api.s0.dry.hmny.io') ||
-      BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
+      BLOCKCHAIN_SERVER.includes('api.s0.dry.hmny.io')// ||
+      // BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
     )
   ) {
     return
@@ -204,11 +204,11 @@ module.exports = function(
 
       if (cache[GLOBAL_SEATS]) {
         cache[STAKING_NETWORK_INFO].total_seats =
-          cache[GLOBAL_SEATS].total_seats
+          cache[GLOBAL_SEATS].total_seats ? cache[GLOBAL_SEATS].total_seats : 0
         cache[STAKING_NETWORK_INFO].total_seats_used =
-          cache[GLOBAL_SEATS].total_seats_used
+          cache[GLOBAL_SEATS].total_seats_used ? cache[GLOBAL_SEATS].total_seats_used : 0
         cache[STAKING_NETWORK_INFO].externalShards =
-          cache[GLOBAL_SEATS].externalShards
+          cache[GLOBAL_SEATS].externalShards ? cache[GLOBAL_SEATS].externalShards : []
       }
 
       if (
@@ -562,6 +562,10 @@ module.exports = function(
           res,
           `data.result.current.quorum-deciders.shard-${e}.committee-members`
         )
+        if (!total) {
+          return []
+        }
+
         return total
           .filter(item => !item['is-harmony-slot'])
           .map(e => e['bls-public-key'])
@@ -648,12 +652,13 @@ module.exports = function(
       cache[GLOBAL_SEATS].total_seats = _.get(
         res,
         'data.result.current.external-slot-count'
-      )
+      ) ? _.get(res, 'data.result.current.external-slot-count') : 0
+      console.log('externalShards', externalShards)
       cache[GLOBAL_SEATS].total_seats_used = _.sumBy(
         externalShards,
-        e => e.external
+        e => e ? e.external : 0
       )
-      cache[GLOBAL_SEATS].externalShards = externalShards
+      cache[GLOBAL_SEATS].externalShards = externalShards.filter(x => x)
       cache[ELECTED_KEYS_SET] = null
 
       cache[ELECTED_KEYS_SET] = externalShardKeys.reduce((cur, elem) => {

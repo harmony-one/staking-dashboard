@@ -101,3 +101,5 @@ typings/
 
 .idea
 appengine/keys/
+
+.DS_Store

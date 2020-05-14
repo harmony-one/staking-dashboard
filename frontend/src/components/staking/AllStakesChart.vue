@@ -18,17 +18,17 @@ import { ones, zeroDecimals } from "../../scripts/num"
 //   return Math.round(Number(min) + Math.random() * (number || 100))
 // }
 
+const isEqualArr = (a, b) => a.every((item, idx) => item === b[idx])
+
 export default {
   name: "AllStakesChart",
   components: { ChartBar },
   props: ["raw", "eff", "median"],
-  computed: {
-    median: function() {
-      console.log("MEDIAN", this.median)
-    }
-  },
   data: function() {
     return {
+      rawStake: [],
+      effStake: [],
+      labels: [],
       options: {
         plugins: {
           labels: false
@@ -87,8 +87,19 @@ export default {
       }
     }
   },
-  computed: {
-    chartdata() {
+  watch: {
+    raw() {
+      this.calculateChartData()
+    },
+    eff() {
+      this.calculateChartData()
+    }
+  },
+  mounted() {
+    this.calculateChartData()
+  },
+  methods: {
+    calculateChartData() {
       const data = this.raw
         .map((v, i) => ({
           raw: Math.floor(ones(v)),
@@ -103,10 +114,26 @@ export default {
       //map out indiv stakes
       const rawStake = data.map(v => v.raw)
       const effStake = data.map(v => v.eff)
+
+      if (!isEqualArr(rawStake, this.rawStake)) {
+        this.rawStake = rawStake
+      }
+
+      if (!isEqualArr(effStake, this.effStake)) {
+        this.effStake = effStake
+      }
+
+      if (!isEqualArr(labels, this.labels)) {
+        this.labels = labels
+      }
+    }
+  },
+  computed: {
+    chartdata() {
       //median and colors
-      const even = effStake.length % 2 === 0
-      const median = Math.floor(effStake.length / 2)
-      const colors = effStake.map((v, i) => {
+      const even = this.effStake.length % 2 === 0
+      const median = Math.floor(this.effStake.length / 2)
+      const colors = this.effStake.map((v, i) => {
         if (even && (i === median || i === median + 1)) {
           return "rgba(102, 161, 255, 0.75)"
         } else if (i === median) {
@@ -116,11 +143,11 @@ export default {
       })
 
       return {
-        labels,
+        labels: this.labels,
         datasets: [
           {
             label: "Effective Stake",
-            data: effStake,
+            data: this.effStake,
             borderColor: colors,
             backgroundColor: colors,
             borderWidth: 1
@@ -128,7 +155,7 @@ export default {
           {
             label: "Bid",
             backgroundColor: "#4fe7c888",
-            data: rawStake,
+            data: this.rawStake,
             minHeight: 16,
             borderWidth: 0
           }

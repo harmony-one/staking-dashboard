@@ -1,3 +1,11 @@
+const BigNumber = require('bignumber.js')
+
+BigNumber.config({
+  FORMAT: {
+    groupSeparator: ''
+  }
+})
+
 const axios = require('axios')
 const _ = require('lodash')
 const {
@@ -359,13 +367,20 @@ module.exports = function(
             selfStake = elem.amount
           }
           totalStake = cache[DELEGATIONS_BY_VALIDATOR][address].reduce(
-            (acc, val) => acc + val.amount,
+            (acc, val) =>
+              BigNumber(acc)
+                .plus(val.amount)
+                .toFormat(),
             0
           )
 
-          averageStake =
-            totalStake / cache[DELEGATIONS_BY_VALIDATOR][address].length
-          remainder = remainder - totalStake
+          averageStake = BigNumber(totalStake)
+            .div(cache[DELEGATIONS_BY_VALIDATOR][address].length)
+            .toFormat()
+
+          remainder = BigNumber(remainder)
+            .minus(totalStake)
+            .toFormat()
         }
 
         const utcDate = new Date(Date.now())
@@ -639,13 +654,13 @@ module.exports = function(
 
       cache[LAST_EPOCH_METRICS] = {
         lastEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
-          calculateTotalStakeByShard(shard, 'previous')
+          calculateTotalStakeByShard(shard, 'current')
         ),
         // currentEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
         //   calculateTotalStakeByShard(shard, 'current')
         // ),
         lastEpochEffectiveStake: parseFloat(
-          _.get(res, 'data.result.previous.epos-median-stake', 0)
+          _.get(res, 'data.result.current.epos-median-stake', 0)
         )
       }
 

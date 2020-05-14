@@ -162,7 +162,13 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
 
     async loadNetworkInfo({ commit, state }) {
-      const networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+      let networkInfo;
+
+      try {
+        networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+      } catch (err) {
+        networkInfo = {};
+      }
 
       commit("setNetworkInfo", networkInfo)
     },

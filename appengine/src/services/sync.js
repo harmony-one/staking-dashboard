@@ -59,6 +59,7 @@ module.exports = function(
   // Currently only work for OS network and testnet.
   if (
     !(
+      BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.dry.hmny.io')// ||

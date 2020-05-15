@@ -74,7 +74,7 @@ export default {
               },
               ticks: {
                 suggestedMin: 0,
-                max: this.median * 2,
+                // max: this.median * 2,
                 callback: value =>
                   value < this.median * 2 && value > this.median * 1.9
                     ? ""

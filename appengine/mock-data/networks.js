@@ -5,7 +5,7 @@ module.exports = [
     testnet: true,
     rpc_url: 'https://api.s0.dry.hmny.io',
     chain_title: 'partnernet',
-    explorer_url: 'https://explorer.ps.hmny.io/#/staking-tx/',
+    explorer_url: 'https://explorer.ps.hmny.io/#',
     chain_id: 1,
     id: 'harmony-partnernet',
     __typename: 'networks'
@@ -15,7 +15,7 @@ module.exports = [
     testnet: true,
     rpc_url: 'https://api.s0.os.hmny.io',
     chain_title: 'Openstakingnet',
-    explorer_url: 'https://explorer.os.hmny.io/#/staking-tx/',
+    explorer_url: 'https://explorer.os.hmny.io/#',
     chain_id: 3,
     id: 'harmony-open-staking',
     __typename: 'networks',
@@ -38,7 +38,7 @@ module.exports = [
     logo_url: 'https://harmony.one/logo',
     rpc_url: 'https://api.s0.t.hmny.io',
     chain_title: 'mainnet',
-    explorer_url: 'https://explorer.harmony.one/#/staking-tx/',
+    explorer_url: 'https://explorer.harmony.one/#',
     id: 'harmony',
     chain_id: 1,
     __typename: 'networks'

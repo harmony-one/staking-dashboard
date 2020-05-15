@@ -72,7 +72,11 @@ export default {
               gridLines: {
                 display: true
               },
+              type: 'logarithmic',
               ticks: {
+                autoSkip: true,
+                maxTicksLimit: 10,
+                autoSkipPadding: 10,
                 suggestedMin: 0,
                 // max: this.median * 2,
                 callback: value =>

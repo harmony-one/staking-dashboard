@@ -55,11 +55,12 @@ export default {
 .li-validator-name {
   font-size: 1rem;
   line-height: 18px;
-  min-width: 100px;
   font-weight: 500;
   color: var(--txt);
   display: inline-block;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .li-validator-image {

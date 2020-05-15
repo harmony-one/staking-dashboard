@@ -1,7 +1,7 @@
 <template>
 
   <div class="container">
-    
+
     <div class="mobile-menu-button">
       <div v-if="open" class="close-menu" @click="close()">
         <i class="material-icons mobile-menu-action">close</i>
@@ -161,8 +161,8 @@ export default {
   height: 48px;
 }
 
-@media screen and (max-width: 414px) {
-  
+@media screen and (max-width: 768px) {
+
   .app-header {
     position: fixed;
     top: 0;

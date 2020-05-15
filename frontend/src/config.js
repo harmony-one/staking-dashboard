@@ -4,7 +4,7 @@ export default {
   name: `Harmony`,
   node_halted_timeout: 120000,
   block_timeout: 10000,
-  default_gas_price: dev ? 1e-9 : 2.5e-8, // Recommended
+  default_gas_price: 1e-9, // Recommended
 
   // Ledger
   CosmosAppTestModeAllowed: false,

@@ -101,7 +101,7 @@ export default {
   data: () => ({
     tooltips,
     searchTerm: "",
-    activeOnly: false
+    activeOnly: true
   }),
   computed: {
     ...mapState({ network: state => state.connection.network }),

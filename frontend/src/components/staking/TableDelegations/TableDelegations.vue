@@ -90,8 +90,8 @@ export default {
           title: `Stake`,
           value: `stake`,
           tooltip: `Stake of validator`,
-          width: "120px",
-            align: "right",
+          width: "150px",
+          align: "right",
           render: value => zeroDecimals(ones(value)) + " ONE"
         }
       ]

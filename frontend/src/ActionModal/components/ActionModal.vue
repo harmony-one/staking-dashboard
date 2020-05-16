@@ -214,6 +214,12 @@
                 <!-- with the hash {{ txHash }} -->
                 was successfully signed and sent the network. Waiting for it to
                 be confirmed.
+                <div v-if="txHash">
+                  <br />Transaction:
+                  <a :href="linkToTransaction" target="_blank">
+                    {{ prettyTransactionHash }}
+                  </a>
+                </div>
               </div>
             </TmDataMsg>
           </div>
@@ -749,7 +755,9 @@ export default {
           )
         }
 
-        const { included } = sendResponse
+        const { included, hash } = sendResponse
+
+        this.txConfirmResult = { txhash: hash };
 
         await this.waitForInclusion(included)
 

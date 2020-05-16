@@ -7,8 +7,7 @@
       <p class="c6 c3"><span class="c0"></span></p>
       <p class="c6 c3"><span class="c0"></span></p>
       <p class="c14 c3"><span class="c0"></span></p>
-      <p class="c8"><span class="c0">AGREEMENT TO TERMS</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>AGREEMENT TO TERMS</h2>
       <p class="c1">
         <span
           >These Terms of Use constitute a legally binding agreement made
@@ -83,8 +82,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">INTELLECTUAL PROPERTY RIGHTS</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>INTELLECTUAL PROPERTY RIGHTS</h2>
       <p class="c1">
         <span class="c0"
           >Unless otherwise indicated, the Site is our proprietary property and
@@ -118,8 +116,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">USER REPRESENTATIONS</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>USER REPRESENTATIONS</h2>
       <p class="c1">
         <span class="c0"
           >By using the Site, you represent and warrant that: &nbsp;(1) you have
@@ -142,7 +139,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c6"><span class="c0">PROHIBITED ACTIVITIES</span></p>
+      <h2>PROHIBITED ACTIVITIES</h2>
       <p class="c4 c3"><span class="c0"></span></p>
       <p class="c1">
         <span class="c0"
@@ -320,8 +317,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c6"><span class="c0">USER GENERATED CONTRIBUTIONS </span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>USER GENERATED CONTRIBUTIONS </h2>
       <p class="c1">
         <span class="c0"
           >The Site does not offer users to submit or post content. We may
@@ -449,8 +445,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">CONTRIBUTION LICENSE</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>CONTRIBUTION LICENSE</h2>
       <p class="c14">
         <span class="c0"
           >You and the Site agree that we may access, store, process, and use
@@ -482,8 +477,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c8"><span class="c0">SUBMISSIONS</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>SUBMISSIONS</h2>
       <p class="c1">
         <span class="c0"
           >You acknowledge and agree that any questions, comments, suggestions,
@@ -503,8 +497,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c8"><span class="c0">THIRD-PARTY WEBSITE AND CONTENT</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>THIRD-PARTY WEBSITE AND CONTENT</h2>
       <p class="c1">
         <span class="c0"
           >The Site may contain (or you may be sent via the Site) links to other
@@ -542,8 +535,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c8"><span class="c0">SITE MANAGEMENT</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>SITE MANAGEMENT</h2>
       <p class="c1">
         <span class="c0"
           >We reserve the right, but not the obligation, to: (1) monitor the
@@ -563,7 +555,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">PRIVACY POLICY</span></p>
+      <h2>PRIVACY POLICY</h2>
       <p class="c3 c14"><span class="c13"></span></p>
       <p class="c1">
         <span
@@ -589,8 +581,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c10 c9"></span></p>
-      <p class="c8"><span class="c0">TERM AND TERMINATION</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>TERM AND TERMINATION</h2>
       <p class="c1">
         <span class="c9 c10"
           >These Terms of Use shall remain in full force and effect while you
@@ -619,7 +610,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">MODIFICATIONS AND INTERRUPTIONS</span></p>
+      <h2>MODIFICATIONS AND INTERRUPTIONS</h2>
       <p class="c4 c3"><span class="c0"></span></p>
       <p class="c1">
         <span class="c0"
@@ -650,8 +641,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">GOVERNING LAW</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>GOVERNING LAW</h2>
       <p class="c1">
         <span class="c0"
           >These Terms of Use and your use of the Site are governed by and
@@ -663,10 +653,8 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">DISPUTE RESOLUTION</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>DISPUTE RESOLUTION</h2>
       <p class="c6"><span class="c0">Binding Arbitration</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
       <p class="c1">
         <span
           >If the Parties are unable to resolve a Dispute through informal
@@ -730,8 +718,7 @@
         >
       </p>
       <p class="c4 c3"><span class="c0"></span></p>
-      <p class="c6"><span class="c0">Restrictions</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>Restrictions</h2>
       <p class="c1">
         <span class="c0"
           >The Parties agree that any arbitration shall be limited to the
@@ -745,8 +732,7 @@
         >
       </p>
       <p class="c3 c4"><span class="c0"></span></p>
-      <p class="c6"><span class="c0">Exceptions to Arbitration</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>Exceptions to Arbitration</h2>
       <p class="c1">
         <span class="c0"
           >The Parties agree that the following Disputes are not subject to the
@@ -765,8 +751,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">CORRECTIONS</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>CORRECTIONS</h2>
       <p class="c1">
         <span class="c0"
           >There may be information on the Site that contains typographical
@@ -778,8 +763,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">DISCLAIMER</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>DISCLAIMER</h2>
       <p class="c1">
         <span class="c0"
           >THE SITE IS PROVIDED ON AN AS-IS AND AS-AVAILABLE BASIS. YOU AGREE
@@ -815,8 +799,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">LIMITATIONS OF LIABILITY</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>LIMITATIONS OF LIABILITY</h2>
       <p class="c1">
         <span class="c0"
           >IN NO EVENT WILL WE OR OUR DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE
@@ -837,8 +820,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">INDEMNIFICATION</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>INDEMNIFICATION</h2>
       <p class="c1">
         <span class="c0"
           >You agree to defend, indemnify, and hold us harmless, including our
@@ -861,8 +843,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">USER DATA</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>USER DATA</h2>
       <p class="c1">
         <span class="c0"
           >We will maintain certain data that you transmit to the Site for the
@@ -878,12 +859,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1">
-        <span class="c0"
-          >ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES</span
-        >
-      </p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES</h2>
       <p class="c1">
         <span class="c0"
           >Visiting the Site, sending us emails, and completing online forms
@@ -904,8 +880,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c8"><span class="c0">CALIFORNIA USERS AND RESIDENTS</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>CALIFORNIA USERS AND RESIDENTS</h2>
       <p class="c1">
         <span class="c0"
           >If any complaint with us is not satisfactorily resolved, you can
@@ -917,8 +892,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c8"><span class="c0">MISCELLANEOUS</span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>MISCELLANEOUS</h2>
       <p class="c1">
         <span class="c0"
           >These Terms of Use and any policies or operating rules posted by us
@@ -945,8 +919,7 @@
       </p>
       <p class="c1 c3"><span class="c0"></span></p>
       <p class="c1 c3"><span class="c0"></span></p>
-      <p class="c1"><span class="c0">CONTACT US </span></p>
-      <p class="c4 c3"><span class="c0"></span></p>
+      <h2>CONTACT US </h2>
       <p class="c1">
         <span class="c0"
           >In order to resolve a complaint regarding the Site or to receive

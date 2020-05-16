@@ -15,7 +15,7 @@
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
             <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Stake:</h4>
-            {{ networkInfo.liveEpochTotalStake | ones | zeroDecimals }} ONE
+            {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
             <h4 v-tooltip.top="tooltips.v_list.current_block_number">

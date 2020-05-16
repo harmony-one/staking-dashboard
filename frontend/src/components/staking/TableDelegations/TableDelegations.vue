@@ -104,7 +104,9 @@ export default {
             tooltip: tooltips.portfolio.ending_in,
             width: "160px",
             align: "right",
-            render: value => value + " epoch" + value > 1 ? "s" : ""
+            render: value => {
+              return `${value} epoch${value > 1 ? "s" : ""}`
+            }
           }
         ])
       } else {

@@ -13,6 +13,7 @@
             :on-change="value => (isLiveMode = value)"
           />
         </div>
+        <div class="info_header">Top 320 Slots</div>
         <div class="networkInfo">
           <div class="networkInfo-column">
             <div id="validators_median_stake" class="networkInfo-item">

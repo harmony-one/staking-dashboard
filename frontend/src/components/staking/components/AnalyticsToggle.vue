@@ -4,14 +4,14 @@
       :class="{ tabItem: true, active: !value, first: true }"
       @click="() => onChange(false)"
     >
-      {{ titlePrefix }} Last Epoch
+      {{ titlePrefix }} Last Election
     </span>
     <div class="divider" />
     <span
       :class="{ tabItem: true, active: value }"
       @click="() => onChange(true)"
     >
-      {{ titlePrefix }} Live Epoch
+      {{ titlePrefix }} Next Election
     </span>
   </div>
 </template>

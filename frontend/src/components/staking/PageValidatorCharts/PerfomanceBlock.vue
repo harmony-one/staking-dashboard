@@ -33,7 +33,7 @@
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.shards">
           Shard {{ item.shard }}
         </h4>
-        <span>{{ item.count }} slots</span>
+        <span>{{ item.count }} {{ item.count > 1 ? "slots" : "slot" }}</span>
       </li>
       <li class="row">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">

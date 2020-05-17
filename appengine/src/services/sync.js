@@ -417,10 +417,7 @@ module.exports = function(
                 cache[ELECTED_KEYS_SET].has(item)
               ).length
             : 0,
-          active:
-            res['bls-public-keys'].filter(item =>
-              cache[ELECTED_KEYS_SET].has(item)
-            ).length > 0,
+          active: cache[ACTIVE_VALIDATORS].includes(res.address),
           uptime_percentage:
             _.get(result, 'lifetime.blocks.signed') &&
             _.get(result, 'lifetime.blocks.to-sign')
@@ -434,7 +431,6 @@ module.exports = function(
             null
           )
         }
-        validatorInfo.active = validatorInfo.elected_nodes > 0
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
@@ -471,9 +467,7 @@ module.exports = function(
         }
 
         cache[VALIDATOR_INFO][address] = validatorInfo
-        if (validatorInfo.elected_nodes > 0) {
-          cache[ACTIVE_VALIDATORS].push(address)
-        }
+
         cache[VALIDATOR_INFO_HISTORY][address][epochIndex] = validatorInfo
         if (cache[VALIDATOR_INFO_HISTORY][address][epochIndex - MAX_LENGTH]) {
           delete cache[VALIDATOR_INFO_HISTORY][address][epochIndex - MAX_LENGTH]
@@ -813,13 +807,40 @@ module.exports = function(
       await getAllDelegationsInfo()
 
       // Then get validator info, each call gets 100 validatorinfo.
-      cache[ACTIVE_VALIDATORS] = []
+
+      await getElectedValidators();
+
       await getAllValidatorsInfo()
       console.log('distro calculation starting.')
       await calculateDistroTable()
       console.log('distro calculation finished.')
     } catch (err) {
       console.log('here Error: ', err.message)
+    }
+  }
+
+  const getElectedValidators = async () => {
+    let res = null
+    try {
+      cache[ACTIVE_VALIDATORS] = []
+
+      res = await apiClient.post(
+          '/',
+          bodyParams('hmy_getElectedValidatorAddresses')
+      )
+
+      if(res.data && res.data.result) {
+        cache[ACTIVE_VALIDATORS] = res.data.result;
+      } else {
+        console.log(
+            `error when getElectedValidators for ${BLOCKCHAIN_SERVER}`);
+      }
+    } catch (err) {
+      console.log(
+          `error when callMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
+          err,
+          res.result
+      )
     }
   }
 
@@ -881,9 +902,6 @@ module.exports = function(
     const sizeInt = parseInt(size, 10)
     let validators
 
-    cache[ACTIVE_VALIDATORS] = cache[ACTIVE_VALIDATORS].filter(
-      e => cache[VALIDATOR_INFO][e].elected_nodes > 0
-    )
     if (active === 'true') {
       validators = !cache[ACTIVE_VALIDATORS] ? [] : cache[ACTIVE_VALIDATORS]
     } else {
@@ -939,6 +957,7 @@ module.exports = function(
     }
   }
 
+  // deprecated
   const getActiveValidators = () => {
     if (!cache[ACTIVE_VALIDATORS]) {
       return []

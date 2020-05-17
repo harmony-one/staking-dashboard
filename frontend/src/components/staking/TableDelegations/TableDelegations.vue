@@ -102,13 +102,13 @@ export default {
             title: `Returned in`,
             value: `remaining_epoch`,
             tooltip: tooltips.portfolio.ending_in,
-            width: "160px",
+            width: "190px",
             align: "right",
             render: value => {
               if (value) {
                 return `${value} epoch${value > 1 ? "s" : ""}`
               } else {
-                return "current epoch"
+                return "end of current epoch"
               }
             }
           }

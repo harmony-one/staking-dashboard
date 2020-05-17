@@ -7,6 +7,9 @@ import { StakingFactory, StakingTransaction } from "@harmony-js/staking"
 
 const URL_MAINNET = `https://api.s0.t.hmny.io`
 
+const GAS_PRICE = new Unit('1').asGwei().toHex();
+const GAS_LIMIT = new Unit('25000').asWei().toHex();
+
 const MAX_ATTEMPTS = process.env.MAX_ATTEMPTS
 const maxAttempts = Number(MAX_ATTEMPTS)
 
@@ -111,8 +114,8 @@ export default class Staking {
         amount: new Unit(value).asSzabo().toHex() as any
       })
       .setTxParams({
-        gasPrice: new Unit(transactionData.gasPrice).asGwei().toHex(),
-        gasLimit: "0x0927c0",
+        gasPrice: GAS_PRICE,
+        gasLimit: GAS_LIMIT,
         chainId: this.harmony.chainId
       } as any)
       .build()
@@ -132,8 +135,8 @@ export default class Staking {
         amount: new Unit(value).asSzabo().toHex() as any
       })
       .setTxParams({
-        gasPrice: new Unit(transactionData.gasPrice).asGwei().toHex(),
-        gasLimit: "0x0927c0",
+        gasPrice: GAS_PRICE,
+        gasLimit: GAS_LIMIT,
         chainId: this.harmony.chainId
       } as any)
       .build()
@@ -147,9 +150,9 @@ export default class Staking {
         delegatorAddress: transactionData.delegatorAddress
       })
       .setTxParams({
-        nonce: "0x2",
-        gasPrice: "0x",
-        gasLimit: "0x0927c0",
+        // nonce: "0x2",
+        gasPrice: GAS_PRICE,
+        gasLimit: GAS_LIMIT,
         // gasPrice: new Unit(this.transactionDetails.fee).asMwei().toWei(),
         // gasLimit: this.transactionDetails.gas,
         chainId: this.harmony.chainId

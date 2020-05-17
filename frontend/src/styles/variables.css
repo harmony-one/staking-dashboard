@@ -96,9 +96,9 @@
     "Cantarell",
     "Fira Sans",
     "Droid Sans",
-    "Helvetica Neue",
+    "Nunito",
     sans-serif;
-  --helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --helvetica: "Nunito", Nunito, Arial, sans-serif;
   --mono: Consolas, Monaco, monospace;
   --xxl: calc(var(--x) * 1.75);
   --xl: calc(var(--x) * 1.5);

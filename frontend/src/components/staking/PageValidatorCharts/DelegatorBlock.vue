@@ -12,19 +12,19 @@
         Amount
       </div>
     </div>
-    
+
     <div class="delegation" v-for="(delegator, index) in delegations" v-if="delegator.amount > 0">
       <div class="index">
         {{index + 1}}
       </div>
       <div class="address">
-        <a :href="`https://explorer.os.hmny.io/#/address/${delegator['delegator-address']}`" target="_blank">
+        <a :href="`${networkConfig.explorer_url}/address/${delegator['delegator-address']}`" target="_blank">
           {{ delegator['delegator-address'] }}
         </a>
         {{validator_address === delegator['delegator-address'] ? '(self)' : ''}}
       </div>
       <div class="short-address">
-        <a :href="`https://explorer.os.hmny.io/#/address/${delegator['delegator-address']}`" target="_blank">
+        <a :href="`${networkConfig.explorer_url}/address/${delegator['delegator-address']}`" target="_blank">
           {{ shortAddress(delegator['delegator-address']) }}
         </a>
         {{validator_address === delegator['delegator-address'] ? '(self)' : ''}}
@@ -38,6 +38,7 @@
 
 <script>
 import { percent, ones, zeroDecimals } from "../../../scripts/num"
+import { mapState } from "vuex"
 
 export default {
   name: "DelegatorBlock",
@@ -60,6 +61,9 @@ export default {
       validator_address: this.validator.operator_address,
       delegations
     }
+  },
+  computed: {
+    ...mapState({ networkConfig: state => state.connection.networkConfig }),
   }
 }
 </script>

@@ -14,7 +14,7 @@
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Stake:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Network Stake:</h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
@@ -167,10 +167,7 @@ export default {
         : ""
     },
     linkToTransaction() {
-      const blocksUrl = this.networkConfig.explorer_url
-        ? this.networkConfig.explorer_url.replace("tx", "block")
-        : ""
-
+      const blocksUrl = this.networkConfig.explorer_url + '/block/'
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },

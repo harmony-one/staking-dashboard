@@ -60,6 +60,8 @@ export default {
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .li-validator-image {

@@ -10,9 +10,10 @@
         <div class="tabsPlane">
           <AnalyticsToggle
             :value="isLiveMode"
-            :onChange="value => (isLiveMode = value)"
+            :on-change="value => (isLiveMode = value)"
           />
         </div>
+        <div class="info_header">Top 320 Slots</div>
         <div class="networkInfo">
           <div class="networkInfo-column">
             <div id="validators_median_stake" class="networkInfo-item">
@@ -20,7 +21,7 @@
                 Effective Median Stake:
               </h4>
               <span v-if="networkInfo.effective_median_stake">
-                {{ networkInfo.effective_median_stake | ones | zeroDecimals }}
+                {{ effectiveMedianStake | ones | zeroDecimals }}
                 ONE
               </span>
               <span v-else>-</span>
@@ -149,16 +150,16 @@ export default {
     TotalStakeHistory,
     EffectiveMedianHistory
   },
-  data: () => ({
-    tooltips,
-    isLiveMode: false
-  }),
   filters: {
     ones,
     shortDecimals,
     zeroDecimals,
     twoDecimals
   },
+  data: () => ({
+    tooltips,
+    isLiveMode: true
+  }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
@@ -176,14 +177,28 @@ export default {
       }
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
-    ...mapState({
-      totalStake: state =>
-        state.connection.networkInfo
-          ? state.connection.networkInfo["total-staking"]
-          : null
-    }),
 
     //computed
+
+    totalStake: state => {
+      if (!state.networkInfo) {
+        return null
+      }
+
+      return state.isLiveMode
+        ? state.networkInfo.liveEpochTotalStake
+        : state.networkInfo.lastEpochTotalStake
+    },
+
+    effectiveMedianStake: state => {
+      if (!state.networkInfo) {
+        return null
+      }
+
+      return state.isLiveMode
+        ? state.networkInfo.effective_median_stake
+        : state.networkInfo.lastEpochEffectiveStake
+    },
 
     activeValidators: state =>
       state.allValidators.filter(v => v.active === true),
@@ -214,10 +229,7 @@ export default {
       return data
     },
     linkToTransaction() {
-      // const blocksUrl = this.networkConfig.explorer_url
-      //   ? this.networkConfig.explorer_url.replace("tx", "block")
-      //   : ""
-      const blocksUrl = `https://explorer.os.hmny.io/#/block/`
+      const blocksUrl = this.networkConfig.explorer_url + '/block/'
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },

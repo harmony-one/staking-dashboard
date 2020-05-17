@@ -6,7 +6,7 @@
           Uptime (AVG)
         </h4>
         <span id="page-profile__uptime">{{
-          validator.uptime_percentage | percent | notAvailable
+          (validator.uptime_percentage || 0) | percent
         }}</span>
       </li>
       <!-- <li class="row">
@@ -29,13 +29,19 @@
         </h4>
         <span>{{ validator.apr | percent | notAvailable }}</span>
       </li>
-      <li class="row">
-        <h4 v-info-style v-tooltip.top="tooltips.v_profile.shards">Shards</h4>
-        <span>{{ shardIDs }}</span>
+      <li class="row" v-for="item in shardIDs" :key="item.shard">
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.shards">
+          Shard {{ item.shard }}
+        </h4>
+        <span>{{ item.count }} {{ item.count > 1 ? "slots" : "slot" }}</span>
       </li>
       <li class="row">
-        <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">Lifetime Rewards</h4>
-        <span>{{ validator.lifetime_reward_accumulated | ones | zeroDecimals }}</span>
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.rewards">
+          Lifetime Rewards
+        </h4>
+        <span>{{
+          validator.lifetime_reward_accumulated | ones | zeroDecimals
+        }}</span>
       </li>
     </ul>
   </div>
@@ -74,16 +80,27 @@ export default {
     rewards() {
       // return this.selfStake ? zeroDecimals(ones(this.selfStake.reward)) : 0
       // total rewards to date based on all delegations
-      return zeroDecimals(ones(this.validator.delegations.reduce((a, c) => a += c.reward, 0)))
+      return zeroDecimals(
+        ones(this.validator.delegations.reduce((a, c) => (a += c.reward), 0))
+      )
     },
     shardIDs() {
-      return this.validator["bls-public-keys"]
+      const shards = {}
+
+      this.validator["bls-public-keys"]
         .map(e =>
           e[e.length - 1] >= "a"
             ? (e.charCodeAt(e.length - 1) - 87) % 4
             : parseInt(e[e.length - 1]) % 4
         )
-        .toString()
+        .forEach(
+          shard => (shards[shard] = shards[shard] ? shards[shard] + 1 : 1)
+        )
+
+      return Object.keys(shards).map(key => ({
+        shard: key,
+        count: shards[key]
+      }))
     }
   }
 }

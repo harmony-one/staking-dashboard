@@ -44,6 +44,10 @@ export interface INetworkInfo {
   live_table: Array<TFrontendValidator>
   live_raw_stake_distro: Array<number>
   live_effective_median_stake_distro: Array<number>
+
+  lastEpochTotalStake: number;
+  liveEpochTotalStake: number;
+  lastEpochEffectiveStake: number;
 }
 
 const state = {
@@ -158,7 +162,13 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
 
     async loadNetworkInfo({ commit, state }) {
-      const networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+      let networkInfo;
+
+      try {
+        networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+      } catch (err) {
+        networkInfo = {};
+      }
 
       commit("setNetworkInfo", networkInfo)
     },

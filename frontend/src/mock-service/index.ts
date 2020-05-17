@@ -90,5 +90,5 @@ export function fetchNetworkInfo(networkId: string) {
 export function mockTransfer(data: any) {
   console.log("Data to send -> ", data)
   // return axios.get(`${API_URL}/accounts/${data.from_address}/transfers`).then(rez => rez.data)
-  return { gas_estimate: "24341" }
+  return { gas_estimate: "21000" }
 }

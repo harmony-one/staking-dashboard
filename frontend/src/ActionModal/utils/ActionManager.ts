@@ -110,11 +110,11 @@ export default class ActionManager {
         network: networkConfig
       }
 
-      await signer(JSON.stringify(fullMessage))
+      const { txHash } = await signer(JSON.stringify(fullMessage))
 
       const included = waitTransactionConfirm
 
-      return { included, hash: "" }
+      return { included, hash: txHash }
     } catch (err) {
       console.log("[ActionManager] send error", err)
     }

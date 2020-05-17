@@ -6,7 +6,7 @@
           Looks like you don't have the Harmony browser extension installed yet.
           Head over to the
           <a
-            href="https://chrome.google.com/webstore/detail/harmony/dmknnpkhnockodmnclcellfiilmklimd"
+            href="https://harmony.one/chrome-wallet"
             target="_blank"
             rel="noopener norefferer"
             >Harmony Chrome Extension</a

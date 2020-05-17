@@ -13,8 +13,8 @@
   margin-bottom: var(--double);
 }
 
-
-.validatorTable, .networkInfo {
+.validatorTable,
+.networkInfo {
   background: white;
   margin: var(--double) 0;
   border-radius: var(--unit);
@@ -25,6 +25,7 @@
 }
 
 .networkInfo {
+  margin: 0 0 var(--double) 0;
 
   &-column {
     display: flex;
@@ -46,14 +47,22 @@
   }
 }
 
+.info_header {
+  color: var(--black);
+  font-size: 20px;
+  font-weight: bold;
+  margin: var(--double) 0 10px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
 .no-results {
   text-align: center;
   margin: 3rem;
   color: var(--dim);
 }
-
-
 
 .widget-row {
   display: flex;

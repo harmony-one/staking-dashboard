@@ -1,3 +1,11 @@
+const BigNumber = require('bignumber.js')
+
+BigNumber.config({
+  FORMAT: {
+    groupSeparator: ''
+  }
+})
+
 const axios = require('axios')
 const _ = require('lodash')
 const {
@@ -29,7 +37,9 @@ const MAX_LENGTH = 30
 const GLOBAL_VIEW = 'GLOBAL_VIEW'
 const ELECTED_KEYS = 'ELECTED_KEYS'
 const ELECTED_KEYS_SET = 'ELECTED_KEYS_SET'
-const ELECTED_NODES = 'ELECTED_NODES'
+const ELECTED_KEYS_PER_NODE = 'ELECTED_KEYS_PER_NODE'
+const LAST_EPOCH_METRICS = 'LAST_EPOCH_METRICS'
+const LIVE_EPOCH_METRICS = 'LIVE_EPOCH_METRICS'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
 const VALIDATOR_PAGE_SIZE = 100
@@ -49,9 +59,11 @@ module.exports = function(
   // Currently only work for OS network and testnet.
   if (
     !(
+      BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
       BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io') ||
-      BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
+      BLOCKCHAIN_SERVER.includes('api.s0.dry.hmny.io')// ||
+      // BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
     )
   ) {
     return
@@ -77,7 +89,9 @@ module.exports = function(
     LIVE_KEYS_PER_NODE: {},
     STAKING_DISTRO_TABLE: {},
     LIVE_STAKING_DISTRO_TABLE: {},
-    ELECTED_NODES: {}
+    ELECTED_KEYS_PER_NODE: {},
+    LAST_EPOCH_METRICS: {},
+    LIVE_EPOCH_METRICS: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -199,11 +213,11 @@ module.exports = function(
 
       if (cache[GLOBAL_SEATS]) {
         cache[STAKING_NETWORK_INFO].total_seats =
-          cache[GLOBAL_SEATS].total_seats
+          cache[GLOBAL_SEATS].total_seats ? cache[GLOBAL_SEATS].total_seats : 0
         cache[STAKING_NETWORK_INFO].total_seats_used =
-          cache[GLOBAL_SEATS].total_seats_used
+          cache[GLOBAL_SEATS].total_seats_used ? cache[GLOBAL_SEATS].total_seats_used : 0
         cache[STAKING_NETWORK_INFO].externalShards =
-          cache[GLOBAL_SEATS].externalShards
+          cache[GLOBAL_SEATS].externalShards ? cache[GLOBAL_SEATS].externalShards : []
       }
 
       if (
@@ -319,9 +333,9 @@ module.exports = function(
           res.data.result.length
         )
 
-        res.data.result.forEach(elem => {
+        res.data.result.forEach(async elem => {
           if (elem && elem.validator && elem.validator.address) {
-            processValidatorInfoData(elem.validator.address, elem)
+            await processValidatorInfoData(elem.validator.address, elem)
           }
         })
         return res.data.result.length
@@ -354,13 +368,20 @@ module.exports = function(
             selfStake = elem.amount
           }
           totalStake = cache[DELEGATIONS_BY_VALIDATOR][address].reduce(
-            (acc, val) => acc + val.amount,
+            (acc, val) =>
+              BigNumber(acc)
+                .plus(val.amount)
+                .toFormat(),
             0
           )
 
-          averageStake =
-            totalStake / cache[DELEGATIONS_BY_VALIDATOR][address].length
-          remainder = remainder - totalStake
+          averageStake = BigNumber(totalStake)
+            .div(cache[DELEGATIONS_BY_VALIDATOR][address].length)
+            .toFormat()
+
+          remainder = BigNumber(remainder)
+            .minus(totalStake)
+            .toFormat()
         }
 
         const utcDate = new Date(Date.now())
@@ -448,6 +469,7 @@ module.exports = function(
           validatorInfo['commision-recent-change'] =
             cache[VALIDATOR_INFO][address]['commision-recent-change']
         }
+
         cache[VALIDATOR_INFO][address] = validatorInfo
         if (validatorInfo.elected_nodes > 0) {
           cache[ACTIVE_VALIDATORS].push(address)
@@ -519,6 +541,7 @@ module.exports = function(
     while (totalValidators < cache[VALIDATORS].length) {
       const count = await processValidatorWithPage(page)
       totalValidators += count
+      console.log('get validator', count)
       if (count === 0) {
         break
       }
@@ -555,6 +578,10 @@ module.exports = function(
           res,
           `data.result.current.quorum-deciders.shard-${e}.committee-members`
         )
+        if (!total) {
+          return []
+        }
+
         return total
           .filter(item => !item['is-harmony-slot'])
           .map(e => e['bls-public-key'])
@@ -563,7 +590,7 @@ module.exports = function(
       const rawStakes = {}
       const electedKeys = []
       const effectiveStakes = {}
-      const electedNodes = new Set()
+      const electedKeysPerNode = {}
       const externalShards = _.range(numOfShards).map(e => {
         const total = _.get(
           res,
@@ -573,10 +600,16 @@ module.exports = function(
           console.log(`total: ${total.length}`)
           total.forEach(item => {
             if (!item['is-harmony-slot']) {
-              rawStakes[item['bls-public-key']] = item['raw-stake']
-              effectiveStakes[item['bls-public-key']] = item['effective-stake']
-              electedKeys.push(item['bls-public-key'])
-              electedNodes.add(item['earning-account'])
+              const blsKey = item['bls-public-key']
+              const address = item['earning-account']
+              rawStakes[blsKey] = parseFloat(item['raw-stake'])
+              effectiveStakes[blsKey] = parseFloat(item['effective-stake'])
+              electedKeys.push(blsKey)
+              if (electedKeysPerNode[address]) {
+                electedKeysPerNode[address].push(blsKey)
+              } else {
+                electedKeysPerNode[address] = [blsKey]
+              }
             }
           })
 
@@ -590,23 +623,58 @@ module.exports = function(
       })
       // TODO: add mutex to avoid requests return empty data.
       cache[RAW_STAKE] = null
-      cache[ELECTED_KEYS] = null
-      cache[EFFECTIVE_STAKE] = null
-      cache[ELECTED_NODES] = null
       cache[RAW_STAKE] = rawStakes
+      cache[ELECTED_KEYS] = null
       cache[ELECTED_KEYS] = electedKeys
+      cache[EFFECTIVE_STAKE] = null
       cache[EFFECTIVE_STAKE] = effectiveStakes
-      cache[ELECTED_NODES] = electedNodes
+      cache[ELECTED_KEYS_PER_NODE] = null
+      cache[ELECTED_KEYS_PER_NODE] = electedKeysPerNode
+      cache[LAST_EPOCH_METRICS] = null
+
+      const calculateTotalStakeByShard = (shard, type) => {
+        const committeeMembers = _.get(
+          res,
+          `data.result.${type}.quorum-deciders.shard-${shard}.committee-members`
+        )
+
+        if (!committeeMembers) {
+          console.log('Error: not found committeeMembers')
+
+          return 0
+        }
+
+        return committeeMembers.reduce((acc, e) => {
+          if (e['is-harmony-slot']) {
+            return acc
+          }
+
+          return acc + (e['raw-stake'] ? parseFloat(e['raw-stake']) : 0)
+        }, 0)
+      }
+
+      cache[LAST_EPOCH_METRICS] = {
+        lastEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
+          calculateTotalStakeByShard(shard, 'current')
+        ),
+        // currentEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
+        //   calculateTotalStakeByShard(shard, 'current')
+        // ),
+        lastEpochEffectiveStake: parseFloat(
+          _.get(res, 'data.result.current.epos-median-stake', 0)
+        )
+      }
 
       cache[GLOBAL_SEATS].total_seats = _.get(
         res,
         'data.result.current.external-slot-count'
-      )
+      ) ? _.get(res, 'data.result.current.external-slot-count') : 0
+      console.log('externalShards', externalShards)
       cache[GLOBAL_SEATS].total_seats_used = _.sumBy(
         externalShards,
-        e => e.external
+        e => e ? e.external : 0
       )
-      cache[GLOBAL_SEATS].externalShards = externalShards
+      cache[GLOBAL_SEATS].externalShards = externalShards.filter(x => x)
       cache[ELECTED_KEYS_SET] = null
 
       cache[ELECTED_KEYS_SET] = externalShardKeys.reduce((cur, elem) => {
@@ -634,7 +702,11 @@ module.exports = function(
       const liveEffectiveStakes = {}
       const liveKeysPerNode = {}
 
+      let liveEpochTotalStake = 0
+
       res.data.result['epos-slot-winners'].forEach(e => {
+        liveEpochTotalStake += parseFloat(e['raw-stake'])
+
         if (e['slot-owner']) {
           const nodeAddress = e['slot-owner']
           const key = e['bls-public-key']
@@ -648,6 +720,8 @@ module.exports = function(
           }
         }
       })
+
+      cache[LIVE_EPOCH_METRICS] = { liveEpochTotalStake }
       cache[LIVE_ELECTED_KEYS] = null
       cache[LIVE_EFFECTIVE_STAKES] = null
       cache[LIVE_RAW_STAKES] = null
@@ -665,35 +739,19 @@ module.exports = function(
   }
 
   const calculateDistroTable = async () => {
-    let table = []
-    cache[ELECTED_NODES].forEach(e => table.push(e))
-    totalNum = 0
-    table = table.map(address => {
-      let keyNum = 0
-      let total = 0
-      let totalEffectiveStake = 0
-      if (!cache[VALIDATOR_INFO][address]) {
-        console.log('can not get validator info of ', address)
-        return null
+    let table = Object.keys(cache[ELECTED_KEYS_PER_NODE]).map(nodeAddress => {
+      const blsKeys = cache[ELECTED_KEYS_PER_NODE][nodeAddress]
+      const total_stake = _.sumBy(blsKeys, k => cache[RAW_STAKE][k])
+      if (cache[VALIDATOR_INFO][nodeAddress] == undefined) {
+        console.log(`undefine is here: ${nodeAddress}`)
       }
-      cache[VALIDATOR_INFO][address]['bls-public-keys'].forEach(key => {
-        if (cache[ELECTED_KEYS_SET].has(key)) {
-          keyNum++
-          total += cache[RAW_STAKE][key]
-          totalEffectiveStake = parseFloat(cache[EFFECTIVE_STAKE][key])
-        }
-      })
-      if (!totalEffectiveStake || !keyNum || !total) {
-        console.log('minh error', address, totalEffectiveStake, total, keyNum)
-      }
-      totalNum += keyNum
       return {
-        address,
-        name: cache[VALIDATOR_INFO][address].name,
-        effective_stake: totalEffectiveStake,
-        bid: parseFloat(total) / keyNum,
-        total_stake: parseFloat(total),
-        num: keyNum
+        address: nodeAddress,
+        name: cache[VALIDATOR_INFO][nodeAddress].name,
+        effective_stake: cache[EFFECTIVE_STAKE][blsKeys[0]],
+        bid: total_stake / blsKeys.length,
+        total_stake,
+        num: blsKeys.length
       }
     })
 
@@ -711,20 +769,18 @@ module.exports = function(
 
     // Live TABLE
 
-    let liveTable = Object.keys(cache[LIVE_KEYS_PER_NODE]).map(
-      nodeAddress => {
-        const blsKeys = cache[LIVE_KEYS_PER_NODE][nodeAddress]
+    let liveTable = Object.keys(cache[LIVE_KEYS_PER_NODE]).map(nodeAddress => {
+      const blsKeys = cache[LIVE_KEYS_PER_NODE][nodeAddress]
 
-        return {
-          address: nodeAddress,
-          name: cache[VALIDATOR_INFO][nodeAddress].name,
-          effective_stake: cache[LIVE_EFFECTIVE_STAKES][blsKeys[0]],
-          bid: _.sumBy(blsKeys, k => cache[LIVE_RAW_STAKES][k]) / blsKeys.length,
-          total_stake: _.sumBy(blsKeys, k => cache[LIVE_RAW_STAKES][k]),
-          num: blsKeys.length
-        }
+      return {
+        address: nodeAddress,
+        name: cache[VALIDATOR_INFO][nodeAddress].name,
+        effective_stake: cache[LIVE_EFFECTIVE_STAKES][blsKeys[0]],
+        bid: _.sumBy(blsKeys, k => cache[LIVE_RAW_STAKES][k]) / blsKeys.length,
+        total_stake: _.sumBy(blsKeys, k => cache[LIVE_RAW_STAKES][k]),
+        num: blsKeys.length
       }
-    )
+    })
 
     liveTable = _.sortBy(liveTable, e => -e.bid)
     slot = 0
@@ -800,7 +856,9 @@ module.exports = function(
           ),
           live_effective_median_stake_distro: cache[LIVE_ELECTED_KEYS].map(
             e => cache[LIVE_EFFECTIVE_STAKES][e]
-          )
+          ),
+          ...cache[LAST_EPOCH_METRICS],
+          ...cache[LIVE_EPOCH_METRICS]
         }
 
     return stakingNetworkInfo

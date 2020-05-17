@@ -21,7 +21,13 @@
             <div v-if="delegation.loading" class="delegation-body">
               Loading...
             </div>
-            <div v-else-if="!delegations.length && !Object.keys(delegation.unbondingDelegations).length" class="delegation-body">
+            <div
+              v-else-if="
+                !delegations.length &&
+                  !Object.keys(delegation.unbondingDelegations).length
+              "
+              class="delegation-body"
+            >
               No delegations in your portfolio
             </div>
             <StakeAllocationBlock
@@ -128,11 +134,14 @@ export default {
       isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
     }),
     delegations() {
-      return this.delegates.loading ? [] : this.delegates.delegates.filter(d => d.amount > 0)
-        .map((d) => ({
-          ...d,
-          validator: d.validator_info.name
-        }))
+      return this.delegates.loading
+        ? []
+        : this.delegates.delegates
+            .filter(d => d.amount > 0)
+            .map(d => ({
+              ...d,
+              validator: d.validator_info.name
+            }))
     },
     undelegations() {
       const epoch = this.connection.networkInfo.current_epoch
@@ -143,17 +152,26 @@ export default {
         for (let j = 0; j < d.Undelegations.length; j++) {
           const ud = d.Undelegations[j]
           if (ud.Epoch + 7 < epoch) continue
+
+          const lastEpochInCommit = d.validator_info["last-epoch-in-committee"]
+          let remaining_epoch = 0
+
+          if (lastEpochInCommit) {
+            remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 7
+          }
+
           undelegations.push({
             ...d.validator_info,
             moniker: d.validator_info.name,
             operator_address: d.validator_info.address,
             ...d,
             stake: ud.Amount,
-            remaining_epoch: Math.min(7, ud.Epoch - epoch + 8),
+            remaining_epoch
           })
         }
       }
       // console.log(this.networkInfo, undelegations)
+
       return undelegations
     }
   },

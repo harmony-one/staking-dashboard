@@ -105,7 +105,11 @@ export default {
             width: "160px",
             align: "right",
             render: value => {
-              return `${value} epoch${value > 1 ? "s" : ""}`
+              if (value) {
+                return `${value} epoch${value > 1 ? "s" : ""}`
+              } else {
+                return "current epoch"
+              }
             }
           }
         ])
@@ -158,7 +162,6 @@ export default {
 }
 </script>
 <style lang="scss">
-
 .table-delegations {
   .table-headings-wrap {
     width: 100%;

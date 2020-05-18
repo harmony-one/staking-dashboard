@@ -53,13 +53,13 @@
             >
               <DelegatorBlock :validator="validator" />
             </LightWidget>
-            <LightWidget v-if="allHistory.length" title="Event history">
-              <EventHistoryBlock :events="eventsHistory" />
-            </LightWidget>
+<!--            <LightWidget v-if="allHistory.length" title="Event history">-->
+<!--              <EventHistoryBlock :events="eventsHistory" />-->
+<!--            </LightWidget>-->
           </div>
         </div>
       </div>
-    </template> 
+    </template>
     <template v-else>
       <div slot="title">Validator Not Found</div>
       <div slot="subtitle">

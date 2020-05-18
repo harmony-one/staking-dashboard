@@ -40,6 +40,7 @@ const ELECTED_KEYS_SET = 'ELECTED_KEYS_SET'
 const ELECTED_KEYS_PER_NODE = 'ELECTED_KEYS_PER_NODE'
 const LAST_EPOCH_METRICS = 'LAST_EPOCH_METRICS'
 const LIVE_EPOCH_METRICS = 'LIVE_EPOCH_METRICS'
+const VALIDATORS_TOTAL_STAKE = 'VALIDATORS_TOTAL_STAKE'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
 const VALIDATOR_PAGE_SIZE = 100
@@ -93,7 +94,8 @@ module.exports = function(
     LIVE_STAKING_DISTRO_TABLE: {},
     ELECTED_KEYS_PER_NODE: {},
     LAST_EPOCH_METRICS: {},
-    LIVE_EPOCH_METRICS: {}
+    LIVE_EPOCH_METRICS: {},
+    VALIDATORS_TOTAL_STAKE: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -440,14 +442,29 @@ module.exports = function(
           )
         }
 
-        if (cache[LAST_EPOCH_METRICS]) {
+        if (!cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]) {
+          console.log('Total stake - NOT FOUND ' + validatorInfo.address)
+        }
+
+        if (
+          cache[VALIDATORS_TOTAL_STAKE] &&
+          cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]
+        ) {
           const { currentTotalStake, previousTotalStake } = cache[
-            LAST_EPOCH_METRICS
-          ]
+            VALIDATORS_TOTAL_STAKE
+          ][validatorInfo.address]
 
           if (previousTotalStake) {
+            // console.log('--------------------------')
+            // console.log('Address ' + validatorInfo.address)
+            // console.log('currentTotalStake ' + currentTotalStake)
+            // console.log('previousTotalStake ' + previousTotalStake)
+            // console.log('validatorInfo.apr ' + validatorInfo.apr)
+
             validatorInfo.apr =
               (validatorInfo.apr * currentTotalStake) / previousTotalStake
+
+            // console.log('Result ' + validatorInfo.apr)
           }
         }
 
@@ -645,7 +662,7 @@ module.exports = function(
       cache[ELECTED_KEYS_PER_NODE] = electedKeysPerNode
       cache[LAST_EPOCH_METRICS] = null
 
-      const calculateTotalStakeByShard = (shard, type) => {
+      const calculateTotalStakeByShard = (shard, type, address) => {
         const committeeMembers = _.get(
           res,
           `data.result.${type}.quorum-deciders.shard-${shard}.committee-members`
@@ -657,27 +674,41 @@ module.exports = function(
           return 0
         }
 
-        return committeeMembers.reduce((acc, e) => {
-          if (e['is-harmony-slot']) {
-            return acc
-          }
+        return committeeMembers
+          .filter(cm => (address ? cm['earning-account'] === address : true))
+          .reduce((acc, e) => {
+            if (e['is-harmony-slot']) {
+              return acc
+            }
 
-          return acc + (e['raw-stake'] ? parseFloat(e['raw-stake']) : 0)
-        }, 0)
+            return acc + (e['raw-stake'] ? parseFloat(e['raw-stake']) : 0)
+          }, 0)
       }
 
-      const currentTotalStake = _.sumBy(_.range(numOfShards), shard =>
-        calculateTotalStakeByShard(shard, 'current')
-      )
+      // for apr calculating
+      cache[VALIDATORS_TOTAL_STAKE] = {}
 
-      const previousTotalStake = _.sumBy(_.range(numOfShards), shard =>
-        calculateTotalStakeByShard(shard, 'previous')
-      )
+      if (cache[VALIDATORS]) {
+        cache[VALIDATORS].forEach(address => {
+          const currentTotalStake = _.sumBy(_.range(numOfShards), shard =>
+            calculateTotalStakeByShard(shard, 'current', address)
+          )
+
+          const previousTotalStake = _.sumBy(_.range(numOfShards), shard =>
+            calculateTotalStakeByShard(shard, 'previous', address)
+          )
+
+          cache[VALIDATORS_TOTAL_STAKE][address] = {
+            currentTotalStake,
+            previousTotalStake
+          }
+        })
+      }
 
       cache[LAST_EPOCH_METRICS] = {
-        lastEpochTotalStake: currentTotalStake,
-        currentTotalStake,
-        previousTotalStake,
+        lastEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
+          calculateTotalStakeByShard(shard, 'current')
+        ),
         // currentEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
         //   calculateTotalStakeByShard(shard, 'current')
         // ),

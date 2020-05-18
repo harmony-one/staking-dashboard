@@ -16,7 +16,9 @@
       >
         {{ column.title }}
       </a>
-      <i class="material-icons">arrow_drop_up</i>
+      <i class="material-icons" @click="() => onClick(column.value)"
+        >arrow_drop_up</i
+      >
     </template>
     <span v-else>{{ column.title }}</span>
   </div>

@@ -59,10 +59,12 @@ module.exports = function(
   // Currently only work for OS network and testnet.
   if (
     !(
-      BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io') ||
-      BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
-      BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io') ||
-      BLOCKCHAIN_SERVER.includes('api.s0.dry.hmny.io')// ||
+      (
+        BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io') ||
+        BLOCKCHAIN_SERVER.includes('api.s0.os.hmny.io') ||
+        BLOCKCHAIN_SERVER.includes('api.s0.ps.hmny.io') ||
+        BLOCKCHAIN_SERVER.includes('api.s0.dry.hmny.io')
+      ) // ||
       // BLOCKCHAIN_SERVER.includes('api.s0.stn.hmny.io')
     )
   ) {
@@ -212,12 +214,18 @@ module.exports = function(
       }
 
       if (cache[GLOBAL_SEATS]) {
-        cache[STAKING_NETWORK_INFO].total_seats =
-          cache[GLOBAL_SEATS].total_seats ? cache[GLOBAL_SEATS].total_seats : 0
-        cache[STAKING_NETWORK_INFO].total_seats_used =
-          cache[GLOBAL_SEATS].total_seats_used ? cache[GLOBAL_SEATS].total_seats_used : 0
-        cache[STAKING_NETWORK_INFO].externalShards =
-          cache[GLOBAL_SEATS].externalShards ? cache[GLOBAL_SEATS].externalShards : []
+        cache[STAKING_NETWORK_INFO].total_seats = cache[GLOBAL_SEATS]
+          .total_seats
+          ? cache[GLOBAL_SEATS].total_seats
+          : 0
+        cache[STAKING_NETWORK_INFO].total_seats_used = cache[GLOBAL_SEATS]
+          .total_seats_used
+          ? cache[GLOBAL_SEATS].total_seats_used
+          : 0
+        cache[STAKING_NETWORK_INFO].externalShards = cache[GLOBAL_SEATS]
+          .externalShards
+          ? cache[GLOBAL_SEATS].externalShards
+          : []
       }
 
       if (
@@ -430,6 +438,17 @@ module.exports = function(
             'lifetime.reward-accumulated',
             null
           )
+        }
+
+        if (cache[LAST_EPOCH_METRICS]) {
+          const { currentTotalStake, previousTotalStake } = cache[
+            LAST_EPOCH_METRICS
+          ]
+
+          if (previousTotalStake) {
+            validatorInfo.apr =
+              (validatorInfo.apr * currentTotalStake) / previousTotalStake
+          }
         }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
@@ -647,10 +666,18 @@ module.exports = function(
         }, 0)
       }
 
+      const currentTotalStake = _.sumBy(_.range(numOfShards), shard =>
+        calculateTotalStakeByShard(shard, 'current')
+      )
+
+      const previousTotalStake = _.sumBy(_.range(numOfShards), shard =>
+        calculateTotalStakeByShard(shard, 'previous')
+      )
+
       cache[LAST_EPOCH_METRICS] = {
-        lastEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
-          calculateTotalStakeByShard(shard, 'current')
-        ),
+        lastEpochTotalStake: currentTotalStake,
+        currentTotalStake,
+        previousTotalStake,
         // currentEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
         //   calculateTotalStakeByShard(shard, 'current')
         // ),
@@ -662,11 +689,12 @@ module.exports = function(
       cache[GLOBAL_SEATS].total_seats = _.get(
         res,
         'data.result.current.external-slot-count'
-      ) ? _.get(res, 'data.result.current.external-slot-count') : 0
+      )
+        ? _.get(res, 'data.result.current.external-slot-count')
+        : 0
       console.log('externalShards', externalShards)
-      cache[GLOBAL_SEATS].total_seats_used = _.sumBy(
-        externalShards,
-        e => e ? e.external : 0
+      cache[GLOBAL_SEATS].total_seats_used = _.sumBy(externalShards, e =>
+        e ? e.external : 0
       )
       cache[GLOBAL_SEATS].externalShards = externalShards.filter(x => x)
       cache[ELECTED_KEYS_SET] = null
@@ -808,7 +836,7 @@ module.exports = function(
 
       // Then get validator info, each call gets 100 validatorinfo.
 
-      await getElectedValidators();
+      await getElectedValidators()
 
       await getAllValidatorsInfo()
       console.log('distro calculation starting.')
@@ -825,21 +853,20 @@ module.exports = function(
       cache[ACTIVE_VALIDATORS] = []
 
       res = await apiClient.post(
-          '/',
-          bodyParams('hmy_getElectedValidatorAddresses')
+        '/',
+        bodyParams('hmy_getElectedValidatorAddresses')
       )
 
-      if(res.data && res.data.result) {
-        cache[ACTIVE_VALIDATORS] = res.data.result;
+      if (res.data && res.data.result) {
+        cache[ACTIVE_VALIDATORS] = res.data.result
       } else {
-        console.log(
-            `error when getElectedValidators for ${BLOCKCHAIN_SERVER}`);
+        console.log(`error when getElectedValidators for ${BLOCKCHAIN_SERVER}`)
       }
     } catch (err) {
       console.log(
-          `error when callMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
-          err,
-          res.result
+        `error when callMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
+        err,
+        res.result
       )
     }
   }

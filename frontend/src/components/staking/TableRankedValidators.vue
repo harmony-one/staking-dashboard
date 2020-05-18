@@ -94,6 +94,7 @@ export default {
         {
           title: `Name`,
           value: `name`,
+          key: item => item.address,
           tooltip: `The validator's moniker`,
           renderComponent: ValidatorName
         },

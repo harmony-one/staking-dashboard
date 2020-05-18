@@ -23,7 +23,7 @@
           <div
             class="table-cell"
             v-for="(item, index) in data"
-            :key="index"
+            :key="column.key ? column.key(item) : index"
             @click="(e) => onRowClick(item)"
             @contextmenu.prevent="() => onRowClick(item, true)"
             :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"

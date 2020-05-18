@@ -124,6 +124,7 @@ export default {
         {
           title: `Name`,
           value: `name`,
+          key: item => item.address,
           tooltip: tooltips.v_list.name,
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },

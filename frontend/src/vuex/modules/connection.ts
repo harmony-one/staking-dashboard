@@ -48,6 +48,9 @@ export interface INetworkInfo {
   lastEpochTotalStake: number;
   liveEpochTotalStake: number;
   lastEpochEffectiveStake: number;
+  liveExternalShards: Array<{ total: number; external: number }>
+  liveTotalSeatsUsed: number
+  liveTotalSeats: number
 }
 
 const state = {

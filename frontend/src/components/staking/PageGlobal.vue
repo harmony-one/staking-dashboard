@@ -73,7 +73,7 @@
               "
             >
               <div class="chart">
-                <SeatAllocation :data="networkInfo" />
+                <SeatAllocation :data="networkInfo.externalShards" />
               </div>
             </LightWidget>
 
@@ -111,6 +111,19 @@
 
             <div class="table-border validatorTable">
               <TableRankedValidators :data="enrichedLiveValidators" />
+            </div>
+
+            <div class="widget-row">
+              <LightWidget
+                v-if="networkInfo.liveExternalShards"
+                :title="
+                  `Seats Elected ${networkInfo.liveTotalSeatsUsed} / ${networkInfo.liveTotalSeats}`
+                "
+              >
+                <div class="chart">
+                  <SeatAllocation :data="networkInfo.liveExternalShards" />
+                </div>
+              </LightWidget>
             </div>
           </div>
         </template>
@@ -229,7 +242,7 @@ export default {
       return data
     },
     linkToTransaction() {
-      const blocksUrl = this.networkConfig.explorer_url + '/block/'
+      const blocksUrl = this.networkConfig.explorer_url + "/block/"
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },

@@ -13,7 +13,7 @@
       </div>
     </div>
     
-    <div class="delegation" v-for="(delegator, index) in delegations">
+    <div class="delegation" v-for="(delegator, index) in delegations" v-if="delegator.amount > 0">
       <div class="index">
         {{index + 1}}
       </div>

@@ -126,7 +126,7 @@ export default {
           title: `Status`,
           value: `status`,
           tooltip: tooltips.v_list.status,
-          width: "96px",
+          width: "110px",
           renderComponent: ValidatorStatus // render as Component - use custom Vue components
         },
         {

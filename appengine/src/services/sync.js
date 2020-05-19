@@ -18,13 +18,13 @@ const DELEGATIONS_BY_DELEGATOR = 'DELEGATIONS_BY_DELEGATOR'
 const DELEGATIONS_BY_VALIDATOR = 'DELEGATIONS_BY_VALIDATOR'
 const STAKING_DISTRO_TABLE = 'STAKING_DISTRO_TABLE'
 const GLOBAL_SEATS = 'GLOBAL_SEATS'
-const STAKING_DISTRO = 'STAKING_DISTRO'
+const EFFECTIVE_STAKE = 'EFFECTIVE_STAKE'
 const RAW_STAKE = 'RAW_STAKE'
 const MAX_LENGTH = 30
 const GLOBAL_VIEW = 'GLOBAL_VIEW'
-// const ELECTED_KEYS = 'ELECTED_KEYS'
+const ELECTED_KEYS = 'ELECTED_KEYS'
+const ELECTED_KEYS_SET = 'ELECTED_KEYS_SET'
 const ELECTED_NODES = 'ELECTED_NODES'
-const BLS_KEYS = 'BLS_KEYS'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
 const VALIDATOR_PAGE_SIZE = 100
@@ -61,13 +61,11 @@ module.exports = function (
     STAKING_NETWORK_INFO: {},
     STAKING_NETWORK_INFO_PREV_EPOCH: {},
     VOTING_POWER: {},
-    STAKING_DISTRO: [],
-    STAKING_DISTRO_RAW: [],
     GLOBAL_SEATS: {},
-    BLS_KEYS: {},
+    ELECTED_KEYS: {},
+    ELECTED_KEYS_SET: {},
     GLOBAL_VIEW: {},
     RAW_STAKE: {},
-    ELECTED_KEYS: {},
     STAKING_DISTRO_TABLE: {},
     ELECTED_NODES: {},
   }
@@ -105,23 +103,6 @@ module.exports = function (
   }
 
   let numOfShards = 0
-
-  const getActiveValidatorAddressesData = async () => {
-    try {
-      const res = await apiClient.post(
-        '/',
-        bodyParams('hmy_getElectedValidatorAddresses')
-      )
-
-      if (Array.isArray(res.data.result)) {
-        cache[ACTIVE_VALIDATORS] = res.data.result
-        console.log('# of active validators', cache[ACTIVE_VALIDATORS].length)
-      }
-      return res.data.result
-    } catch (err) {
-      console.log(err)
-    }
-  }
 
   const getAllValidatorAddressesData = async () => {
     try {
@@ -261,8 +242,6 @@ module.exports = function (
         delete cache[GLOBAL_VIEW][currentEpoch - MAX_LENGTH]
       }
       await filterGlobalCache(currentEpoch)
-
-      // console.log("getAllValidatorAddressesData", res.data)
       return {
         ...cache[STAKING_NETWORK_INFO],
         history: cache[GLOBAL_VIEW],
@@ -404,12 +383,13 @@ module.exports = function (
             : 1,
           elected_nodes: Array.isArray(res['bls-public-keys'])
             ? res['bls-public-keys'].filter((item) =>
-                cache[ELECTED_NODES].has(item)
+                cache[ELECTED_KEYS_SET].has(item)
               ).length
             : 0,
           active:
-            Array.isArray(cache[ACTIVE_VALIDATORS]) &&
-            cache[ACTIVE_VALIDATORS].includes(address),
+            res['bls-public-keys'].filter((item) =>
+              cache[ELECTED_KEYS_SET].has(item)
+            ).length > 0,
           uptime_percentage:
             _.get(result, 'lifetime.blocks.signed') &&
             _.get(result, 'lifetime.blocks.to-sign')
@@ -513,7 +493,6 @@ module.exports = function (
             }
           })
           page += 1
-          await sleep(SLEEP_TIME)
         } else {
           break
         }
@@ -521,6 +500,7 @@ module.exports = function (
     } catch (err) {
       console.log('error when getDelegationsFirst', err)
     }
+    await sleep(SLEEP_TIME)
   }
 
   const getAllValidatorsInfo = async () => {
@@ -533,8 +513,8 @@ module.exports = function (
         break
       }
       page += 1
-      await sleep(SLEEP_TIME)
     }
+    await sleep(SLEEP_TIME)
   }
 
   const getDelegationsByValidatorData = async (address) => {
@@ -550,7 +530,7 @@ module.exports = function (
     return res.data.result
   }
 
-  const updateVotingPower = async () => {
+  const callSuperCommittees = async () => {
     try {
       const res = await apiClient.post(
         '/',
@@ -570,6 +550,10 @@ module.exports = function (
           .map((e) => e['bls-public-key'])
       })
 
+      const rawStakes = {}
+      const electedKeys = []
+      const effectiveStakes = {}
+      const electedNodes = new Set()
       const externalShards = _.range(numOfShards).map((e) => {
         const total = _.get(
           res,
@@ -577,17 +561,32 @@ module.exports = function (
         )
         if (total) {
           console.log(`total: ${total.length}`)
+          total.forEach((item) => {
+            if (!item['is-harmony-slot']) {
+              rawStakes[item['bls-public-key']] = item['raw-stake']
+              effectiveStakes[item['bls-public-key']] = item['effective-stake']
+              electedKeys.push(item['bls-public-key'])
+              electedNodes.add(item['earning-account'])
+            }
+          })
+
           return {
             total: total.length,
             external: total.filter((item) => !item['is-harmony-slot']).length,
           }
         } else {
-          console.log(
-            `error of getting data.result.current.quorum-deciders.shard-${e}.committee-members`,
-            total
-          )
+          console.log('error when getting elected bls keys')
         }
       })
+      // TODO: add mutex to avoid requests return empty data.
+      cache[RAW_STAKE] = null
+      cache[ELECTED_KEYS] = null
+      cache[EFFECTIVE_STAKE] = null
+      cache[ELECTED_NODES] = null
+      cache[RAW_STAKE] = rawStakes
+      cache[ELECTED_KEYS] = electedKeys
+      cache[EFFECTIVE_STAKE] = effectiveStakes
+      cache[ELECTED_NODES] = electedNodes
 
       cache[GLOBAL_SEATS].total_seats = _.get(
         res,
@@ -598,9 +597,9 @@ module.exports = function (
         (e) => e.external
       )
       cache[GLOBAL_SEATS].externalShards = externalShards
-      cache[ELECTED_NODES] = null
+      cache[ELECTED_KEYS_SET] = null
 
-      cache[ELECTED_NODES] = externalShardKeys.reduce((cur, elem) => {
+      cache[ELECTED_KEYS_SET] = externalShardKeys.reduce((cur, elem) => {
         elem.forEach((key) => cur.add(key))
         return cur
       }, new Set())
@@ -610,64 +609,35 @@ module.exports = function (
         err
       )
     }
-    try {
-      const res = await apiClient.post(
-        '/',
-        bodyParams('hmy_getMedianRawStakeSnapshot')
-      )
-      cache[STAKING_DISTRO] = _.get(
-        res,
-        'data.result.epos-slot-winners'
-      ).reduce((cur, item) => {
-        cur[item['bls-public-key']] = item['eposed-stake']
-        return cur
-      }, new Map())
-
-      cache[RAW_STAKE] = _.get(res, 'data.result.epos-slot-candidates').reduce(
-        (cur, item) => {
-          item['keys-at-auction'].forEach((key) => {
-            cur[key] = parseFloat(item['stake-per-key'])
-          })
-          return cur
-        },
-        new Map()
-      )
-
-      cache[BLS_KEYS] = _.get(res, 'data.result.epos-slot-winners').map(
-        (item) => item['bls-public-key']
-      )
-    } catch (err) {
-      console.log(
-        `error when getMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
-        err
-      )
-    }
   }
 
   const calculateDistroTable = async () => {
-    let table = cache[ACTIVE_VALIDATORS].filter(
-      (address) => cache[VALIDATOR_INFO][address].elected_nodes > 0
-    )
-    let count = 0
+    let table = []
+    cache[ELECTED_NODES].forEach((e) => table.push(e))
+    const seen = new Set()
+    totalNum = 0
     table = table.map((address) => {
-      count += 1
-      let key_num = 0
+      let keyNum = 0
       let total = 0
-      let total_effective_stake = 0
+      let totalEffectiveStake = 0
       cache[VALIDATOR_INFO][address]['bls-public-keys'].forEach((key) => {
-        if (cache[ELECTED_NODES].has(key)) {
-          key_num++
+        if (cache[ELECTED_KEYS_SET].has(key)) {
+          keyNum++
           total += cache[RAW_STAKE][key]
-          total_effective_stake = parseFloat(cache[STAKING_DISTRO][key])
+          totalEffectiveStake = parseFloat(cache[EFFECTIVE_STAKE][key])
         }
       })
+      if (!totalEffectiveStake || !keyNum || !total) {
+        console.log('minh error', address, totalEffectiveStake, total, keyNum)
+      }
+      totalNum += keyNum
       return {
         address,
         name: cache[VALIDATOR_INFO][address].name,
-        effective_stake: total_effective_stake,
-        bid: parseFloat(total) / key_num,
+        effective_stake: totalEffectiveStake,
+        bid: parseFloat(total) / keyNum,
         total_stake: parseFloat(total),
-        num: key_num,
+        num: keyNum,
       }
     })
 
@@ -687,7 +657,7 @@ module.exports = function (
   const update = async () => {
     try {
       // Calculate voting power first.
-      await updateVotingPower()
+      await callSuperCommittees()
 
       // Get global info first.
       await syncStakingNetworkInfo()
@@ -704,7 +674,7 @@ module.exports = function (
       await getAllValidatorsInfo()
       await calculateDistroTable()
     } catch (err) {
-      console.log('Error: ', err.message)
+      console.log('here Error: ', err.message)
     }
   }
 
@@ -730,9 +700,9 @@ module.exports = function (
       : {
           ...cache[STAKING_NETWORK_INFO],
           history: cache[GLOBAL_VIEW],
-          raw_stake_distro: cache[BLS_KEYS].map((e) => cache[RAW_STAKE][e]),
-          effective_median_stake_distro: cache[BLS_KEYS].map(
-            (e) => cache[STAKING_DISTRO][e]
+          raw_stake_distro: cache[ELECTED_KEYS].map((e) => cache[RAW_STAKE][e]),
+          effective_median_stake_distro: cache[ELECTED_KEYS].map(
+            (e) => cache[EFFECTIVE_STAKE][e]
           ),
           table: cache[STAKING_DISTRO_TABLE],
         }

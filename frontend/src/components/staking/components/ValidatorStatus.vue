@@ -1,7 +1,6 @@
 <template>
   <div class="status-container">
     <span
-      v-tooltip.top="tooltips.v_list[status_class]"
       :class="status_class"
       class="validator-status"
       :title="status_detailed"
@@ -11,6 +10,11 @@
 </template>
 
 <script>
+
+
+      // removed from span element v-tooltip.top="tooltips.v_list[status_class]"
+
+
 import tooltips from "src/components/tooltips"
 
 const toClassName = text => text.toLowerCase().replace(/ /g, "_")

@@ -84,6 +84,7 @@ export default {
   line-height: 1rem;
   text-transform: uppercase;
   font-size: 0.8rem;
+  color: var(--blue);
 }
 
 .chart-container-next-epoch {

@@ -77,7 +77,7 @@ export default {
           title: `Status`,
           value: `status`,
           tooltip: tooltips.portfolio.status,
-          width: "96px",
+          width: "110px",
           renderComponent: ValidatorStatus // render as Component - use custom Vue components
         },
         {
@@ -104,7 +104,7 @@ export default {
             tooltip: tooltips.portfolio.ending_in,
             width: "160px",
             align: "right",
-            render: value => value + " epochs"
+            render: value => value + " epoch" + value > 1 ? "s" : ""
           }
         ])
       } else {

@@ -1,3 +1,5 @@
+const { externalShardsByKeys } = require('./special-helpers')
+
 const BigNumber = require('bignumber.js')
 
 BigNumber.config({
@@ -774,7 +776,13 @@ module.exports = function(
         }
       })
 
-      cache[LIVE_EPOCH_METRICS] = { liveEpochTotalStake }
+      const liveExternalShards = externalShardsByKeys(liveElectedKeys)
+
+      cache[LIVE_EPOCH_METRICS] = {
+        liveEpochTotalStake,
+        liveExternalShards
+      }
+
       cache[LIVE_ELECTED_KEYS] = null
       cache[LIVE_EFFECTIVE_STAKES] = null
       cache[LIVE_RAW_STAKES] = null

@@ -54,10 +54,6 @@ export default {
   },
   props: ["data", "columns", "sort", "onRowClick"],
   methods: {
-    columnClick(e) {
-      e.stopPropagation()
-      console.log(e)
-    },
     orderBy(property) {
       if (this.sort.property === property) {
         this.sort.order = this.sort.order === `asc` ? `desc` : "asc"

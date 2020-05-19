@@ -778,9 +778,15 @@ module.exports = function(
 
       const liveExternalShards = externalShardsByKeys(liveElectedKeys)
 
+      const liveTotalSeatsUsed = _.sumBy(liveExternalShards, e => e ? e.external : 0)
+
+      const liveTotalSeats = _.sumBy(liveExternalShards, e => e ? e.external : 0)
+
       cache[LIVE_EPOCH_METRICS] = {
         liveEpochTotalStake,
-        liveExternalShards
+        liveExternalShards,
+        liveTotalSeatsUsed,
+        liveTotalSeats
       }
 
       cache[LIVE_ELECTED_KEYS] = null

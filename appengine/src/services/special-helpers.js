@@ -1,5 +1,5 @@
 const externalShardsByKeys = keys => {
-  const shards = {}
+  const shards = []
 
   if (Array.isArray(keys)) {
     keys
@@ -9,9 +9,11 @@ const externalShardsByKeys = keys => {
           : parseInt(e[e.length - 1]) % 4
       )
       .forEach(shard => {
-        const external = shards[shard] ? shards[shard].external + 1 : 1
+        const key = Number(shard)
 
-        shards[shard] = { external, total: 170 + external }
+        const external = shards[key] ? shards[key].external + 1 : 1
+
+        shards[key] = { external, total: 170 + external }
       })
   }
 

@@ -19,52 +19,40 @@
         <i v-tooltip.top="'Sign In'" class="material-icons">exit_to_app</i>
         Sign In
       </a>
-    </div> -->
+    </div>-->
 
     <div class="app-menu-main">
       <router-link
         id="menu_item_portfolio"
         class="app-menu-item"
-        to="/portfolio"
+        :to="'/portfolio' + getURLPath"
         exact="exact"
         title="Portfolio"
         @click.native="close"
       >
-        <svgicon
-          name="profile"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="profile" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Portfolio</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
       <router-link
         id="menu_item_validators"
         class="app-menu-item"
-        to="/validators"
+        :to="'/validators' + getURLPath"
         title="Validators"
         @click.native="close"
       >
-        <svgicon
-          name="validators"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="validators" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Validators</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
       <router-link
         id="menu_item_global"
         class="app-menu-item"
-        to="/analytics"
+        :to="'/analytics' + getURLPath"
         title="Analytics"
         @click.native="close"
       >
-        <svgicon
-          name="world"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="world" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Analytics</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -100,11 +88,7 @@
         title="Networks"
         @click.native="close"
       >
-        <svgicon
-          name="network"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="network" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -139,7 +123,6 @@
         <h2 class="app-menu-title">Security</h2>
       </router-link>-->
 
-
       <a
         class="app-menu-item small"
         href="https://docs.harmony.one/home/validators"
@@ -148,7 +131,6 @@
       >
         <h2 class="app-menu-title">Become a Validator</h2>
       </a>
-      
 
       <router-link
         class="app-menu-item small"
@@ -170,7 +152,7 @@
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
 
-<!-- 
+      <!-- 
       <router-link
         class="app-menu-item small"
         to="#"
@@ -179,9 +161,7 @@
         @click.native="feedback"
       >
         <h2 class="app-menu-title">Feedback</h2>
-      </router-link> -->
-
-
+      </router-link>-->
 
       <router-link
         v-if="session.signedIn"
@@ -231,11 +211,21 @@ export default {
   },
   computed: {
     ...mapState([`session`]),
-    ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`])
+    ...mapState({ network: state => state.connection.network }),
+    ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`]),
+    getURLPath() {
+      const network = this.network
+      let urlPath = "mainnet"
+      if (network === "harmony") urlPath = "mainnet"
+      else if (network === "harmony-testnet") urlPath = "testnet"
+      else if (network === "harmony-partnernet") urlPath = "partnernet"
+      else if (network === "harmony-open-staking") urlPath = "openstakingnet"
+      return "/" + urlPath
+    }
   },
   methods: {
     feedback() {
-      console.log('feedback')
+      console.log("feedback")
     },
     close() {
       this.$emit(`close`)
@@ -314,6 +304,7 @@ export default {
   padding: var(--half) 0 var(--half) var(--unit);
   color: var(--gray);
   border-left: 4px solid var(--gray);
+  cursor: pointer;
 }
 .app-menu-item:nth-child(5) {
   border-top: 1px solid var(--light);
@@ -335,6 +326,7 @@ export default {
   align-self: flex-end;
 }
 .app-menu-item:hover,
+.app-menu-item:active,
 .app-menu-item.router-link-active {
   color: var(--blue);
   border-left: 4px solid var(--blue);

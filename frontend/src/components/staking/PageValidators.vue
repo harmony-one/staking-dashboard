@@ -8,9 +8,7 @@
       <div class="networkInfo">
         <div class="networkInfo-column">
           <div id="validators_median_stake" class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">
-              Effective Median Stake:
-            </h4>
+            <h4 v-tooltip.top="tooltips.v_list.effective_median_stake">Effective Median Stake:</h4>
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
@@ -18,22 +16,14 @@
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.current_block_number">
-              Current Block Height:
-            </h4>
-            <a :href="linkToTransaction" target="_blank">
-              #{{ networkInfo.current_block_number }}
-            </a>
+            <h4 v-tooltip.top="tooltips.v_list.current_block_number">Current Block Height:</h4>
+            <a :href="linkToTransaction" target="_blank">#{{ networkInfo.current_block_number }}</a>
           </div>
         </div>
       </div>
       <div v-if="isNetworkInfoLoading" class="validatorTable">
         <div class="filterOptions">
-          <TmField
-            v-model="searchTerm"
-            class="searchField"
-            placeholder="Search"
-          />
+          <TmField v-model="searchTerm" class="searchField" placeholder="Search" />
           <div class="toggles">
             <TmBtn
               value="Elected"
@@ -57,14 +47,13 @@
           :data="validators"
           :active-only="activeOnly"
           :search="searchTerm.trim()"
+          :networkid="networkid"
           show-on-mobile="expectedReturns"
         />
         <div
           v-if="validators && validators.length === 0 && searchTerm"
           class="no-results"
-        >
-          No results for these search terms
-        </div>
+        >No results for these search terms</div>
       </div>
       <TmDataLoading v-if="isLoading" />
     </template>
@@ -101,10 +90,12 @@ export default {
   data: () => ({
     tooltips,
     searchTerm: "",
+    networkid: "",
     activeOnly: true
   }),
   computed: {
     ...mapState({ network: state => state.connection.network }),
+    ...mapState({ networks: state => state.connection.networks }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
@@ -128,11 +119,30 @@ export default {
         : ""
     },
     linkToTransaction() {
-      const blocksUrl = this.networkConfig.explorer_url + '/block/'
+      const blocksUrl = this.networkConfig.explorer_url + "/block/"
       return blocksUrl + this.networkInfo.current_block_hash
     }
   },
+  methods: {
+    getNetworkID(param) {
+      let networkID = "harmony"
+      if (param === "mainnet") networkID = "harmony"
+      else if (param === "testnet") networkID = "harmony-testnet"
+      else if (param === "partnernet") networkID = "harmony-partnernet"
+      else if (param === "openstakingnet") networkID = "harmony-open-staking"
+      return networkID
+    }
+  },
   async mounted() {
+    const networkID = this.getNetworkID(this.$route.params.networkid)
+    console.log("PageValidators---->networkID", networkID)
+    this.networkid = networkID
+    setTimeout(() => {
+      if (this.network !== networkID) {
+        const network = this.networks.find(net => net.id == networkID)
+        this.$store.dispatch("setNetwork", network)
+      }
+    }, 3000)
     // this.$store.dispatch(`getValidators`)
     this.$store.dispatch("getDelegates")
   }

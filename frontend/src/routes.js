@@ -9,7 +9,7 @@
 export default [
   {
     path: `/`,
-    redirect: `/validators`
+    redirect: `/validators/mainnet`
   },
   // {
   //   path: `/proposals`,
@@ -39,7 +39,11 @@ export default [
   //   redirect: `/proposals/:proposalId`
   // },
   {
-    path: `/validators`,
+    path: `/validators/`,
+    redirect: `/validators/mainnet`
+  },
+  {
+    path: `/validators/:networkid`,
     name: `Validators`,
     meta: {
       feature: "Validators"
@@ -49,7 +53,7 @@ export default [
   {
     path: `/analytics`,
     name: `Analytics`,
-    meta: { 
+    meta: {
       feature: "Analytics"
     },
     component: require(`./components/staking/PageGlobal`).default

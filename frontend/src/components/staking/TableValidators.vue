@@ -48,6 +48,9 @@ export default {
     search: {
       type: String,
       default: () => ""
+    },
+    networkid: {
+      type: String
     }
   },
   data: () => ({
@@ -228,7 +231,9 @@ export default {
       })
     },
     getValidators() {
+      console.log("TableValidators----->networkid", this.networkid)
       this.$store.dispatch(`getValidatorsWithParams`, {
+        networkid: this.networkid,
         active: this.activeOnly,
         page: this.pagination.pageIndex,
         size: this.pagination.pageSize,

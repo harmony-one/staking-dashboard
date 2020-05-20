@@ -1,56 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <% if (process.env.MOBILE_APP) { %>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=0"
+    />
+    <% } else { %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <% } %>
+    <meta
+      name="Description"
+      content="Harmony is a fast and open blockchain for decentralized applications. Our mainnet supports state sharding with instant finality. Our staking mechanism reduces centralization while supporting delegation and slashing."
+    />
+    <meta name="Author" content="Harmony International Software Systems Inc." />
+    <meta
+      name="keywords"
+      content="Staking, Staking Rewards, Proof of Stake, Blockchain, Cryptocurrency, One, Tezos, Polkadot, Binance, Wallet"
+    />
+    <title>Harmony – Open Consensus for 10B</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <% if (process.env.MOBILE_APP) { %>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-  <% } else { %>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <% } %>
-  <meta name="Description" content="Harmony is a fast and open blockchain for decentralized applications.
+    <meta property="og:title" content="Harmony – Open Consensus for 10B" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Harmony is a fast and open blockchain for decentralized applications. Our mainnet supports state sharding with instant finality. Our staking mechanism reduces centralization while supporting delegation and slashing."
+    />
 
-Our mainnet supports state sharding with instant finality. Our staking mechanism reduces centralization while supporting delegation and slashing.">
-  <meta name="Author" content="Harmony International Software Systems Inc.">
-  <meta name="keywords"
-    content="Staking, Staking Rewards, Proof of Stake, Blockchain, Cryptocurrency, One, Tezos, Polkadot, Binance, Wallet">
-  <title>Harmony – Open Consensus for 10B</title>
+    <meta
+      property="og:site_name"
+      content="To scale trust and create a radically fair economy"
+    />
+    <meta property="og:url" content="https://harmony.one/" />
 
-  <meta property="og:title" content="Harmony – Open Consensus for 10B" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="Harmony is a fast and open blockchain for decentralized applications.
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      property="og:image"
+      content="https://explorer.harmony.one/static/twitter-harmony.png"
+    />
 
-Our mainnet supports state sharding with instant finality. Our staking mechanism reduces centralization while supporting delegation and slashing." />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ffffff" />
 
-  <meta property="og:site_name" content="To scale trust and create a radically fair economy" />
-  <meta property="og:url" content="https://harmony.one/" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/img/icons/i48.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="128x128"
+      href="/img/icons/i128.png"
+    />
 
-  <link rel="shortcut icon" href="/static/favicon.ico" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-          property="og:image"
-          content="https://explorer.harmony.one/static/twitter-harmony.png"
-  />
+    <!--  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap" rel="stylesheet">-->
+  </head>
 
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
-
-  <link rel="icon" type="image/png" sizes="48x48" href="/img/icons/i48.png">
-  <link rel="icon" type="image/png" sizes="128x128" href="/img/icons/i128.png">
-
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap" rel="stylesheet">
-</head>
-
-<body style="background: #2ac6dc">
-  <noscript>
-    <strong>We're sorry but Harmony doesn't work properly without JavaScript enabled. Please enable it to
-      continue.</strong>
-  </noscript>
-  <div id="app"></div>
-  <script async src='https://www.google-analytics.com/analytics.js'></script>
-  <!-- built files will be auto injected -->
-</body>
-
+  <body style="background: #2ac6dc">
+    <noscript>
+      <strong
+        >We're sorry but Harmony doesn't work properly without JavaScript
+        enabled. Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!--  <script async src='https://www.google-analytics.com/analytics.js'></script>-->
+    <!-- built files will be auto injected -->
+  </body>
 </html>

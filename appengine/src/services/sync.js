@@ -448,27 +448,27 @@ module.exports = function(
           console.log('Total stake - NOT FOUND ' + validatorInfo.address)
         }
 
-        if (
-          cache[VALIDATORS_TOTAL_STAKE] &&
-          cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]
-        ) {
-          const { currentTotalStake, previousTotalStake } = cache[
-            VALIDATORS_TOTAL_STAKE
-          ][validatorInfo.address]
-
-          if (previousTotalStake) {
-            // console.log('--------------------------')
-            // console.log('Address ' + validatorInfo.address)
-            // console.log('currentTotalStake ' + currentTotalStake)
-            // console.log('previousTotalStake ' + previousTotalStake)
-            // console.log('validatorInfo.apr ' + validatorInfo.apr)
-
-            validatorInfo.apr =
-              (validatorInfo.apr * currentTotalStake) / previousTotalStake
-
-            // console.log('Result ' + validatorInfo.apr)
-          }
-        }
+        // if (
+        //   cache[VALIDATORS_TOTAL_STAKE] &&
+        //   cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]
+        // ) {
+        //   const { currentTotalStake, previousTotalStake } = cache[
+        //     VALIDATORS_TOTAL_STAKE
+        //   ][validatorInfo.address]
+        //
+        //   if (previousTotalStake) {
+        //     // console.log('--------------------------')
+        //     // console.log('Address ' + validatorInfo.address)
+        //     // console.log('currentTotalStake ' + currentTotalStake)
+        //     // console.log('previousTotalStake ' + previousTotalStake)
+        //     // console.log('validatorInfo.apr ' + validatorInfo.apr)
+        //
+        //     validatorInfo.apr =
+        //       (validatorInfo.apr * currentTotalStake) / previousTotalStake
+        //
+        //     // console.log('Result ' + validatorInfo.apr)
+        //   }
+        // }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {

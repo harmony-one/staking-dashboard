@@ -83,7 +83,6 @@ import RewardHistoryBlock from "./RewardHistoryBlock"
 import DelegatorBlock from "./DelegatorBlock"
 import EventHistoryBlock from "./EventHistoryBlock"
 import TmPage from "common/TmPage"
-import { getNetworkID } from "../../helpers"
 import PageLoading from "common/PageLoading"
 import {
   fetchValidatorByAddress,
@@ -124,19 +123,17 @@ export default {
     ...mapState({
       isNetworkFetching: state => state.connection.isNetworkFetching
     }),
+    ...mapState({ network: state => state.connection.network }),
     ...mapState({ networks: state => state.connection.networks }),
     ...mapState([`connection`]),
-    networkId() {
-      return getNetworkID(this.$route.params.networkid)
-    },
     eventsHistory() {
       return this.allHistory.length ? generateEventHistory(this.allHistory) : {}
     }
   },
   watch: {
     isNetworkFetching: function() {
-      const networkID = this.networkId
-      const network = this.networks.find(net => net.id == networkID)
+      const chainTitle = this.$route.params.chaintitle
+      const network = this.networks.find(net => net.chain_title === chainTitle)
       this.$store.dispatch("setNetwork", network)
     },
     networkId: async function() {
@@ -156,15 +153,15 @@ export default {
   methods: {
     fetchValidator: async function() {
       this.loading = true
-      const networkid = this.networkId
+      const network = this.network
       try {
-        if (networkid) {
+        if (network) {
           this.validator = await fetchValidatorByAddress(
-            networkid,
+            network,
             this.$route.params.validator
           )
           let history = await fetchValidatorHistory(
-            networkid,
+            network,
             this.$route.params.validator
           )
 

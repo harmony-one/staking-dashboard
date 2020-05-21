@@ -20,7 +20,6 @@ import ValidatorStatus from "./components/ValidatorStatus"
 import ValidatorName from "./components/ValidatorName"
 
 import tooltips from "src/components/tooltips"
-import { getURLPath } from "../helpers"
 
 import {
   percent,
@@ -50,7 +49,7 @@ export default {
       type: String,
       default: () => ""
     },
-    networkID: {
+    chainTitle: {
       type: String,
       default: "mainnet"
     }
@@ -230,7 +229,7 @@ export default {
       this.$router.push({
         name: "validator",
         params: {
-          networkid: getURLPath(this.networkID),
+          chaintitle: this.chainTitle,
           validator: validator.operator_address
         }
       })

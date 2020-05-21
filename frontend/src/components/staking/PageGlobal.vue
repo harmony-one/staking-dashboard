@@ -148,7 +148,6 @@ import TotalStakeHistory from "staking/TotalStakeHistory"
 import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 import tooltips from "src/components/tooltips"
 import AnalyticsToggle from "./components/AnalyticsToggle"
-import { getNetworkID } from "../helpers"
 import PageLoading from "common/PageLoading"
 
 export default {
@@ -181,7 +180,6 @@ export default {
     ...mapState({
       isNetworkFetching: state => state.connection.isNetworkFetching
     }),
-    ...mapState({ network: state => state.connection.network }),
     ...mapState({ networks: state => state.connection.networks }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
@@ -281,8 +279,10 @@ export default {
   watch: {
     isNetworkFetching: function() {
       if (!this.isNetworkFetching) {
-        const networkID = getNetworkID(this.$route.params.networkid)
-        const network = this.networks.find(net => net.id == networkID)
+        const chainTitle = this.$route.params.chaintitle
+        const network = this.networks.find(
+          net => net.chain_title === chainTitle
+        )
         this.$store.dispatch("setNetwork", network)
       }
     }

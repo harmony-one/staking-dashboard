@@ -59,7 +59,6 @@ import StakeAllocationBlock from "./StakeAllocationBlock"
 import LightWidget from "./components/LightWidget"
 import moment from "moment"
 import tooltips from "src/components/tooltips"
-import { getNetworkID } from "../helpers"
 import PageLoading from "common/PageLoading"
 
 export default {
@@ -157,8 +156,8 @@ export default {
   },
   watch: {
     isNetworkFetching: function() {
-      const networkID = getNetworkID(this.$route.params.networkid)
-      const network = this.networks.find(net => net.id == networkID)
+      const chainTitle = this.$route.params.chaintitle
+      const network = this.networks.find(net => net.chain_title === chainTitle)
       this.$store.dispatch("setNetwork", network)
     }
   }

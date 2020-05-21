@@ -59,7 +59,7 @@
           :data="validators"
           :active-only="activeOnly"
           :search="searchTerm.trim()"
-          :networkID="networkID"
+          :chainTitle="chainTitle"
           v-if="!isNetworkFetching"
           show-on-mobile="expectedReturns"
         />
@@ -87,7 +87,6 @@ import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
 import PercentageChange from "./components/PercentageChange"
-import { getNetworkID } from "../helpers"
 import PageLoading from "common/PageLoading"
 export default {
   name: `tab-validators`,
@@ -108,14 +107,13 @@ export default {
   data: () => ({
     tooltips,
     searchTerm: "",
-    networkID: "mainnet",
+    chainTitle: "mainnet",
     activeOnly: true
   }),
   computed: {
     ...mapState({
       isNetworkFetching: state => state.connection.isNetworkFetching
     }),
-    ...mapState({ network: state => state.connection.network }),
     ...mapState({ networks: state => state.connection.networks }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
@@ -150,9 +148,12 @@ export default {
   },
   watch: {
     isNetworkFetching: function() {
+      const chainTitle = this.$route.params.chaintitle
+      this.chainTitle = chainTitle
       if (!this.isNetworkFetching) {
-        this.networkID = getNetworkID(this.$route.params.networkid)
-        const network = this.networks.find(net => net.id == this.networkID)
+        const network = this.networks.find(
+          net => net.chain_title === chainTitle
+        )
         this.$store.dispatch("setNetwork", network)
       }
     }

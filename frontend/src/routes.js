@@ -43,7 +43,7 @@ export default [
     redirect: `/validators/mainnet`
   },
   {
-    path: `/validators/:networkid`,
+    path: `/validators/:chaintitle`,
     name: `Validators`,
     meta: {
       feature: "Validators"
@@ -55,7 +55,7 @@ export default [
     redirect: `/analytics/mainnet`
   },
   {
-    path: `/analytics/:networkid`,
+    path: `/analytics/:chaintitle`,
     name: `Analytics`,
     meta: {
       feature: "Analytics"
@@ -68,7 +68,7 @@ export default [
     redirect: `/validators`
   },
   {
-    path: `/validators/:networkid/:validator`,
+    path: `/validators/:chaintitle/:validator`,
     name: `validator`,
     meta: {
       feature: "Validators"
@@ -84,7 +84,7 @@ export default [
     redirect: `/portfolio/mainnet`
   },
   {
-    path: `/portfolio/:networkid`,
+    path: `/portfolio/:chaintitle`,
     name: `portfolio`,
     component: require(`./components/wallet/PagePortfolio`).default,
     meta: {

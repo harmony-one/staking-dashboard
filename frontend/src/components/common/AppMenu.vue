@@ -25,7 +25,7 @@
       <router-link
         id="menu_item_portfolio"
         class="app-menu-item"
-        :to="'/portfolio/' + getURLPath(network)"
+        :to="'/portfolio/' + getChainTitle"
         exact="exact"
         title="Portfolio"
         @click.native="close"
@@ -37,7 +37,7 @@
       <router-link
         id="menu_item_validators"
         class="app-menu-item"
-        :to="'/validators/' + getURLPath(network)"
+        :to="'/validators/' + getChainTitle"
         title="Validators"
         @click.native="close"
       >
@@ -48,7 +48,7 @@
       <router-link
         id="menu_item_global"
         class="app-menu-item"
-        :to="'/analytics/' + getURLPath(network)"
+        :to="'/analytics/' + getChainTitle"
         title="Analytics"
         @click.native="close"
       >
@@ -197,7 +197,6 @@ import ConnectedNetwork from "common/TmConnectedNetwork"
 import TmBtn from "common/TmBtn"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, shortDecimals } from "scripts/num.js"
-import { getURLPath } from "../helpers"
 export default {
   name: `app-menu`,
   components: {
@@ -212,11 +211,13 @@ export default {
   },
   computed: {
     ...mapState([`session`]),
-    ...mapState({ network: state => state.connection.network }),
-    ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`])
+    ...mapState({ networkConfig: state => state.connection.networkConfig }),
+    ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`]),
+    getChainTitle() {
+      return this.networkConfig.chain_title
+    }
   },
   methods: {
-    getURLPath: getURLPath,
     feedback() {
       console.log("feedback")
     },

@@ -68,6 +68,7 @@
     "vue-clipboard2": "^0.3.0",
     "vue-directive-tooltip": "^1.4.5",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-loading-spinner": "1.0.11",
     "vue-mq": "1.0.1",
     "vue-property-decorator": "^8.3.0",
     "vue-router": "^3.0.3",

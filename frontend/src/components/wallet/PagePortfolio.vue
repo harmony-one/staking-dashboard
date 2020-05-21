@@ -46,58 +46,9 @@
         </template> -->
       </template>
     </TmPage>
+    <page-loading v-if="isNetworkFetching" />
   </div>
 </template>
-
-<style scoped lang="scss">
-.tab-header {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-.portfolio-top-container {
-  display: flex;
-  flex-flow: row wrap;
-  flex-direction: row;
-  justify-content: space-between;
-
-  > div {
-    margin-right: var(--unit);
-    height: fit-content;
-    border-radius: 5px;
-    flex-grow: 1;
-  }
-
-  &.no-sign-in {
-    margin: 1.5em auto;
-    padding: 0 20px;
-
-    > div {
-      margin: 0;
-    }
-  }
-
-  .delegation-body,
-  .time-body {
-    padding: 0 var(--unit);
-    text-align: center;
-  }
-
-  @media screen and (min-width: 1300px) and (max-width: 1400px) {
-    // > div {
-    //   margin-right: 10px;
-    // }
-
-    // .balance {
-    //   max-width: 380px;
-    // }
-
-    // .time_next_epoch {
-    //   max-width: 280px;
-    // }
-  }
-}
-</style>
 <script>
 import { mapState, mapGetters } from "vuex"
 import TmPage from "common/TmPage"
@@ -108,6 +59,8 @@ import StakeAllocationBlock from "./StakeAllocationBlock"
 import LightWidget from "./components/LightWidget"
 import moment from "moment"
 import tooltips from "src/components/tooltips"
+import { getNetworkID } from "../helpers"
+import PageLoading from "common/PageLoading"
 
 export default {
   name: `page-portfolio`,
@@ -117,7 +70,8 @@ export default {
     Undelegations,
     DelegationsOverview,
     TmBalance,
-    LightWidget
+    LightWidget,
+    PageLoading
   },
   data: () => ({
     tooltips,
@@ -127,6 +81,10 @@ export default {
       .toDate()
   }),
   computed: {
+    ...mapState({
+      isNetworkFetching: state => state.connection.isNetworkFetching
+    }),
+    ...mapState({ networks: state => state.connection.networks }),
     ...mapState([`session`, `wallet`, `delegation`, `delegates`, "connection"]),
     ...mapGetters([`lastHeader`]),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
@@ -195,6 +153,13 @@ export default {
     update(height) {
       this.lastUpdate = height
       this.$store.dispatch(`getRewardsFromMyValidators`)
+    }
+  },
+  watch: {
+    isNetworkFetching: function() {
+      const networkID = getNetworkID(this.$route.params.networkid)
+      const network = this.networks.find(net => net.id == networkID)
+      this.$store.dispatch("setNetwork", network)
     }
   }
 }

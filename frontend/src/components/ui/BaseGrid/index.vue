@@ -1,12 +1,15 @@
 <template>
   <div>
     <div class="table-headings-wrap">
-
       <div
         class="table-headings"
         v-for="column in columns"
         :key="column.value"
-        :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
+        :style="
+          column.width
+            ? { flexBasis: column.width, minWidth: column.width }
+            : { flexGrow: 1 }
+        "
       >
         <SortHeaderCell :column="column" :sort="sort" :onClick="orderBy" />
       </div>
@@ -18,15 +21,26 @@
           class="table-column"
           v-for="(column, index) in columns"
           :key="index"
-          :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
+          :style="
+            column.width
+              ? { flexBasis: column.width, minWidth: column.width }
+              : { flexGrow: 1 }
+          "
         >
           <div
             class="table-cell"
+            v-bind:class="{
+              'red-zone': isLowerThan90(item['uptime_percentage'])
+            }"
             v-for="(item, index) in data"
             :key="column.key ? column.key(item) : index"
-            @click="(e) => onRowClick(item)"
+            @click="e => onRowClick(item)"
             @contextmenu.prevent="() => onRowClick(item, true)"
-            :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
+            :style="
+              column.align === 'right'
+                ? { justifyContent: 'flex-end' }
+                : { justifyContent: 'flex-start' }
+            "
           >
             <template v-if="column.render">
               {{ column.render(item[column.value], item) }}
@@ -58,8 +72,12 @@ export default {
   components: {
     SortHeaderCell
   },
-  props: ["data", "columns", "sort", "onRowClick", 'scrollable'],
+  props: ["data", "columns", "sort", "onRowClick", "scrollable"],
   methods: {
+    isLowerThan90(value) {
+      if (Number(value) < 0.9) return true
+      return false
+    },
     orderBy(property) {
       if (this.sort.property === property) {
         this.sort.order = this.sort.order === `asc` ? `desc` : "asc"
@@ -73,7 +91,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 @mixin table-row {
   display: flex;
   flex-direction: row;
@@ -108,6 +125,9 @@ export default {
     overflow-y: hidden;
   }
 }
+.red-zone {
+  background: #f9a4bc;
+}
 
 .table-body {
   @include table-row;
@@ -128,14 +148,14 @@ export default {
       overflow: hidden;
     }
     .table-cell:nth-child(odd) {
-      background: #00ADE810;
+      background: #00ade810;
     }
     .table-cell:last-child {
       border-bottom: none;
     }
   }
   .table-column:last-child {
-    margin-right: calc(-1*var(--unit));
+    margin-right: calc(-1 * var(--unit));
   }
 }
 </style>

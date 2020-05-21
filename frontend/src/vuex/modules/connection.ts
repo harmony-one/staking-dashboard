@@ -45,9 +45,9 @@ export interface INetworkInfo {
   live_raw_stake_distro: Array<number>
   live_effective_median_stake_distro: Array<number>
 
-  lastEpochTotalStake: number;
-  liveEpochTotalStake: number;
-  lastEpochEffectiveStake: number;
+  lastEpochTotalStake: number
+  liveEpochTotalStake: number
+  lastEpochEffectiveStake: number
   liveExternalShards: Array<{ total: number; external: number }>
   liveTotalSeatsUsed: number
   liveTotalSeats: number
@@ -66,7 +66,8 @@ const state = {
   externals: {} as { config: typeof config; node: TNode },
   networks: Array<INetworkConfig>(),
   networkInfo: {} as INetworkInfo,
-  isNetworkInfoLoading: false
+  isNetworkInfoLoading: false,
+  isNetworkFetching: true
 }
 
 let interval: any
@@ -116,6 +117,9 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     setConnected(state, connected) {
       Vue.set(state, `connected`, connected)
     },
+    setNetworkFetching(state, fetching) {
+      state.isNetworkFetching = fetching
+    },
     setNetworks(state, networks: INetworkConfig[]) {
       state.networks = networks
     },
@@ -135,10 +139,12 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     async setLastHeader() {},
 
     async init({ state, dispatch, commit }) {
+      commit("setNetworkFetching", true)
       const networks: INetworkConfig[] = await fetchNetworks()
 
       const network = networks.find(network => network.id === state.network)
 
+      commit("setNetworkFetching", false)
       if (!interval) {
         interval = setInterval(
           () => dispatch("loadNetworkInfo"),
@@ -165,12 +171,12 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
 
     async loadNetworkInfo({ commit, state }) {
-      let networkInfo;
+      let networkInfo
 
       try {
         networkInfo = await fetchNetworkInfo(state.networkConfig.id)
       } catch (err) {
-        networkInfo = {};
+        networkInfo = {}
       }
 
       commit("setNetworkInfo", networkInfo)

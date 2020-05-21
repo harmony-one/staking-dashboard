@@ -33,9 +33,7 @@ export default {
   },
   methods: {
     selectNetworkHandler(network) {
-      console.log("network", network)
       if (this.connection.network !== network.id) {
-        console.log("saved")
         this.$store.dispatch(`setNetwork`, network)
       }
     }

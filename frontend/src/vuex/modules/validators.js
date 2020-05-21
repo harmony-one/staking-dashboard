@@ -13,7 +13,6 @@ export default () => {
   const actions = {
     async getValidatorsWithParams({ commit, rootState }, params) {
       // commit("setLoading", true)
-      const networkID = params.networkid
       let data
       // API has hard cap, this will split requests and concat results after all requests are back
       if (params.size > 100) {
@@ -22,7 +21,7 @@ export default () => {
         for (let i = 0; i < pages; i++) {
           data.push(
             await fetchValidatorsWithParams(
-              networkID /*rootState.connection.networkConfig.id*/,
+              rootState.connection.networkConfig.id,
               {
                 ...params,
                 page: i,
@@ -36,7 +35,7 @@ export default () => {
         data.validators = validators
       } else {
         data = await fetchValidatorsWithParams(
-          networkID /*rootState.connection.networkConfig.id*/,
+          rootState.connection.networkConfig.id,
           params
         )
       }

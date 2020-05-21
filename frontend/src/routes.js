@@ -51,7 +51,11 @@ export default [
     component: require(`./components/staking/PageValidators`).default
   },
   {
-    path: `/analytics`,
+    path: `/analytics/`,
+    redirect: `/analytics/mainnet`
+  },
+  {
+    path: `/analytics/:networkid`,
     name: `Analytics`,
     meta: {
       feature: "Analytics"
@@ -64,7 +68,7 @@ export default [
     redirect: `/validators`
   },
   {
-    path: `/validators/:validator`,
+    path: `/validators/:networkid/:validator`,
     name: `validator`,
     meta: {
       feature: "Validators"
@@ -76,7 +80,11 @@ export default [
     redirect: `/validators/:validator`
   },
   {
-    path: `/portfolio`,
+    path: `/portfolio/`,
+    redirect: `/portfolio/mainnet`
+  },
+  {
+    path: `/portfolio/:networkid`,
     name: `portfolio`,
     component: require(`./components/wallet/PagePortfolio`).default,
     meta: {

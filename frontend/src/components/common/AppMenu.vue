@@ -25,7 +25,7 @@
       <router-link
         id="menu_item_portfolio"
         class="app-menu-item"
-        :to="'/portfolio' + getURLPath"
+        :to="'/portfolio/' + getURLPath(network)"
         exact="exact"
         title="Portfolio"
         @click.native="close"
@@ -37,7 +37,7 @@
       <router-link
         id="menu_item_validators"
         class="app-menu-item"
-        :to="'/validators' + getURLPath"
+        :to="'/validators/' + getURLPath(network)"
         title="Validators"
         @click.native="close"
       >
@@ -48,7 +48,7 @@
       <router-link
         id="menu_item_global"
         class="app-menu-item"
-        :to="'/analytics' + getURLPath"
+        :to="'/analytics/' + getURLPath(network)"
         title="Analytics"
         @click.native="close"
       >
@@ -197,6 +197,7 @@ import ConnectedNetwork from "common/TmConnectedNetwork"
 import TmBtn from "common/TmBtn"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, shortDecimals } from "scripts/num.js"
+import { getURLPath } from "../helpers"
 export default {
   name: `app-menu`,
   components: {
@@ -212,18 +213,10 @@ export default {
   computed: {
     ...mapState([`session`]),
     ...mapState({ network: state => state.connection.network }),
-    ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`]),
-    getURLPath() {
-      const network = this.network
-      let urlPath = "mainnet"
-      if (network === "harmony") urlPath = "mainnet"
-      else if (network === "harmony-testnet") urlPath = "testnet"
-      else if (network === "harmony-partnernet") urlPath = "partnernet"
-      else if (network === "harmony-open-staking") urlPath = "openstakingnet"
-      return "/" + urlPath
-    }
+    ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`])
   },
   methods: {
+    getURLPath: getURLPath,
     feedback() {
       console.log("feedback")
     },

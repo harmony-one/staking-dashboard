@@ -129,6 +129,7 @@
         </template>
 
         <!-- <TmDataLoading v-if="isLoading" /> -->
+        <page-loading v-if="isNetworkFetching" />
       </template>
     </template>
   </PageContainer>
@@ -147,9 +148,11 @@ import TotalStakeHistory from "staking/TotalStakeHistory"
 import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 import tooltips from "src/components/tooltips"
 import AnalyticsToggle from "./components/AnalyticsToggle"
+import { getNetworkID } from "../helpers"
+import PageLoading from "common/PageLoading"
 
 export default {
-  name: `tab-validators`,
+  name: `tab-analytics`,
   components: {
     AnalyticsToggle,
     PageContainer,
@@ -161,7 +164,8 @@ export default {
     SeatAllocation,
     SeatAllocationHistory,
     TotalStakeHistory,
-    EffectiveMedianHistory
+    EffectiveMedianHistory,
+    PageLoading
   },
   filters: {
     ones,
@@ -174,7 +178,11 @@ export default {
     isLiveMode: false
   }),
   computed: {
+    ...mapState({
+      isNetworkFetching: state => state.connection.isNetworkFetching
+    }),
     ...mapState({ network: state => state.connection.network }),
+    ...mapState({ networks: state => state.connection.networks }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
@@ -269,6 +277,15 @@ export default {
     //   sortOrder: "asc",
     //   search: "",
     // })
+  },
+  watch: {
+    isNetworkFetching: function() {
+      if (!this.isNetworkFetching) {
+        const networkID = getNetworkID(this.$route.params.networkid)
+        const network = this.networks.find(net => net.id == networkID)
+        this.$store.dispatch("setNetwork", network)
+      }
+    }
   }
 }
 </script>

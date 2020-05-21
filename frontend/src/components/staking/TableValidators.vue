@@ -20,6 +20,7 @@ import ValidatorStatus from "./components/ValidatorStatus"
 import ValidatorName from "./components/ValidatorName"
 
 import tooltips from "src/components/tooltips"
+import { getURLPath } from "../helpers"
 
 import {
   percent,
@@ -49,8 +50,9 @@ export default {
       type: String,
       default: () => ""
     },
-    networkid: {
-      type: String
+    networkID: {
+      type: String,
+      default: "mainnet"
     }
   },
   data: () => ({
@@ -227,13 +229,14 @@ export default {
     onClickValidator(validator) {
       this.$router.push({
         name: "validator",
-        params: { validator: validator.operator_address }
+        params: {
+          networkid: getURLPath(this.networkID),
+          validator: validator.operator_address
+        }
       })
     },
     getValidators() {
-      console.log("TableValidators----->networkid", this.networkid)
       this.$store.dispatch(`getValidatorsWithParams`, {
-        networkid: this.networkid,
         active: this.activeOnly,
         page: this.pagination.pageIndex,
         size: this.pagination.pageSize,

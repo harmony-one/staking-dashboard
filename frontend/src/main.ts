@@ -9,7 +9,6 @@ import { tooltipStyles, focusElement, focusParentLast } from "src/directives"
 import App from "./App.vue"
 import init from "./initializeApp"
 import { getURLParams } from "./scripts/url"
-import "./registerServiceWorker"
 import "@babel/polyfill"
 import SvgIcon from 'vue-svgicon'
 // @ts-ignore
@@ -47,13 +46,12 @@ Vue.directive(`info-style`, tooltipStyles)
 Vue.directive(`focus-last`, focusParentLast)
 
 const urlParams = getURLParams(window)
-const { store, router, apolloProvider } = init(urlParams)
+const { store, router } = init(urlParams)
 
 // window.store = store;
 
 new Vue({
   router,
   ...App,
-  store,
-  apolloProvider
+  store
 }).$mount("#app")

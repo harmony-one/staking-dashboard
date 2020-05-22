@@ -1,12 +1,15 @@
 <template>
   <div>
     <div class="table-headings-wrap">
-
       <div
         class="table-headings"
         v-for="column in columns"
         :key="column.value"
-        :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
+        :style="
+          column.width
+            ? { flexBasis: column.width, minWidth: column.width }
+            : { flexGrow: 1 }
+        "
       >
         <SortHeaderCell :column="column" :sort="sort" :onClick="orderBy" />
       </div>
@@ -18,15 +21,26 @@
           class="table-column"
           v-for="(column, index) in columns"
           :key="index"
-          :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
+          :style="
+            column.width
+              ? { flexBasis: column.width, minWidth: column.width }
+              : { flexGrow: 1 }
+          "
         >
           <div
-            class="table-cell"
+            :class="{
+              'table-cell': true,
+              'active-sort': sort.property === column.value
+            }"
             v-for="(item, index) in data"
             :key="column.key ? column.key(item) : index"
-            @click="(e) => onRowClick(item)"
+            @click="e => onRowClick(item)"
             @contextmenu.prevent="() => onRowClick(item, true)"
-            :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
+            :style="
+              column.align === 'right'
+                ? { justifyContent: 'flex-end' }
+                : { justifyContent: 'flex-start' }
+            "
           >
             <template v-if="column.render">
               {{ column.render(item[column.value], item) }}
@@ -58,7 +72,7 @@ export default {
   components: {
     SortHeaderCell
   },
-  props: ["data", "columns", "sort", "onRowClick", 'scrollable'],
+  props: ["data", "columns", "sort", "onRowClick", "scrollable"],
   methods: {
     orderBy(property) {
       if (this.sort.property === property) {
@@ -73,7 +87,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 @mixin table-row {
   display: flex;
   flex-direction: row;
@@ -126,16 +139,24 @@ export default {
       min-height: 48px;
       max-height: 48px;
       overflow: hidden;
+
+      &.active-sort {
+        color: var(--blue);
+
+        .li-validator-name {
+          color: var(--blue);
+        }
+      }
     }
     .table-cell:nth-child(odd) {
-      background: #00ADE810;
+      background: #00ade810;
     }
     .table-cell:last-child {
       border-bottom: none;
     }
   }
   .table-column:last-child {
-    margin-right: calc(-1*var(--unit));
+    margin-right: calc(-1 * var(--unit));
   }
 }
 </style>

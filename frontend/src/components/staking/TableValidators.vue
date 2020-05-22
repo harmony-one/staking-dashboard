@@ -53,7 +53,7 @@ export default {
   data: () => ({
     query: ``,
     sort: {
-      property: `apr`,
+      property: `uptime_percentage`,
       order: `desc`
     },
     pagination: {
@@ -171,12 +171,12 @@ export default {
       }
 
       if (this.$mq === "tab") {
-        const keep = ["name", "apr", "total_stake"]
+        const keep = ["name", "apr", "uptime_percentage"]
         props = props.filter(p => keep.includes(p.value))
       }
 
       if (this.$mq === "sm" || this.$mq === "md") {
-        const keep = ["name", "apr"]
+        const keep = ["name", "uptime_percentage"]
         props = props.filter(p => keep.includes(p.value))
       }
 

@@ -6,10 +6,11 @@
 /**
  * Routes are all defined here
  */
+const chainTitle = process.env.DEFAULT_CHAIN_TITLE
 export default [
   {
     path: `/`,
-    redirect: `/validators/mainnet`
+    redirect: `/validators/${chainTitle}`
   },
   // {
   //   path: `/proposals`,
@@ -40,7 +41,7 @@ export default [
   // },
   {
     path: `/validators/`,
-    redirect: `/validators/mainnet`
+    redirect: `/validators/${chainTitle}`
   },
   {
     path: `/validators/:chaintitle`,
@@ -52,7 +53,7 @@ export default [
   },
   {
     path: `/analytics/`,
-    redirect: `/analytics/mainnet`
+    redirect: `/analytics/${chainTitle}`
   },
   {
     path: `/analytics/:chaintitle`,
@@ -81,7 +82,7 @@ export default [
   },
   {
     path: `/portfolio/`,
-    redirect: `/portfolio/mainnet`
+    redirect: `/portfolio/${chainTitle}`
   },
   {
     path: `/portfolio/:chaintitle`,

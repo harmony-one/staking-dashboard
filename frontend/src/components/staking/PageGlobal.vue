@@ -129,7 +129,7 @@
         </template>
 
         <!-- <TmDataLoading v-if="isLoading" /> -->
-        <page-loading v-if="isNetworkFetching" />
+        <TmDataLoading v-if="isNetworkFetching" />
       </template>
     </template>
   </PageContainer>
@@ -148,7 +148,7 @@ import TotalStakeHistory from "staking/TotalStakeHistory"
 import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 import tooltips from "src/components/tooltips"
 import AnalyticsToggle from "./components/AnalyticsToggle"
-import PageLoading from "common/PageLoading"
+import TmDataLoading from "common/TmDataLoading"
 
 export default {
   name: `tab-analytics`,
@@ -164,7 +164,7 @@ export default {
     SeatAllocationHistory,
     TotalStakeHistory,
     EffectiveMedianHistory,
-    PageLoading
+    TmDataLoading
   },
   filters: {
     ones,
@@ -283,7 +283,7 @@ export default {
         const network = this.networks.find(
           net => net.chain_title === chainTitle
         )
-        this.$store.dispatch("setNetwork", network)
+        if (network) this.$store.dispatch("setNetwork", network)
       }
     }
   }

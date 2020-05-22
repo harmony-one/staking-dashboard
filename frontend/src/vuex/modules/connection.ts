@@ -144,7 +144,6 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
 
       const network = networks.find(network => network.id === state.network)
 
-      commit("setNetworkFetching", false)
       if (!interval) {
         interval = setInterval(
           () => dispatch("loadNetworkInfo"),
@@ -155,6 +154,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       commit("setNetworks", networks)
       dispatch("setNetwork", network || networks[0])
       dispatch("loadNetworkInfo")
+      commit("setNetworkFetching", false)
     },
 
     async reconnect({ commit, state, rootState }) {

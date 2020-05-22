@@ -60,7 +60,6 @@
           :active-only="activeOnly"
           :search="searchTerm.trim()"
           :chainTitle="chainTitle"
-          v-if="!isNetworkFetching"
           show-on-mobile="expectedReturns"
         />
         <div
@@ -70,8 +69,7 @@
           No results for these search terms
         </div>
       </div>
-      <TmDataLoading v-if="isLoading" />
-      <page-loading v-if="isNetworkFetching" />
+      <TmDataLoading v-if="isLoading || isNetworkFetching" />
     </template>
   </PageContainer>
 </template>
@@ -87,7 +85,6 @@ import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
 import PercentageChange from "./components/PercentageChange"
-import PageLoading from "common/PageLoading"
 export default {
   name: `tab-validators`,
   components: {
@@ -95,8 +92,7 @@ export default {
     PageContainer,
     TmField,
     TmBtn,
-    TmDataLoading,
-    PageLoading
+    TmDataLoading
   },
   filters: {
     ones,
@@ -107,7 +103,7 @@ export default {
   data: () => ({
     tooltips,
     searchTerm: "",
-    chainTitle: "mainnet",
+    chainTitle: process.env.DEFAULT_CHAIN_TITLE,
     activeOnly: true
   }),
   computed: {
@@ -154,7 +150,7 @@ export default {
         const network = this.networks.find(
           net => net.chain_title === chainTitle
         )
-        this.$store.dispatch("setNetwork", network)
+        if (network) this.$store.dispatch("setNetwork", network)
       }
     }
   }

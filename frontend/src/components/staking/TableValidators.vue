@@ -50,8 +50,7 @@ export default {
       default: () => ""
     },
     chainTitle: {
-      type: String,
-      default: "mainnet"
+      type: String
     }
   },
   data: () => ({

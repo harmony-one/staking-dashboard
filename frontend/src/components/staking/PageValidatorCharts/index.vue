@@ -68,7 +68,7 @@
         all validators
       </div>
     </template>
-    <page-loading v-if="isNetworkFetching" />
+    <TmDataLoading v-if="isNetworkFetching" />
   </TmPage>
 </template>
 
@@ -83,7 +83,7 @@ import RewardHistoryBlock from "./RewardHistoryBlock"
 import DelegatorBlock from "./DelegatorBlock"
 import EventHistoryBlock from "./EventHistoryBlock"
 import TmPage from "common/TmPage"
-import PageLoading from "common/PageLoading"
+import TmDataLoading from "common/TmDataLoading"
 import {
   fetchValidatorByAddress,
   fetchValidatorHistory
@@ -104,7 +104,7 @@ export default {
     EventHistoryBlock,
     TmPage,
     LightWidget,
-    PageLoading
+    TmDataLoading
   },
   props: {
     showOnMobile: {
@@ -134,7 +134,7 @@ export default {
     isNetworkFetching: function() {
       const chainTitle = this.$route.params.chaintitle
       const network = this.networks.find(net => net.chain_title === chainTitle)
-      this.$store.dispatch("setNetwork", network)
+      if (network) this.$store.dispatch("setNetwork", network)
     },
     networkId: async function() {
       return await this.fetchValidator()

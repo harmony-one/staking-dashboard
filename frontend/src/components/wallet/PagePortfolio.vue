@@ -46,7 +46,7 @@
         </template> -->
       </template>
     </TmPage>
-    <page-loading v-if="isNetworkFetching" />
+    <TmDataLoading v-if="isNetworkFetching" />
   </div>
 </template>
 <script>
@@ -59,7 +59,7 @@ import StakeAllocationBlock from "./StakeAllocationBlock"
 import LightWidget from "./components/LightWidget"
 import moment from "moment"
 import tooltips from "src/components/tooltips"
-import PageLoading from "common/PageLoading"
+import TmDataLoading from "common/TmDataLoading"
 
 export default {
   name: `page-portfolio`,
@@ -70,7 +70,7 @@ export default {
     DelegationsOverview,
     TmBalance,
     LightWidget,
-    PageLoading
+    TmDataLoading
   },
   data: () => ({
     tooltips,
@@ -158,7 +158,7 @@ export default {
     isNetworkFetching: function() {
       const chainTitle = this.$route.params.chaintitle
       const network = this.networks.find(net => net.chain_title === chainTitle)
-      this.$store.dispatch("setNetwork", network)
+      if (network) this.$store.dispatch("setNetwork", network)
     }
   }
 }
@@ -174,20 +174,28 @@ export default {
   flex-flow: row wrap;
   flex-direction: row;
   justify-content: space-between;
-}
 
-.portfolio-top-container {
-  margin-right: -16px;
-}
-.portfolio-top-container > div:last-child {
   > div {
-    margin-top: 30px;
-    margin-right: 20px;
+    margin-right: var(--unit);
     height: fit-content;
     border-radius: 5px;
     flex-grow: 1;
   }
 
+  &.no-sign-in {
+    margin: 1.5em auto;
+    padding: 0 20px;
+
+    > div {
+      margin: 0;
+    }
+  }
+
+  .delegation-body,
+  .time-body {
+    padding: 0 var(--unit);
+    text-align: center;
+  }
   @media screen and (min-width: 1300px) and (max-width: 1400px) {
     > div {
       margin-right: 10px;

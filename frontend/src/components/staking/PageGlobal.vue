@@ -279,11 +279,10 @@ export default {
   watch: {
     isNetworkFetching: function() {
       if (!this.isNetworkFetching) {
-        const chainTitle = this.$route.params.chaintitle
-        const network = this.networks.find(
-          net => net.chain_title === chainTitle
-        )
-        if (network) this.$store.dispatch("setNetwork", network)
+        this.$store.dispatch("setNetworkByChainTitle", this.$route.params.chaintitle).catch(err => {
+          this.$router.replace('/analytics');
+          this.$router.go(0);
+        });
       }
     }
   }

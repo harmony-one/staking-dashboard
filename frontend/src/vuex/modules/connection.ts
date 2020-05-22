@@ -169,6 +169,17 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
 
       // store.dispatch("getDelegates");
     },
+    async setNetworkByChainTitle({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        const network = state.networks.find(net => net.chain_title === payload);
+        if (network) {
+          commit("setNetwork", network);
+          resolve("setNetwork success");
+        } else {
+          reject("setNetwork failed");
+        }
+      });
+    },
 
     async loadNetworkInfo({ commit, state }) {
       let networkInfo

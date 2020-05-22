@@ -132,9 +132,10 @@ export default {
   },
   watch: {
     isNetworkFetching: function() {
-      const chainTitle = this.$route.params.chaintitle
-      const network = this.networks.find(net => net.chain_title === chainTitle)
-      if (network) this.$store.dispatch("setNetwork", network)
+      this.$store.dispatch("setNetworkByChainTitle", this.$route.params.chaintitle).catch(err => {
+        this.$router.replace('/validators');
+        this.$router.go(0);
+      });
     },
     networkId: async function() {
       return await this.fetchValidator()

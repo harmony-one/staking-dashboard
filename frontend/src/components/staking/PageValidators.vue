@@ -147,10 +147,10 @@ export default {
       const chainTitle = this.$route.params.chaintitle
       this.chainTitle = chainTitle
       if (!this.isNetworkFetching) {
-        const network = this.networks.find(
-          net => net.chain_title === chainTitle
-        )
-        if (network) this.$store.dispatch("setNetwork", network)
+        this.$store.dispatch("setNetworkByChainTitle", chainTitle).catch(err => {
+          this.$router.replace('/validators');
+          this.$router.go(0);
+        });
       }
     }
   }

@@ -3,6 +3,7 @@ import config from "src/config"
 import axios from "axios"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
+import { getBalance } from "@/mock-service"
 
 const emptyState = {
   balances: Array<any>(),
@@ -10,7 +11,7 @@ const emptyState = {
   loaded: false,
   error: null,
   accountNumber: null,
-  address: '',
+  address: "",
   externals: { config, axios }
 }
 
@@ -66,12 +67,14 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       if (!rootState.connection.connected) return
 
       try {
-        const res = await node.staking.account(state.address);
+        const amount = await getBalance(
+          state.address,
+          rootState.connection.networkConfig.rpc_url
+        )
 
         state.error = null
-        const { coins, account_number } = res || {} as any;
-        commit(`setAccountNumber`, account_number)
-        commit(`setWalletBalances`, coins || [])
+
+        commit(`setWalletBalances`, [{ denom: "one", amount: amount || 0 }])
         state.loading = false
         state.loaded = true
       } catch (error) {

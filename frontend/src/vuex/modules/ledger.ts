@@ -128,8 +128,17 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
       return response.one_address.toString()
     },
 
-    async signTransactionLeger(params, transactionData: ITransactionData) {
+    async signTransactionLeger(
+      { commit, rootState },
+      transactionData: ITransactionData
+    ) {
+      await node.staking.initHarmony(
+        rootState.connection.networkConfig.rpc_url,
+        rootState.connection.networkConfig.chain_id
+      )
+
       const app = await getHarmonyApp()
+
       let signedTxn: Transaction | StakingTransaction,
         txn,
         shardId = 0

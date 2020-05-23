@@ -333,7 +333,6 @@ import config from "src/config"
 
 import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
-import { processMathWalletMessage } from "scripts/mathwallet-utils"
 import { openExtensionPopup } from "../utils/openExtensionPopup"
 
 const defaultStep = `details`
@@ -367,6 +366,8 @@ const signMethodOptions = {
     value: SIGN_METHODS.LOCAL
   }
 }
+
+const getMathWalletUtils = () => import("scripts/mathwallet-utils")
 
 const sessionType = {
   EXPLORE: "explore",
@@ -550,6 +551,16 @@ export default {
     actionInProgress(isOpen) {
       if (!isOpen) {
         this.close()
+      }
+    },
+    sessionType() {
+      if (
+        this.sessionType === SIGN_METHODS.MATHWALLET &&
+        !this.processMathWalletMessage
+      ) {
+        getMathWalletUtils().then(module => {
+          this.processMathWalletMessage = module.processMathWalletMessage
+        })
       }
     }
   },
@@ -738,7 +749,7 @@ export default {
           )
         } else if (this.selectedSignMethod === SIGN_METHODS.MATHWALLET) {
           this.$store.commit(`setActionInProgress`, true)
-          sendResponse = await processMathWalletMessage(
+          sendResponse = await this.processMathWalletMessage(
             sendData,
             this.networkConfig,
             this.wallet.address
@@ -757,7 +768,7 @@ export default {
 
         const { included, hash } = sendResponse
 
-        this.txConfirmResult = { txhash: hash };
+        this.txConfirmResult = { txhash: hash }
 
         await this.waitForInclusion(included)
 
@@ -841,6 +852,16 @@ export default {
       invoiceTotal: {
         between: between(0, this.balanceInAtoms)
       }
+    }
+  },
+  mounted() {
+    if (
+      this.sessionType === SIGN_METHODS.MATHWALLET &&
+      !this.processMathWalletMessage
+    ) {
+      getMathWalletUtils().then(module => {
+        this.processMathWalletMessage = module.processMathWalletMessage
+      })
     }
   }
 }

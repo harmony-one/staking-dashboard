@@ -2,9 +2,8 @@ import config from "src/config"
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
 import HarmonyApp, { SW_ERR } from "./harmony-ledger"
 
-import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
-import { ITransactionData } from "@/staking-client/Staking"
+import Staking, { ITransactionData } from "@/staking-client/Staking"
 import { Transaction } from "@harmony-js/transaction"
 import { StakingTransaction } from "@harmony-js/staking"
 // @ts-ignore
@@ -12,6 +11,8 @@ import TransportWebHID from "@ledgerhq/hw-transport-webhid"
 
 const INTERACTION_TIMEOUT = 120 * 1000
 var harmonyApp: any
+
+const staking = new Staking();
 
 declare global {
   interface Navigator {
@@ -86,7 +87,7 @@ async function getHarmonyApp() {
   return harmonyApp
 }
 
-export default ({ node }: { node: TNode }): Module<any, any> => ({
+export default (): Module<any, any> => ({
   state: {
     externals: { config } // for
   },
@@ -132,7 +133,7 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
       { commit, rootState },
       transactionData: ITransactionData
     ) {
-      await node.staking.initHarmony(
+      await staking.initHarmony(
         rootState.connection.networkConfig.rpc_url,
         rootState.connection.networkConfig.chain_id
       )
@@ -146,51 +147,51 @@ export default ({ node }: { node: TNode }): Module<any, any> => ({
       const signTransaction = async (txn: Transaction) =>
         await app.signTransaction(
           txn,
-          node.staking.harmony.chainId,
+          staking.harmony.chainId,
           shardId,
-          node.staking.harmony.messenger
+          staking.harmony.messenger
         )
 
       const signStakingTransaction = async (txn: StakingTransaction) =>
         await app.signStakingTransaction(
           txn,
-          node.staking.harmony.chainId,
+          staking.harmony.chainId,
           shardId,
-          node.staking.harmony.messenger
+          staking.harmony.messenger
         )
 
       switch (transactionData.type) {
         case "MsgSend":
-          txn = node.staking.createTransaction(transactionData)
+          txn = staking.createTransaction(transactionData)
           signedTxn = await signTransaction(txn)
           break
         case "MsgDelegate":
-          await node.staking.setSharding()
+          await staking.setSharding()
 
-          txn = node.staking.createDelegateTransaction(transactionData)
+          txn = staking.createDelegateTransaction(transactionData)
           signedTxn = await signStakingTransaction(txn)
-          signedTxn.setMessenger(node.staking.harmony.messenger)
+          signedTxn.setMessenger(staking.harmony.messenger)
           break
         case "MsgUndelegate":
-          await node.staking.setSharding()
+          await staking.setSharding()
 
-          txn = node.staking.createUndelegateTransaction(transactionData)
+          txn = staking.createUndelegateTransaction(transactionData)
           signedTxn = await signStakingTransaction(txn)
-          signedTxn.setMessenger(node.staking.harmony.messenger)
+          signedTxn.setMessenger(staking.harmony.messenger)
           break
 
         case "MsgWithdrawDelegationReward":
-          await node.staking.setSharding()
+          await staking.setSharding()
 
-          txn = node.staking.createRewards(transactionData)
+          txn = staking.createRewards(transactionData)
           signedTxn = await signStakingTransaction(txn)
-          signedTxn.setMessenger(node.staking.harmony.messenger)
+          signedTxn.setMessenger(staking.harmony.messenger)
           break
       }
 
       // const rawTransaction = signedTxn.getRawTransaction()
 
-      const included = async () => await node.staking.sendTransaction(signedTxn)
+      const included = async () => await staking.sendTransaction(signedTxn)
 
       return { included }
     }

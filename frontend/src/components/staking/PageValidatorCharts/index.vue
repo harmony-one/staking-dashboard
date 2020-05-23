@@ -37,7 +37,7 @@
               />
             </LightWidget>
             <LightWidget
-              title="Reward rate history"
+              title="Expected Return History"
               :tooltip="tooltips.v_profile.reward_rate_history"
             >
               <RewardHistoryBlock

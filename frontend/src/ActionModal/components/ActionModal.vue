@@ -368,6 +368,7 @@ const signMethodOptions = {
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
+let processMathWalletMessage;
 
 const sessionType = {
   EXPLORE: "explore",
@@ -555,11 +556,11 @@ export default {
     },
     sessionType() {
       if (
-        this.sessionType === SIGN_METHODS.MATHWALLET &&
-        !this.processMathWalletMessage
+        this.session.sessionType === SIGN_METHODS.MATHWALLET &&
+        !processMathWalletMessage
       ) {
         getMathWalletUtils().then(module => {
-          this.processMathWalletMessage = module.processMathWalletMessage
+          processMathWalletMessage = module.processMathWalletMessage
         })
       }
     }
@@ -749,7 +750,8 @@ export default {
           )
         } else if (this.selectedSignMethod === SIGN_METHODS.MATHWALLET) {
           this.$store.commit(`setActionInProgress`, true)
-          sendResponse = await this.processMathWalletMessage(
+
+          sendResponse = await processMathWalletMessage(
             sendData,
             this.networkConfig,
             this.wallet.address
@@ -856,11 +858,11 @@ export default {
   },
   mounted() {
     if (
-      this.sessionType === SIGN_METHODS.MATHWALLET &&
-      !this.processMathWalletMessage
+      this.session.sessionType === SIGN_METHODS.MATHWALLET &&
+      !processMathWalletMessage
     ) {
       getMathWalletUtils().then(module => {
-        this.processMathWalletMessage = module.processMathWalletMessage
+        processMathWalletMessage = module.processMathWalletMessage
       })
     }
   }

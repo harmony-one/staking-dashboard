@@ -6,7 +6,7 @@
 
     <template v-if="session.browserWithLedgerSupport">
       <div class="session-main">
-        <HardwareState :loading="status === `connect` ? false : true">
+        <HardwareState :loading="showLoading">
           <template v-if="status === `connect` || status === `detect`">
             <p style="margin-bottom: 1rem;">
               Please plug in your Ledger&nbsp;Nano and open the Harmony Ledger
@@ -18,7 +18,8 @@
             class="error-message-block"
           >
             Your browser doesn't have HID enabled. Please enable this feature by
-            visiting: <CopyLink
+            visiting:
+            <CopyLink
               text="chrome://flags/#enable-experimental-web-platform-features"
               href="chrome://flags/#enable-experimental-web-platform-features"
             />
@@ -61,7 +62,8 @@ export default {
   data: () => ({
     status: `connect`,
     connectionError: null,
-    address: null
+    address: null,
+    loading: false
   }),
   computed: {
     ...mapState([`session`]),
@@ -70,6 +72,9 @@ export default {
         connect: "Sign In",
         detect: "Waiting for Ledger"
       }[this.status]
+    },
+    showLoading() {
+      return this.loading || (this.status === `connect` ? false : true)
     }
   },
   methods: {
@@ -90,6 +95,10 @@ export default {
         address: this.address
       })
     }
+  },
+  mounted() {
+    this.loading = true
+    this.$store.dispatch(`loadLegerModule`).then(() => (this.loading = false))
   }
 }
 </script>

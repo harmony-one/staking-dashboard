@@ -1,6 +1,7 @@
 <template>
   <div class="validator-info-container">
     <ValidatorLogo
+      v-if="!isSmall"
       :name="data.moniker"
       :operator-address="data.operator_address"
       :logo-url="data.logo_url"
@@ -15,7 +16,13 @@ import ValidatorLogo from "./ValidatorLogo"
 export default {
   name: `li-validator`,
   components: { ValidatorLogo },
-  props: ["data"]
+  props: ["data"],
+  computed: {
+    isSmall() {
+      // TODO fix for all sizes
+      return this.$mq === "sm" || this.$mq === "md"
+    }
+  }
 }
 </script>
 

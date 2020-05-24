@@ -1,5 +1,3 @@
-import * as crypto from "@harmony-js/crypto"
-
 const blockchainValidator = {
   self_stake: 1.11111e23,
   total_stake: 1.11111e23,
@@ -87,9 +85,7 @@ export const remapValidator = (
     ...validator,
     userName: validator.name,
 
-    operator_address: convertAddress
-      ? crypto.getAddress(validator["address"]).bech32
-      : validator["address"],
+    operator_address: validator["address"],
 
     rate: validator.rate,
     max_rate: validator["max-rate"],

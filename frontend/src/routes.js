@@ -49,7 +49,7 @@ export default [
   {
     path: `/analytics`,
     name: `Analytics`,
-    meta: { 
+    meta: {
       feature: "Analytics"
     },
     component: require(`./components/staking/PageGlobal`).default
@@ -180,6 +180,16 @@ export default [
     name: `mathwallet`,
     components: {
       session: require(`./components/common/TmSessionMathWallet`).default
+    },
+    meta: {
+      feature: "Session"
+    }
+  },
+  {
+    path: `/onewallet`,
+    name: `onewallet`,
+    components: {
+      session: require(`./components/common/TmSessionOneWallet`).default
     },
     meta: {
       feature: "Session"

@@ -21,8 +21,9 @@ export default opts => ({
 
   // not use Node
   extension: require(`./extension.js`).default(opts),
+  onewallet: require(`./onewallet.js`).default(opts),
   session: require(`./session.js`).default(opts),
   keystore: require(`./keystore.js`).default(opts),
   notifications: require(`./notifications.js`).default(opts),
-  validators: require(`./validators.js`).default(opts),
+  validators: require(`./validators.js`).default(opts)
 })

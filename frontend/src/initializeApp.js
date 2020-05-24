@@ -1,6 +1,7 @@
 /* istanbul ignore file: really just integrations */
 
 import { listenToExtensionMessages } from "scripts/extension-utils"
+import { listenToOneWalletMessages } from "scripts/onewallet-utils"
 import {
   enableGoogleAnalytics,
   setGoogleAnalyticsPage
@@ -51,7 +52,7 @@ export default function init(urlParams, env = process.env) {
 
   store.dispatch(`loadLocalPreferences`)
 
-  store.dispatch('loadPersistedState');
+  store.dispatch("loadPersistedState")
 
   store
     .dispatch(`init`)
@@ -60,7 +61,7 @@ export default function init(urlParams, env = process.env) {
       store.dispatch(`checkForPersistedSession`)
       store.dispatch(`checkForPersistedAddresses`)
       Promise.all([
-        store.dispatch("getDelegates"),
+        store.dispatch("getDelegates")
         // store.dispatch("getValidators")
       ]).then(() => store.dispatch("getRewardsFromMyValidators"))
       store.dispatch(`getPool`)
@@ -68,6 +69,7 @@ export default function init(urlParams, env = process.env) {
     })
 
   listenToExtensionMessages(store)
+  listenToOneWalletMessages(store)
 
   return { store, router, apolloProvider }
 }

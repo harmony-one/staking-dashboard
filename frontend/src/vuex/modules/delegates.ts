@@ -4,7 +4,6 @@ import Vue from "vue"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 import { fetchDelegationsByAddress } from "@/mock-service"
-import * as crypto from "@harmony-js/crypto"
 
 const validator_sample = {
   operator_address: "onevaloper16ddmnhsxkjh6xt4n2xk36d56pndvjxcn6gffpm",
@@ -58,15 +57,16 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
   actions: {
     reconnected() {},
     async getDelegates({ commit, rootState }) {
-      if(!rootState.session.address) return;
+      if (!rootState.session.address) return
 
-      const delegatorAddressHex = crypto.getAddress(rootState.session.address).basicHex;
-
-      const data = await fetchDelegationsByAddress(rootState.connection.networkConfig.id, delegatorAddressHex);
+      const data = await fetchDelegationsByAddress(
+        rootState.connection.networkConfig.id,
+        rootState.session.address
+      )
 
       commit("setDelegates", data)
 
-      return data;
+      return data
     },
     async getSelfBond() {}
   }

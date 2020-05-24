@@ -3,7 +3,7 @@ import config from "src/config"
 import axios from "axios"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
-import Tendermint from "@/connectors/tendermint"
+import { getBalance } from "@/mock-service"
 
 const emptyState = {
   balances: Array<any>(),
@@ -11,8 +11,7 @@ const emptyState = {
   loaded: false,
   error: null,
   accountNumber: null,
-  address: '',
-  subscribedRPC: {} as Tendermint,
+  address: "",
   externals: { config, axios }
 }
 
@@ -68,12 +67,14 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       if (!rootState.connection.connected) return
 
       try {
-        const res = await node.staking.account(state.address);
+        const amount = await getBalance(
+          state.address,
+          rootState.connection.networkConfig.rpc_url
+        )
 
         state.error = null
-        const { coins, account_number } = res || {} as any;
-        commit(`setAccountNumber`, account_number)
-        commit(`setWalletBalances`, coins || [])
+
+        commit(`setWalletBalances`, [{ denom: "one", amount: amount || 0 }])
         state.loading = false
         state.loaded = true
       } catch (error) {
@@ -99,46 +100,6 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     },
     async walletSubscribe({ state, rootState, dispatch }) {
       if (!rootState.session.address) return
-      // check if we already subscribed to this rpc object
-      // we need to resubscribe on rpc reconnections
-      if (state.subscribedRPC === node.tendermint) return
-
-      state.subscribedRPC = node.tendermint;
-
-      try {
-        await subscribeToTxs(
-          node.tendermint,
-          rootState.session.address,
-          dispatch
-        )
-      } catch (error) {
-        state.error = error
-      }
     }
   }
 })
-
-// // TODO TEMP Mock actions to empty functions
-// const mockedActions = Object.keys(actions).reduce((acc, key) => {
-//   acc[key] = () => {}
-//   return acc
-// }, {})
-
-function subscribeToTxs(tendermint: Tendermint, address: string, dispatch: any) {
-  function onTx(data: any) {
-    dispatch(`queryWalletStateAfterHeight`, data.TxResult.height + 1)
-  }
-
-  const queries = [
-    `tm.event = 'Tx' AND sender = '${address}'`,
-    `tm.event = 'Tx' AND recipient = '${address}'`,
-    `tm.event = 'Tx' AND proposer = '${address}'`,
-    `tm.event = 'Tx' AND depositor = '${address}'`,
-    `tm.event = 'Tx' AND delegator = '${address}'`,
-    `tm.event = 'Tx' AND voter = '${address}'`
-  ]
-
-  return Promise.all(
-    queries.map(query => tendermint.subscribe({ query }, onTx))
-  )
-}

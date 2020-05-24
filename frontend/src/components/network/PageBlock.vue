@@ -65,7 +65,6 @@ import {
   flattenTransactionMsgs,
   addTransactionTypeData
 } from "scripts/transaction-utils"
-import { AllValidators, AllValidatorsResult } from "src/gql"
 
 import TmPage from "common/TmPage"
 import TransactionList from "transactions/TransactionList"

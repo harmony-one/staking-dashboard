@@ -50,10 +50,9 @@ export default ({ node }: { node: TNode }): Module<IState, any> => ({
   },
 
   actions: {
-    reconnected({ commit, dispatch }) {
+    reconnected({ commit }) {
       //on a reconnect we assume, that the rpc connector changed, so we can safely resubscribe to blocks
       commit(`setSubscription`, false)
-      dispatch(`subscribeToBlocks`)
     },
     async getBlockTxs({ dispatch }, height) {
       let txs = await node.get.txsByHeight(height)
@@ -89,41 +88,6 @@ export default ({ node }: { node: TNode }): Module<IState, any> => ({
         commit(`setBlocksError`, error)
         return null
       }
-    },
-    async subscribeToBlocks({ state, commit, dispatch }) {
-      // ensure we never subscribe twice
-      if (state.subscription) return false
-      if (state.subscribedRPC === node.tendermint) return false
-      commit(`setSubscribedRPC`, node.tendermint)
-
-      const status = await node.tendermint.status()
-
-      commit(`setBlockHeight`, status.sync_info.latest_block_height)
-      if (status.sync_info.catching_up) {
-        // still syncing, let's try subscribing again in 30 seconds
-        commit(`setSyncing`, true)
-        commit(`setSubscription`, false)
-        setTimeout(() => dispatch(`subscribeToBlocks`), 30e3)
-        return false
-      }
-
-      commit(`setSyncing`, false)
-      // New RPC endpoint in sync, reset UI block list
-      commit(`setBlocks`, [])
-
-      // only subscribe if the node is not catching up anymore
-      node.tendermint.subscribe(
-        { query: `tm.event = 'NewBlock'` },
-        (event: any) => {
-          if (state.subscription === false) commit(`setSubscription`, true)
-          commit(`addBlock`, event.block)
-          event.block &&
-            event.block.header &&
-            commit(`setBlockHeight`, event.block.header.height)
-        }
-      )
-
-      return true
     }
   }
 })

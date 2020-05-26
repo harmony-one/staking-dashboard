@@ -229,7 +229,7 @@ export default {
   data: () => ({
     amount: null,
     selectedIndex: 0,
-    slideValue: 50,
+    sliderValue: 50,
     slideValueOutput: 50,
     sliderValueOutput: 50
   }),

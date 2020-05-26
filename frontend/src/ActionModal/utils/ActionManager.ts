@@ -1,8 +1,9 @@
 import config from "src/config"
-import { getSigner } from "./signer"
+import { getExtensionSigner, getOneWalletSigner } from "./signer"
 import { uatoms } from "@/scripts/num"
 import { mockTransfer } from "../../mock-service"
-import { waitTransactionConfirm } from "src/scripts/extension-utils"
+import { waitExtensionTransactionConfirm } from "src/scripts/extension-utils"
+import { waitOneWalletTransactionConfirm } from "src/scripts/onewallet-utils"
 
 import {
   MsgDelegate,
@@ -92,10 +93,17 @@ export default class ActionManager {
     return rez.gas_estimate
   }
 
-  async send(memo: any, txMetaData: any, networkConfig: INetworkConfig) {
+  async send(
+    signMethod: any,
+    memo: any,
+    txMetaData: any,
+    networkConfig: INetworkConfig
+  ) {
     this.readyCheck()
 
     const { gasEstimate, gasPrice, submitType } = txMetaData
+    const getSigner =
+      signMethod === "onewallet" ? getOneWalletSigner : getExtensionSigner
     const signer: any = await getSigner(config, submitType, {
       address: this.context.userAddress
     })
@@ -112,7 +120,10 @@ export default class ActionManager {
 
       const { txHash } = await signer(JSON.stringify(fullMessage))
 
-      const included = waitTransactionConfirm
+      const included =
+        signMethod === "onewallet"
+          ? waitOneWalletTransactionConfirm
+          : waitExtensionTransactionConfirm
 
       return { included, hash: txHash }
     } catch (err) {

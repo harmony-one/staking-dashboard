@@ -4,13 +4,14 @@
       <h2 class="session-title">Use Harmony-One Wallet Browser Extension</h2>
       <div v-if="!onewallet.enabled" class="session-main">
         <p>
-          Looks like you don't have the Harmony-One Wallet browser extension installed yet.
-          Head over to the
+          Looks like you don't have the Harmony-One Wallet browser extension
+          installed yet. Head over to the
           <a
             href="harmony-one wallet chrome store link"
             target="_blank"
             rel="noopener norefferer"
-          >Harmony-One Wallet Chrome Extension</a>
+            >Harmony-One Wallet Chrome Extension</a
+          >
           to quickly install the extension.
         </p>
       </div>
@@ -25,7 +26,7 @@
 import SessionFrame from "common/SessionFrame"
 import TmBtn from "common/TmBtn"
 import { mapState } from "vuex"
-import { signInWithOneWallet } from "../../scripts/onewallet-utils"
+import { logInWithOneWallet } from "../../scripts/onewallet-utils"
 import { openOneWalletPopup } from "../../ActionModal/utils/openOneWalletPopup"
 export default {
   name: `session-onewallet`,
@@ -39,9 +40,16 @@ export default {
   },
   methods: {
     async signIn() {
-      openOneWalletPopup(this.session.extensionId, 750, 500)
-      const { address } = await signInWithOneWallet()
-      console.log("address----->", address)
+      openOneWalletPopup(this.session.extensionId, 400, 580)
+      const { address } = await logInWithOneWallet()
+      if (address) {
+        this.$store.dispatch(`signIn`, {
+          sessionType: `onewallet`,
+          address
+        })
+        this.$store.dispatch("setOneWalletAccount", address)
+        this.$router.push(`/`)
+      }
     }
   }
 }

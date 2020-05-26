@@ -1,5 +1,3 @@
-import { getAccountsFromExtension } from "src/scripts/extension-utils"
-
 export default () => {
   const state = {
     enabled: false,

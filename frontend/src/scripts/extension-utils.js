@@ -38,7 +38,9 @@ const processMessage = (store, type, payload) => {
 
 const filterExtensionMessage = callback => message => {
   if (message.source !== window) return
+  if (!message) return
   const { data } = message
+  if (!data) return
   if (data.type && data.type === HARMONY_EXT_TYPE) {
     callback(data)
   }
@@ -110,7 +112,7 @@ export const signWithExtension = async (signMessage, senderAddress) => {
   return { txHash: res.rawTransaction }
 }
 
-export const waitTransactionConfirm = async () => {
+export const waitExtensionTransactionConfirm = async () => {
   return await waitForResponse(`TRANSACTION_CONFIRM_RESPONSE`)
 }
 

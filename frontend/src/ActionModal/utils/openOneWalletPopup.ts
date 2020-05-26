@@ -30,5 +30,3 @@ export const openOneWalletPopup = (
 
   popupCenter(url, "Harmony-One Wallet Extension", w, h)
 }
-
-// let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=400,height=600,left=100,top=100`

@@ -42,6 +42,18 @@
             The address you are trying to send with is not available in the
             extension.
           </p>
+          <p
+            v-else-if="
+              onewallet.enabled &&
+                !modalContext.isOneWalletAccount &&
+                step === signStep &&
+                selectedSignMethod === SIGN_METHODS.ONEWALLET
+            "
+            class="form-message notice extension-address"
+          >
+            The address you are trying to send with is not available in the
+            Harmony-One wallet.
+          </p>
         </div>
         <template v-if="!featureAvailable">
           <FeatureNotAvailable :feature="title" />
@@ -152,6 +164,30 @@
                   Please install the Harmony Browser Extension from the
                   <a
                     href="https://chrome.google.com/webstore/category/extensions"
+                    target="_blank"
+                    rel="noopener norefferer"
+                    >Chrome Web Store</a
+                  >.
+                </div>
+              </HardwareState>
+              <HardwareState
+                v-if="selectedSignMethod === SIGN_METHODS.ONEWALLET"
+                :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
+                :loading="!!sending"
+              >
+                <div v-if="onewallet.enabled && !sending">
+                  Please send the transaction to be signed in the Harmony-One
+                  Wallet Browser Extension.
+                </div>
+                <div v-if="onewallet.enabled && sending">
+                  Please open the Harmony-One Wallet Browser Extension, review
+                  the details, and approve the transaction.
+                </div>
+                <div v-if="!onewallet.enabled">
+                  Please install the Harmony-One Wallet Browser Extension from
+                  the
+                  <a
+                    href="harmony one wallet chrome store"
                     target="_blank"
                     rel="noopener norefferer"
                     >Chrome Web Store</a
@@ -334,6 +370,7 @@ import config from "src/config"
 import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
 import { openExtensionPopup } from "../utils/openExtensionPopup"
+import { openOneWalletPopup } from "../utils/openOneWalletPopup"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -345,7 +382,8 @@ const SIGN_METHODS = {
   LOCAL: `local`,
   LEDGER: `ledger`,
   EXTENSION: `extension`,
-  MATHWALLET: `mathwallet`
+  MATHWALLET: `mathwallet`,
+  ONEWALLET: "onewallet"
 }
 
 const signMethodOptions = {
@@ -361,6 +399,10 @@ const signMethodOptions = {
     key: `Math Wallet`,
     value: SIGN_METHODS.MATHWALLET
   },
+  ONEWALLET: {
+    key: `Harmony-One Wallet Extension`,
+    value: SIGN_METHODS.ONEWALLET
+  },
   LOCAL: {
     key: `Local Account (Unsafe)`,
     value: SIGN_METHODS.LOCAL
@@ -368,14 +410,15 @@ const signMethodOptions = {
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
-let processMathWalletMessage;
+let processMathWalletMessage
 
 const sessionType = {
   EXPLORE: "explore",
   LOCAL: SIGN_METHODS.LOCAL,
   LEDGER: SIGN_METHODS.LEDGER,
   EXTENSION: SIGN_METHODS.EXTENSION,
-  MATHWALLET: SIGN_METHODS.MATHWALLET
+  MATHWALLET: SIGN_METHODS.MATHWALLET,
+  ONEWALLET: SIGN_METHODS.ONEWALLET
 }
 
 export default {
@@ -447,7 +490,7 @@ export default {
     featureAvailable: true
   }),
   computed: {
-    ...mapState([`extension`, `session`, `connection`, "wallet"]),
+    ...mapState([`extension`, `session`, `connection`, "wallet", `onewallet`]),
     ...mapState({
       network: state => state.connection.network,
       networkConfig: state => state.connection.networkConfig
@@ -498,6 +541,8 @@ export default {
         signMethods.push(signMethodOptions.EXTENSION)
       } else if (this.session.sessionType === sessionType.MATHWALLET) {
         signMethods.push(signMethodOptions.MATHWALLET)
+      } else if (this.session.sessionType === sessionType.ONEWALLET) {
+        signMethods.push(signMethodOptions.ONEWALLET)
       } else {
         signMethods.push(signMethodOptions.LOCAL)
       }
@@ -520,7 +565,9 @@ export default {
         this.session.browserWithLedgerSupport ||
         this.session.selectedSignMethod === "mathwallet" ||
         (this.selectedSignMethod === "extension" &&
-          this.modalContext.isExtensionAccount)
+          this.modalContext.isExtensionAccount) ||
+        (this.selectedSignMethod === "onewallet" &&
+          this.modalContext.isOneWalletAccount)
       )
     },
     prettyIncludedHeight() {
@@ -758,10 +805,12 @@ export default {
           )
         } else {
           this.$store.commit(`setActionInProgress`, true)
-
-          openExtensionPopup(this.session.extensionId)
+          if (this.selectedSignMethod === SIGN_METHODS.ONEWALLET)
+            openOneWalletPopup(this.session.extensionId, 400, 560)
+          else openExtensionPopup(this.session.extensionId)
 
           sendResponse = await this.actionManager.send(
+            this.selectedSignMethod,
             memo,
             feeProperties,
             this.networkConfig

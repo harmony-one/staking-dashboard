@@ -42,9 +42,10 @@ export const totalRewards = (state, getters) =>
 // staking
 export const liquidAtoms = state => {
   return (
-    state.wallet.balances.find(balance => balance.denom === 'one') || {amount: 0}
+    state.wallet.balances.find(balance => balance.denom === "one") || {
+      amount: 0
+    }
   ).amount
-
 }
 export const totalAtoms = (state, getters) => {
   return new BN(getters.liquidAtoms)
@@ -115,6 +116,7 @@ export const modalContext = (state, getters) => ({
   totalRewards: getters.totalRewards,
   delegates: state.delegates.delegates,
   bondDenom: getters.bondDenom,
+  isOneWalletAccount: state.onewallet.account === state.session.address,
   isExtensionAccount: state.extension.accounts.some(account => {
     return account.address === state.session.address
   })

@@ -12,6 +12,9 @@ const processMessage = (store, type, payload) => {
       store.commit("setOneWalletAvailable")
       getOneWalletSession()
       break
+    case "CLOSE_SESSION_RESPONSE":
+      store.commit(`setActionInProgress`, false)
+      break
     case "GET_SESSION_RESPONSE":
       if (payload) {
         store.commit(`setExtensionId`, payload.extensionId)
@@ -24,7 +27,9 @@ const processMessage = (store, type, payload) => {
 
 const filterExtensionMessage = callback => message => {
   if (message.source !== window) return
+  if (message === undefined) return
   const { data } = message
+  if (!data) return
   if (data.type && data.type === HARMONY_EXT_TYPE) {
     callback(data)
   }
@@ -80,55 +85,29 @@ const sendAsyncMessageToContentScript = async payload => {
   return response
 }
 
-// export const getAccountsFromExtension = () => {
-//   sendMessageToContentScript({ type: "GET_WALLETS" })
-// }
-
-// export const signWithExtension = async (signMessage, senderAddress) => {
-//   const res = await sendAsyncMessageToContentScript({
-//     type: "HARMONY_SIGN_REQUEST",
-//     payload: {
-//       signMessage,
-//       senderAddress
-//     }
-//   })
-
-//   return { txHash: res.rawTransaction }
-// }
-
-export const signInWithOneWallet = async () => {
-  console.log("signInWithOneWallet")
+export const logInWithOneWallet = async () => {
   const res = await sendAsyncMessageToContentScript({
-    type: "ONEWALLET_SIGN_REQUEST"
+    type: "ONEWALLET_LOGIN_REQUEST"
   })
 
   return { address: res.address }
 }
 
-// export const waitTransactionConfirm = async () => {
-//   return await waitForResponse(`TRANSACTION_CONFIRM_RESPONSE`)
-// }
+export const signWithOneWallet = async (signMessage, senderAddress) => {
+  const res = await sendAsyncMessageToContentScript({
+    type: "ONEWALLET_SIGN_REQUEST",
+    payload: {
+      signMessage,
+      senderAddress
+    }
+  })
+  return { txHash: res.rawTransaction }
+}
 
-// export const closeExtensionSession = () => {
-//   sendMessageToContentScript(
-//     {
-//       type: "CLOSE_SESSION",
-//       payload: true
-//     },
-//     true
-//   )
-// }
+export const waitOneWalletTransactionConfirm = async () => {
+  return await waitForResponse(`TRANSACTION_CONFIRM_RESPONSE`)
+}
 
 export const getOneWalletSession = () => {
   sendMessageToContentScript({ type: "GET_SESSION" })
 }
-
-// export const setNetwork = async networkConfig => {
-//   return await sendMessageToContentScript(
-//     {
-//       type: "SET_NETWORK_REQUEST",
-//       payload: networkConfig
-//     },
-//     true
-//   )
-// }

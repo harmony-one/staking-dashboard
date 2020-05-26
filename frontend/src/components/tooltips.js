@@ -39,6 +39,7 @@ export default {
     status: `Election status of validator in current epoch`,
     name: `Validator name`,
     apr: "Expected annual percentage return rate",
+    average_apr: "Average expected return",
     stake: "Total ONE staked by the validator",
     fees:
       "Commission on rewards charged by validator",

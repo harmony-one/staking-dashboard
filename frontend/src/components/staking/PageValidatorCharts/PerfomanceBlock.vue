@@ -39,9 +39,9 @@
       </li>
       <li class="row">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.apr">
-          Average APR
+          Latest expected return
         </h4>
-        <span>{{ validator.apr | percent | notAvailable }}</span>
+        <span>{{ validator.last_apr | percent | notAvailable }}</span>
       </li>
     </ul>
   </div>

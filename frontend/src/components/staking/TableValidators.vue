@@ -131,7 +131,7 @@ export default {
         {
           title: `Expected Return`,
           value: `apr`,
-          tooltip: tooltips.v_list.apr,
+          tooltip: tooltips.v_list.average_apr,
           width: "200px",
           align: "right",
           render: value => percent(value)

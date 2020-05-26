@@ -436,12 +436,21 @@ module.exports = function(
               ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
                 parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
               : null,
-          apr: _.get(result, 'lifetime.apr', null),
+          last_apr: _.get(result, 'lifetime.apr', null),
+          epoch_apr: _.get(result, 'lifetime.epoch-apr', null),
           lifetime_reward_accumulated: _.get(
             result,
             'lifetime.reward-accumulated',
             null
           )
+        }
+
+        if (Array.isArray(validatorInfo.epoch_apr)) {
+          const { epoch_apr } = validatorInfo
+
+          validatorInfo.apr =
+            epoch_apr.reduce((acc, v) => acc + parseFloat(v['Value']), 0) /
+            epoch_apr.length
         }
 
         if (!cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]) {
@@ -778,9 +787,13 @@ module.exports = function(
 
       const liveExternalShards = externalShardsByKeys(liveElectedKeys)
 
-      const liveTotalSeatsUsed = _.sumBy(liveExternalShards, e => e ? e.external : 0)
+      const liveTotalSeatsUsed = _.sumBy(liveExternalShards, e =>
+        e ? e.external : 0
+      )
 
-      const liveTotalSeats = _.sumBy(liveExternalShards, e => e ? e.external : 0)
+      const liveTotalSeats = _.sumBy(liveExternalShards, e =>
+        e ? e.external : 0
+      )
 
       cache[LIVE_EPOCH_METRICS] = {
         liveEpochTotalStake,

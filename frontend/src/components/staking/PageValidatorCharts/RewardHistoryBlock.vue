@@ -68,16 +68,18 @@ export default {
   }),
   computed: {
     chartdata() {
+      const data = this.validator ? this.validator.epoch_apr : [];
+
       return {
-        labels: this.history.map(
-          v => v.epoch /* moment(v.uctDate).format("MM.DD") */
+        labels: data.map(
+          v => parseFloat(v.Epoch) /* moment(v.uctDate).format("MM.DD") */
         ),
         datasets: [
           {
             label: "Rate",
             borderColor: "#0a93eb",
             fill: false,
-            data: this.history.map(v => v.apr * 100)
+            data: data.map(v => v.Value * 100)
           }
         ]
       }

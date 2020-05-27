@@ -3,6 +3,8 @@
 node_modules
 /dist
 
+/.firebase
+
 /tests/e2e/reports/
 selenium-debug.log
 chromedriver.log

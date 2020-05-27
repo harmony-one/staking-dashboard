@@ -154,11 +154,11 @@ export default {
           if (ud.Epoch + 7 < epoch) continue
 
           const lastEpochInCommit = d.validator_info["last-epoch-in-committee"]
-          let remaining_epoch = 0
+          let remaining_epoch = 1
 
-          if (lastEpochInCommit) {
-            remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 7
-          }
+          // if (lastEpochInCommit) {
+          //   remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 1
+          // }
 
           undelegations.push({
             ...d.validator_info,

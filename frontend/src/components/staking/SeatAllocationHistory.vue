@@ -28,7 +28,6 @@ export default {
       plugins: {
         labels: false,
       },
-      responsive: true,
       maintainAspectRatio: false,
       tooltips: {
         mode: "index",
@@ -77,7 +76,7 @@ export default {
     chartdata() {
       //data is history
       const epochs = Object.keys(this.data)
-      const data = epochs.sort().map((k) => 
+      const data = epochs.sort().map((k) =>
         this.data[k].total_seats_used / this.data[k].total_seats * 100
       )
       return {

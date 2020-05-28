@@ -68,23 +68,7 @@ export default {
   }),
   computed: {
     chartdata() {
-      let data = []
-
-      if (this.validator.active) {
-        data = this.validator ? this.validator.epoch_apr : []
-      } else {
-        data = this.history.map(v => ({
-          Epoch: v.epoch,
-          Value:
-            v.last_apr !== undefined
-              ? parseFloat(v.last_apr)
-              : parseFloat(v.apr)
-        }))
-
-        if (data[0] && data[0].Epoch === 0 && data[1]) {
-          data[0].Epoch = data[1].Epoch - 1
-        }
-      }
+      const data = this.validator.epoch_apr
 
       return {
         labels: data.map(

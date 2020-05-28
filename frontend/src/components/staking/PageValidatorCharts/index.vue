@@ -53,9 +53,9 @@
             >
               <DelegatorBlock :validator="validator" />
             </LightWidget>
-<!--            <LightWidget v-if="allHistory.length" title="Event history">-->
-<!--              <EventHistoryBlock :events="eventsHistory" />-->
-<!--            </LightWidget>-->
+            <!--            <LightWidget v-if="allHistory.length" title="Event history">-->
+            <!--              <EventHistoryBlock :events="eventsHistory" />-->
+            <!--            </LightWidget>-->
           </div>
         </div>
       </div>
@@ -231,7 +231,7 @@ export default {
   margin-right: var(--unit);
   margin-bottom: var(--unit);
   > div {
-    min-width: 350px;
+    //min-width: 350px;
     flex-grow: 1;
     padding: var(--unit);
     border-right: 1px solid var(--light2);
@@ -248,7 +248,11 @@ export default {
   }
 }
 
-// @media screen and (max-width: 414px) {
+@media screen and (max-width: 414px) {
+  .validator-top {
+    max-width: calc(100vw - 2 * var(--double));
+  }
+}
 @media screen and (max-width: 1200px) {
   .validator-top {
     display: flex;

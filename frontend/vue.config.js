@@ -50,8 +50,9 @@ module.exports = {
               process.env.GOOGLE_ANALYTICS_UID
             )
           }
-        })
-      ]
+        }),
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
+      ],
     }
 
     if (process.env.NODE_ENV === `production` && !process.env.E2E_TESTS) {
@@ -88,6 +89,9 @@ module.exports = {
 
   pluginOptions: {
     lintStyleOnBuild: false,
-    stylelint: {}
+    stylelint: {},
+    webpackBundleAnalyzer: {
+      openAnalyzer: false
+    }
   }
 }

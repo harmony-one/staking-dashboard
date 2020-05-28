@@ -436,7 +436,8 @@ module.exports = function(
               ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
                 parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
               : null,
-          apr: _.get(result, 'lifetime.apr', null),
+          last_apr: _.get(result, 'lifetime.apr', null),
+          epoch_apr: _.get(result, 'lifetime.epoch-apr', null),
           lifetime_reward_accumulated: _.get(
             result,
             'lifetime.reward-accumulated',
@@ -444,31 +445,61 @@ module.exports = function(
           )
         }
 
+        if (validatorInfo.active) {
+          if (Array.isArray(validatorInfo.epoch_apr)) {
+            const { epoch_apr } = validatorInfo
+
+            validatorInfo.apr =
+              epoch_apr.reduce((acc, v) => acc + parseFloat(v['Value']), 0) /
+              epoch_apr.length
+          }
+        } else {
+          const history = _.values(
+            cache[VALIDATOR_INFO_HISTORY][validatorInfo.address]
+          )
+            .sort((a, b) => a.index - b.index)
+            .slice(1)
+
+          if (history.length) {
+            validatorInfo.apr =
+              history.reduce((acc, v) => {
+                const apr =
+                  v.last_apr !== undefined
+                    ? parseFloat(v.last_apr)
+                    : parseFloat(v.apr)
+
+                return acc + apr
+              }, 0) / history.length
+          } else {
+            validatorInfo.apr = 0
+          }
+        }
+
         if (!cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]) {
           console.log('Total stake - NOT FOUND ' + validatorInfo.address)
         }
 
-        if (
-          cache[VALIDATORS_TOTAL_STAKE] &&
-          cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]
-        ) {
-          const { currentTotalStake, previousTotalStake } = cache[
-            VALIDATORS_TOTAL_STAKE
-          ][validatorInfo.address]
-
-          if (previousTotalStake) {
-            // console.log('--------------------------')
-            // console.log('Address ' + validatorInfo.address)
-            // console.log('currentTotalStake ' + currentTotalStake)
-            // console.log('previousTotalStake ' + previousTotalStake)
-            // console.log('validatorInfo.apr ' + validatorInfo.apr)
-
-            validatorInfo.apr =
-              (validatorInfo.apr * currentTotalStake) / previousTotalStake
-
-            // console.log('Result ' + validatorInfo.apr)
-          }
-        }
+        // if (
+        //   cache[VALIDATORS_TOTAL_STAKE] &&
+        //   cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]
+        // ) {
+        //   const { currentTotalStake, previousTotalStake } = cache[
+        //     VALIDATORS_TOTAL_STAKE
+        //   ][validatorInfo.address]
+        //
+        //   if (previousTotalStake) {
+        //     // console.log('--------------------------')
+        //     // console.log('Address ' + validatorInfo.address)
+        //     // console.log('currentTotalStake ' + currentTotalStake)
+        //     // console.log('previousTotalStake ' + previousTotalStake)
+        //     // console.log('validatorInfo.apr ' + validatorInfo.apr)
+        //
+        //     validatorInfo.apr =
+        //       (validatorInfo.apr * currentTotalStake) / previousTotalStake
+        //
+        //     // console.log('Result ' + validatorInfo.apr)
+        //   }
+        // }
 
         // Calculating cache[VALIDATOR_INFO_HISTORY]
         if (!cache[VALIDATOR_INFO_HISTORY][address]) {
@@ -778,9 +809,13 @@ module.exports = function(
 
       const liveExternalShards = externalShardsByKeys(liveElectedKeys)
 
-      const liveTotalSeatsUsed = _.sumBy(liveExternalShards, e => e ? e.external : 0)
+      const liveTotalSeatsUsed = _.sumBy(liveExternalShards, e =>
+        e ? e.external : 0
+      )
 
-      const liveTotalSeats = _.sumBy(liveExternalShards, e => e ? e.external : 0)
+      const liveTotalSeats = _.sumBy(liveExternalShards, e =>
+        e ? e.external : 0
+      )
 
       cache[LIVE_EPOCH_METRICS] = {
         liveEpochTotalStake,

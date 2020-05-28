@@ -28,10 +28,12 @@
           "
         >
           <div
-            class="table-cell"
+            :class="{
+              'table-cell': true,
+              'active-sort': sort.property === column.value
+            }"
             v-bind:class="{
               'red-zone': isLowerThan90(item['uptime_percentage'])
-            }"
             v-for="(item, index) in data"
             :key="column.key ? column.key(item) : index"
             @click="e => onRowClick(item)"
@@ -146,6 +148,14 @@ export default {
       min-height: 48px;
       max-height: 48px;
       overflow: hidden;
+
+      &.active-sort {
+        color: var(--blue);
+
+        .li-validator-name {
+          color: var(--blue);
+        }
+      }
     }
     .table-cell:nth-child(odd) {
       background: #00ade810;

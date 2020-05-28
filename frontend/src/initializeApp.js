@@ -9,7 +9,6 @@ import config from "src/config"
 import Node from "./connectors/node"
 import router, { routeGuard } from "./router"
 import Store from "./vuex/store"
-import { createApolloProvider } from "src/gql/apollo.js"
 
 const google_analytics_uid = process.env.GOOGLE_ANALYTICS_UID || ""
 
@@ -34,14 +33,11 @@ export default function init(urlParams, env = process.env) {
   const stargate = urlParams.stargate || process.env.MOCK_API_URL
   console.log(`Expecting stargate at: ${stargate}`)
 
-  const apolloProvider = createApolloProvider(urlParams)
-  const apolloClient = apolloProvider.clients.defaultClient
-
   const node = Node(stargate)
-  const store = Store({ node, apollo: apolloClient })
+  const store = Store({ node, apollo: {} })
 
   setGoogleAnalyticsPage(router.currentRoute.path)
-  router.beforeEach(routeGuard(store, apolloClient))
+  router.beforeEach(routeGuard(store, {}))
   router.afterEach(to => {
     /* istanbul ignore next */
     setGoogleAnalyticsPage(to.path)
@@ -51,7 +47,7 @@ export default function init(urlParams, env = process.env) {
 
   store.dispatch(`loadLocalPreferences`)
 
-  store.dispatch('loadPersistedState');
+  store.dispatch("loadPersistedState")
 
   store
     .dispatch(`init`)
@@ -60,7 +56,7 @@ export default function init(urlParams, env = process.env) {
       store.dispatch(`checkForPersistedSession`)
       store.dispatch(`checkForPersistedAddresses`)
       Promise.all([
-        store.dispatch("getDelegates"),
+        store.dispatch("getDelegates")
         // store.dispatch("getValidators")
       ]).then(() => store.dispatch("getRewardsFromMyValidators"))
       store.dispatch(`getPool`)
@@ -69,5 +65,5 @@ export default function init(urlParams, env = process.env) {
 
   listenToExtensionMessages(store)
 
-  return { store, router, apolloProvider }
+  return { store, router }
 }

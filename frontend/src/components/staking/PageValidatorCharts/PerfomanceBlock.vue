@@ -23,12 +23,6 @@
         </h4>
         <span>{{ validator.elected_nodes || 0 }}</span>
       </li>
-      <li class="row">
-        <h4 v-info-style v-tooltip.top="tooltips.v_profile.apr">
-          Expected Return
-        </h4>
-        <span>{{ validator.apr | percent | notAvailable }}</span>
-      </li>
       <li class="row" v-for="item in shardIDs" :key="item.shard">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.shards">
           Shard {{ item.shard }}
@@ -42,6 +36,12 @@
         <span>{{
           validator.lifetime_reward_accumulated | ones | zeroDecimals
         }}</span>
+      </li>
+      <li class="row">
+        <h4 v-info-style v-tooltip.top="tooltips.v_profile.apr">
+          Latest expected return
+        </h4>
+        <span>{{ validator.last_apr | percent | notAvailable }}</span>
       </li>
     </ul>
   </div>

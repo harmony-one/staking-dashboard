@@ -28,7 +28,6 @@ export default {
       plugins: {
         labels: false,
       },
-      responsive: true,
       maintainAspectRatio: false,
       tooltips: {
         mode: "index",
@@ -76,7 +75,7 @@ export default {
     chartdata() {
       const epochs = Object.keys(this.data)
       const elected = epochs.sort().map((k) => ones(this.data[k].effective_median_stake))
-      
+
       return {
         labels: epochs,
         datasets: [

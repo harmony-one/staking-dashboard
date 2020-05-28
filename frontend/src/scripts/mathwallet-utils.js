@@ -2,12 +2,16 @@ import { Harmony, HarmonyExtension } from "@harmony-js/core"
 import { HarmonyAddress, BN } from "@harmony-js/crypto"
 import { StakingFactory } from "@harmony-js/staking"
 import { ChainType, Unit } from "@harmony-js/utils"
-export const processMathWalletMessage = async (sendData, networkConfig, from) => {
+export const processMathWalletMessage = async (
+  sendData,
+  networkConfig,
+  from
+) => {
   const { type, fee, gasPrice } = sendData
   const { gasEstimate } = fee
   const { chain_id, rpc_url } = networkConfig
 
-  const harmony = new Harmony(rpc_url, {
+  const harmony = await new Harmony(rpc_url, {
     chainType: ChainType.Harmony,
     chainId: chain_id
   })
@@ -25,6 +29,7 @@ export const processMathWalletMessage = async (sendData, networkConfig, from) =>
         gasLimit: gasEstimate,
         gasPrice: Unit.One(gasPrice).toHex()
       })
+
       signedTxn = await window.harmony.signTransaction(txn)
       break
     }

@@ -68,16 +68,34 @@ export default {
   }),
   computed: {
     chartdata() {
+      let data = []
+
+      if (this.validator.active) {
+        data = this.validator ? this.validator.epoch_apr : []
+      } else {
+        data = this.history.map(v => ({
+          Epoch: v.epoch,
+          Value:
+            v.last_apr !== undefined
+              ? parseFloat(v.last_apr)
+              : parseFloat(v.apr)
+        }))
+
+        if (data[0] && data[0].Epoch === 0 && data[1]) {
+          data[0].Epoch = data[1].Epoch - 1
+        }
+      }
+
       return {
-        labels: this.history.map(
-          v => v.epoch /* moment(v.uctDate).format("MM.DD") */
+        labels: data.map(
+          v => parseFloat(v.Epoch) /* moment(v.uctDate).format("MM.DD") */
         ),
         datasets: [
           {
             label: "Rate",
             borderColor: "#0a93eb",
             fill: false,
-            data: this.history.map(v => v.apr * 100)
+            data: data.map(v => v.Value * 100)
           }
         ]
       }

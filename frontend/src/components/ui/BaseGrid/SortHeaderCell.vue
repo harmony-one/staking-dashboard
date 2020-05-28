@@ -56,7 +56,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .panel-sort-table-header {
   font-size: var(--m);
   padding-right: 6px;
@@ -100,5 +100,22 @@ export default {
 .sort-by.desc i {
   transform: rotate(180deg);
   color: var(--tertiary);
+}
+
+.sort-by.active a {
+  position: relative;
+
+  &:after {
+    display: block;
+    content: "";
+    position: absolute;
+    width: calc(100% + 22px);
+    height: 2px;
+    background-color: var(--blue);
+    opacity: 0.8;
+    border-radius: 10px;
+    bottom: -12px;
+    left: 0;
+  }
 }
 </style>

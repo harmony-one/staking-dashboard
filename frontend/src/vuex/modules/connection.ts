@@ -157,12 +157,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       commit("setNetworkFetching", false)
     },
 
-    async reconnect({ commit, state, rootState }) {
-      await node.staking.initHarmony(
-        state.networkConfig.rpc_url,
-        state.networkConfig.chain_id
-      )
-
+    async reconnect({ commit }) {
       // setNetworkToExtension(state.networkConfig)
 
       commit("setConnected", true)

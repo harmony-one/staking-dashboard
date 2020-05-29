@@ -447,7 +447,7 @@ module.exports = function(
           )
         }
 
-        if (validatorInfo.active) {
+        // if (validatorInfo.active) {
           if (Array.isArray(validatorInfo.epoch_apr)) {
             const { epoch_apr } = validatorInfo
 
@@ -455,27 +455,27 @@ module.exports = function(
               epoch_apr.reduce((acc, v) => acc + parseFloat(v['Value']), 0) /
               epoch_apr.length
           }
-        } else {
-          const history = _.values(
-            cache[VALIDATOR_INFO_HISTORY][validatorInfo.address]
-          )
-            .sort((a, b) => a.index - b.index)
-            .slice(1)
-
-          if (history.length) {
-            validatorInfo.apr =
-              history.reduce((acc, v) => {
-                const apr =
-                  v.last_apr !== undefined
-                    ? parseFloat(v.last_apr)
-                    : parseFloat(v.apr)
-
-                return acc + apr
-              }, 0) / history.length
-          } else {
-            validatorInfo.apr = 0
-          }
-        }
+        // } else {
+        //   const history = _.values(
+        //     cache[VALIDATOR_INFO_HISTORY][validatorInfo.address]
+        //   )
+        //     .sort((a, b) => a.index - b.index)
+        //     .slice(1)
+        //
+        //   if (history.length) {
+        //     validatorInfo.apr =
+        //       history.reduce((acc, v) => {
+        //         const apr =
+        //           v.last_apr !== undefined
+        //             ? parseFloat(v.last_apr)
+        //             : parseFloat(v.apr)
+        //
+        //         return acc + apr
+        //       }, 0) / history.length
+        //   } else {
+        //     validatorInfo.apr = 0
+        //   }
+        // }
 
         if (!cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]) {
           console.log('Total stake - NOT FOUND ' + validatorInfo.address)

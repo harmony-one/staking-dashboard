@@ -14,7 +14,7 @@
     <TmFormGroup class="action-modal-form-group">
       <div class="form-message notice">
         <span v-if="!isRedelegation()">
-          It will take 7 epochs to unlock your tokens after a delegation and the
+          It will take until the end of current epoch to unlock your tokens after a delegation and the
           tokens are still slashable if the validator behaves maliciously.
         </span>
         <span v-else>

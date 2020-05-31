@@ -43,6 +43,7 @@ const ELECTED_KEYS_PER_NODE = 'ELECTED_KEYS_PER_NODE'
 const LAST_EPOCH_METRICS = 'LAST_EPOCH_METRICS'
 const LIVE_EPOCH_METRICS = 'LIVE_EPOCH_METRICS'
 const VALIDATORS_TOTAL_STAKE = 'VALIDATORS_TOTAL_STAKE'
+const LIVE_VALIDATORS_CANDIDATE = 'LIVE_VALIDATORS_CANDIDATE'
 const SECOND_PER_BLOCK = 8
 const SYNC_PERIOD = 60000
 const VALIDATOR_PAGE_SIZE = 100
@@ -97,7 +98,8 @@ module.exports = function(
     ELECTED_KEYS_PER_NODE: {},
     LAST_EPOCH_METRICS: {},
     LIVE_EPOCH_METRICS: {},
-    VALIDATORS_TOTAL_STAKE: {}
+    VALIDATORS_TOTAL_STAKE: {},
+    LIVE_VALIDATORS_CANDIDATE: {}
   }
 
   console.log('Blockchain server: ', BLOCKCHAIN_SERVER)
@@ -445,7 +447,7 @@ module.exports = function(
           )
         }
 
-        if (validatorInfo.active) {
+        // if (validatorInfo.active) {
           if (Array.isArray(validatorInfo.epoch_apr)) {
             const { epoch_apr } = validatorInfo
 
@@ -453,27 +455,27 @@ module.exports = function(
               epoch_apr.reduce((acc, v) => acc + parseFloat(v['Value']), 0) /
               epoch_apr.length
           }
-        } else {
-          const history = _.values(
-            cache[VALIDATOR_INFO_HISTORY][validatorInfo.address]
-          )
-            .sort((a, b) => a.index - b.index)
-            .slice(1)
-
-          if (history.length) {
-            validatorInfo.apr =
-              history.reduce((acc, v) => {
-                const apr =
-                  v.last_apr !== undefined
-                    ? parseFloat(v.last_apr)
-                    : parseFloat(v.apr)
-
-                return acc + apr
-              }, 0) / history.length
-          } else {
-            validatorInfo.apr = 0
-          }
-        }
+        // } else {
+        //   const history = _.values(
+        //     cache[VALIDATOR_INFO_HISTORY][validatorInfo.address]
+        //   )
+        //     .sort((a, b) => a.index - b.index)
+        //     .slice(1)
+        //
+        //   if (history.length) {
+        //     validatorInfo.apr =
+        //       history.reduce((acc, v) => {
+        //         const apr =
+        //           v.last_apr !== undefined
+        //             ? parseFloat(v.last_apr)
+        //             : parseFloat(v.apr)
+        //
+        //         return acc + apr
+        //       }, 0) / history.length
+        //   } else {
+        //     validatorInfo.apr = 0
+        //   }
+        // }
 
         if (!cache[VALIDATORS_TOTAL_STAKE][validatorInfo.address]) {
           console.log('Total stake - NOT FOUND ' + validatorInfo.address)
@@ -807,6 +809,24 @@ module.exports = function(
         }
       })
 
+      const candidates = []
+
+      res.data.result['epos-slot-candidates'].forEach(e => {
+        if (e['validator']) {
+          const nodeAddress = e['validator']
+
+          if (!candidates.find(v => v.address === nodeAddress)) {
+            candidates.push({
+              address: nodeAddress,
+              bid: e['stake-per-key'],
+              total_stake: e['stake'],
+              keys: e['keys-at-auction'],
+              num: e['keys-at-auction'].length
+            })
+          }
+        }
+      })
+
       const liveExternalShards = externalShardsByKeys(liveElectedKeys)
 
       const liveTotalSeatsUsed = _.sumBy(liveExternalShards, e =>
@@ -831,6 +851,7 @@ module.exports = function(
       cache[LIVE_EFFECTIVE_STAKES] = liveEffectiveStakes
       cache[LIVE_ELECTED_KEYS] = liveElectedKeys
       cache[LIVE_KEYS_PER_NODE] = liveKeysPerNode
+      cache[LIVE_VALIDATORS_CANDIDATE] = candidates
     } catch (err) {
       console.log(
         `error when callMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
@@ -885,6 +906,18 @@ module.exports = function(
     })
 
     liveTable = _.sortBy(liveTable, e => -e.bid)
+
+    let candidateTable = cache[LIVE_VALIDATORS_CANDIDATE].filter(
+      v => !liveTable.find(val => val.address === v.address)
+    ).map(v => ({
+      ...v,
+      name: cache[VALIDATOR_INFO][v.address] ? cache[VALIDATOR_INFO][v.address].name : '',
+    }))
+
+    candidateTable = _.sortBy(candidateTable, e => -e.bid)
+
+    liveTable = liveTable.concat(candidateTable)
+
     slot = 0
 
     liveTable = liveTable.map(e => {

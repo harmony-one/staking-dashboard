@@ -11,17 +11,15 @@
         >
           <i class="material-icons">arrow_back</i>
         </div>
-        <div
-          id="closeBtn"
-          class="action-modal-icon action-modal-close"
-          @click="close"
-        >
+        <div id="closeBtn" class="action-modal-icon action-modal-close" @click="close">
           <i class="material-icons">close</i>
         </div>
         <div class="action-modal-header">
-          <span class="action-modal-title">{{
+          <span class="action-modal-title">
+            {{
             requiresSignIn ? `Sign in required` : title
-          }}</span>
+            }}
+          </span>
           <Steps
             v-if="
               [defaultStep, feeStep, signStep].includes(step) &&
@@ -48,9 +46,7 @@
         </template>
         <template v-else>
           <div v-if="requiresSignIn" class="action-modal-form">
-            <p class="form-message notice">
-              You need to sign in to submit a transaction.
-            </p>
+            <p class="form-message notice">You need to sign in to submit a transaction.</p>
           </div>
           <div v-else-if="step === defaultStep" class="action-modal-form">
             <slot />
@@ -64,13 +60,7 @@
               field-label="Gas Price"
             >
               <span class="input-suffix">{{ bondDenom | viewDenom }}</span>
-              <TmField
-                id="gas-price"
-                v-model="gasPrice"
-                step="0.000000001"
-                type="number"
-                min="0"
-              />
+              <TmField id="gas-price" v-model="gasPrice" step="0.000000001" type="number" min="0" />
               <TmFormMsg
                 v-if="balanceInAtoms === 0"
                 :msg="`doesn't have any ${bondDenom}s`"
@@ -124,10 +114,10 @@
               >
                 <div v-if="session.browserWithLedgerSupport">
                   {{
-                    sending
-                      ? `Please verify and sign the transaction on your Ledger`
-                      : `Please plug in your Ledger&nbsp;Nano and open
-                the Harmony app`
+                  sending
+                  ? `Please verify and sign the transaction on your Ledger`
+                  : `Please plug in your Ledger&nbsp;Nano and open
+                  the Harmony app`
                   }}
                 </div>
                 <div v-else>
@@ -154,8 +144,7 @@
                     href="https://chrome.google.com/webstore/category/extensions"
                     target="_blank"
                     rel="noopener norefferer"
-                    >Chrome Web Store</a
-                  >.
+                  >Chrome Web Store</a>.
                 </div>
               </HardwareState>
               <HardwareState
@@ -163,9 +152,7 @@
                 :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
                 :loading="!!sending"
               >
-                <div v-if="!sending">
-                  Please send the transaction to be signed in the Math Wallet.
-                </div>
+                <div v-if="!sending">Please send the transaction to be signed in the Math Wallet.</div>
                 <div v-if="sending">
                   Please open the Math Wallet, review the details, and approve
                   the transaction.
@@ -206,57 +193,44 @@
                   alt="a small spinning circle to display loading"
                 />
               </div>
-              <div slot="title">
-                Signed and sent to the network
-              </div>
+              <div slot="title">Sent and confirming</div>
               <div slot="subtitle">
                 The transaction
                 <!-- with the hash {{ txHash }} -->
                 was successfully signed and sent the network. Waiting for it to
                 be confirmed.
-                <div v-if="txHash">
-                  <br />Transaction:
-                  <a :href="linkToTransaction" target="_blank">
-                    {{ prettyTransactionHash }}
-                  </a>
-                </div>
               </div>
             </TmDataMsg>
           </div>
-          <div
-            v-else-if="step === successStep"
-            class="action-modal-form success-step"
-          >
-            <TmDataMsg
-              :icon="isTransactionFailed ? 'sentiment_dissatisfied' : 'check'"
-            >
+          <div v-else-if="step === successStep" class="action-modal-form success-step">
+            <TmDataMsg :icon="isTransactionFailed ? 'sentiment_dissatisfied' : 'check'">
               <div slot="title">
                 {{
-                  isTransactionFailed
-                    ? "Transaction failed"
-                    : notifyMessage.title
+                isTransactionFailed
+                ? "Transaction failed"
+                : notifyMessage.title
                 }}
               </div>
               <div slot="subtitle">
                 {{
-                  isTransactionFailed
-                    ? txConfirmResult.message
-                    : notifyMessage.body
+                isTransactionFailed
+                ? txConfirmResult.message
+                : notifyMessage.body
                 }}
                 <br />
                 <br />Transaction:
-                <a :href="linkToTransaction" target="_blank">
-                  {{ prettyTransactionHash }}
-                </a>
+                <a
+                  v-for="(tHash, index) in txHash"
+                  :key="index"
+                  :href="linkToTransaction(tHash)"
+                  target="_blank"
+                >{{ prettyTransactionHash(tHash) + (index !== txHash.length - 1 ? ', ' : '') }}</a>
               </div>
             </TmDataMsg>
           </div>
           <div class="action-modal-footer">
             <slot name="action-modal-footer">
-              <TmFormGroup
-                v-if="[defaultStep, feeStep].includes(step)"
-                class="action-modal-group"
-              >
+              <TmFormGroup v-if="[defaultStep, feeStep].includes(step)" class="action-modal-group">
                 <div>
                   <TmBtn
                     v-if="requiresSignIn"
@@ -304,9 +278,7 @@
             <p
               v-if="submissionError"
               class="tm-form-msg sm tm-form-msg--error submission-error"
-            >
-              {{ submissionError }}
-            </p>
+            >{{ submissionError }}</p>
           </div>
         </template>
       </div>
@@ -322,8 +294,8 @@ import TmFormGroup from "src/components/common/TmFormGroup"
 import TmFormMsg from "src/components/common/TmFormMsg"
 import FeatureNotAvailable from "src/components/common/FeatureNotAvailable"
 import TmDataMsg from "common/TmDataMsg"
-import TableInvoice from "./TableInvoice"
-import Steps from "./Steps"
+import TableInvoice from "../TableInvoice"
+import Steps from "../Steps"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, prettyInt } from "src/scripts/num"
 import { transactionToShortString } from "src/scripts/transaction-utils"
@@ -331,9 +303,10 @@ import { between, requiredIf } from "vuelidate/lib/validators"
 import { track } from "scripts/google-analytics"
 import config from "src/config"
 
-import ActionManager from "../utils/ActionManager"
+import ActionManager from "../../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
-import { openExtensionPopup } from "../utils/openExtensionPopup"
+import { processMathWalletMessage } from "scripts/mathwallet-utils"
+import { openExtensionPopup } from "../../utils/openExtensionPopup"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -366,9 +339,6 @@ const signMethodOptions = {
     value: SIGN_METHODS.LOCAL
   }
 }
-
-const getMathWalletUtils = () => import("scripts/mathwallet-utils")
-let processMathWalletMessage;
 
 const sessionType = {
   EXPLORE: "explore",
@@ -525,18 +495,6 @@ export default {
     },
     prettyIncludedHeight() {
       return prettyInt(this.includedHeight)
-    },
-    prettyTransactionHash() {
-      return this.txHash ? transactionToShortString(this.txHash) : ""
-    },
-    linkToTransaction() {
-      return this.networkConfig
-        ? this.networkConfig.explorer_url +
-            (this.transactionData.type === "MsgSend"
-              ? "/tx/"
-              : "/staking-tx/") +
-            this.txHash
-        : ""
     }
   },
   watch: {
@@ -553,16 +511,6 @@ export default {
       if (!isOpen) {
         this.close()
       }
-    },
-    sessionType() {
-      if (
-        this.session.sessionType === SIGN_METHODS.MATHWALLET &&
-        !processMathWalletMessage
-      ) {
-        getMathWalletUtils().then(module => {
-          processMathWalletMessage = module.processMathWalletMessage
-        })
-      }
     }
   },
   updated: function() {
@@ -576,6 +524,12 @@ export default {
     }
   },
   methods: {
+    prettyTransactionHash(tHash) {
+      return tHash ? transactionToShortString(tHash) : ""
+    },
+    linkToTransaction(tHash) {
+      return this.networkConfig.explorer_url + tHash
+    },
     confirmModalOpen() {
       let confirmResult = false
       if (this.session.actionInProgress) {
@@ -750,7 +704,6 @@ export default {
           )
         } else if (this.selectedSignMethod === SIGN_METHODS.MATHWALLET) {
           this.$store.commit(`setActionInProgress`, true)
-
           sendResponse = await processMathWalletMessage(
             sendData,
             this.networkConfig,
@@ -768,9 +721,7 @@ export default {
           )
         }
 
-        const { included, hash } = sendResponse
-
-        this.txConfirmResult = { txhash: hash }
+        const { included } = sendResponse
 
         await this.waitForInclusion(included)
 
@@ -806,7 +757,8 @@ export default {
       //   this.selectedSignMethod
       // )
       window.ga("send", "event", this.title.toLowerCase(), "success", "modal")
-
+      console.log("transactionProperties", transactionProperties)
+      console.log("feeProperties", feeProperties)
       this.$store.dispatch(`post${txType}`, {
         txProps: transactionProperties,
         txMeta: feeProperties
@@ -854,16 +806,6 @@ export default {
       invoiceTotal: {
         between: between(0, this.balanceInAtoms)
       }
-    }
-  },
-  mounted() {
-    if (
-      this.session.sessionType === SIGN_METHODS.MATHWALLET &&
-      !processMathWalletMessage
-    ) {
-      getMathWalletUtils().then(module => {
-        processMathWalletMessage = module.processMathWalletMessage
-      })
     }
   }
 }

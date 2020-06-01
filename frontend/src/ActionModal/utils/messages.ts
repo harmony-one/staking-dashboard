@@ -30,6 +30,19 @@ export function MsgDelegate(
     }
   }
 }
+export function MsgMultiDelegate(
+  senderAddress: string,
+  { validatorAddress, amount, denom }: any
+) {
+  return {
+    type: `harmony-sdk/MsgMultiDelegate`,
+    value: {
+      delegator_address: senderAddress,
+      validator_address: validatorAddress,
+      amount: Coin({ amount, denom })
+    }
+  }
+}
 
 export function MsgUndelegate(
   senderAddress: string,
@@ -132,10 +145,14 @@ function Coin({ amount, denom }: any) {
   }
 }
 
-export type TMsgFuncConstructor = (senderAddress: string, params: any) => { type: string; value: any };
+export type TMsgFuncConstructor = (
+  senderAddress: string,
+  params: any
+) => { type: string; value: any }
 
 export default {
   MsgSend: MsgSend,
+  MsgMultiDelegate: MsgMultiDelegate,
   MsgDelegate: MsgDelegate,
   MsgUndelegate: MsgUndelegate,
   MsgRedelegate: MsgRedelegate,
@@ -143,4 +160,4 @@ export default {
   MsgVote: MsgVote,
   MsgDeposit: MsgDeposit,
   MsgWithdrawDelegationReward: MsgWithdrawDelegationReward
-};
+}

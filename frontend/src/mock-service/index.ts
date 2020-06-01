@@ -1,4 +1,6 @@
 import axios from "axios"
+import BigNumber from "bignumber.js"
+
 import {
   remapValidator,
   TBlockchainValidator
@@ -90,5 +92,34 @@ export function fetchNetworkInfo(networkId: string) {
 export function mockTransfer(data: any) {
   console.log("Data to send -> ", data)
   // return axios.get(`${API_URL}/accounts/${data.from_address}/transfers`).then(rez => rez.data)
-  return { gas_estimate: "24341" }
+  return { gas_estimate: "21000" }
+}
+
+const bodyParams = (method: string, params: string[]) => `{
+      "jsonrpc": "2.0",
+      "method": "${method}",
+      "params": ${JSON.stringify(params)},
+      "id": 1
+    }`
+
+export const getBalance = async (address: string, rpc_url: string) => {
+  const res = await axios({
+    method: "post",
+    url: rpc_url,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    data: bodyParams("hmy_getBalance", [address, "latest"])
+  })
+
+  let coins = 0
+
+  try {
+    coins = new BigNumber(Number(res.data.result)).div(1e12).toNumber();
+  } catch (e) {
+    console.error(e)
+  }
+
+  return coins
 }

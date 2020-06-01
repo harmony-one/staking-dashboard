@@ -5,6 +5,7 @@
       :columns="columns"
       :data="enrichedValidators"
       :onRowClick="onClickValidator"
+      :scrollable="true"
     />
     <!-- <PanelPagination :pagination="pagination" :total="totalFound" /> -->
   </div>
@@ -30,19 +31,19 @@ import {
 export default {
   name: `table-validators`,
   components: {
-    BaseGrid,
+    BaseGrid
   },
   props: {
     data: {
       type: Array,
       default: () => []
-    },
+    }
   },
   data: () => ({
     sort: {
       property: `slot`,
       order: `asc`
-    },
+    }
   }),
   watch: {
     "sort.order": function() {
@@ -50,34 +51,28 @@ export default {
     },
     "sort.property": function() {
       return this.enrichedValidators
-    },
+    }
   },
   computed: {
-    enrichedValidators(
-      {
-        data,
-        sort: { property, order },
-      } = this
-    ) {
-      
+    enrichedValidators({ data, sort: { property, order } } = this) {
       //slice it just in case
       data = data.slice()
-      if (property === 'name') {
-        console.log('name sort')
-        data.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
-        if (order === 'desc') data.reverse()
+      if (property === "name") {
+        console.log("name sort")
+        data.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+        if (order === "desc") data.reverse()
         return data
       }
       data = data.sort((a, b) => {
         a = a[property]
         b = b[property]
         try {
-          if (property === 'slot') {
-            a = parseInt(a.split('-')[0])
-            b = parseInt(b.split('-')[0])
+          if (property === "slot") {
+            a = parseInt(a.split("-")[0])
+            b = parseInt(b.split("-")[0])
           }
-        } catch(e) {} //don't interfere if slot data isn't perfect
-        return order === 'asc' ? a - b : b - a
+        } catch (e) {} //don't interfere if slot data isn't perfect
+        return order === "asc" ? a - b : b - a
       })
       return data
     },
@@ -87,12 +82,13 @@ export default {
           title: `Slots`,
           value: `slot`,
           tooltip: `The slots occupied by this Validator (in chart above)`,
-          align: 'right',
-          width: "96px",
+          align: "right",
+          width: "96px"
         },
         {
           title: `Name`,
           value: `name`,
+          key: item => item.address,
           tooltip: `The validator's moniker`,
           renderComponent: ValidatorName
         },
@@ -101,7 +97,7 @@ export default {
           value: `bid`,
           tooltip: `Bid per BLS key`,
           width: "130px",
-          align: 'right',
+          align: "right",
           render: value => zeroDecimals(ones(value))
         },
         {
@@ -109,17 +105,18 @@ export default {
           value: `effective_stake`,
           tooltip: `Validator's effective ONE staked`,
           width: "130px",
-          align: 'right',
-          render: value => zeroDecimals(ones(value))
+          align: "right",
+          render: value =>
+            value !== undefined ? zeroDecimals(ones(value)) : "--"
         },
         {
           title: `Total`,
           value: `total_stake`,
           tooltip: `Validator's total ONE staked`,
           width: "130px",
-          align: 'right',
+          align: "right",
           render: value => zeroDecimals(ones(value))
-        },
+        }
       ]
 
       if (this.$mq === "tab") {
@@ -142,14 +139,17 @@ export default {
   methods: {
     onClickValidator(validator, newTab = false) {
       if (newTab) {
-        window.open(window.location.origin + '/validators/' + validator.operator_address, '_blank')
+        window.open(
+          window.location.origin + "/validators/" + validator.operator_address,
+          "_blank"
+        )
         return
       }
       this.$router.push({
         name: "validator",
         params: { validator: validator.operator_address }
       })
-    },
+    }
   }
 }
 </script>

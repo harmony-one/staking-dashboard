@@ -129,7 +129,7 @@
           Creating an address in the browser is unsafe. Please install our
           <a
             target="_blank"
-            href="https://chrome.google.com/webstore/detail/harmony/dmknnpkhnockodmnclcellfiilmklimd?hl=en"
+            href="https://harmony.one/chrome-wallet"
             >browser extension</a
           >
         </p>

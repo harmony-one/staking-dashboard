@@ -32,9 +32,9 @@
           <h2>+{{ rewards | ones | zeroDecimals }}</h2>
         </div>
       </div>
-      <div class="total-atoms total-undel">
+      <div class="total-atoms total-undel" v-if="totalUndelegated">
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
-        <h2 class="total-atoms__value">
+        <h2 class="total-atoms__value" style="color: #000000; margin-bottom: 10px;">
           {{ totalUndelegated | ones | zeroDecimals }}
         </h2>
       </div>
@@ -70,7 +70,7 @@ import TmBtn from "common/TmBtn"
 import SendModal from "src/ActionModal/components/SendModal"
 import ModalWithdrawRewards from "src/ActionModal/components/ModalWithdrawRewards"
 import { mapState, mapGetters } from "vuex"
-import _ from "lodash"
+import sumBy from "lodash.sumby"
 import tooltips from "src/components/tooltips"
 
 export default {
@@ -116,8 +116,8 @@ export default {
       const delegates = this.delegates.delegates
       return this.delegates.loaded
         ? delegates
-          ? _.sumBy(delegates, elem =>
-              _.sumBy(elem.Undelegations, el => el.Amount)
+          ? sumBy(delegates, elem =>
+              sumBy(elem.Undelegations, el => el.Amount)
             )
           : 0
         : 0

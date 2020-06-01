@@ -1,6 +1,5 @@
 import Router from "vue-router"
 import routes from "./routes"
-import { NetworkCapability, NetworkCapabilityResult } from "./gql"
 import Vue from "vue"
 
 /* istanbul ignore next */
@@ -42,14 +41,3 @@ const router = new Router({
 })
 
 export default router
-
-// check if feature is allowed and redirect if not
-async function featureAvailable(apollo, networkId, to) {
-  const { data } = await apollo.query({
-    query: NetworkCapability(
-      networkId,
-      `feature_${to.meta.feature.toLowerCase()}`
-    )
-  })
-  return NetworkCapabilityResult(data)
-}

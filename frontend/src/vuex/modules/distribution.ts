@@ -40,6 +40,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     setDelegationRewards(state, { validatorAddr, rewards }) {
       Vue.set(state.rewards, validatorAddr, rewards)
     },
+    setAllDelegationRewards(state, { rewards }) {
+      state.rewards = rewards;
+    },
     resetDelegationRewards(state) {
       state.rewards = {}
     },
@@ -80,14 +83,15 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
 
       commit(`resetDelegationRewards`)
 
+      const rewards: any = {}
+
       if (Array.isArray(rootState.delegates.delegates)) {
-        rootState.delegates.delegates.forEach((d: any) =>
-          commit(`setDelegationRewards`, {
-            validatorAddr: d.validator_address,
-            rewards: { one: Number(d.reward) }
-          })
+        rootState.delegates.delegates.forEach(
+          (d: any) => (rewards[d.validator_address] = { one: Number(d.reward) })
         )
       }
+
+      commit(`setAllDelegationRewards`, { rewards })
 
       // await Promise.all(
       //   yourValidators.map((validator: any) =>

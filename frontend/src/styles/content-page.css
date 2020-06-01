@@ -5,6 +5,13 @@
   border-radius: 0.25rem;
 }
 
+.card-light {
+  max-width: 1000px;
+  padding: 1rem 1.5rem;
+  margin: 0 auto 1.5rem auto;
+  border-radius: 0.25rem;
+}
+
 h1 {
   font-size: var(--xxl);
   line-height: 36px;
@@ -23,6 +30,11 @@ h2 {
   margin-bottom: 1rem;
 }
 
+.card-light h2 {
+  margin: 1rem 0;
+  font-weight: 600;
+}
+
 b {
   font-weight: 600;
   text-transform: uppercase;
@@ -30,13 +42,14 @@ b {
 
 .c2 {
   font-weight: 500;
-  font-size: var(--lg);
+  /*font-size: var(--lg);*/
   line-height: var(--xl);
-  padding: 2rem 0 0;
+  /*padding: 2rem 0 0;*/
   color: var(--txt);
   display: list-item;
   margin-left: 0;
-  list-style-position: inside;
+  /*list-style-position: inside;*/
+  list-style: none;
 }
 
 .c4 {
@@ -49,12 +62,17 @@ b {
   color: var(--txt);
 }
 
+.c8 {
+  font-weight: 600;
+  color: var(--txt);
+}
+
 .c5 {
   font-weight: 500;
-  font-size: var(--lg);
-  line-height: var(--xl);
+  /*font-size: var(--lg);*/
+  /*line-height: var(--xl);*/
   padding: 0;
-  display: block;
+  /*display: block;*/
   color: var(--txt);
 }
 

@@ -107,10 +107,7 @@ export const signWithExtension = async (signMessage, senderAddress) => {
     }
   })
 
-  return {
-    signature: Buffer.from(res.signature || "", "hex"),
-    publicKey: Buffer.from(res.publicKey || "", "hex")
-  }
+  return { txHash: res.rawTransaction }
 }
 
 export const waitTransactionConfirm = async () => {

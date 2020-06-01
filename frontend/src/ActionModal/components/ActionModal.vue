@@ -214,6 +214,12 @@
                 <!-- with the hash {{ txHash }} -->
                 was successfully signed and sent the network. Waiting for it to
                 be confirmed.
+                <div v-if="txHash">
+                  <br />Transaction:
+                  <a :href="linkToTransaction" target="_blank">
+                    {{ prettyTransactionHash }}
+                  </a>
+                </div>
               </div>
             </TmDataMsg>
           </div>
@@ -327,7 +333,6 @@ import config from "src/config"
 
 import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
-import { processMathWalletMessage } from "scripts/mathwallet-utils"
 import { openExtensionPopup } from "../utils/openExtensionPopup"
 
 const defaultStep = `details`
@@ -361,6 +366,9 @@ const signMethodOptions = {
     value: SIGN_METHODS.LOCAL
   }
 }
+
+const getMathWalletUtils = () => import("scripts/mathwallet-utils")
+let processMathWalletMessage;
 
 const sessionType = {
   EXPLORE: "explore",
@@ -522,7 +530,13 @@ export default {
       return this.txHash ? transactionToShortString(this.txHash) : ""
     },
     linkToTransaction() {
-      return this.networkConfig.explorer_url + this.txHash
+      return this.networkConfig
+        ? this.networkConfig.explorer_url +
+            (this.transactionData.type === "MsgSend"
+              ? "/tx/"
+              : "/staking-tx/") +
+            this.txHash
+        : ""
     }
   },
   watch: {
@@ -538,6 +552,16 @@ export default {
     actionInProgress(isOpen) {
       if (!isOpen) {
         this.close()
+      }
+    },
+    sessionType() {
+      if (
+        this.session.sessionType === SIGN_METHODS.MATHWALLET &&
+        !processMathWalletMessage
+      ) {
+        getMathWalletUtils().then(module => {
+          processMathWalletMessage = module.processMathWalletMessage
+        })
       }
     }
   },
@@ -564,9 +588,8 @@ export default {
       }
     },
     open() {
-      console.log(this.title.toLowerCase(), 'open')
-      window.ga('send', 'event', this.title.toLowerCase(), 'open', 'modal')
-
+      console.log(this.title.toLowerCase(), "open")
+      window.ga("send", "event", this.title.toLowerCase(), "open", "modal")
 
       this.confirmModalOpen()
 
@@ -582,8 +605,8 @@ export default {
       // this.gasPrice = config.default_gas_price.toFixed(9)
     },
     close() {
-      console.log(this.title.toLowerCase(), 'close')
-      window.ga('send', 'event', this.title.toLowerCase(), 'close', 'modal')
+      console.log(this.title.toLowerCase(), "close")
+      window.ga("send", "event", this.title.toLowerCase(), "close", "modal")
 
       if (this.session.actionInProgress) {
         closeExtensionSession()
@@ -628,7 +651,13 @@ export default {
       // An ActionModal is only the prototype of a parent modal
 
       console.log(this.title.toLowerCase(), this.step.toLowerCase())
-      window.ga('send', 'event', this.title.toLowerCase(), this.step.toLowerCase(), 'modal')
+      window.ga(
+        "send",
+        "event",
+        this.title.toLowerCase(),
+        this.step.toLowerCase(),
+        "modal"
+      )
 
       switch (this.step) {
         case defaultStep:
@@ -721,6 +750,7 @@ export default {
           )
         } else if (this.selectedSignMethod === SIGN_METHODS.MATHWALLET) {
           this.$store.commit(`setActionInProgress`, true)
+
           sendResponse = await processMathWalletMessage(
             sendData,
             this.networkConfig,
@@ -738,7 +768,9 @@ export default {
           )
         }
 
-        const { included } = sendResponse
+        const { included, hash } = sendResponse
+
+        this.txConfirmResult = { txhash: hash }
 
         await this.waitForInclusion(included)
 
@@ -773,7 +805,7 @@ export default {
       //   this.title,
       //   this.selectedSignMethod
       // )
-      window.ga('send', 'event', this.title.toLowerCase(), 'success', 'modal')
+      window.ga("send", "event", this.title.toLowerCase(), "success", "modal")
 
       this.$store.dispatch(`post${txType}`, {
         txProps: transactionProperties,
@@ -784,7 +816,7 @@ export default {
       this.step = signStep
       this.submissionError = `${this.submissionErrorPrefix}: ${message}.`
       // this.trackEvent(`event`, `failed-submit`, this.title, message)
-      window.ga('send', 'event', this.title.toLowerCase(), 'failed', 'modal')
+      window.ga("send", "event", this.title.toLowerCase(), "failed", "modal")
     },
     async checkFeatureAvailable() {
       return true // Temp
@@ -822,6 +854,16 @@ export default {
       invoiceTotal: {
         between: between(0, this.balanceInAtoms)
       }
+    }
+  },
+  mounted() {
+    if (
+      this.session.sessionType === SIGN_METHODS.MATHWALLET &&
+      !processMathWalletMessage
+    ) {
+      getMathWalletUtils().then(module => {
+        processMathWalletMessage = module.processMathWalletMessage
+      })
     }
   }
 }

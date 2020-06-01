@@ -11,6 +11,7 @@ do
                 (ostn) NETWORK=Openstakingnet;;
                 (pstn) NETWORK=partnernet;;
                 (stn) NETWORK=stressnet;;
+				(mainnet) NETWORK=mainnet;;
             esac
             ;;
     esac
@@ -20,7 +21,7 @@ echo "Deleting database for" $NETWORK "(auto_confirm:" $AUTO_CONFIRM")"
 
 if [ -z $NETWORK ]
 then
-    echo "Usage: sh clear_db.sh [-n] ostn/pstn/stn [-y]"
+    echo "Usage: sh clear_db.sh [-n] ostn/pstn/stn/mainnet [-y]"
     exit 0
 fi
 
@@ -32,6 +33,8 @@ echo "Clearing db" $NETWORK_GLOBAL "and" $NETWORK_HISTORY
 if [ $AUTO_CONFIRM == true ]
 then
     firebase firestore:delete --project  staking-explorer -r $NETWORK_GLOBAL -y
+    firebase firestore:delete --project  staking-explorer -r $NETWORK_HISTORY -y
 else
     firebase firestore:delete --project  staking-explorer -r $NETWORK_GLOBAL
+    firebase firestore:delete --project  staking-explorer -r $NETWORK_HISTORY
 fi

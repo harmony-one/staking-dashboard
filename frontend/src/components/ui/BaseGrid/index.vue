@@ -5,27 +5,42 @@
         class="table-headings"
         v-for="column in columns"
         :key="column.value"
-        :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
+        :style="
+          column.width
+            ? { flexBasis: column.width, minWidth: column.width }
+            : { flexGrow: 1 }
+        "
       >
         <SortHeaderCell :column="column" :sort="sort" :onClick="orderBy" />
       </div>
     </div>
 
-    <div class="table-wrap">
+    <div :class="{ 'table-wrap': true, scrollable: scrollable }">
       <div class="table-body">
         <div
           class="table-column"
           v-for="(column, index) in columns"
           :key="index"
-          :style="column.width ? { flexBasis: column.width, minWidth: column.width } : { flexGrow: 1 }"
+          :style="
+            column.width
+              ? { flexBasis: column.width, minWidth: column.width }
+              : { flexGrow: 1 }
+          "
         >
           <div
-            class="table-cell"
+            :class="{
+              'table-cell': true,
+              'active-sort': sort.property === column.value
+            }"
             v-for="(item, index) in data"
-            :key="index"
-            @click="column.value === 'select' ? '' : onRowClick(item)"
+            :key="column.key ? column.key(item) : index"
+            @click="e => (column.value === 'select') ? '' : onRowClick(item)"
             @contextmenu.prevent="() => onRowClick(item, true)"
-            :style="column.align === 'right' ? { justifyContent: 'flex-end' } : { justifyContent: 'flex-start' }"
+            :style="
+              column.align === 'right'
+                ? { justifyContent: 'flex-end' }
+                : { justifyContent: 'flex-start' }
+            "
           >
             <template v-if="column.render">{{ column.render(item[column.value], item)}}</template>
 
@@ -53,7 +68,7 @@ export default {
   components: {
     SortHeaderCell
   },
-  props: ["data", "columns", "sort", "onRowClick"],
+  props: ["data", "columns", "sort", "onRowClick", "scrollable"],
   methods: {
     orderBy(property) {
       if (this.sort.property === property) {
@@ -75,7 +90,9 @@ export default {
 }
 
 .table-headings-wrap {
-  @include table-row;
+  // @include table-row;
+  display: flex;
+  flex-direction: row;
   position: relative;
   min-height: 48px;
 }
@@ -87,8 +104,11 @@ export default {
   overflow: hidden;
   overflow-y: auto;
   height: 100%;
-  max-height: calc(100vh - 442px);
   border-bottom: 1px solid var(--light2);
+}
+
+.scrollable {
+  max-height: calc(100vh - 442px);
 }
 
 @media screen and (max-width: 414px) {
@@ -115,6 +135,14 @@ export default {
       min-height: 48px;
       max-height: 48px;
       overflow: hidden;
+
+      &.active-sort {
+        color: var(--blue);
+
+        .li-validator-name {
+          color: var(--blue);
+        }
+      }
     }
     .table-cell:nth-child(odd) {
       background: #00ade810;

@@ -56,12 +56,13 @@ export default {
 
 
   computed: {
-    
+
     columns() {
       let props = [
         {
           title: `Name`,
           value: `name`,
+          key: item => item.address,
           tooltip: `The validator's moniker`,
           renderComponent: ValidatorName
         },

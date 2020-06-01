@@ -37,7 +37,7 @@
       </div>
     </div>
     <div v-else>
-      Not found decreased events
+      No events of stake decreasing
     </div>
   </div>
 </template>

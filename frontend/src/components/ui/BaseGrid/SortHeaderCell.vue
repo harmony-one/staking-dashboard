@@ -3,17 +3,24 @@
     :class="classNames"
     v-if="column.value != 'select'"
     class="panel-sort-table-header"
-    :style="column.align === 'right' ? { textAlign: 'right' } : { textAlign: 'left' }"
+    :style="
+      column.align === 'right'
+        ? { textAlign: 'right', justifyContent: 'flex-end' }
+        : { textAlign: 'left', justifyContent: 'flex-start' }
+    "
   >
-    <a
-      v-if="sort"
-      v-tooltip.top="column.tooltip"
-      class="sort-by-link"
-      @click="() => onClick(column.value)"
-    >
-      {{ column.title }}
-      <i class="material-icons">arrow_drop_up</i>
-    </a>
+    <template v-if="sort">
+      <a
+        v-tooltip.top="column.tooltip"
+        class="sort-by-link"
+        @click="() => onClick(column.value)"
+      >
+        {{ column.title }}
+      </a>
+      <i class="material-icons" @click="() => onClick(column.value)"
+        >arrow_drop_up</i
+      >
+    </template>
     <span v-else>{{ column.title }}</span>
   </div>
 </template>
@@ -50,30 +57,33 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .panel-sort-table-header {
   font-size: var(--m);
-  padding: var(--unit) 0;
-  padding-right: var(--quarter);
+  padding-right: 6px;
   border-bottom: 1px solid var(--bc-dim);
   min-height: 48px;
   overflow: hidden;
   text-transform: uppercase;
   font-weight: bold;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .sort-by i {
   font-size: var(--lg);
-  position: relative;
-  top: 6px;
-  right: 4px;
+  display: flex;
+  cursor: pointer;
+  margin: 0 6px 0 6px;
 }
 
 .sort-by a {
+  display: flex;
   cursor: pointer;
   user-select: none;
-  white-space: nowrap;
   color: var(--dim-black);
+  line-height: 20px;
 }
 
 .sort-by a:hover {
@@ -91,5 +101,22 @@ export default {
 .sort-by.desc i {
   transform: rotate(180deg);
   color: var(--tertiary);
+}
+
+.sort-by.active a {
+  position: relative;
+
+  &:after {
+    display: block;
+    content: "";
+    position: absolute;
+    width: calc(100% + 22px);
+    height: 2px;
+    background-color: var(--blue);
+    opacity: 0.8;
+    border-radius: 10px;
+    bottom: -12px;
+    left: 0;
+  }
 }
 </style>

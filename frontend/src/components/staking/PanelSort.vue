@@ -124,7 +124,7 @@ export default {
 }
 
 @media screen and (max-width: 414px) {
-    
+
   .mobile {
     display: table-cell;
   }

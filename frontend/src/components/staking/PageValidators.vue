@@ -69,7 +69,7 @@
         :from-options="delegationTargetOptions()"
         :to="selectedValidators"
         :denom="bondDenom"
-        :minAmount="1000"
+        :minAmount="1000 * selectedValidators.length"
       />
     </template>
   </PageContainer>

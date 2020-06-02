@@ -14,15 +14,16 @@
     <TmFormGroup class="action-modal-form-group">
       <div class="form-message notice">
         <span>
-          It will take 7 epochs to unlock your tokens after a delegation and the
-          tokens are still slashable if the validators behave maliciously.
+          It will take until the end of current epoch to unlock your tokens
+          after a delegation and the tokens are still slashable if the validator
+          behaves maliciously.
         </span>
       </div>
     </TmFormGroup>
     <!-- <TmFormGroup class="action-modal-form-group" field-id="to" field-label="To"> -->
     <TmFormGroup class="action-modal-address-group" field-id="to">
       <div v-for="(item, index) in to" :key="index">
-        <span>{{item.name}}</span>
+        <!--        <span>{{ item.name }}</span>-->
         <TmField id="to" :value="item.address" type="text" readonly />
       </div>
     </TmFormGroup>
@@ -51,6 +52,7 @@
       :error="$v.amount.$error && $v.amount.$invalid"
       class="action-modal-form-group"
       field-id="amount"
+      v-if="isBalanceEnough"
     >
       <span class="input-suffix-denom">{{ viewDenom(denom) }}</span>
       <TmFieldGroup>
@@ -81,7 +83,11 @@
         name="Wallet"
         type="custom"
       />
-      <TmFormMsg v-else-if="$v.amount.$error && !$v.amount.decimal" name="Amount" type="numeric" />
+      <TmFormMsg
+        v-else-if="$v.amount.$error && !$v.amount.decimal"
+        name="Amount"
+        type="numeric"
+      />
       <TmFormMsg
         v-else-if="$v.amount.$error && (!$v.amount.required || amount === 0)"
         name="Amount"
@@ -101,6 +107,20 @@
         class="tm-form-msg"
       />
     </TmFormGroup>
+
+    <div v-else class="body_container">
+      <TmFormMsg
+        name=""
+        type="custom"
+        :msg="`Not enough funds to delegate, minimum ${minAmountOnes} ONEs`"
+      />
+    </div>
+
+    <div style="margin-top: 20px; margin-bottom: 20px;">
+      <b>{{ amount / to.length }} {{ denom | viewDenom }}s</b>
+      will be delegated to each validator
+    </div>
+
   </ActionModal>
 </template>
 
@@ -121,7 +141,7 @@ import TmBtn from "src/components/common/TmBtn"
 import TmFormGroup from "src/components/common/TmFormGroup"
 import TmFormMsg from "src/components/common/TmFormMsg"
 import ActionModal from "./ActionModal"
-import transaction from "../../utils/transactionTypes"
+import transaction from "../utils/transactionTypes"
 
 export default {
   name: `multidelegation-modal`,
@@ -167,6 +187,9 @@ export default {
       if (!this.session.signedIn) return 0
 
       return this.fromOptions[this.selectedIndex].maximum
+    },
+    isBalanceEnough() {
+      return atoms(this.balance) > ones(this.minAmount) * this.to.length
     },
     from() {
       if (!this.session.signedIn) return ``

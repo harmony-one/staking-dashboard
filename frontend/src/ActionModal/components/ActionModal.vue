@@ -214,10 +214,21 @@
                 <!-- with the hash {{ txHash }} -->
                 was successfully signed and sent the network. Waiting for it to
                 be confirmed.
-                <div v-if="txHash">
+                <div v-if="txHash && Array.isArray(txHash)">
+                  <br />Transactions:
+                  <a
+                    v-for="(item, index) in txHash"
+                    :key="index"
+                    :href="linkToTransaction(item.hash)"
+                    target="_blank"
+                  >
+                    {{ prettyTransactionHash(item.hash) }}
+                  </a>
+                </div>
+                <div v-if="txHash && !Array.isArray(txHash)">
                   <br />Transaction:
-                  <a :href="linkToTransaction" target="_blank">
-                    {{ prettyTransactionHash }}
+                  <a :href="linkToTransaction(txHash)" target="_blank">
+                    {{ prettyTransactionHash(txHash) }}
                   </a>
                 </div>
               </div>
@@ -244,10 +255,23 @@
                     : notifyMessage.body
                 }}
                 <br />
-                <br />Transaction:
-                <a :href="linkToTransaction" target="_blank">
-                  {{ prettyTransactionHash }}
-                </a>
+                <div v-if="txHash && Array.isArray(txHash)">
+                  <br />Transactions:
+                  <a
+                    v-for="(item, index) in txHash"
+                    :key="index"
+                    :href="linkToTransaction(item.hash)"
+                    target="_blank"
+                  >
+                    {{ prettyTransactionHash(item.hash) }}
+                  </a>
+                </div>
+                <div v-if="txHash && !Array.isArray(txHash)">
+                  <br />Transaction:
+                  <a :href="linkToTransaction(txHash)" target="_blank">
+                    {{ prettyTransactionHash(txHash) }}
+                  </a>
+                </div>
               </div>
             </TmDataMsg>
           </div>
@@ -525,18 +549,6 @@ export default {
     },
     prettyIncludedHeight() {
       return prettyInt(this.includedHeight)
-    },
-    prettyTransactionHash() {
-      return this.txHash ? transactionToShortString(this.txHash) : ""
-    },
-    linkToTransaction() {
-      return this.networkConfig
-        ? this.networkConfig.explorer_url +
-            (this.transactionData.type === "MsgSend"
-              ? "/tx/"
-              : "/staking-tx/") +
-            this.txHash
-        : ""
     }
   },
   watch: {
@@ -576,6 +588,18 @@ export default {
     }
   },
   methods: {
+    prettyTransactionHash(txHash) {
+      return txHash ? transactionToShortString(txHash) : ""
+    },
+    linkToTransaction(txHash) {
+      return this.networkConfig
+        ? this.networkConfig.explorer_url +
+            (this.transactionData.type === "MsgSend"
+              ? "/tx/"
+              : "/staking-tx/") +
+            txHash
+        : ""
+    },
     confirmModalOpen() {
       let confirmResult = false
       if (this.session.actionInProgress) {
@@ -790,7 +814,9 @@ export default {
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
 
-      this.txConfirmResult = await includedFn()
+      const res = await includedFn()
+
+      this.txConfirmResult = res
 
       this.$store.dispatch(`queryWalletBalances`)
       this.$store

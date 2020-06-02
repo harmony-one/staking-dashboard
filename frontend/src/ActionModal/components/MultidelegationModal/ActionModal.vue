@@ -11,14 +11,16 @@
         >
           <i class="material-icons">arrow_back</i>
         </div>
-        <div id="closeBtn" class="action-modal-icon action-modal-close" @click="close">
+        <div
+          id="closeBtn"
+          class="action-modal-icon action-modal-close"
+          @click="close"
+        >
           <i class="material-icons">close</i>
         </div>
         <div class="action-modal-header">
           <span class="action-modal-title">
-            {{
-            requiresSignIn ? `Sign in required` : title
-            }}
+            {{ requiresSignIn ? `Sign in required` : title }}
           </span>
           <Steps
             v-if="
@@ -46,7 +48,9 @@
         </template>
         <template v-else>
           <div v-if="requiresSignIn" class="action-modal-form">
-            <p class="form-message notice">You need to sign in to submit a transaction.</p>
+            <p class="form-message notice">
+              You need to sign in to submit a transaction.
+            </p>
           </div>
           <div v-else-if="step === defaultStep" class="action-modal-form">
             <slot />
@@ -60,7 +64,13 @@
               field-label="Gas Price"
             >
               <span class="input-suffix">{{ bondDenom | viewDenom }}</span>
-              <TmField id="gas-price" v-model="gasPrice" step="0.000000001" type="number" min="0" />
+              <TmField
+                id="gas-price"
+                v-model="gasPrice"
+                step="0.000000001"
+                type="number"
+                min="0"
+              />
               <TmFormMsg
                 v-if="balanceInAtoms === 0"
                 :msg="`doesn't have any ${bondDenom}s`"
@@ -114,9 +124,9 @@
               >
                 <div v-if="session.browserWithLedgerSupport">
                   {{
-                  sending
-                  ? `Please verify and sign the transaction on your Ledger`
-                  : `Please plug in your Ledger&nbsp;Nano and open
+                    sending
+                      ? `Please verify and sign the transaction on your Ledger`
+                      : `Please plug in your Ledger&nbsp;Nano and open
                   the Harmony app`
                   }}
                 </div>
@@ -144,7 +154,8 @@
                     href="https://chrome.google.com/webstore/category/extensions"
                     target="_blank"
                     rel="noopener norefferer"
-                  >Chrome Web Store</a>.
+                    >Chrome Web Store</a
+                  >.
                 </div>
               </HardwareState>
               <HardwareState
@@ -152,7 +163,9 @@
                 :icon="session.browserWithLedgerSupport ? 'laptop' : 'info'"
                 :loading="!!sending"
               >
-                <div v-if="!sending">Please send the transaction to be signed in the Math Wallet.</div>
+                <div v-if="!sending">
+                  Please send the transaction to be signed in the Math Wallet.
+                </div>
                 <div v-if="sending">
                   Please open the Math Wallet, review the details, and approve
                   the transaction.
@@ -202,20 +215,25 @@
               </div>
             </TmDataMsg>
           </div>
-          <div v-else-if="step === successStep" class="action-modal-form success-step">
-            <TmDataMsg :icon="isTransactionFailed ? 'sentiment_dissatisfied' : 'check'">
+          <div
+            v-else-if="step === successStep"
+            class="action-modal-form success-step"
+          >
+            <TmDataMsg
+              :icon="isTransactionFailed ? 'sentiment_dissatisfied' : 'check'"
+            >
               <div slot="title">
                 {{
-                isTransactionFailed
-                ? "Transaction failed"
-                : notifyMessage.title
+                  isTransactionFailed
+                    ? "Transaction failed"
+                    : notifyMessage.title
                 }}
               </div>
               <div slot="subtitle">
                 {{
-                isTransactionFailed
-                ? txConfirmResult.message
-                : notifyMessage.body
+                  isTransactionFailed
+                    ? txConfirmResult.message
+                    : notifyMessage.body
                 }}
                 <br />
                 <br />Transaction:
@@ -224,13 +242,20 @@
                   :key="index"
                   :href="linkToTransaction(tHash)"
                   target="_blank"
-                >{{ prettyTransactionHash(tHash) + (index !== txHash.length - 1 ? ', ' : '') }}</a>
+                  >{{
+                    prettyTransactionHash(tHash) +
+                      (index !== txHash.length - 1 ? ", " : "")
+                  }}</a
+                >
               </div>
             </TmDataMsg>
           </div>
           <div class="action-modal-footer">
             <slot name="action-modal-footer">
-              <TmFormGroup v-if="[defaultStep, feeStep].includes(step)" class="action-modal-group">
+              <TmFormGroup
+                v-if="[defaultStep, feeStep].includes(step)"
+                class="action-modal-group"
+              >
                 <div>
                   <TmBtn
                     v-if="requiresSignIn"
@@ -278,7 +303,9 @@
             <p
               v-if="submissionError"
               class="tm-form-msg sm tm-form-msg--error submission-error"
-            >{{ submissionError }}</p>
+            >
+              {{ submissionError }}
+            </p>
           </div>
         </template>
       </div>

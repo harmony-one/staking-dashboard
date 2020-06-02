@@ -368,7 +368,7 @@ const signMethodOptions = {
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
-let processMathWalletMessage;
+let processMathWalletMessage
 
 const sessionType = {
   EXPLORE: "explore",

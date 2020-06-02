@@ -112,7 +112,7 @@
       <TmFormMsg
         name=""
         type="custom"
-        :msg="`Not enough funds to delegate, minimum ${minAmountOnes} ONEs`"
+        :msg="`Not enough funds to delegate, minimum ${minAmount} ONEs`"
       />
     </div>
 
@@ -120,7 +120,6 @@
       <b>{{ amount / to.length }} {{ denom | viewDenom }}s</b>
       will be delegated to each validator
     </div>
-
   </ActionModal>
 </template>
 
@@ -189,7 +188,7 @@ export default {
       return this.fromOptions[this.selectedIndex].maximum
     },
     isBalanceEnough() {
-      return atoms(this.balance) > ones(this.minAmount) * this.to.length
+      return atoms(this.balance) > this.minAmount
     },
     from() {
       if (!this.session.signedIn) return ``

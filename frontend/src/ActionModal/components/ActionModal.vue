@@ -825,6 +825,7 @@ export default {
       this.txConfirmResult = res
 
       this.$store.dispatch(`queryWalletBalances`)
+      this.$store.dispatch(`resetSelectedValidators`)
       this.$store
         .dispatch(`getDelegates`)
         .then(() => this.$store.dispatch(`getRewardsFromMyValidators`))

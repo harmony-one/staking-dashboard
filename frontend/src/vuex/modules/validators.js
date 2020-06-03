@@ -90,6 +90,9 @@ export default () => {
       } else {
         commit("selectValidator", select_validator.address)
       }
+    },
+    resetSelectedValidators({ commit }) {
+      commit("resetSelectedValidators")
     }
   }
 
@@ -118,6 +121,9 @@ export default () => {
     },
     deselectValidator(state, address) {
       state.selected = state.selected.filter(v => v.address !== address)
+    },
+    resetSelectedValidators(state) {
+      state.selected = []
     }
   }
 

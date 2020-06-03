@@ -114,26 +114,23 @@ const bodyParams = (method: string, params: string[]) => `{
     }`
 
 export const getBalance = async (address: string, rpc_url: string) => {
-  // const res = await axios({
-  //   method: "post",
-  //   url: rpc_url,
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json"
-  //   },
-  //   data: bodyParams("hmy_getBalance", [address, "latest"])
-  // })
+  const res = await axios({
+    method: "post",
+    url: rpc_url,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    data: bodyParams("hmy_getBalance", [address, "latest"])
+  })
 
   let coins = 0
 
   try {
-    coins = new BigNumber(Number(3000000000000000000000)).div(1e12).toNumber()
+    coins = new BigNumber(Number(res.data.result)).div(1e12).toNumber()
   } catch (e) {
     console.error(e)
   }
 
   return coins
-
-  const iframe = videoContainer.children[0]
-  const content = iframe.contentDocument || iframe.contentWindow.document
 }

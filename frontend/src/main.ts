@@ -11,6 +11,9 @@ import init from "./initializeApp"
 import { getURLParams } from "./scripts/url"
 import "@babel/polyfill"
 import SvgIcon from 'vue-svgicon'
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 // @ts-ignore
 import VueMq from "vue-mq"
 
@@ -23,6 +26,7 @@ Vue.use(Tooltip, { delay: 1 })
 Vue.use(Vuelidate)
 Vue.use(VueClipboard)
 Vue.use(InfiniteScroll)
+Vue.use(Loading)
 
 // Default tag name is 'svgicon'
 Vue.use(SvgIcon, {

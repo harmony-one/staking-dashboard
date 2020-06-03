@@ -1,5 +1,10 @@
 <template>
-  <div id="validators_table" class="table-container">
+  <div
+    id="validators_table"
+    class="table-container"
+    ref="loadingContainer"
+    style="position: relative;"
+  >
     <BaseGrid
       :sort="sort"
       :columns="columns"
@@ -37,10 +42,6 @@ export default {
     PanelPagination
   },
   props: {
-    data: {
-      type: Array,
-      required: true
-    },
     activeOnly: {
       type: Boolean,
       default: () => true
@@ -60,7 +61,9 @@ export default {
       pageIndex: 0,
       pageSize: 50
     },
-    fetchTimeoutId: null
+    fetchTimeoutId: null,
+    loading: false,
+    data: []
   }),
   computed: {
     ...mapState([`distribution`, `pool`, `session`, "delegates", "validators"]),
@@ -203,6 +206,16 @@ export default {
         this.pagination.pageIndex = 0
         this.getValidators()
       }, 300)
+    },
+    loading() {
+      if (this.loading) {
+        this.loader = this.$loading.show({
+          container: this.$refs.loadingContainer,
+          canCancel: false
+        })
+      } else if (this.loader) {
+        this.loader.hide()
+      }
     }
   },
   // watch: {
@@ -228,14 +241,21 @@ export default {
       })
     },
     getValidators() {
-      this.$store.dispatch(`getValidatorsWithParams`, {
-        active: this.activeOnly,
-        page: this.pagination.pageIndex,
-        size: this.pagination.pageSize,
-        sortProperty: this.sort.property,
-        sortOrder: this.sort.order,
-        search: this.search
-      })
+      this.loading = true
+
+      this.$store
+        .dispatch(`getValidatorsWithParams`, {
+          active: this.activeOnly,
+          page: this.pagination.pageIndex,
+          size: this.pagination.pageSize,
+          sortProperty: this.sort.property,
+          sortOrder: this.sort.order,
+          search: this.search
+        })
+        .then(data => {
+          this.data = data
+          this.loading = false
+        })
     }
   }
 }

@@ -29,18 +29,21 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
 
       if (!rootState.connection.connected) return
 
-      try {
-        const pool = await node.get.pool()
-        commit(`setPool`, pool)
+      state.loading = false
+      state.loaded = false
 
-        state.error = null
-        state.loading = false
-        state.loaded = true
-      } catch (error) {
-        state.error = error
-        state.loading = false
-        state.loaded = false
-      }
+      // try {
+      //   const pool = await node.get.pool()
+      //   commit(`setPool`, pool)
+      //
+      //   state.error = null
+      //   state.loading = false
+      //   state.loaded = true
+      // } catch (error) {
+      //   state.error = error
+      //   state.loading = false
+      //   state.loaded = false
+      // }
     }
   }
 });

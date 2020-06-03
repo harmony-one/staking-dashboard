@@ -32,7 +32,6 @@ export default () => {
 
       commit("setLoaded", true)
 
-      commit("setValidators", data.validators)
       commit("setTotal", data.total)
       commit("setTotalActive", data.total_active)
       commit("setTotalFound", data.totalFound)
@@ -75,7 +74,7 @@ export default () => {
 
   const mutations = {
     setValidators(state, validators) {
-      state.validators = validators
+      // state.validators = validators
     },
     setTotal(state, total) {
       state.total = total

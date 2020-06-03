@@ -142,7 +142,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       if (!interval) {
         interval = setInterval(
           () => dispatch("loadNetworkInfo"),
-          POLLING_TIMEOUT_SEC * 1000
+          POLLING_TIMEOUT_SEC * 3000
         )
       }
 

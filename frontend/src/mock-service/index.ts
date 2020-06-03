@@ -29,6 +29,10 @@ export function fetchValidators(networkId: string) {
   })
 }
 
+let last_query = ""
+let last_time = Date.now()
+let cache = {}
+
 export function fetchValidatorsWithParams(
   networkId: string,
   params: {
@@ -44,18 +48,25 @@ export function fetchValidatorsWithParams(
     return []
   }
 
+  const query = queryString.stringify(params)
+
+  if (query === last_query && Date.now() - last_time < 1000 * 60) {
+    return Promise.resolve(cache)
+  }
+
+  last_time = Date.now()
+  last_query = query
+
   return axios
-    .get(
-      `${API_URL}/networks/${networkId}/validators_with_page?${queryString.stringify(
-        params
-      )}`
-    )
+    .get(`${API_URL}/networks/${networkId}/validators_with_page?${query}`)
     .then(rez => {
       const validators: any[] = rez.data.validators.map((v: any) =>
         remapValidator(v, false)
       )
 
-      return { ...rez.data, validators }
+      cache = { ...rez.data, validators }
+
+      return cache
     })
     .catch(() => {
       return { validators: [], totalActive: 0, total: 0 }
@@ -116,7 +127,7 @@ export const getBalance = async (address: string, rpc_url: string) => {
   let coins = 0
 
   try {
-    coins = new BigNumber(Number(res.data.result)).div(1e12).toNumber();
+    coins = new BigNumber(Number(res.data.result)).div(1e12).toNumber()
   } catch (e) {
     console.error(e)
   }

@@ -1,10 +1,5 @@
 <template>
-  <PageContainer
-    :managed="true"
-    :data-empty="validators && validators.length === 0"
-    :epoch="true"
-    title="Validators"
-  >
+  <PageContainer :managed="true" :epoch="true" title="Validators">
     <template slot="managed-body">
       <div class="networkInfo">
         <div class="networkInfo-column">
@@ -15,7 +10,9 @@
             {{ networkInfo.effective_median_stake | ones | zeroDecimals }} ONE
           </div>
           <div id="validators_total_stake" class="networkInfo-item">
-            <h4 v-tooltip.top="tooltips.v_list.total_stake">Total Network Stake:</h4>
+            <h4 v-tooltip.top="tooltips.v_list.total_stake">
+              Total Network Stake:
+            </h4>
             {{ networkInfo["total-staking"] | ones | zeroDecimals }} ONE
           </div>
           <div class="networkInfo-item">
@@ -55,19 +52,11 @@
           </div>
         </div>
         <TableValidators
-          :data="validators"
           :active-only="activeOnly"
           :search="searchTerm.trim()"
           show-on-mobile="expectedReturns"
         />
-        <div
-          v-if="validators && validators.length === 0 && searchTerm"
-          class="no-results"
-        >
-          No results for these search terms
-        </div>
       </div>
-      <TmDataLoading v-if="isLoading" />
     </template>
   </PageContainer>
 </template>
@@ -78,11 +67,9 @@ import TableValidators from "staking/TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
-import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
-import PercentageChange from "./components/PercentageChange"
 
 export default {
   name: `tab-validators`,
@@ -90,8 +77,7 @@ export default {
     TableValidators,
     PageContainer,
     TmField,
-    TmBtn,
-    TmDataLoading
+    TmBtn
   },
   filters: {
     ones,
@@ -112,30 +98,19 @@ export default {
       isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
     }),
     ...mapState({
-      allValidators: state =>
-        state.validators.loaded ? state.validators.validators : [],
       total: state => state.validators.total,
       totalActive: state => state.validators.totalActive
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
-    activeValidators: state =>
-      state.allValidators.filter(v => v.active === true),
-    validators: state => {
-      return state.allValidators
-    },
     prettyTransactionHash() {
       return this.networkInfo.current_block_hash
         ? transactionToShortString(this.networkInfo.current_block_hash)
         : ""
     },
     linkToTransaction() {
-      const blocksUrl = this.networkConfig.explorer_url + '/block/'
+      const blocksUrl = this.networkConfig.explorer_url + "/block/"
       return blocksUrl + this.networkInfo.current_block_hash
     }
-  },
-  async mounted() {
-    // this.$store.dispatch(`getValidators`)
-    this.$store.dispatch("getDelegates")
   }
 }
 </script>

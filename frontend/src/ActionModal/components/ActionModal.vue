@@ -624,6 +624,11 @@ export default {
       this.$store.commit(`setModalId`, this.transactionData.type)
       this.gasPrice = config.default_gas_price.toFixed(9)
 
+      if (Array.isArray(this.transactionData.validatorAddress)) {
+        this.gasPrice =
+          this.gasPrice * this.transactionData.validatorAddress.length
+      }
+
       // this.trackEvent(`event`, `modal`, this.title)
       // this.checkFeatureAvailable()
       // this.gasPrice = config.default_gas_price.toFixed(9)

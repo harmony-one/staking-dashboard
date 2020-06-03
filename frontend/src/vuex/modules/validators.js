@@ -7,7 +7,8 @@ export default () => {
     validators: [],
     total: 0,
     totalActive: 0,
-    totalFound: 0
+    totalFound: 0,
+    selected: []
   }
 
   const actions = {
@@ -19,15 +20,25 @@ export default () => {
         const pages = Math.ceil(params.size / 100)
         data = []
         for (let i = 0; i < pages; i++) {
-          data.push(await fetchValidatorsWithParams(rootState.connection.networkConfig.id, {
-            ...params, page: i, size: 100
-          }))
+          data.push(
+            await fetchValidatorsWithParams(
+              rootState.connection.networkConfig.id,
+              {
+                ...params,
+                page: i,
+                size: 100
+              }
+            )
+          )
         }
         const validators = data.reduce((a, c) => a.concat(...c.validators), [])
         data = data[0]
         data.validators = validators
       } else {
-        data = await fetchValidatorsWithParams(rootState.connection.networkConfig.id, params)
+        data = await fetchValidatorsWithParams(
+          rootState.connection.networkConfig.id,
+          params
+        )
       }
 
       commit("setLoaded", true)
@@ -35,7 +46,6 @@ export default () => {
       commit("setTotal", data.total)
       commit("setTotalActive", data.total_active)
       commit("setTotalFound", data.totalFound)
-
 
       return data.validators
     },
@@ -69,6 +79,17 @@ export default () => {
       // commit("setValidators", validators)
 
       return validators
+    },
+    selectValidator({ commit, rootState }, select_validator) {
+      const validator = state.selected.find(
+        v => v.address === select_validator.address
+      )
+
+      if (validator) {
+        commit("deselectValidator", select_validator.address)
+      } else {
+        commit("selectValidator", select_validator.address)
+      }
     }
   }
 
@@ -91,6 +112,12 @@ export default () => {
     setLoaded(state, loaded) {
       state.loading = false
       state.loaded = loaded
+    },
+    selectValidator(state, address) {
+      state.selected.push({ address })
+    },
+    deselectValidator(state, address) {
+      state.selected = state.selected.filter(v => v.address !== address)
     }
   }
 

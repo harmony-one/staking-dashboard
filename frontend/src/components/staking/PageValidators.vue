@@ -34,11 +34,15 @@
           />
           <div class="toggles">
             <TmBtn
-              value="Delegate"
+              :value="
+                selectedValidators.length
+                  ? `Delegate (${selectedValidators.length})`
+                  : 'Delegate'
+              "
               v-tooltip.top="tooltips.v_list.multi_delegate"
               class="btn-radio secondary"
               @click.native="multidelgate"
-              v-bind:disabled="selectedItem.length === 0"
+              v-bind:disabled="selectedValidators.length === 0"
             />
             <TmBtn
               value="Elected"
@@ -65,20 +69,19 @@
         />
       </div>
 
-        <MultidelegationModal
-                ref="multidelegationModal"
-                :from-options="delegationTargetOptions()"
-                :to="selectedValidators"
-                :denom="bondDenom"
-                :minAmount="1000 * selectedValidators.length"
-        />
-
+      <MultidelegationModal
+        ref="multidelegationModal"
+        :from-options="delegationTargetOptions()"
+        :to="selectedValidators"
+        :denom="bondDenom"
+        :minAmount="1000 * selectedValidators.length"
+      />
     </template>
   </PageContainer>
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapGetters, mapState } from "vuex"
 import TableValidators from "staking/TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
@@ -87,6 +90,8 @@ import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
 import MultidelegationModal from "src/ActionModal/components/MultidelegationModal"
+import { formatBech32 } from "../../filters"
+import isEmpty from "lodash.isempty"
 
 export default {
   name: `tab-validators`,
@@ -109,6 +114,8 @@ export default {
     activeOnly: true
   }),
   computed: {
+    ...mapState([`session`, `delegates`, `validators`]),
+    ...mapGetters([`bondDenom`, `committedDelegations`, `liquidAtoms`]),
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
@@ -117,7 +124,8 @@ export default {
     }),
     ...mapState({
       total: state => state.validators.total,
-      totalActive: state => state.validators.totalActive
+      totalActive: state => state.validators.totalActive,
+      selectedValidators: state => state.validators.selected
     }),
     ...mapState({ isLoading: state => state.validators.loading }),
     prettyTransactionHash() {
@@ -136,6 +144,48 @@ export default {
       window.ga("send", "event", "multidelegate", "open", "modal")
       this.$refs.multidelegationModal.open()
     },
+    delegationTargetOptions(
+      { session, liquidAtoms, committedDelegations, $route, delegates } = this
+    ) {
+      if (!session.signedIn) return []
+
+      //- First option should always be your wallet (i.e normal delegation)
+      const myWallet = [
+        {
+          address: session.address,
+          maximum: Math.floor(liquidAtoms),
+          key: `My Wallet - ${formatBech32(session.address, false, 20)}`,
+          value: 0
+        }
+      ]
+      const bondedValidators = Object.keys(committedDelegations)
+      if (isEmpty(bondedValidators)) {
+        return myWallet
+      }
+      //- The rest of the options are from your other bonded validators
+      //- We skip the option of redelegating to the same address
+      const redelegationOptions = bondedValidators
+        .filter(address => address != $route.params.validator)
+        .reduce((validators, address) => {
+          const delegate = delegates.delegates.find(function(validator) {
+            return validator.operator_address === address
+          })
+
+          const name = delegate.validator_info && delegate.validator_info.name
+
+          return validators.concat({
+            address: address,
+            maximum: Math.floor(committedDelegations[address]),
+            key: `${name} - ${formatBech32(
+              delegate.delegator_address,
+              false,
+              20
+            )}`,
+            value: validators.length + 1
+          })
+        }, [])
+      return myWallet.concat(redelegationOptions)
+    }
   }
 }
 </script>

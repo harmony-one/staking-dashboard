@@ -121,6 +121,7 @@ export default {
         {
           title: ``,
           value: `select`,
+          key: item => item.address,
           tooltip: tooltips.v_list.select,
           width: "60px",
           renderComponent: ValidatorSelect // render as Component - use custom Vue components

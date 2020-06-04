@@ -50,12 +50,12 @@ export function fetchValidatorsWithParams(
 
   const query = queryString.stringify(params)
 
-  if (query === last_query && Date.now() - last_time < 1000 * 60) {
+  if (networkId + query === last_query && Date.now() - last_time < 1000 * 60) {
     return Promise.resolve(cache)
   }
 
   last_time = Date.now()
-  last_query = query
+  last_query = networkId + query
 
   return axios
     .get(`${API_URL}/networks/${networkId}/validators_with_page?${query}`)
@@ -98,12 +98,6 @@ export function fetchNetworkInfo(networkId: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/staking_network_info`)
     .then(rez => rez.data)
-}
-
-export function mockTransfer(data: any) {
-  console.log("Data to send -> ", data)
-  // return axios.get(`${API_URL}/accounts/${data.from_address}/transfers`).then(rez => rez.data)
-  return { gas_estimate: "21000" }
 }
 
 const bodyParams = (method: string, params: string[]) => `{

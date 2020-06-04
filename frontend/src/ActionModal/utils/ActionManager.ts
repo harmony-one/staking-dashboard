@@ -1,7 +1,6 @@
 import config from "src/config"
 import { getSigner } from "./signer"
 import { uatoms } from "@/scripts/num"
-import { mockTransfer } from "../../mock-service"
 import { waitTransactionConfirm } from "src/scripts/extension-utils"
 
 import {
@@ -94,10 +93,12 @@ export default class ActionManager {
     }
   }
 
-  async simulate(memo: any) {
-    const rez = await mockTransfer(memo)
-
-    return rez.gas_estimate
+  async simulate() {
+    if (this.messageType === "MsgSend") {
+      return "21000"
+    } else {
+      return "25000"
+    }
   }
 
   async send(memo: any, txMetaData: any, networkConfig: INetworkConfig) {

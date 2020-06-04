@@ -100,12 +100,6 @@ export function fetchNetworkInfo(networkId: string) {
     .then(rez => rez.data)
 }
 
-export function mockTransfer(data: any) {
-  console.log("Data to send -> ", data)
-  // return axios.get(`${API_URL}/accounts/${data.from_address}/transfers`).then(rez => rez.data)
-  return { gas_estimate: "21000" }
-}
-
 const bodyParams = (method: string, params: string[]) => `{
       "jsonrpc": "2.0",
       "method": "${method}",

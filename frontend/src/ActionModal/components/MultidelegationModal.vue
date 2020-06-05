@@ -24,7 +24,12 @@
     <TmFormGroup class="action-modal-address-group" field-id="to">
       <div v-for="(item, index) in to" :key="index">
         <!--        <span>{{ item.name }}</span>-->
-        <TmField id="to" :value="item.address" type="text" readonly />
+        <div style="display: flex; flex-direction: row; align-items: center;">
+          <TmField id="to" :value="item.address" type="text" readonly />
+          <div style="margin-left: 20px; margin-right: 20px;">
+            {{ Number(amount / to.length).toFixed(2) }}
+          </div>
+        </div>
       </div>
     </TmFormGroup>
 
@@ -54,7 +59,7 @@
       field-id="amount"
       v-if="isBalanceEnough"
     >
-      <span class="input-suffix-denom">{{ viewDenom(denom) }}</span>
+      <span class="input-suffix-denom">{{ viewDenom(denom) }} in Total will be delegated</span>
       <TmFieldGroup>
         <TmField
           id="amount"
@@ -72,6 +77,19 @@
           @click.native="setMaxAmount()"
         />
       </TmFieldGroup>
+
+      <div class="slider">
+        <div class="value">{{ sliderValueOutput }}%</div>
+        <input
+          v-model="sliderValue"
+          type="range"
+          min="0"
+          max="100"
+          step="10"
+          @input="change"
+        />
+      </div>
+
       <span class="form-message">
         Available to Stake:
         {{ getFromBalance() }}
@@ -177,7 +195,10 @@ export default {
   },
   data: () => ({
     amount: null,
-    selectedIndex: 0
+    selectedIndex: 0,
+    slideValue: 50,
+    slideValueOutput: 50,
+    sliderValueOutput: 50
   }),
   computed: {
     ...mapState([`session`]),
@@ -212,6 +233,10 @@ export default {
     }
   },
   methods: {
+    change() {
+      this.sliderValueOutput = this.sliderValue
+      this.amount = atoms((this.balance * this.sliderValue) / 100)
+    },
     viewDenom,
     open() {
       console.log("transactionData", this.transactionData)
@@ -262,5 +287,67 @@ export default {
   overflow: auto;
   padding: 0px 0px 10px 0px;
   margin-bottom: var(--unit);
+}
+
+.slider {
+  margin: var(--unit);
+
+  .value {
+    text-align: center;
+  }
+
+  input[type="range"] {
+    padding: 0;
+    border: none;
+    -webkit-appearance: none;
+    margin: 0;
+    width: 100%;
+  }
+  input[type="range"]:focus {
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #ddd;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 2px solid var(--blue);
+    height: 32px;
+    width: 32px;
+    border-radius: 16px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -12px;
+  }
+  input[type="range"]:focus::-webkit-slider-runnable-track {
+    background: #eee;
+    border: none;
+    outline: none;
+  }
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #ddd;
+  }
+  input[type="range"]::-moz-range-thumb {
+    -webkit-appearance: none;
+    border: 2px solid var(--blue);
+    height: 32px;
+    width: 32px;
+    border-radius: 16px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -12px;
+  }
+  input[type="range"]::-ms-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #ddd;
+  }
 }
 </style>

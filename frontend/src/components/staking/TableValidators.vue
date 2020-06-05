@@ -69,7 +69,10 @@ export default {
   computed: {
     ...mapState([`distribution`, `pool`, `session`, "delegates", "validators"]),
     ...mapState({
-      annualProvision: state => state.minting.annualProvision
+      annualProvision: state => state.minting.annualProvision,
+      isMultiDelegationSupport: state =>
+        state.session.sessionType === "extension" &&
+        state.session.extensionVersion >= 16
     }),
     ...mapState({
       totalFound: state => state.validators.totalFound
@@ -119,14 +122,6 @@ export default {
     columns() {
       let props = [
         {
-          title: ``,
-          value: `select`,
-          key: item => item.address,
-          tooltip: tooltips.v_list.select,
-          width: "60px",
-          renderComponent: ValidatorSelect // render as Component - use custom Vue components
-        },
-        {
           title: `Status`,
           value: `status`,
           tooltip: tooltips.v_list.status,
@@ -173,6 +168,17 @@ export default {
           render: value => percent(value)
         }
       ]
+
+      if (this.isMultiDelegationSupport) {
+        props.unshift({
+          title: ``,
+          value: `select`,
+          key: item => item.address,
+          tooltip: tooltips.v_list.select,
+          width: "60px",
+          renderComponent: ValidatorSelect // render as Component - use custom Vue components
+        })
+      }
 
       const aprColumn = props.find(p => p.value === "apr")
 

@@ -22,7 +22,8 @@ const processMessage = (store, type, payload) => {
       break
     case "GET_SESSION_RESPONSE":
       if (payload) {
-        store.commit(`setExtensionId`, payload.extensionId)
+        store.commit(`setExtensionInfo`, payload)
+
         if (payload.signMessage) {
           store.commit(`setActionInProgress`, true)
         }

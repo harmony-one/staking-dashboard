@@ -789,13 +789,13 @@ export default {
         } else {
           this.$store.commit(`setActionInProgress`, true)
 
+          setTimeout(() => openExtensionPopup(this.session.extensionId), 100)
+
           sendResponse = await this.actionManager.send(
             memo,
             feeProperties,
             this.networkConfig
           )
-
-          setTimeout(() => openExtensionPopup(this.session.extensionId), 100)
         }
 
         const { included, hash } = sendResponse

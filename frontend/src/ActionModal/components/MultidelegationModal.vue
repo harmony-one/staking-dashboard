@@ -59,7 +59,7 @@
       field-id="amount"
       v-if="isBalanceEnough"
     >
-      <span class="input-suffix-denom">{{ viewDenom(denom) }} in Total will be delegated</span>
+      <span class="input-suffix-denom">{{ viewDenom(denom) }}s will be delegated in total</span>
       <TmFieldGroup>
         <TmField
           id="amount"

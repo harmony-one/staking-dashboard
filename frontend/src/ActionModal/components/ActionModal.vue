@@ -212,8 +212,8 @@
               <div slot="subtitle">
                 The transaction
                 <!-- with the hash {{ txHash }} -->
-                was successfully signed and sent to the network. Waiting for it to
-                be confirmed.
+                was successfully signed and sent to the network. Waiting for it
+                to be confirmed.
                 <div v-if="txHash && Array.isArray(txHash)">
                   <br />Transactions:
                   <a
@@ -789,13 +789,13 @@ export default {
         } else {
           this.$store.commit(`setActionInProgress`, true)
 
-          openExtensionPopup(this.session.extensionId)
-
           sendResponse = await this.actionManager.send(
             memo,
             feeProperties,
             this.networkConfig
           )
+
+          setTimeout(() => openExtensionPopup(this.session.extensionId), 100)
         }
 
         const { included, hash } = sendResponse

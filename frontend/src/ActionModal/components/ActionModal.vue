@@ -212,7 +212,7 @@
               <div slot="subtitle">
                 The transaction
                 <!-- with the hash {{ txHash }} -->
-                was successfully signed and sent the network. Waiting for it to
+                was successfully signed and sent to the network. Waiting for it to
                 be confirmed.
                 <div v-if="txHash && Array.isArray(txHash)">
                   <br />Transactions:

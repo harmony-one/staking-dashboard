@@ -51,6 +51,7 @@ export default (opts = {}) => {
   store.subscribe(mutation => {
     if (mutation.type === "setConnected") {
       store.dispatch("queryWalletBalances")
+      store.dispatch(`resetSelectedValidators`)
 
       Promise.all([
         store.dispatch("getDelegates")

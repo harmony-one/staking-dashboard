@@ -21,6 +21,7 @@ export default () => {
     signedIn: false,
     sessionType: null, // local, explore, ledger, extension
     pauseHistory: false,
+    extensionVersion: 0,
     history: [],
     address: null, // Current address
     addresses: [], // Array of previously used addresses
@@ -89,9 +90,15 @@ export default () => {
     setModalId(state, modalId) {
       state.modalId = modalId
     },
-    setExtensionId(state, extensionId) {
+    setExtensionInfo(state, { extensionId, extensionVersion }) {
       state.extensionId = extensionId
-    },
+
+      if (extensionVersion) {
+        state.extensionVersion = Number(
+          extensionVersion.split(".").slice(-1)[0]
+        )
+      }
+    }
   }
 
   const actions = {

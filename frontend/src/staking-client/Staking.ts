@@ -16,6 +16,7 @@ const maxAttempts = Number(MAX_ATTEMPTS)
 export interface ITransactionData {
   type:
     | "MsgDelegate"
+    | "MsgMultiDelegate"
     | "MsgSend"
     | "MsgUndelegate"
     | "MsgWithdrawDelegationReward"

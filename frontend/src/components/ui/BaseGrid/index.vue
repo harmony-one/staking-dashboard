@@ -34,7 +34,7 @@
             }"
             v-for="(item, index) in data"
             :key="column.key ? column.key(item) : index"
-            @click="e => onRowClick(item)"
+            @click="e => (column.value === 'select') ? '' : onRowClick(item)"
             @contextmenu.prevent="() => onRowClick(item, true)"
             :style="
               column.align === 'right'
@@ -42,21 +42,18 @@
                 : { justifyContent: 'flex-start' }
             "
           >
-            <template v-if="column.render">
-              {{ column.render(item[column.value], item) }}
-            </template>
+            <template v-if="column.render">{{ column.render(item[column.value], item)}}</template>
 
             <template v-else-if="column.renderComponent">
               <component
                 :is="column.renderComponent"
                 :value="item[column.value]"
+                :id="index"
                 :data="item"
               />
             </template>
 
-            <template v-else>
-              {{ item[column.value] }}
-            </template>
+            <template v-else>{{ item[column.value] }}</template>
           </div>
         </div>
       </div>
@@ -66,7 +63,6 @@
 
 <script>
 import SortHeaderCell from "./SortHeaderCell"
-
 export default {
   name: `base-grid`,
   components: {

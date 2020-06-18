@@ -212,12 +212,23 @@
               <div slot="subtitle">
                 The transaction
                 <!-- with the hash {{ txHash }} -->
-                was successfully signed and sent the network. Waiting for it to
-                be confirmed.
-                <div v-if="txHash">
+                was successfully signed and sent to the network. Waiting for it
+                to be confirmed.
+                <div v-if="txHash && Array.isArray(txHash)">
+                  <br />Transactions:
+                  <a
+                    v-for="(item, index) in txHash"
+                    :key="index"
+                    :href="linkToTransaction(item.hash)"
+                    target="_blank"
+                  >
+                    {{ prettyTransactionHash(item.hash) }}
+                  </a>
+                </div>
+                <div v-if="txHash && !Array.isArray(txHash)">
                   <br />Transaction:
-                  <a :href="linkToTransaction" target="_blank">
-                    {{ prettyTransactionHash }}
+                  <a :href="linkToTransaction(txHash)" target="_blank">
+                    {{ prettyTransactionHash(txHash) }}
                   </a>
                 </div>
               </div>
@@ -244,10 +255,23 @@
                     : notifyMessage.body
                 }}
                 <br />
-                <br />Transaction:
-                <a :href="linkToTransaction" target="_blank">
-                  {{ prettyTransactionHash }}
-                </a>
+                <div v-if="txHash && Array.isArray(txHash)">
+                  <br />Transactions:
+                  <a
+                    v-for="(item, index) in txHash"
+                    :key="index"
+                    :href="linkToTransaction(item.hash)"
+                    target="_blank"
+                  >
+                    {{ prettyTransactionHash(item.hash) }}
+                  </a>
+                </div>
+                <div v-if="txHash && !Array.isArray(txHash)">
+                  <br />Transaction:
+                  <a :href="linkToTransaction(txHash)" target="_blank">
+                    {{ prettyTransactionHash(txHash) }}
+                  </a>
+                </div>
               </div>
             </TmDataMsg>
           </div>
@@ -368,7 +392,7 @@ const signMethodOptions = {
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
-let processMathWalletMessage;
+let processMathWalletMessage
 
 const sessionType = {
   EXPLORE: "explore",
@@ -525,18 +549,6 @@ export default {
     },
     prettyIncludedHeight() {
       return prettyInt(this.includedHeight)
-    },
-    prettyTransactionHash() {
-      return this.txHash ? transactionToShortString(this.txHash) : ""
-    },
-    linkToTransaction() {
-      return this.networkConfig
-        ? this.networkConfig.explorer_url +
-            (this.transactionData.type === "MsgSend"
-              ? "/tx/"
-              : "/staking-tx/") +
-            this.txHash
-        : ""
     }
   },
   watch: {
@@ -576,6 +588,18 @@ export default {
     }
   },
   methods: {
+    prettyTransactionHash(txHash) {
+      return txHash ? transactionToShortString(txHash) : ""
+    },
+    linkToTransaction(txHash) {
+      return this.networkConfig
+        ? this.networkConfig.explorer_url +
+            (this.transactionData.type === "MsgSend"
+              ? "/tx/"
+              : "/staking-tx/") +
+            txHash
+        : ""
+    },
     confirmModalOpen() {
       let confirmResult = false
       if (this.session.actionInProgress) {
@@ -704,6 +728,12 @@ export default {
       this.actionManager.setMessage(type, properties)
       try {
         this.gasEstimate = await this.actionManager.simulate(memo)
+
+        if (Array.isArray(this.transactionData.validatorAddress)) {
+          this.gasEstimate =
+            this.gasEstimate * this.transactionData.validatorAddress.length
+        }
+
         this.step = feeStep
       } catch ({ message }) {
         this.submissionError = `${this.submissionErrorPrefix}: ${message}.`
@@ -759,7 +789,7 @@ export default {
         } else {
           this.$store.commit(`setActionInProgress`, true)
 
-          openExtensionPopup(this.session.extensionId)
+          setTimeout(() => openExtensionPopup(this.session.extensionId), 100)
 
           sendResponse = await this.actionManager.send(
             memo,
@@ -790,9 +820,12 @@ export default {
     async waitForInclusion(includedFn) {
       this.step = inclusionStep
 
-      this.txConfirmResult = await includedFn()
+      const res = await includedFn()
+
+      this.txConfirmResult = res
 
       this.$store.dispatch(`queryWalletBalances`)
+      this.$store.dispatch(`resetSelectedValidators`)
       this.$store
         .dispatch(`getDelegates`)
         .then(() => this.$store.dispatch(`getRewardsFromMyValidators`))
@@ -889,7 +922,7 @@ export default {
   width: 500px;
   max-width: 500px;
   height: auto;
-  max-height: 550;
+  max-height: 600px;
   overflow: hidden;
   overflow-y: scroll;
   border-radius: var(--unit);

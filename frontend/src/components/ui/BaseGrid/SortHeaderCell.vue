@@ -1,6 +1,7 @@
 <template>
   <div
     :class="classNames"
+    v-if="column.value != 'select'"
     class="panel-sort-table-header"
     :style="
       column.align === 'right'

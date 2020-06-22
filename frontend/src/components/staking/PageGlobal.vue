@@ -13,7 +13,7 @@
             :on-change="value => (isLiveMode = value)"
           />
         </div>
-        <div class="info_header">Top 320 Slots</div>
+        <div class="info_header">Top {{ slotsCount }} Slots</div>
         <div class="networkInfo">
           <div class="networkInfo-column">
             <div id="validators_median_stake" class="networkInfo-item">
@@ -201,6 +201,18 @@ export default {
       return state.isLiveMode
         ? state.networkInfo.liveEpochTotalStake
         : state.networkInfo.lastEpochTotalStake
+    },
+
+    slotsCount: state => {
+      if (state.isLiveMode) {
+        return state.networkInfo.live_effective_median_stake_distro
+          ? state.networkInfo.live_effective_median_stake_distro.length
+          : 0
+      } else {
+        return state.networkInfo.effective_median_stake_distro
+          ? state.networkInfo.effective_median_stake_distro.length
+          : 0
+      }
     },
 
     effectiveMedianStake: state => {

@@ -14,8 +14,9 @@
     <TmFormGroup class="action-modal-form-group">
       <div class="form-message notice">
         <span v-if="!isRedelegation()">
-          It will take until the end of current epoch to unlock your tokens after a delegation and the
-          tokens are still slashable if the validator behaves maliciously.
+          It will take until the end of current epoch to unlock your tokens
+          after a delegation and the tokens are still slashable if the validator
+          behaves maliciously.
         </span>
         <span v-else>
           Voting power and rewards will change instantly upon redelegation —
@@ -229,8 +230,7 @@ export default {
   data: () => ({
     amount: null,
     selectedIndex: 0,
-    slideValue: 50,
-    slideValueOutput: 50,
+    sliderValue: 50,
     sliderValueOutput: 50
   }),
   computed: {

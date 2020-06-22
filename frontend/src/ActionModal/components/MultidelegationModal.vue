@@ -26,9 +26,9 @@
         <!--        <span>{{ item.name }}</span>-->
         <div style="display: flex; flex-direction: row; align-items: center;">
           <TmField id="to" :value="item.address" type="text" readonly />
-          <div style="margin-left: 20px; margin-right: 20px;">
-            {{ Number(amount / to.length).toFixed(2) }}
-          </div>
+          <div
+            style="margin-left: 20px; margin-right: 20px;"
+          >{{ Number(amount / to.length).toFixed(2) }}</div>
         </div>
       </div>
     </TmFormGroup>
@@ -80,14 +80,7 @@
 
       <div class="slider">
         <div class="value">{{ sliderValueOutput }}%</div>
-        <input
-          v-model="sliderValue"
-          type="range"
-          min="0"
-          max="100"
-          step="10"
-          @input="change"
-        />
+        <input v-model="sliderValue" type="range" min="0" max="100" step="10" @input="change" />
       </div>
 
       <span class="form-message">
@@ -101,11 +94,7 @@
         name="Wallet"
         type="custom"
       />
-      <TmFormMsg
-        v-else-if="$v.amount.$error && !$v.amount.decimal"
-        name="Amount"
-        type="numeric"
-      />
+      <TmFormMsg v-else-if="$v.amount.$error && !$v.amount.decimal" name="Amount" type="numeric" />
       <TmFormMsg
         v-else-if="$v.amount.$error && (!$v.amount.required || amount === 0)"
         name="Amount"
@@ -128,7 +117,7 @@
 
     <div v-else class="body_container">
       <TmFormMsg
-        name=""
+        name
         type="custom"
         :msg="`Not enough funds to delegate, minimum ${minAmount} ONEs`"
       />
@@ -196,8 +185,7 @@ export default {
   data: () => ({
     amount: null,
     selectedIndex: 0,
-    slideValue: 50,
-    slideValueOutput: 50,
+    sliderValue: 50,
     sliderValueOutput: 50
   }),
   computed: {

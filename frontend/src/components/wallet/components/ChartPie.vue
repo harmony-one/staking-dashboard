@@ -1,6 +1,6 @@
 <script>
 import { Doughnut } from "vue-chartjs"
-import 'chartjs-plugin-labels';
+import "chartjs-plugin-labels"
 
 export default {
   extends: Doughnut,
@@ -11,11 +11,13 @@ export default {
     },
     options: {
       type: Object,
-      default: null,
+      default: null
     }
   },
   mounted() {
     this.renderChart(this.chartdata, this.options)
+    const HTML = this.$data._chart.generateLegend()
+    this.$emit("generated", HTML)
   }
 }
 </script>

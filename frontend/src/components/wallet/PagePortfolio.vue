@@ -18,23 +18,15 @@
             title="Portfolio allocation"
             class="delegations"
           >
-            <div v-if="delegation.loading" class="delegation-body">
-              Loading...
-            </div>
+            <div v-if="delegation.loading" class="delegation-body">Loading...</div>
             <div
               v-else-if="
                 !delegations.length &&
                   !Object.keys(delegation.unbondingDelegations).length
               "
               class="delegation-body"
-            >
-              No delegations in your portfolio
-            </div>
-            <StakeAllocationBlock
-              v-else
-              :delegations="delegations"
-              class="delegation-body"
-            />
+            >No delegations in your portfolio</div>
+            <StakeAllocationBlock v-else :delegations="delegations" class="delegation-body" />
           </LightWidget>
         </div>
         <DelegationsOverview :undelegations="undelegations" />
@@ -43,7 +35,7 @@
             Pending Undelegations
           </h3>
           <Undelegations />
-        </template> -->
+        </template>-->
       </template>
     </TmPage>
   </div>
@@ -77,7 +69,11 @@
     }
   }
 
-  .delegation-body,
+  .delegation-body {
+    padding: 0 var(--unit);
+    text-align: left;
+  }
+
   .time-body {
     padding: 0 var(--unit);
     text-align: center;

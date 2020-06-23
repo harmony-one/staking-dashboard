@@ -5,7 +5,11 @@
         :chartdata="chartdata"
         :options="options"
         class="chart"
+        :width="200"
+        :height="200"
+        @generated="setLegend"
       />
+      <div class="legend-container" id="legend-container" v-html="legend"></div>
     </div>
   </div>
 </template>
@@ -31,28 +35,30 @@ export default {
   components: { ChartPie },
   props: ["delegations"],
   data: () => ({
+    legend: "",
+    totalAmount: 0,
     options: {
-      responsive: true,
+      responsive: false,
       maintainAspectRatio: false,
-      cutoutPercentage: 75,
+      cutoutPercentage: 50,
       plugins: {
-        labels: {
-          render: "percentage",
-          fontColor: function(data) {
-            const rgb = hexToRgb(data.dataset.backgroundColor[data.index])
-            const threshold = 140
-            const luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b
-            return luminance > threshold ? "black" : "white"
-          },
-          precision: 0
-        }
+        labels: false
+        // labels: {
+        //   render: "percentage",
+        //   fontColor: function(data) {
+        //     const rgb = hexToRgb(data.dataset.backgroundColor[data.index])
+        //     const threshold = 140
+        //     const luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b
+        //     return luminance > threshold ? "black" : "white"
+        //   },
+        //   precision: 0
+        // }
       },
       tooltips: {
         mode: "index",
         intersect: false,
         callbacks: {
-          title: (data, allData) =>
-            "Validator name: " + allData.labels[data[0].index],
+          title: (data, allData) => "Name: " + allData.labels[data[0].index],
           label: (data, allData) => {
             return (
               "Stake amount: " +
@@ -62,16 +68,48 @@ export default {
           }
         }
       },
-      // hover: {
-      //   mode: "nearest",
-      //   intersect: true
-      // },
       legend: {
-        position: 'bottom'
+        display: false
       },
       scales: {
         xAxes: [{ display: false }],
         yAxes: [{ display: false }]
+      },
+      legendCallback: function(chart) {
+        var legendHtml = []
+        var item = chart.data.datasets[0]
+        let totalAmount = 0
+        let chartData = []
+        for (var i = 0; i < item.data.length; i++) totalAmount += item.data[i]
+        for (var i = 0; i < item.data.length; i++) {
+          let label
+          if (chart.data.labels[i].length > 18)
+            label =
+              chart.data.labels[i].slice(0, 13) +
+              "..." +
+              chart.data.labels[i].slice(-5)
+          else label = chart.data.labels[i]
+          chartData.push({
+            background: item.backgroundColor[i],
+            label,
+            percent: Number((item.data[i] / totalAmount) * 100).toFixed(0)
+          })
+        }
+        chartData.sort((a, b) => b.percent - a.percent)
+        legendHtml.push("<ul>")
+        chartData.forEach(elem =>
+          legendHtml.push(`<li>
+            <div>
+              <span class="legend-col" style="background-color:${elem.background};"></span>
+              ${elem.label}
+            </div>
+            <div>
+              <span class="legendpercent">${elem.percent}%</span>
+            </div>
+            </li>`)
+        )
+        legendHtml.push("</ul>")
+        return legendHtml.join("")
       }
     }
   }),
@@ -81,10 +119,33 @@ export default {
       //   (summ, v) => summ + v.stake_amount,
       //   0
       // )
-
-      const colors = ['#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466',
-      '#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466',
-      '#94DE69', '#4CB7F9', '#6864FF', '#8E2ADF', '#CC3ED0', '#FD5EAB', '#FFA267', '#F0E466']
+      this.totalAmount = this.delegations.reduce((sum, v) => sum + v.amount, 0)
+      const colors = [
+        "#94DE69",
+        "#4CB7F9",
+        "#6864FF",
+        "#8E2ADF",
+        "#CC3ED0",
+        "#FD5EAB",
+        "#FFA267",
+        "#F0E466",
+        "#94DE69",
+        "#4CB7F9",
+        "#6864FF",
+        "#8E2ADF",
+        "#CC3ED0",
+        "#FD5EAB",
+        "#FFA267",
+        "#F0E466",
+        "#94DE69",
+        "#4CB7F9",
+        "#6864FF",
+        "#8E2ADF",
+        "#CC3ED0",
+        "#FD5EAB",
+        "#FFA267",
+        "#F0E466"
+      ]
 
       return {
         labels: this.delegations.map(v => v.validator),
@@ -96,11 +157,16 @@ export default {
         ]
       }
     }
+  },
+  methods: {
+    setLegend(html) {
+      this.legend = html
+    }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .chart-container-stake-allocate {
   display: flex;
   height: 50%;
@@ -108,11 +174,23 @@ export default {
 }
 
 .chart {
-  height: 300px;
-  margin: 0 auto;
+  margin: auto;
+  margin-right: 30px;
 }
-
-
+.legend-container {
+  width: 100%;
+  height: 225px;
+  overflow: auto;
+  li {
+    display: flex;
+    justify-content: space-between;
+  }
+  .legend-col {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+  }
+}
 @media screen and (max-width: 414px) {
   .chart {
     display: flex;
@@ -121,5 +199,4 @@ export default {
     width: 256px;
   }
 }
-
 </style>

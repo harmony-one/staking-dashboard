@@ -1,10 +1,9 @@
 {
-  "name": "world-core-service",
-  "version": "1.0.0",
-  "description": "World core service",
-  "author": "ym",
-  "license": "ISC",
-  "main": "server.js",
+  "name": "appengine-staking-dashboard",
+  "version": "0.0.1",
+  "description": "Node.js appengine for staking dashboard",
+  "private": true,
+  "main": "src/server.ts",
   "scripts": {
     "start": "NODE_ENV=development ts-node ./src/server.ts",
     "build": "rm -rf ./dist && tsc",

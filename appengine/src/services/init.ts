@@ -4,7 +4,7 @@ import { SyncService } from './sync';
 export const InitServices = async function () {
   const dbService = new DBService();
 
-  const syncServices = {};
+  const syncServices: Record<string, SyncService> = {};
 
   const networks = await dbService.getCollectionData('networks');
 

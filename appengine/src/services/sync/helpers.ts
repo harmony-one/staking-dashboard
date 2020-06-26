@@ -2,14 +2,14 @@ import BigNumber from 'bignumber.js';
 
 export const isNotEmpty = obj => (obj ? !!Object.keys(obj).length : false);
 
-export const bodyParams = (method: string, params?: string) => `{
+export const bodyParams = (method: string, params?: string | number) => `{
       "jsonrpc": "2.0",
       "method": "${method}",
       "params": ["${params}"],
       "id": 1
     }`;
 
-export const bodyParams2 = (method: string, params?: string) => `{
+export const bodyParams2 = (method: string, params?: string | number) => `{
       "jsonrpc": "2.0",
       "method": "${method}",
       "params": [${params}],

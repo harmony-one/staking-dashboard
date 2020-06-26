@@ -1,7 +1,8 @@
 import { asyncHandler, createError } from './helpers';
 import { DBService } from '../services/database';
+import { SyncService } from '../services/sync';
 
-export const routes = (app, db: DBService, syncServices) => {
+export const routes = (app, db: DBService, syncServices: Record<string, SyncService>) => {
   app.get(
     '/networks/:networkId/validators',
     asyncHandler(async (req, res) => {

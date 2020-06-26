@@ -1,26 +1,61 @@
-import { bodyParams, changePercentage, externalShardsByKeys } from './helpers'
-import axios, { AxiosInstance } from 'axios'
+import { AxiosInstance } from 'axios';
+import _ from 'lodash';
+
+import { bodyParams, changePercentage, externalShardsByKeys } from './helpers';
+import { IBaseServiceParams, IServices } from './interfaces';
+
+const MAX_LENGTH = 30;
+const SECOND_PER_BLOCK = 8;
 
 export class StakingNetworkInfoService {
   apiClient: AxiosInstance;
   BLOCKCHAIN_SERVER: string;
+  numOfShards = 0;
+  updateDocument;
+  getGlobalDataWithLimit;
+  globalHistory;
+  services: IServices;
 
-  cache = {
-    STAKING_NETWORK_INFO: {}
+  public cache = {
+    STAKING_NETWORK_INFO: {} as any,
+    STAKING_NETWORK_INFO_PREV_EPOCH: {} as any,
+    VOTING_POWER: {},
+    GLOBAL_SEATS: {} as any,
+    ELECTED_KEYS: [],
+    ELECTED_KEYS_SET: new Map(),
+    GLOBAL_VIEW: {},
+    RAW_STAKE: {},
+    LIVE_ELECTED_KEYS: [],
+    LIVE_RAW_STAKES: {},
+    LIVE_EFFECTIVE_STAKES: {},
+    LIVE_KEYS_PER_NODE: {},
+    STAKING_DISTRO_TABLE: {},
+    LIVE_STAKING_DISTRO_TABLE: {},
+    ELECTED_KEYS_PER_NODE: {},
+    LAST_EPOCH_METRICS: {},
+    LIVE_EPOCH_METRICS: {},
+    VALIDATORS_TOTAL_STAKE: {},
+    LIVE_VALIDATORS_CANDIDATE: [],
+    EFFECTIVE_STAKE: {},
   };
 
-  constructor(params: { server: string }) {
-    this.apiClient = axios.create({
-      baseURL: params.server,
-      // baseURL: process.env.SERVER,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
+  constructor(params: IBaseServiceParams) {
+    this.BLOCKCHAIN_SERVER = params.BLOCKCHAIN_SERVER;
+    this.updateDocument = params.updateDocument;
+    this.globalHistory = params.globalHistory;
+    this.apiClient = params.apiClient;
+    this.getGlobalDataWithLimit = params.getGlobalDataWithLimit;
+    this.services = params.services;
 
-    this.BLOCKCHAIN_SERVER = params.server;
+    this.init();
   }
+
+  getValidatorInfo = address => this.services.validatorsInfoService.getValidatorInfo(address);
+
+  init = async () => {
+    const res = await this.getGlobalDataWithLimit(this.globalHistory, 'current_epoch', MAX_LENGTH);
+    _.forEach(res, item => (this.cache.GLOBAL_VIEW[item.current_epoch] = item));
+  };
 
   getNumberOfShards = async () => {
     try {
@@ -37,7 +72,25 @@ export class StakingNetworkInfoService {
     }
   };
 
-  public getStakingNetworkInfo = () => {
+  filterGlobalCache = async currentEpoch => {
+    let epoch = parseInt(currentEpoch);
+    const lastEpoch = epoch;
+    while (this.cache.GLOBAL_VIEW[epoch]) {
+      epoch -= 1;
+    }
+    console.log(`latest ${epoch}`);
+    _.keys(this.cache.GLOBAL_VIEW).forEach(k => {
+      const key = parseInt(k);
+      if (key < epoch || key > lastEpoch) {
+        console.log(`delete key ${key}`);
+        delete this.cache.GLOBAL_VIEW[key];
+      }
+    });
+    console.log(`current ${lastEpoch}, last: ${epoch}`);
+    console.log(`array: ${_.keys(this.cache.GLOBAL_VIEW)}`);
+  };
+
+  getStakingNetworkInfo = () => {
     const stakingNetworkInfo = !this.cache.STAKING_NETWORK_INFO
       ? {}
       : {
@@ -66,12 +119,12 @@ export class StakingNetworkInfoService {
     let table = Object.keys(this.cache.ELECTED_KEYS_PER_NODE).map(nodeAddress => {
       const blsKeys = this.cache.ELECTED_KEYS_PER_NODE[nodeAddress];
       const total_stake = _.sumBy(blsKeys, k => this.cache.RAW_STAKE[k]);
-      if (this.cache.VALIDATOR_INFO[nodeAddress] == undefined) {
+      if (this.getValidatorInfo(nodeAddress) == undefined) {
         console.log(`undefine is here: ${nodeAddress}`);
       }
       return {
         address: nodeAddress,
-        name: this.cache.VALIDATOR_INFO[nodeAddress].name,
+        name: this.getValidatorInfo(nodeAddress).name,
         effective_stake: this.cache.EFFECTIVE_STAKE[blsKeys[0]],
         bid: total_stake / blsKeys.length,
         total_stake,
@@ -98,7 +151,7 @@ export class StakingNetworkInfoService {
 
       return {
         address: nodeAddress,
-        name: this.cache.VALIDATOR_INFO[nodeAddress].name,
+        name: this.getValidatorInfo(nodeAddress).name,
         effective_stake: this.cache.LIVE_EFFECTIVE_STAKES[blsKeys[0]],
         bid: _.sumBy(blsKeys, k => this.cache.LIVE_RAW_STAKES[k]) / blsKeys.length,
         total_stake: _.sumBy(blsKeys, k => this.cache.LIVE_RAW_STAKES[k]),
@@ -112,7 +165,7 @@ export class StakingNetworkInfoService {
       v => !liveTable.find(val => val.address === v.address)
     ).map(v => ({
       ...v,
-      name: this.cache.VALIDATOR_INFO[v.address] ? this.cache.VALIDATOR_INFO[v.address].name : '',
+      name: this.getValidatorInfo(v.address) ? this.getValidatorInfo(v.address).name : '',
     }));
 
     candidateTable = _.sortBy(candidateTable, e => -e.bid);
@@ -134,7 +187,7 @@ export class StakingNetworkInfoService {
 
   syncStakingNetworkInfo = async () => {
     try {
-      const res = await apiClient.post('/', bodyParams('hmy_getStakingNetworkInfo'));
+      const res = await this.apiClient.post('/', bodyParams('hmy_getStakingNetworkInfo'));
 
       const prevNetworkInfo = { ...this.cache.STAKING_NETWORK_INFO };
 
@@ -142,7 +195,7 @@ export class StakingNetworkInfoService {
         this.cache.STAKING_NETWORK_INFO = res.data.result;
       }
       let currentEpoch = null;
-      const res2 = await apiClient.post('/', bodyParams('hmy_latestHeader'));
+      const res2 = await this.apiClient.post('/', bodyParams('hmy_latestHeader'));
       if (res2.data.result) {
         this.cache.STAKING_NETWORK_INFO.current_block_number = res2.data.result.blockNumber;
         this.cache.STAKING_NETWORK_INFO.current_block_hash = res2.data.result.blockHash;
@@ -163,7 +216,7 @@ export class StakingNetworkInfoService {
       }
 
       if (!this.cache.STAKING_NETWORK_INFO.effective_median_stake) {
-        const medianStakeRes = await apiClient.post(
+        const medianStakeRes = await this.apiClient.post(
           '/',
           bodyParams('hmy_getMedianRawStakeSnapshot')
         );
@@ -175,7 +228,7 @@ export class StakingNetworkInfoService {
         }
       }
 
-      if (this.cache.GLOBAL_SEATS]) {
+      if (this.cache.GLOBAL_SEATS) {
         this.cache.STAKING_NETWORK_INFO.total_seats = this.cache.GLOBAL_SEATS.total_seats
           ? this.cache.GLOBAL_SEATS.total_seats
           : 0;
@@ -212,20 +265,24 @@ export class StakingNetworkInfoService {
       // Store to firestore the previous global view.
       if (!this.cache.GLOBAL_VIEW[currentEpoch]) {
         if (this.cache.GLOBAL_VIEW[currentEpoch - 1]) {
-          await updateDocument(
-            globalHistory,
+          await this.updateDocument(
+            this.globalHistory,
             `${currentEpoch - 1}`,
             this.cache.GLOBAL_VIEW[currentEpoch - 1]
           );
         }
-        await updateDocument(globalHistory, `${currentEpoch}`, this.cache.STAKING_NETWORK_INFO);
+        await this.updateDocument(
+          this.globalHistory,
+          `${currentEpoch}`,
+          this.cache.STAKING_NETWORK_INFO
+        );
       }
 
       this.cache.GLOBAL_VIEW[currentEpoch] = this.cache.STAKING_NETWORK_INFO;
       if (this.cache.GLOBAL_VIEW[currentEpoch - MAX_LENGTH]) {
         delete this.cache.GLOBAL_VIEW[currentEpoch - MAX_LENGTH];
       }
-      await filterGlobalCache(currentEpoch);
+      await this.filterGlobalCache(currentEpoch);
       return {
         ...this.cache.STAKING_NETWORK_INFO,
         history: this.cache.GLOBAL_VIEW,
@@ -237,12 +294,12 @@ export class StakingNetworkInfoService {
 
   callSuperCommittees = async () => {
     try {
-      const res = await apiClient.post('/', bodyParams('hmy_getSuperCommittees'));
-      if (numOfShards === 0) {
-        numOfShards = await getNumberOfShards();
-        console.log(`numOfShards ${numOfShards}`);
+      const res = await this.apiClient.post('/', bodyParams('hmy_getSuperCommittees'));
+      if (this.numOfShards === 0) {
+        this.numOfShards = await this.getNumberOfShards();
+        console.log(`this.numOfShards ${this.numOfShards}`);
       }
-      const externalShardKeys = _.range(numOfShards).map(e => {
+      const externalShardKeys = _.range(this.numOfShards).map(e => {
         const total = _.get(
           res,
           `data.result.current.quorum-deciders.shard-${e}.committee-members`
@@ -258,7 +315,7 @@ export class StakingNetworkInfoService {
       const electedKeys = [];
       const effectiveStakes = {};
       const electedKeysPerNode = {};
-      const externalShards = _.range(numOfShards).map(e => {
+      const externalShards = _.range(this.numOfShards).map(e => {
         const total = _.get(
           res,
           `data.result.current.quorum-deciders.shard-${e}.committee-members`
@@ -299,7 +356,7 @@ export class StakingNetworkInfoService {
       this.cache.ELECTED_KEYS_PER_NODE = electedKeysPerNode;
       this.cache.LAST_EPOCH_METRICS = null;
 
-      const calculateTotalStakeByShard = (shard, type, address) => {
+      const calculateTotalStakeByShard = (shard, type, address?) => {
         const committeeMembers = _.get(
           res,
           `data.result.${type}.quorum-deciders.shard-${shard}.committee-members`
@@ -325,13 +382,13 @@ export class StakingNetworkInfoService {
       // for apr calculating
       this.cache.VALIDATORS_TOTAL_STAKE = {};
 
-      if (this.cache.VALIDATORS) {
-        this.cache.VALIDATORS.forEach(address => {
-          const currentTotalStake = _.sumBy(_.range(numOfShards), shard =>
+      if (this.services.validatorsInfoService.cache.VALIDATORS) {
+        this.services.validatorsInfoService.cache.VALIDATORS.forEach(address => {
+          const currentTotalStake = _.sumBy(_.range(this.numOfShards), shard =>
             calculateTotalStakeByShard(shard, 'current', address)
           );
 
-          const previousTotalStake = _.sumBy(_.range(numOfShards), shard =>
+          const previousTotalStake = _.sumBy(_.range(this.numOfShards), shard =>
             calculateTotalStakeByShard(shard, 'previous', address)
           );
 
@@ -343,15 +400,13 @@ export class StakingNetworkInfoService {
       }
 
       this.cache.LAST_EPOCH_METRICS = {
-        lastEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
+        lastEpochTotalStake: _.sumBy(_.range(this.numOfShards), shard =>
           calculateTotalStakeByShard(shard, 'current')
         ),
-        // currentEpochTotalStake: _.sumBy(_.range(numOfShards), shard =>
+        // currentEpochTotalStake: _.sumBy(_.range(this.numOfShards), shard =>
         //   calculateTotalStakeByShard(shard, 'current')
         // ),
-        lastEpochEffectiveStake: parseFloat(
-          _.get(res, 'data.result.current.epos-median-stake', 0)
-        ),
+        lastEpochEffectiveStake: parseFloat(_.get(res, 'data.result.current.epos-median-stake', 0)),
       };
 
       this.cache.GLOBAL_SEATS.total_seats = _.get(res, 'data.result.current.external-slot-count')
@@ -367,14 +422,14 @@ export class StakingNetworkInfoService {
         return cur;
       }, new Set());
     } catch (err) {
-      console.log(`error when updatingVotingPower for ${BLOCKCHAIN_SERVER}`, err);
+      console.log(`error when updatingVotingPower for ${this.BLOCKCHAIN_SERVER}`, err);
     }
   };
 
   callMedianRawStakeSnapshot = async () => {
     let res = null;
     try {
-      res = await apiClient.post('/', bodyParams('hmy_getMedianRawStakeSnapshot'));
+      res = await this.apiClient.post('/', bodyParams('hmy_getMedianRawStakeSnapshot'));
 
       const liveRawStakes = {};
       const liveElectedKeys = [];
@@ -441,7 +496,7 @@ export class StakingNetworkInfoService {
       this.cache.LIVE_VALIDATORS_CANDIDATE = candidates;
     } catch (err) {
       console.log(
-        `error when callMedianRawStakeSnapshot for ${BLOCKCHAIN_SERVER}`,
+        `error when callMedianRawStakeSnapshot for ${this.BLOCKCHAIN_SERVER}`,
         err,
         res.result
       );

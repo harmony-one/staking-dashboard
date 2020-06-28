@@ -14,7 +14,7 @@ RUN npm install
 EXPOSE 9080
 
 # Run the specified command within the container.
-CMD [ "npm", "serve" ]
+CMD [ "npm", "run", "serve" ]
 
 # Copy the rest of your app's source code from your host to your image filesystem.
 COPY . .

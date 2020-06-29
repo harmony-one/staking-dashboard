@@ -420,8 +420,7 @@ export class ValidatorsInfoService {
 
   getValidatorInfo = address => this.cache.VALIDATOR_INFO[address];
 
-  getValidatorHistory = address =>
-    _.values(this.cache.VALIDATOR_INFO_HISTORY[address]).sort((a, b) => a.index - b.index);
+  getValidatorHistory = address => _.values(this.cache.VALIDATOR_INFO_HISTORY[address])
 
   getDelegationsByValidator = address => this.cache.DELEGATIONS_BY_VALIDATOR[address];
 }

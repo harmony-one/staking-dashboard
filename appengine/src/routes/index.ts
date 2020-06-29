@@ -2,8 +2,19 @@ import { asyncHandler, createError } from './helpers';
 import { DBService } from '../services/database';
 import { SyncService } from '../services/sync';
 
-let NETWORKS_CACHE: any[] = [];
-let lastNetworksCacheUpdate = Date.now()
+export interface INetwork {
+  chain_id: number;
+  chain_title: string;
+  explorer_url: string;
+  id: string;
+  logo_url: string;
+  rpc_url: string;
+  testnet: boolean;
+  title: string;
+}
+
+let NETWORKS_CACHE: INetwork[] = [];
+let lastNetworksCacheUpdate = Date.now();
 
 export const routes = (app, db: DBService, syncServices: Record<string, SyncService>) => {
   app.get(
@@ -99,20 +110,27 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   app.get(
     '/networks',
     asyncHandler(async (req, res) => {
-      if(NETWORKS_CACHE.length && Date.now() - lastNetworksCacheUpdate > 5 * 60 * 1000) {
+      if (NETWORKS_CACHE.length && Date.now() - lastNetworksCacheUpdate > 5 * 60 * 1000) {
         res.json(NETWORKS_CACHE);
       }
 
-      const data = await db.getCollectionData('networks');
+      const data: INetwork[] = await db.getCollectionData('networks');
 
       if (!data) {
         throw createError(400, 'Not found');
       }
 
       NETWORKS_CACHE = data;
-      lastNetworksCacheUpdate = Date.now()
+      lastNetworksCacheUpdate = Date.now();
 
       res.json(data);
+    })
+  );
+
+  app.get(
+    '/liveness',
+    asyncHandler(async (req, res) => {
+      res.json(true);
     })
   );
 

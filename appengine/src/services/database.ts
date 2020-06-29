@@ -16,7 +16,7 @@ export class DBService {
     this.db = admin.firestore();
   }
 
-  public getCollectionData = async (collectionName: string) => {
+  public getCollectionData = async (collectionName: string): Promise<any> => {
     const snapshot = await this.db.collection(collectionName).get();
     return snapshot.docs.map(doc => doc.data());
   };

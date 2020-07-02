@@ -60,7 +60,7 @@ export class SyncService {
     services.validatorsInfoService = this.validatorsInfoService;
 
     setInterval(async () => {
-      console.log('--------- Updating ---------', BLOCKCHAIN_SERVER);
+      console.log('--------- Updating ---------', BLOCKCHAIN_SERVER, new Date().toString());
       await this.update();
     }, SYNC_PERIOD);
 

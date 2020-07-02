@@ -78,16 +78,16 @@ export class StakingNetworkInfoService {
     while (this.cache.GLOBAL_VIEW[epoch]) {
       epoch -= 1;
     }
-    console.log(`latest ${epoch}`);
+    // console.log(`latest ${epoch}`);
     _.keys(this.cache.GLOBAL_VIEW).forEach(k => {
       const key = parseInt(k);
       if (key < epoch || key > lastEpoch) {
-        console.log(`delete key ${key}`);
+        // console.log(`delete key ${key}`);
         delete this.cache.GLOBAL_VIEW[key];
       }
     });
-    console.log(`current ${lastEpoch}, last: ${epoch}`);
-    console.log(`array: ${_.keys(this.cache.GLOBAL_VIEW)}`);
+    // console.log(`current ${lastEpoch}, last: ${epoch}`);
+    // console.log(`array: ${_.keys(this.cache.GLOBAL_VIEW)}`);
   };
 
   getStakingNetworkInfo = () => {
@@ -120,7 +120,7 @@ export class StakingNetworkInfoService {
       const blsKeys = this.cache.ELECTED_KEYS_PER_NODE[nodeAddress];
       const total_stake = _.sumBy(blsKeys, k => this.cache.RAW_STAKE[k]);
       if (this.getValidatorInfo(nodeAddress) == undefined) {
-        console.log(`undefine is here: ${nodeAddress}`);
+        // console.log(`undefine is here: ${nodeAddress}`);
       }
       return {
         address: nodeAddress,
@@ -203,7 +203,7 @@ export class StakingNetworkInfoService {
         currentEpoch = res2.data.result.epoch;
       }
 
-      console.log(`getting current Epoch ${currentEpoch} at `, currentEpoch);
+      // console.log(`getting current Epoch ${currentEpoch} at `, currentEpoch);
 
       if (
         this.cache.STAKING_NETWORK_INFO['epoch-last-block'] &&
@@ -297,7 +297,7 @@ export class StakingNetworkInfoService {
       const res = await this.apiClient.post('/', bodyParams('hmy_getSuperCommittees'));
       if (this.numOfShards === 0) {
         this.numOfShards = await this.getNumberOfShards();
-        console.log(`this.numOfShards ${this.numOfShards}`);
+        // console.log(`this.numOfShards ${this.numOfShards}`);
       }
       const externalShardKeys = _.range(this.numOfShards).map(e => {
         const total = _.get(
@@ -321,7 +321,7 @@ export class StakingNetworkInfoService {
           `data.result.current.quorum-deciders.shard-${e}.committee-members`
         );
         if (total) {
-          console.log(`total: ${total.length}`);
+          // console.log(`total: ${total.length}`);
           total.forEach(item => {
             if (!item['is-harmony-slot']) {
               const blsKey = item['bls-public-key'];
@@ -412,7 +412,7 @@ export class StakingNetworkInfoService {
       this.cache.GLOBAL_SEATS.total_seats = _.get(res, 'data.result.current.external-slot-count')
         ? _.get(res, 'data.result.current.external-slot-count')
         : 0;
-      console.log('externalShards', externalShards);
+      // console.log('externalShards', externalShards);
       this.cache.GLOBAL_SEATS.total_seats_used = _.sumBy(externalShards, e => (e ? e.external : 0));
       this.cache.GLOBAL_SEATS.externalShards = externalShards.filter(x => x);
       this.cache.ELECTED_KEYS_SET = null;

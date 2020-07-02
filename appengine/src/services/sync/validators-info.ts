@@ -54,7 +54,7 @@ export class ValidatorsInfoService {
 
       if (Array.isArray(res.data.result)) {
         this.cache.VALIDATORS = res.data.result;
-        console.log('# of validators', this.cache.VALIDATORS.length);
+        // console.log('# of validators', this.cache.VALIDATORS.length);
       }
       return res.data.result;
     } catch (err) {
@@ -90,7 +90,7 @@ export class ValidatorsInfoService {
         bodyParams2('hmy_getAllValidatorInformation', page)
       );
       if (res && res.data && res.data.result && Array.isArray(res.data.result)) {
-        console.log(`hmy_getAllValidatorInformation with page ${page}: `, res.data.result.length);
+        // console.log(`hmy_getAllValidatorInformation with page ${page}: `, res.data.result.length);
 
         res.data.result.forEach(async elem => {
           if (elem && elem.validator && elem.validator.address) {
@@ -264,10 +264,10 @@ export class ValidatorsInfoService {
         );
 
         if (res && res.data && Array.isArray(res.data.result) && isNotEmpty(res.data.result)) {
-          console.log(
-            `hmy_getAllDelegationInformation with page ${page}: `,
-            res.data.result.length
-          );
+          // console.log(
+          //   `hmy_getAllDelegationInformation with page ${page}: `,
+          //   res.data.result.length
+          // );
           res.data.result.forEach(elem => {
             if (Array.isArray(elem) && elem[0] && elem[0].validator_address) {
               this.cache.DELEGATIONS_BY_VALIDATOR[elem[0].validator_address] = elem;
@@ -290,7 +290,7 @@ export class ValidatorsInfoService {
     while (totalValidators < this.cache.VALIDATORS.length) {
       const count = await this.processValidatorWithPage(page);
       totalValidators += count;
-      console.log('get validator', count);
+      // console.log('get validator', count);
       if (count === 0) {
         break;
       }

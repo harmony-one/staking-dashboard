@@ -86,11 +86,11 @@ export class SyncService {
       await this.validatorsInfoService.getElectedValidators();
       await this.validatorsInfoService.getAllValidatorsInfo();
 
-      console.log('distro calculation starting.');
+      // console.log('distro calculation starting.');
       await this.networkInfoService.calculateDistroTable();
-      console.log('distro calculation finished.');
+      // console.log('distro calculation finished.');
     } catch (err) {
-      console.log('here Error: ', err.message);
+      console.log('main update Error: ', err.message);
     }
   };
 

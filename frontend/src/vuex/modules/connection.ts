@@ -9,6 +9,10 @@ import { TFrontendValidator } from "@/mock-service/validator-helpers"
 
 const DEFAULT_NETWORK = process.env.DEFAULT_NETWORK
 
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export interface INetworkConfig {
   id: string
   chain_id: string
@@ -45,9 +49,9 @@ export interface INetworkInfo {
   live_raw_stake_distro: Array<number>
   live_effective_median_stake_distro: Array<number>
 
-  lastEpochTotalStake: number;
-  liveEpochTotalStake: number;
-  lastEpochEffectiveStake: number;
+  lastEpochTotalStake: number
+  liveEpochTotalStake: number
+  lastEpochEffectiveStake: number
   liveExternalShards: Array<{ total: number; external: number }>
   liveTotalSeatsUsed: number
   liveTotalSeats: number
@@ -135,7 +139,16 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     async setLastHeader() {},
 
     async init({ state, dispatch, commit }) {
-      const networks: INetworkConfig[] = await fetchNetworks()
+      let networks: INetworkConfig[] | null = null
+
+      while (!networks) {
+        try {
+          networks = await fetchNetworks()
+        } catch (e) {
+          console.error(e)
+          await sleep(500)
+        }
+      }
 
       const network = networks.find(network => network.id === state.network)
 
@@ -160,12 +173,12 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
 
     async loadNetworkInfo({ commit, state }) {
-      let networkInfo;
+      let networkInfo
 
       try {
         networkInfo = await fetchNetworkInfo(state.networkConfig.id)
       } catch (err) {
-        networkInfo = {};
+        networkInfo = {}
       }
 
       commit("setNetworkInfo", networkInfo)

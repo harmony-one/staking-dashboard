@@ -8,7 +8,36 @@ import {
 
 const queryString = require("query-string")
 
-const API_URL = process.env.MOCK_API_URL
+const urls = [
+  "https://hmny-t.co",
+  "https://staking-us-west.hmny.io",
+  "https://staking-explorer-test.appspot.com"
+]
+
+let urlIndex = 0
+let API_URL = urls[urlIndex]
+
+const getLiveness = (): Promise<any> =>
+  axios
+    .get(`${API_URL}/liveness`, { timeout: 3000 })
+    .then((res: any) => {
+      return res.data === true ? Promise.resolve() : Promise.reject()
+    })
+    .catch(e => {
+      console.error(e)
+
+      if (urlIndex >= urls.length - 1) {
+        urlIndex = 0
+      } else {
+        urlIndex++
+      }
+
+      API_URL = urls[urlIndex]
+
+      return getLiveness()
+    })
+
+getLiveness()
 
 export function fetchProposals() {
   return axios.get(`${API_URL}/proposals`).then(rez => rez.data)

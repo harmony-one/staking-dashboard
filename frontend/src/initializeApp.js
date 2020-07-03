@@ -30,10 +30,7 @@ export default function init(urlParams, env = process.env) {
     enableGoogleAnalytics(google_analytics_uid)
   }
 
-  const stargate = urlParams.stargate || process.env.MOCK_API_URL
-  console.log(`Expecting stargate at: ${stargate}`)
-
-  const node = Node(stargate)
+  const node = Node('')
   const store = Store({ node, apollo: {} })
 
   setGoogleAnalyticsPage(router.currentRoute.path)

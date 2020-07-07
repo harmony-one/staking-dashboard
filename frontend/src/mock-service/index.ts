@@ -9,8 +9,8 @@ import {
 const queryString = require("query-string")
 
 const urls = [
-  "https://staking-us-west.hmny.io",
   "https://hmny-t.co",
+  "https://staking-us-west.hmny.io",
   "https://staking-explorer-test.appspot.com"
 ]
 

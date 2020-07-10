@@ -49,7 +49,7 @@
 <script>
 import { mapState } from "vuex"
 import noScroll from "no-scroll"
-import AppMenu from "common/AppMenu"
+import AppMenu from "common/AppMenu/index"
 export default {
   name: `app-header`,
   components: {

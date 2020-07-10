@@ -30,11 +30,7 @@
         title="Portfolio"
         @click.native="close"
       >
-        <svgicon
-          name="profile"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="profile" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Portfolio</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -45,11 +41,7 @@
         title="Validators"
         @click.native="close"
       >
-        <svgicon
-          name="validators"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="validators" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Validators</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -60,11 +52,7 @@
         title="Analytics"
         @click.native="close"
       >
-        <svgicon
-          name="world"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="world" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Analytics</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -100,11 +88,7 @@
         title="Networks"
         @click.native="close"
       >
-        <svgicon
-          name="network"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="network" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -139,38 +123,39 @@
         <h2 class="app-menu-title">Security</h2>
       </router-link>-->
 
+      <LinkLite href="https://docs.harmony.one/home/validators">
+        Become a Validator
+      </LinkLite>
 
-      <a
-        class="app-menu-item small"
-        href="https://docs.harmony.one/home/validators"
-        @click="close"
-        target="_blank"
-      >
-        <h2 class="app-menu-title">Become a Validator</h2>
-      </a>
-      
+      <LinkLite href="https://docs.harmony.one/home/delegator">
+        Delegators Guide
+      </LinkLite>
 
-      <router-link
-        class="app-menu-item small"
-        to="/terms"
-        exact="exact"
-        title="Terms"
-        @click.native="close"
-      >
-        <h2 class="app-menu-title">Terms of Service</h2>
-      </router-link>
+      <LinkLite href=" https://docs.harmony.one/home/wallets">
+        Supported Wallets
+      </LinkLite>
 
-      <router-link
-        class="app-menu-item small"
-        to="/privacy"
-        exact="exact"
-        title="Privacy"
-        @click.native="close"
-      >
-        <h2 class="app-menu-title">Privacy Policy</h2>
-      </router-link>
+      <LinkLite href="https://harmony.validator.services/">
+        Stake Calculator
+      </LinkLite>
 
-<!-- 
+      <LinkLite href="https://explorer.harmony.one/">
+        Block Explorer
+      </LinkLite>
+
+      <LinkLite href="https://docs.harmony.one/home/validators/definitions">
+        Terms & Concepts
+      </LinkLite>
+
+      <LinkLite href="/terms" :route="true">
+        Terms of Service
+      </LinkLite>
+
+      <LinkLite href="/privacy" :route="true">
+        Privacy Policy
+      </LinkLite>
+
+      <!--
       <router-link
         class="app-menu-item small"
         to="#"
@@ -180,8 +165,6 @@
       >
         <h2 class="app-menu-title">Feedback</h2>
       </router-link> -->
-
-
 
       <router-link
         v-if="session.signedIn"
@@ -214,15 +197,15 @@
 import noScroll from "no-scroll"
 import Bech32 from "common/Bech32"
 import ConnectedNetwork from "common/TmConnectedNetwork"
-import TmBtn from "common/TmBtn"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, shortDecimals } from "scripts/num.js"
+import LinkLite from "./LinkLite"
 export default {
   name: `app-menu`,
   components: {
+    LinkLite,
     Bech32,
-    ConnectedNetwork,
-    TmBtn
+    ConnectedNetwork
   },
   filters: {
     atoms,
@@ -235,7 +218,7 @@ export default {
   },
   methods: {
     feedback() {
-      console.log('feedback')
+      console.log("feedback")
     },
     close() {
       this.$emit(`close`)

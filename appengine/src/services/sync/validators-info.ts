@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { AxiosInstance } from 'axios';
 import _ from 'lodash';
-import {isNotEmpty, bodyParams, bodyParams2, sortByParams, shuffle} from './helpers';
+import { isNotEmpty, bodyParams, bodyParams2, sortByParams, shuffle } from './helpers';
 import { IBaseServiceParams, IServices } from './interfaces';
 
 BigNumber.config({
@@ -383,7 +383,7 @@ export class ValidatorsInfoService {
 
       const totalFound = validators.length;
 
-      if(sortProperty === 'random') {
+      if (sortProperty === 'random') {
         validators = shuffle(validators.slice(0));
       } else if (sortProperty && sortOrder) {
         validators = sortByParams(validators.slice(0), sortProperty, sortOrder);
@@ -422,7 +422,7 @@ export class ValidatorsInfoService {
 
   getValidatorInfo = address => this.cache.VALIDATOR_INFO[address];
 
-  getValidatorHistory = address => _.values(this.cache.VALIDATOR_INFO_HISTORY[address])
+  getValidatorHistory = address => _.values(this.cache.VALIDATOR_INFO_HISTORY[address]);
 
   getDelegationsByValidator = address => this.cache.DELEGATIONS_BY_VALIDATOR[address];
 }

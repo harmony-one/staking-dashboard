@@ -1,4 +1,5 @@
 import { fetchValidators, fetchValidatorsWithParams } from "../../mock-service"
+import { ones } from "../../scripts/num"
 
 export default () => {
   const state = {
@@ -72,14 +73,18 @@ export default () => {
       //   })
       // }
 
+      const validators = data.validators.filter(
+        v => ones(v.total_stake) >= 10000
+      )
+
       commit("setLoaded", true)
 
       commit("setTotalActive", data.total_active)
-      commit("setTotal", data.total)
+      commit("setTotal", validators.length)
 
-      commit("setValidators", data.validators)
+      commit("setValidators", validators)
 
-      return data.validators
+      return validators
     },
 
     async setTotalFound({ commit, rootState }, total) {

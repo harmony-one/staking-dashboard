@@ -89,28 +89,26 @@ export default {
         distribution
       } = this
     ) {
-      return filteredData
-        .map(v => {
-          const delegation = this.delegates.delegates.find(
-            d => d.validator_address === v.operator_address
-          )
-          return Object.assign({}, v, {
-            small_moniker: v.moniker.toLowerCase(),
-            my_delegations: delegation ? delegation.amount : 0,
-            rewards:
-              session.signedIn && distribution.rewards[v.operator_address]
-                ? distribution.rewards[v.operator_address][this.bondDenom]
-                : 0,
-            expectedReturns: annualProvision
-              ? expectedReturns(
-                  v,
-                  parseInt(pool.pool.bonded_tokens),
-                  parseFloat(annualProvision)
-                )
-              : undefined
-          })
+      return filteredData.map(v => {
+        const delegation = this.delegates.delegates.find(
+          d => d.validator_address === v.operator_address
+        )
+        return Object.assign({}, v, {
+          small_moniker: v.moniker.toLowerCase(),
+          my_delegations: delegation ? delegation.amount : 0,
+          rewards:
+            session.signedIn && distribution.rewards[v.operator_address]
+              ? distribution.rewards[v.operator_address][this.bondDenom]
+              : 0,
+          expectedReturns: annualProvision
+            ? expectedReturns(
+                v,
+                parseInt(pool.pool.bonded_tokens),
+                parseFloat(annualProvision)
+              )
+            : undefined
         })
-        .filter(v => ones(v.total_stake) >= 10000)
+      })
     },
     sortedEnrichedValidators() {
       return this.enrichedValidators.slice(0)

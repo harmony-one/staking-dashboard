@@ -412,19 +412,19 @@ export class ValidatorsInfoService {
       })
       .filter(isNotEmpty);
 
-    return {
-      validators,
-      totalFound: validators.length,
-      total: this.cache.VALIDATORS.length,
-      total_active: this.cache.ACTIVE_VALIDATORS.length,
-    };
+    return validators;
   };
 
   cacheAllValidators = () => {
     this.cache.ALL_VALIDATORS = this.generateAllValidators();
   }
 
-  getAllValidators = () => this.cache.ALL_VALIDATORS;
+  getAllValidators = () => ({
+    validators: this.cache.ALL_VALIDATORS,
+    totalFound: this.cache.ALL_VALIDATORS.length,
+    total: this.cache.VALIDATORS.length,
+    total_active: this.cache.ACTIVE_VALIDATORS.length,
+  });
 
   getValidatorsSizes = () => {
     return {

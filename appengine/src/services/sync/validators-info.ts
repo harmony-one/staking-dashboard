@@ -402,8 +402,7 @@ export class ValidatorsInfoService {
         return {
           active: validator.active,
           apr: validator.apr,
-          operator_address: validator.operator_address,
-          status: validator.status,
+          address: validator.address,
           name: validator.name,
           rate: validator.rate,
           total_stake: validator.total_stake,

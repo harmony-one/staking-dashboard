@@ -356,48 +356,36 @@ export class ValidatorsInfoService {
       validators = !this.cache.VALIDATORS ? [] : this.cache.VALIDATORS;
     }
 
-    if (
-      pageInt < 0 ||
-      sizeInt < 0 ||
-      sizeInt > VALIDATOR_PAGE_SIZE ||
-      pageInt * sizeInt >= validators.length
-    ) {
-      return {
-        validators: [],
-        totalFound: 0,
-        total: this.cache.VALIDATORS.length,
-        total_active: this.cache.ACTIVE_VALIDATORS.length,
-      };
-    } else {
-      validators = validators
-        .map(address => {
-          return { ...this.cache.VALIDATOR_INFO[address] };
-        })
-        .filter(isNotEmpty)
-        .filter(
-          v =>
-            !search ||
-            v.name.toLowerCase().includes(search.toLowerCase()) ||
-            v.address.toLowerCase().includes(search.toLowerCase())
-        );
+    validators = validators
+      .map(address => {
+        return { ...this.cache.VALIDATOR_INFO[address] };
+      })
+      .filter(isNotEmpty);
 
-      const totalFound = validators.length;
-
-      if (sortProperty === 'random') {
-        validators = shuffle(validators.slice(0));
-      } else if (sortProperty && sortOrder) {
-        validators = sortByParams(validators.slice(0), sortProperty, sortOrder);
-      }
-
-      validators = validators.slice(pageInt * sizeInt, (pageInt + 1) * sizeInt);
-
-      return {
-        validators,
-        totalFound,
-        total: this.cache.VALIDATORS.length,
-        total_active: this.cache.ACTIVE_VALIDATORS.length,
-      };
+    if (search) {
+      validators = validators.filter(
+        v =>
+          v.name.toLowerCase().includes(search.toLowerCase()) ||
+          v.address.toLowerCase().includes(search.toLowerCase())
+      );
     }
+
+    const totalFound = validators.length;
+
+    if (sortProperty && sortOrder) {
+      validators = sortByParams(validators.slice(0), sortProperty, sortOrder);
+    }
+
+    if (pageInt && sizeInt && pageInt > 0 && sizeInt > 0) {
+      validators = validators.slice(pageInt * sizeInt, (pageInt + 1) * sizeInt);
+    }
+
+    return {
+      validators,
+      totalFound,
+      total: this.cache.VALIDATORS.length,
+      total_active: this.cache.ACTIVE_VALIDATORS.length,
+    };
   };
 
   getValidatorsSizes = () => {

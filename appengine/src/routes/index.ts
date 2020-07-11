@@ -22,7 +22,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
     asyncHandler(async (req, res) => {
       const data = syncServices[req.params.networkId].getValidators();
 
-      res.json({ validators: data });
+      res.json(data);
     })
   );
 

@@ -388,6 +388,38 @@ export class ValidatorsInfoService {
     };
   };
 
+  getAllValidators = () => {
+    let validators = !this.cache.VALIDATORS ? [] : this.cache.VALIDATORS;
+
+    validators = validators
+      .map(address => {
+        const validator = this.cache.VALIDATOR_INFO[address];
+
+        if (!validator) {
+          return null;
+        }
+
+        return {
+          active: validator.active,
+          apr: validator.apr,
+          operator_address: validator.operator_address,
+          status: validator.status,
+          name: validator.name,
+          rate: validator.rate,
+          total_stake: validator.total_stake,
+          uptime_percentage: validator.uptime_percentage,
+        };
+      })
+      .filter(isNotEmpty);
+
+    return {
+      validators,
+      totalFound: validators.length,
+      total: this.cache.VALIDATORS.length,
+      total_active: this.cache.ACTIVE_VALIDATORS.length,
+    };
+  };
+
   getValidatorsSizes = () => {
     return {
       total: this.cache.VALIDATORS.length,

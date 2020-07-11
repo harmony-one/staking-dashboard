@@ -30,6 +30,7 @@ export class ValidatorsInfoService {
 
   cache = {
     VALIDATORS: [],
+    ALL_VALIDATORS: [],
     ACTIVE_VALIDATORS: [],
     VALIDATOR_INFO: {},
     VALIDATOR_INFO_HISTORY: {},
@@ -388,7 +389,7 @@ export class ValidatorsInfoService {
     };
   };
 
-  getAllValidators = () => {
+  generateAllValidators = () => {
     let validators = !this.cache.VALIDATORS ? [] : this.cache.VALIDATORS;
 
     validators = validators
@@ -418,6 +419,12 @@ export class ValidatorsInfoService {
       total_active: this.cache.ACTIVE_VALIDATORS.length,
     };
   };
+
+  cacheAllValidators = () => {
+    this.cache.ALL_VALIDATORS = this.generateAllValidators();
+  }
+
+  getAllValidators = () => this.cache.ALL_VALIDATORS;
 
   getValidatorsSizes = () => {
     return {

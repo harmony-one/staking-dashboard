@@ -86,6 +86,8 @@ export class SyncService {
       await this.validatorsInfoService.getElectedValidators();
       await this.validatorsInfoService.getAllValidatorsInfo();
 
+      this.validatorsInfoService.cacheAllValidators();
+
       // console.log('distro calculation starting.');
       await this.networkInfoService.calculateDistroTable();
       // console.log('distro calculation finished.');

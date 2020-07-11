@@ -83,7 +83,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex"
-import TableValidators from "staking/TableValidators"
+import TableValidators from "./TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
@@ -91,7 +91,7 @@ import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
 import MultidelegationModal from "src/ActionModal/components/MultidelegationModal"
-import { formatBech32 } from "../../filters"
+import { formatBech32 } from "../../../filters"
 import isEmpty from "lodash.isempty"
 
 export default {

@@ -52,9 +52,13 @@ export function fetchValidators(networkId: string) {
   }
 
   return axios.get(`${API_URL}/networks/${networkId}/validators`).then(rez => {
-    const validators: TBlockchainValidator[] = rez.data.validators
+    const validators: any[] = rez.data.validators.map((v: any) =>
+      remapValidator(v, false)
+    )
 
-    return validators.map(v => remapValidator(v, false))
+    cache = { ...rez.data, validators }
+
+    return cache
   })
 }
 

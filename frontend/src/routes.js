@@ -17,7 +17,7 @@ export default [
     meta: {
       feature: "Validators"
     },
-    component: () => import(`./components/staking/PageValidators`)
+    component: () => import(`./components/staking/PageValidators/PageValidators`)
   },
   {
     path: `/analytics`,

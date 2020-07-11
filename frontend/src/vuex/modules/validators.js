@@ -53,9 +53,7 @@ export default () => {
     async getValidators({ commit, rootState }) {
       commit("setLoading", true)
 
-      let validators = await fetchValidators(
-        rootState.connection.networkConfig.id
-      )
+      let data = await fetchValidators(rootState.connection.networkConfig.id)
       // @ts-ignore
       // window.validators = validators
 
@@ -76,10 +74,18 @@ export default () => {
 
       commit("setLoaded", true)
 
-      // commit("setValidators", validators)
+      commit("setTotalActive", data.total_active)
+      commit("setTotal", data.total)
 
-      return validators
+      commit("setValidators", data.validators)
+
+      return data.validators
     },
+
+    async setTotalFound({ commit, rootState }, total) {
+      commit("setTotalFound", total)
+    },
+
     selectValidator({ commit, rootState }, select_validator) {
       const validator = state.selected.find(
         v => v.address === select_validator.address

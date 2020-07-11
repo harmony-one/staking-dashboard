@@ -21,9 +21,9 @@ import { expectedReturns } from "scripts/returns"
 import BaseGrid from "src/components/ui/BaseGrid"
 import PanelPagination from "src/components/ui/BaseGrid/PanelPagination"
 
-import ValidatorSelect from "./components/ValidatorSelect"
-import ValidatorStatus from "./components/ValidatorStatus"
-import ValidatorName from "./components/ValidatorName"
+import ValidatorSelect from "../components/ValidatorSelect"
+import ValidatorStatus from "../components/ValidatorStatus"
+import ValidatorName from "../components/ValidatorName"
 
 import tooltips from "src/components/tooltips"
 
@@ -35,6 +35,7 @@ import {
   zeroDecimals,
   twoDecimals
 } from "scripts/num"
+import { shuffle, sortByParams } from "./helpers"
 
 export default {
   name: `table-validators`,
@@ -55,7 +56,7 @@ export default {
   data: () => ({
     query: ``,
     sort: {
-      property: `uptime_percentage`,
+      property: ``,
       order: `desc`
     },
     pagination: {
@@ -80,7 +81,7 @@ export default {
     ...mapGetters([`committedDelegations`, `bondDenom`, `lastHeader`]),
     enrichedValidators(
       {
-        data,
+        filteredData,
         pool,
         annualProvision,
         committedDelegations,
@@ -88,7 +89,7 @@ export default {
         distribution
       } = this
     ) {
-      return data
+      return filteredData
         .map(v => {
           const delegation = this.delegates.delegates.find(
             d => d.validator_address === v.operator_address
@@ -142,7 +143,7 @@ export default {
           tooltip: tooltips.v_list.average_apr,
           width: "200px",
           align: "right",
-          render: value => percent(value)
+          render: (value, item) => (item.apr === null ? "new" : percent(value))
         },
         {
           title: `Stake`,
@@ -166,7 +167,7 @@ export default {
           tooltip: tooltips.v_list.uptime,
           width: "110px",
           align: "right",
-          render: value => percent(value)
+          render: (value, item) => (item.apr === null ? "new" : percent(value))
         }
       ]
 
@@ -200,29 +201,60 @@ export default {
       }
 
       return props
+    },
+    filteredData() {
+      const { pagination, activeOnly, sort, search } = this
+      const { property: sortProperty, order: sortOrder } = sort
+      const { pageIndex, pageSize } = pagination
+      let validators = this.data
+
+      if (search) {
+        validators = validators.filter(
+          v =>
+            v.name.toLowerCase().includes(search.toLowerCase()) ||
+            v.address.toLowerCase().includes(search.toLowerCase())
+        )
+      }
+
+      if (activeOnly) {
+        validators = validators.filter(v => v.active)
+      }
+
+      this.$store.dispatch(`setTotalFound`, validators.length)
+
+      if (sortProperty && sortOrder) {
+        validators = sortByParams(validators.slice(0), sortProperty, sortOrder)
+      }
+
+      validators = validators.slice(
+        pageIndex * pageSize,
+        (pageIndex + 1) * pageSize
+      )
+
+      return validators
     }
   },
   watch: {
-    activeOnly: function() {
-      this.getValidators()
-    },
-    "sort.order": function() {
-      this.getValidators()
-    },
-    "sort.property": function() {
-      this.getValidators()
-    },
-    "pagination.pageIndex": function() {
-      this.getValidators()
-    },
-    search: function() {
-      clearTimeout(this.fetchTimeoutId)
-
-      this.fetchTimeoutId = setTimeout(() => {
-        this.pagination.pageIndex = 0
-        this.getValidators()
-      }, 300)
-    },
+    // filteredData: function() {
+    //   this.$store.dispatch(`setTotalFound`, this.filteredData.length)
+    // },
+    // "sort.order": function() {
+    //   this.getValidators()
+    // },
+    // "sort.property": function() {
+    //   this.getValidators()
+    // },
+    // "pagination.pageIndex": function() {
+    //   this.getValidators()
+    // },
+    // search: function() {
+    //   clearTimeout(this.fetchTimeoutId)
+    //
+    //   this.fetchTimeoutId = setTimeout(() => {
+    //     this.pagination.pageIndex = 0
+    //     this.getValidators()
+    //   }, 300)
+    // },
     loading() {
       if (this.loading) {
         this.loader = this.$loading.show({
@@ -234,14 +266,6 @@ export default {
       }
     }
   },
-  // watch: {
-  //   "sort.property": function() {
-  //     this.showing = 15
-  //   },
-  //   "sort.order": function() {
-  //     this.showing = 15
-  //   }
-  // },
   mounted() {
     this.$store.dispatch(`getPool`)
     this.$store.dispatch(`getRewardsFromMyValidators`)
@@ -259,19 +283,10 @@ export default {
     getValidators() {
       this.loading = true
 
-      this.$store
-        .dispatch(`getValidatorsWithParams`, {
-          active: this.activeOnly,
-          page: this.pagination.pageIndex,
-          size: this.pagination.pageSize,
-          sortProperty: this.sort.property,
-          sortOrder: this.sort.order,
-          search: this.search
-        })
-        .then(data => {
-          this.data = data
-          this.loading = false
-        })
+      this.$store.dispatch(`getValidators`).then(data => {
+        this.data = shuffle(data)
+        this.loading = false
+      })
     }
   }
 }

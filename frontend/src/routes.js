@@ -159,6 +159,16 @@ export default [
     }
   },
   {
+    path: `/onewallet`,
+    name: `onewallet`,
+    components: {
+      session: require(`./components/common/TmSessionOneWallet`).default
+    },
+    meta: {
+      feature: "Session"
+    }
+  },
+  {
     path: `/existing`,
     name: `existing`,
     components: {

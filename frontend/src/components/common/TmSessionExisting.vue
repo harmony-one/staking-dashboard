@@ -35,6 +35,14 @@
           route="mathwallet"
         />
         <LiSession
+          v-if="!isMobileApp"
+          id="use-onewallet"
+          icon="extension"
+          title="Use Harmony One Wallet"
+          route="onewallet"
+        />
+
+        <LiSession
           v-if="session.insecureMode"
           id="recover-with-backup"
           icon="settings_backup_restore"

@@ -121,7 +121,7 @@ export default {
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
-      isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading,
+      isNetworkInfoLoading: state => !!state.connection.networkConfig.id,
       isMultiDelegationSupport: state =>
         state.session.sessionType === "extension" &&
         state.session.extensionVersion >= 16

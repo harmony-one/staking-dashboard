@@ -82,13 +82,17 @@ export default () => {
       commit("setTotalActive", data.total_active)
       commit("setTotal", validators.length)
 
-      commit("setValidators", validators)
+      commit("setTotalFound", data.total_active)
+
+      // commit("setValidators", validators)
 
       return validators
     },
 
-    async setTotalFound({ commit, rootState }, total) {
-      commit("setTotalFound", total)
+    async setTotalFound({ commit, state, rootState }, total) {
+      if (state.totalFound !== total) {
+        commit("setTotalFound", total)
+      }
     },
 
     selectValidator({ commit, rootState }, select_validator) {

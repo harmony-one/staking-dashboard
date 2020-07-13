@@ -46,10 +46,25 @@ export function fetchNetworks() {
   return axios.get(`${API_URL}/networks`).then(rez => rez.data)
 }
 
+let validatorsCache: any = null
+let lastNetwork = ""
+let last_time_v = Date.now()
+
 export function fetchValidators(networkId: string) {
   if (!networkId) {
     return []
   }
+
+  if (
+    !!validatorsCache &&
+    Date.now() - last_time_v < 1000 * 60 &&
+    lastNetwork === networkId
+  ) {
+    return Promise.resolve(validatorsCache)
+  }
+
+  lastNetwork = networkId
+  last_time_v = Date.now()
 
   return axios.get(`${API_URL}/networks/${networkId}/validators`).then(rez => {
     const validators: any[] = rez.data.validators.map((v: any) =>
@@ -57,6 +72,8 @@ export function fetchValidators(networkId: string) {
     )
 
     cache = { ...rez.data, validators }
+
+    validatorsCache = cache
 
     return cache
   })

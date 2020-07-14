@@ -18,21 +18,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   },
   actions: {
     async getMintingParameters({ state, commit, rootState }) {
-      if (!rootState.connection.connected || state.loaded) return
-
-      state.loading = true
-      try {
-        await Promise.all([
-          node.get
-            .annualProvisionedTokens()
-            .then(parseFloat)
-            .then((provision: any) => commit("setAnnualProvision", provision))
-        ])
-        state.loaded = true
-      } catch (error) {
-        state.error = error.message
-      }
-      state.loading = false
+      return
     }
   }
-});
+})

@@ -1,4 +1,3 @@
-import uniqBy from "lodash.uniqby"
 import Vue from "vue"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
@@ -65,86 +64,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     async initializeWallet({ dispatch }) {
       await dispatch(`getAllTxs`)
     },
-    async parseAndSetTxs(
-      { commit, dispatch, state },
-      { txType }: { txType: TxTypes }
-    ) {
-      const txs = await dispatch(`getTx`, txType)
-      if (state[txType] && txs.length > state[txType].length) {
-        let newTxs = uniqBy(txs.concat(state[txType]), `txhash`)
-        newTxs = await dispatch(`enrichTransactions`, {
-          transactions: newTxs,
-          txType
-        })
-        switch (txType) {
-          case TX_TYPES.TypeBank:
-            commit(`setBankTxs`, newTxs)
-            break
-          case TX_TYPES.TypeStaking:
-            commit(`setStakingTxs`, newTxs)
-            break
-          case TX_TYPES.TypeGovernance:
-            commit(`setGovernanceTxs`, newTxs)
-            break
-          case TX_TYPES.TypeDistribution:
-            commit(`setDistributionTxs`, newTxs)
-            break
-        }
-      }
-    },
     async getAllTxs({ commit, dispatch, state, rootState }) {
-      try {
-        commit(`setHistoryLoading`, true)
-
-        if (!rootState.connection.connected) {
-          return
-        }
-
-        await Promise.all(
-          Object.values(TX_TYPES).map(txType =>
-            dispatch(`parseAndSetTxs`, { txType })
-          )
-        )
-
-        state.error = null
-        commit(`setHistoryLoading`, false)
-        state.loaded = true
-      } catch (error) {
-        state.error = error
-      }
-    },
-    async getTx(
-      {
-        rootState: {
-          session: { address }
-        }
-      },
-      type
-    ) {
-      let response
-
-      const validatorAddress = address.replace(`cosmos`, `cosmosvaloper`)
-
-      switch (type) {
-        case TX_TYPES.TypeBank:
-          response = await node.get.bankTxs(address)
-          break
-        case TX_TYPES.TypeStaking:
-          response = await node.get.stakingTxs(address, validatorAddress)
-          break
-        case TX_TYPES.TypeGovernance:
-          response = await node.get.governanceTxs(address)
-          break
-        case TX_TYPES.TypeDistribution:
-          response = await node.get.distributionTxs(address, validatorAddress)
-          break
-        default:
-          throw new Error(`Unknown transaction type: ${type}`)
-      }
-      if (!response) {
-        return []
-      }
-      return response
     },
     async enrichTransactions({ dispatch }, { transactions, txType }) {
       const enrichedTransactions = await Promise.all(

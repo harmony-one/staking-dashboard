@@ -94,6 +94,15 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
     })
   );
 
+    app.get(
+        '/networks/:networkId/network_info_lite',
+        asyncHandler(async (req, res) => {
+            const data = syncServices[req.params.networkId].getNetworkInfoLite();
+
+            res.json(data);
+        })
+    );
+
   app.get(
     '/proposals',
     asyncHandler(async (req, res) => {

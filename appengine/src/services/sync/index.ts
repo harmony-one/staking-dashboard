@@ -97,6 +97,7 @@ export class SyncService {
   };
 
   getStakingNetworkInfo = () => this.networkInfoService.getStakingNetworkInfo();
+  getNetworkInfoLite = () => this.networkInfoService.getNetworkInfoLite();
 
   getValidators = () => this.validatorsInfoService.getAllValidators();
   getValidatorsWithPage = params => this.validatorsInfoService.getValidatorsWithPage(params);

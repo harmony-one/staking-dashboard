@@ -115,6 +115,19 @@ export class StakingNetworkInfoService {
     return stakingNetworkInfo;
   };
 
+  getNetworkInfoLite = () => {
+    const networkInfoLite = !this.cache.STAKING_NETWORK_INFO
+      ? {}
+      : {
+          ...this.cache.STAKING_NETWORK_INFO,
+          history: this.cache.GLOBAL_VIEW,
+          ...this.cache.LAST_EPOCH_METRICS,
+          ...this.cache.LIVE_EPOCH_METRICS,
+        };
+
+    return networkInfoLite;
+  };
+
   calculateDistroTable = async () => {
     let table = Object.keys(this.cache.ELECTED_KEYS_PER_NODE).map(nodeAddress => {
       const blsKeys = this.cache.ELECTED_KEYS_PER_NODE[nodeAddress];

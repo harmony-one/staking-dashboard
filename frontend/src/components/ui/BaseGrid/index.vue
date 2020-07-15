@@ -32,8 +32,6 @@
               'table-cell': true,
               'active-sort': sort.property === column.value
             }"
-            v-bind:class="{
-              'red-zone': isLowerThan90(item['uptime_percentage'])
             v-for="(item, index) in data"
             :key="column.key ? column.key(item) : index"
             @click="e => (column.value === 'select') ? '' : onRowClick(item)"
@@ -72,10 +70,6 @@ export default {
   },
   props: ["data", "columns", "sort", "onRowClick", "scrollable"],
   methods: {
-    isLowerThan90(value) {
-      if (Number(value) < 0.9) return true
-      return false
-    },
     orderBy(property) {
       if (this.sort.property === property) {
         this.sort.order = this.sort.order === `asc` ? `desc` : "asc"
@@ -122,9 +116,6 @@ export default {
     max-height: none;
     overflow-y: hidden;
   }
-}
-.red-zone {
-  background: #f9a4bc;
 }
 
 .table-body {

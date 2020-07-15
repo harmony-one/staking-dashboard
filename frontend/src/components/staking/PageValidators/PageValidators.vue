@@ -78,7 +78,7 @@
         :denom="bondDenom"
         :minAmount="1000 * selectedValidators.length"
       />
-        <TmDataLoading v-if="isLoading || isNetworkFetching" />
+      <TmDataLoading v-if="isLoading || isNetworkFetching" />
     </template>
   </PageContainer>
 </template>
@@ -197,19 +197,17 @@ export default {
       return myWallet.concat(redelegationOptions)
     }
   },
-  async mounted() {
-    // this.$store.dispatch(`getValidators`)
-    this.$store.dispatch("getDelegates")
-  },
   watch: {
     isNetworkFetching: function() {
       const chainTitle = this.$route.params.chaintitle
       this.chainTitle = chainTitle
       if (!this.isNetworkFetching) {
-        this.$store.dispatch("setNetworkByChainTitle", chainTitle).catch(err => {
-          this.$router.replace('/validators');
-          this.$router.go(0);
-        });
+        this.$store
+          .dispatch("setNetworkByChainTitle", chainTitle)
+          .catch(err => {
+            this.$router.replace("/validators")
+            this.$router.go(0)
+          })
       }
     }
   }

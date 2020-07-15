@@ -53,9 +53,9 @@
             >
               <DelegatorBlock :validator="validator" />
             </LightWidget>
-<!--            <LightWidget v-if="allHistory.length" title="Event history">-->
-<!--              <EventHistoryBlock :events="eventsHistory" />-->
-<!--            </LightWidget>-->
+            <!--            <LightWidget v-if="allHistory.length" title="Event history">-->
+            <!--              <EventHistoryBlock :events="eventsHistory" />-->
+            <!--            </LightWidget>-->
           </div>
         </div>
       </div>
@@ -68,6 +68,7 @@
         all validators
       </div>
     </template>
+    <TmDataLoading v-if="isNetworkFetching" />
   </TmPage>
 </template>
 
@@ -82,6 +83,7 @@ import RewardHistoryBlock from "./RewardHistoryBlock"
 import DelegatorBlock from "./DelegatorBlock"
 import EventHistoryBlock from "./EventHistoryBlock"
 import TmPage from "common/TmPage"
+import TmDataLoading from "common/TmDataLoading"
 import {
   fetchValidatorByAddress,
   fetchValidatorHistory
@@ -101,7 +103,8 @@ export default {
     DelegatorBlock,
     EventHistoryBlock,
     TmPage,
-    LightWidget
+    LightWidget,
+    TmDataLoading
   },
   props: {
     showOnMobile: {
@@ -117,15 +120,23 @@ export default {
     tooltips
   }),
   computed: {
+    ...mapState({
+      isNetworkFetching: state => state.connection.isNetworkFetching
+    }),
+    ...mapState({ network: state => state.connection.network }),
+    ...mapState({ networks: state => state.connection.networks }),
     ...mapState([`connection`]),
-    networkId() {
-      return this.connection.networkConfig.id
-    },
     eventsHistory() {
       return this.allHistory.length ? generateEventHistory(this.allHistory) : {}
     }
   },
   watch: {
+    isNetworkFetching: function() {
+      this.$store.dispatch("setNetworkByChainTitle", this.$route.params.chaintitle).catch(err => {
+        this.$router.replace('/validators');
+        this.$router.go(0);
+      });
+    },
     networkId: async function() {
       return await this.fetchValidator()
     },
@@ -143,15 +154,15 @@ export default {
   methods: {
     fetchValidator: async function() {
       this.loading = true
-
+      const network = this.network
       try {
-        if (this.connection.networkConfig.id) {
+        if (network) {
           this.validator = await fetchValidatorByAddress(
-            this.connection.networkConfig.id,
+            network,
             this.$route.params.validator
           )
           let history = await fetchValidatorHistory(
-            this.connection.networkConfig.id,
+            network,
             this.$route.params.validator
           )
 

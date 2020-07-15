@@ -49,9 +49,9 @@ export interface INetworkInfo {
   live_raw_stake_distro: Array<number>
   live_effective_median_stake_distro: Array<number>
 
-  lastEpochTotalStake: number
-  liveEpochTotalStake: number
-  lastEpochEffectiveStake: number
+  lastEpochTotalStake: number;
+  liveEpochTotalStake: number;
+  lastEpochEffectiveStake: number;
   liveExternalShards: Array<{ total: number; external: number }>
   liveTotalSeatsUsed: number
   liveTotalSeats: number
@@ -70,7 +70,8 @@ const state = {
   externals: {} as { config: typeof config; node: TNode },
   networks: Array<INetworkConfig>(),
   networkInfo: {} as INetworkInfo,
-  isNetworkInfoLoading: false
+  isNetworkInfoLoading: false,
+  isNetworkFetching: true
 }
 
 let interval: any
@@ -120,6 +121,9 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     setConnected(state, connected) {
       Vue.set(state, `connected`, connected)
     },
+    setNetworkFetching(state, fetching) {
+      state.isNetworkFetching = fetching
+    },
     setNetworks(state, networks: INetworkConfig[]) {
       state.networks = networks
     },
@@ -139,6 +143,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     async setLastHeader() {},
 
     async init({ state, dispatch, commit }) {
+      commit("setNetworkFetching", true)
       let networks: INetworkConfig[] | null = null
 
       while (!networks) {
@@ -162,6 +167,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       commit("setNetworks", networks)
       dispatch("setNetwork", network || networks[0])
       dispatch("loadNetworkInfo")
+      commit("setNetworkFetching", false)
     },
 
     async reconnect({ commit }) {
@@ -170,6 +176,17 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       commit("setConnected", true)
 
       // store.dispatch("getDelegates");
+    },
+    async setNetworkByChainTitle({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        const network = state.networks.find(net => net.chain_title === payload);
+        if (network) {
+          commit("setNetwork", network);
+          resolve("setNetwork success");
+        } else {
+          reject("setNetwork failed");
+        }
+      });
     },
 
     async loadNetworkInfo({ commit, state }) {

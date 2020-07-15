@@ -51,6 +51,9 @@ export default {
     search: {
       type: String,
       default: () => ""
+    },
+    chainTitle: {
+      type: String
     }
   },
   data: () => ({
@@ -275,7 +278,10 @@ export default {
     onClickValidator(validator) {
       this.$router.push({
         name: "validator",
-        params: { validator: validator.operator_address }
+        params: {
+          chaintitle: this.chainTitle,
+          validator: validator.operator_address
+        }
       })
     },
     getValidators() {

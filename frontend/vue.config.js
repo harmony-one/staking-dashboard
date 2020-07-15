@@ -42,8 +42,9 @@ module.exports = {
             MOCK_API_URL: JSON.stringify(
               process.env.MOCK_API_URL || DEFAULT_MOCK_API_URL
             ),
-            DEFAULT_NETWORK: JSON.stringify(
-              process.env.DEFAULT_NETWORK
+            DEFAULT_NETWORK: JSON.stringify(process.env.DEFAULT_NETWORK),
+            DEFAULT_CHAIN_TITLE: JSON.stringify(
+              process.env.DEFAULT_CHAIN_TITLE
             ),
             GOOGLE_ANALYTICS_UID: JSON.stringify(
               process.env.GOOGLE_ANALYTICS_UID
@@ -63,7 +64,7 @@ module.exports = {
           "default-src": `'self'`,
           "script-src": [`'self'`, `https://*.lunie.io`],
           "worker-src": `'none'`,
-          "style-src": [`'self'`, `'unsafe-inline'`],
+          "style-src": [`'self'`, `'unsafe-inline'`]
           // "connect-src": [
           //   // third party tools
           //   //`https://api-iam.intercom.io`,

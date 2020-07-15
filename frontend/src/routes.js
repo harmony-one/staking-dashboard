@@ -6,13 +6,18 @@
 /**
  * Routes are all defined here
  */
+const chainTitle = process.env.DEFAULT_CHAIN_TITLE
 export default [
   {
     path: `/`,
-    redirect: `/validators`
+    redirect: `/validators/${chainTitle}`
   },
   {
-    path: `/validators`,
+    path: `/validators/`,
+    redirect: `/validators/${chainTitle}`
+  },
+  {
+    path: `/validators/:chaintitle`,
     name: `Validators`,
     meta: {
       feature: "Validators"
@@ -20,7 +25,11 @@ export default [
     component: () => import(`./components/staking/PageValidators/PageValidators`)
   },
   {
-    path: `/analytics`,
+    path: `/analytics/`,
+    redirect: `/analytics/${chainTitle}`
+  },
+  {
+    path: `/analytics/:chaintitle`,
     name: `Analytics`,
     meta: {
       feature: "Analytics"
@@ -33,7 +42,7 @@ export default [
     redirect: `/validators`
   },
   {
-    path: `/validators/:validator`,
+    path: `/validators/:chaintitle/:validator`,
     name: `validator`,
     meta: {
       feature: "Validators"
@@ -45,7 +54,11 @@ export default [
     redirect: `/validators/:validator`
   },
   {
-    path: `/portfolio`,
+    path: `/portfolio/`,
+    redirect: `/portfolio/${chainTitle}`
+  },
+  {
+    path: `/portfolio/:chaintitle`,
     name: `portfolio`,
     component: () => import(`./components/wallet/PagePortfolio`),
     meta: {

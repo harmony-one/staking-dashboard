@@ -19,9 +19,9 @@
             <h4 v-tooltip.top="tooltips.v_list.current_block_number">
               Current Block Height:
             </h4>
-            <a :href="linkToTransaction" target="_blank">
-              #{{ networkInfo.current_block_number }}
-            </a>
+            <a :href="linkToTransaction" target="_blank"
+              >#{{ networkInfo.current_block_number }}</a
+            >
           </div>
         </div>
       </div>
@@ -66,6 +66,7 @@
         <TableValidators
           :active-only="activeOnly"
           :search="searchTerm.trim()"
+          :chainTitle="chainTitle"
           show-on-mobile="expectedReturns"
         />
       </div>
@@ -77,6 +78,7 @@
         :denom="bondDenom"
         :minAmount="1000 * selectedValidators.length"
       />
+        <TmDataLoading v-if="isLoading || isNetworkFetching" />
     </template>
   </PageContainer>
 </template>
@@ -112,11 +114,15 @@ export default {
   data: () => ({
     tooltips,
     searchTerm: "",
+    chainTitle: process.env.DEFAULT_CHAIN_TITLE,
     activeOnly: true
   }),
   computed: {
     ...mapState([`session`, `delegates`, `validators`]),
     ...mapGetters([`bondDenom`, `committedDelegations`, `liquidAtoms`]),
+    ...mapState({
+      isNetworkFetching: state => state.connection.isNetworkFetching
+    }),
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
@@ -189,6 +195,22 @@ export default {
           })
         }, [])
       return myWallet.concat(redelegationOptions)
+    }
+  },
+  async mounted() {
+    // this.$store.dispatch(`getValidators`)
+    this.$store.dispatch("getDelegates")
+  },
+  watch: {
+    isNetworkFetching: function() {
+      const chainTitle = this.$route.params.chaintitle
+      this.chainTitle = chainTitle
+      if (!this.isNetworkFetching) {
+        this.$store.dispatch("setNetworkByChainTitle", chainTitle).catch(err => {
+          this.$router.replace('/validators');
+          this.$router.go(0);
+        });
+      }
     }
   }
 }
@@ -274,7 +296,6 @@ export default {
   margin: 3rem;
   color: var(--dim);
 }
-
 @media screen and (max-width: 414px) {
   .validatorTable {
     margin-left: calc(-2 * var(--unit)) !important;

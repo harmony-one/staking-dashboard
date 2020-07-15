@@ -129,6 +129,7 @@
         </template>
 
         <!-- <TmDataLoading v-if="isLoading" /> -->
+        <TmDataLoading v-if="isNetworkFetching" />
       </template>
     </template>
   </PageContainer>
@@ -147,9 +148,10 @@ import TotalStakeHistory from "staking/TotalStakeHistory"
 import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 import tooltips from "src/components/tooltips"
 import AnalyticsToggle from "./components/AnalyticsToggle"
+import TmDataLoading from "common/TmDataLoading"
 
 export default {
-  name: `tab-validators`,
+  name: `tab-analytics`,
   components: {
     AnalyticsToggle,
     PageContainer,
@@ -161,7 +163,8 @@ export default {
     SeatAllocation,
     SeatAllocationHistory,
     TotalStakeHistory,
-    EffectiveMedianHistory
+    EffectiveMedianHistory,
+    TmDataLoading
   },
   filters: {
     ones,
@@ -174,7 +177,10 @@ export default {
     isLiveMode: false
   }),
   computed: {
-    ...mapState({ network: state => state.connection.network }),
+    ...mapState({
+      isNetworkFetching: state => state.connection.isNetworkFetching
+    }),
+    ...mapState({ networks: state => state.connection.networks }),
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
@@ -281,6 +287,16 @@ export default {
     //   sortOrder: "asc",
     //   search: "",
     // })
+  },
+  watch: {
+    isNetworkFetching: function() {
+      if (!this.isNetworkFetching) {
+        this.$store.dispatch("setNetworkByChainTitle", this.$route.params.chaintitle).catch(err => {
+          this.$router.replace('/analytics');
+          this.$router.go(0);
+        });
+      }
+    }
   }
 }
 </script>

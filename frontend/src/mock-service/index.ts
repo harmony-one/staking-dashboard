@@ -37,7 +37,7 @@ const getLiveness = (): Promise<any> =>
       return getLiveness()
     })
 
-getLiveness()
+// getLiveness()
 
 export function fetchProposals() {
   return axios.get(`${API_URL}/proposals`).then(rez => rez.data)
@@ -50,10 +50,10 @@ let validatorsCache: any = null
 let lastNetwork = ""
 let last_time_v = Date.now()
 
-export function fetchValidators(networkId: string) {
-  if (!networkId) {
-    return []
-  }
+export function fetchValidators(networkId: string = "harmony") {
+  // if (!networkId) {
+  //   return []
+  // }
 
   if (
     !!validatorsCache &&
@@ -147,6 +147,12 @@ export function fetchDelegationsByAddress(networkId: string, address: string) {
 export function fetchNetworkInfo(networkId: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/staking_network_info`)
+    .then(rez => rez.data)
+}
+
+export function fetchNetworkInfoLite(networkId: string) {
+  return axios
+    .get(`${API_URL}/networks/${networkId}/network_info_lite`)
     .then(rez => rez.data)
 }
 

@@ -1,9 +1,8 @@
 <template>
   <div
+    v-if="showingValidators.length"
     id="validators_table"
     class="table-container"
-    ref="loadingContainer"
-    style="position: relative;"
   >
     <BaseGrid
       :sort="sort"
@@ -133,7 +132,7 @@ export default {
           value: `name`,
           key: item => item.address,
           tooltip: tooltips.v_list.name,
-          renderComponent: ValidatorName // render as Component - use custom Vue components
+          // renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
           title: `Expected Return`,
@@ -253,16 +252,16 @@ export default {
     //     this.getValidators()
     //   }, 300)
     // },
-    loading() {
-      if (this.loading) {
-        this.loader = this.$loading.show({
-          container: this.$refs.loadingContainer,
-          canCancel: false
-        })
-      } else if (this.loader) {
-        this.loader.hide()
-      }
-    }
+    // loading() {
+    //   if (this.loading) {
+    //     this.loader = this.$loading.show({
+    //       container: this.$refs.loadingContainer,
+    //       canCancel: false
+    //     })
+    //   } else if (this.loader) {
+    //     this.loader.hide()
+    //   }
+    // }
   },
   mounted() {
     this.$store.dispatch(`getPool`)

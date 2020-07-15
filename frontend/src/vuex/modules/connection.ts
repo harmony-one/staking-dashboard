@@ -2,7 +2,7 @@ import Vue from "vue"
 import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
-import { fetchNetworks, fetchNetworkInfo } from "../../mock-service"
+import { fetchNetworkInfoLite, fetchNetworks } from "../../mock-service"
 // import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 import { POLLING_TIMEOUT_SEC } from "@/constants/time-constants"
 import { TFrontendValidator } from "@/mock-service/validator-helpers"
@@ -173,10 +173,10 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     },
 
     async loadNetworkInfo({ commit, state }) {
-      let networkInfo
+      let networkInfo = {}
 
       try {
-        networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+        networkInfo = await fetchNetworkInfoLite(state.networkConfig.id)
       } catch (err) {
         networkInfo = {}
       }

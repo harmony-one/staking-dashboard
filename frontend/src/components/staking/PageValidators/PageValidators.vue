@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      <div v-if="isNetworkInfoLoading" class="validatorTable">
+      <div class="validatorTable">
         <div class="filterOptions">
           <TmField
             v-model="searchTerm"

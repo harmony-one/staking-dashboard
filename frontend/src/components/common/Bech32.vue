@@ -21,16 +21,18 @@
     >
       <a
         v-if="session && !session.isMobile && session.sessionType === 'ledger'"
-        @click="() => {
-          onShowLedger()
-          showAddressOnLedger()
+        @click="
+          () => {
+            onShowLedger()
+            showAddressOnLedger()
+          }
+        "
+        class="show-on-ledger"
+        v-tooltip="{
+          placement: 'top',
+          content: ledgerSuccess || `Click to show on Ledger`
         }"
-      class="show-on-ledger"
-      v-tooltip="{
-        placement: 'top',
-        content: ledgerSuccess || `Click to show on Ledger`
-      }"
-    >
+      >
         Show on Ledger
       </a>
     </div>
@@ -70,7 +72,7 @@ export default {
   }),
   methods: {
     onShowLedger() {
-      this.ledgerSuccess = 'Some Message'
+      this.ledgerSuccess = "Some Message"
       setTimeout(() => {
         this.ledgerSuccess = false
       }, 2500)
@@ -106,7 +108,8 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.address, .show-on-ledger {
+.address,
+.show-on-ledger {
   width: 100%;
   margin-top: var(--half);
 }
@@ -122,6 +125,12 @@ export default {
   width: 100%;
   cursor: pointer;
   white-space: nowrap;
+}
+
+@media screen and (max-width: 414px) {
+  .address {
+    font-size: 12px;
+  }
 }
 
 .bech32-address .address:hover {

@@ -34,7 +34,10 @@
       </div>
       <div class="total-atoms total-undel" v-if="totalUndelegated">
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
-        <h2 class="total-atoms__value" style="color: #000000; margin-bottom: 10px;">
+        <h2
+          class="total-atoms__value"
+          style="color: #000000; margin-bottom: 10px;"
+        >
           {{ totalUndelegated | ones | zeroDecimals }}
         </h2>
       </div>
@@ -116,9 +119,7 @@ export default {
       const delegates = this.delegates.delegates
       return this.delegates.loaded
         ? delegates
-          ? sumBy(delegates, elem =>
-              sumBy(elem.Undelegations, el => el.Amount)
-            )
+          ? sumBy(delegates, elem => sumBy(elem.Undelegations, el => el.Amount))
           : 0
         : 0
     },
@@ -244,6 +245,12 @@ export default {
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+}
+@media screen and (max-width: 414px) {
+  .button-container {
+    transform: scale(0.8);
+    justify-content: center;
+  }
 }
 
 .row {

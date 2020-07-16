@@ -17,10 +17,24 @@ let NETWORKS_CACHE: INetwork[] = [];
 let lastNetworksCacheUpdate = Date.now();
 
 export const routes = (app, db: DBService, syncServices: Record<string, SyncService>) => {
+  const getSyncService = networkId => {
+    if (syncServices[networkId]) {
+      return syncServices[networkId];
+    }
+
+    const networkConfig = NETWORKS_CACHE.find(n => n.chain_title === networkId);
+
+    if (!networkConfig || !syncServices[networkConfig.id]) {
+      throw new Error('network not found');
+    }
+
+    return syncServices[networkConfig.id];
+  };
+
   app.get(
     '/networks/:networkId/validators',
     asyncHandler(async (req, res) => {
-      const data = syncServices[req.params.networkId].getValidators();
+      const data = getSyncService(req.params.networkId).getValidators();
 
       res.json(data);
     })
@@ -29,7 +43,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   app.get(
     '/networks/:networkId/validators_with_page',
     asyncHandler(async (req, res) => {
-      const data = await syncServices[req.params.networkId].getValidatorsWithPage(req.query);
+      const data = await getSyncService(req.params.networkId).getValidatorsWithPage(req.query);
 
       res.json(data);
     })
@@ -38,7 +52,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   app.get(
     '/networks/:networkId/activeValidators',
     asyncHandler(async (req, res) => {
-      const data = syncServices[req.params.networkId].getActiveValidators();
+      const data = getSyncService(req.params.networkId).getActiveValidators();
 
       res.json({ validators: data });
     })
@@ -46,7 +60,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   app.get(
     '/networks/:networkId/validators/:address',
     asyncHandler(async (req, res) => {
-      const validator = syncServices[req.params.networkId].getValidatorInfo(req.params.address);
+      const validator = getSyncService(req.params.networkId).getValidatorInfo(req.params.address);
 
       if (!validator) {
         throw createError(400, 'Not found');
@@ -59,7 +73,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   app.get(
     '/networks/:networkId/validator_history/:address',
     asyncHandler(async (req, res) => {
-      const history = syncServices[req.params.networkId].getValidatorHistory(req.params.address);
+      const history = getSyncService(req.params.networkId).getValidatorHistory(req.params.address);
 
       if (!history) {
         throw createError(400, 'Not found');
@@ -72,7 +86,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   app.get(
     '/networks/:networkId/delegations/:address',
     asyncHandler(async (req, res) => {
-      const data = await syncServices[req.params.networkId].getDelegationsByDelegator(
+      const data = await getSyncService(req.params.networkId).getDelegationsByDelegator(
         req.params.address
       );
 
@@ -88,20 +102,20 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
         total_one_staked: 10,
         current_block_number: 10,
         current_block_hash: '0xaa7c3439771d5a329c2ee6407ba6dbdc6d88b43c0c2e5669c9c260fec62ff185',
-        ...syncServices[req.params.networkId].getStakingNetworkInfo(),
+        ...getSyncService(req.params.networkId).getStakingNetworkInfo(),
       };
       res.json(data);
     })
   );
 
-    app.get(
-        '/networks/:networkId/network_info_lite',
-        asyncHandler(async (req, res) => {
-            const data = syncServices[req.params.networkId].getNetworkInfoLite();
+  app.get(
+    '/networks/:networkId/network_info_lite',
+    asyncHandler(async (req, res) => {
+      const data = getSyncService(req.params.networkId).getNetworkInfoLite();
 
-            res.json(data);
-        })
-    );
+      res.json(data);
+    })
+  );
 
   app.get(
     '/proposals',

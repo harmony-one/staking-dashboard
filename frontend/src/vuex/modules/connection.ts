@@ -2,7 +2,11 @@ import Vue from "vue"
 import config from "src/config"
 import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
-import { fetchNetworks, fetchNetworkInfo } from "../../mock-service"
+import {
+  fetchNetworkInfo,
+  fetchNetworkInfoLite,
+  fetchNetworks
+} from "../../mock-service"
 // import { setNetwork as setNetworkToExtension } from "@/scripts/extension-utils"
 import { POLLING_TIMEOUT_SEC } from "@/constants/time-constants"
 import { TFrontendValidator } from "@/mock-service/validator-helpers"
@@ -49,9 +53,9 @@ export interface INetworkInfo {
   live_raw_stake_distro: Array<number>
   live_effective_median_stake_distro: Array<number>
 
-  lastEpochTotalStake: number;
-  liveEpochTotalStake: number;
-  lastEpochEffectiveStake: number;
+  lastEpochTotalStake: number
+  liveEpochTotalStake: number
+  lastEpochEffectiveStake: number
   liveExternalShards: Array<{ total: number; external: number }>
   liveTotalSeatsUsed: number
   liveTotalSeats: number
@@ -71,7 +75,8 @@ const state = {
   networks: Array<INetworkConfig>(),
   networkInfo: {} as INetworkInfo,
   isNetworkInfoLoading: false,
-  isNetworkFetching: true
+  isNetworkFetching: true,
+  chainTitle: ""
 }
 
 let interval: any
@@ -116,7 +121,11 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     setNetwork(state, networkConfig: INetworkConfig) {
       state.networkConfig = networkConfig
       state.network = networkConfig.id
+      state.chainTitle = networkConfig.chain_title
       state.lastHeader = { height: 0, ...networkConfig }
+    },
+    setChainTitle(state, payload) {
+      state.chainTitle = payload
     },
     setConnected(state, connected) {
       Vue.set(state, `connected`, connected)
@@ -128,7 +137,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
       state.networks = networks
     },
     setNetworkInfo(state, networkInfo: INetworkInfo) {
-      state.networkInfo = networkInfo
+      state.networkInfo = { ...state.networkInfo, ...networkInfo }
       state.isNetworkInfoLoading = true
 
       // console.log(
@@ -142,7 +151,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   actions: {
     async setLastHeader() {},
 
-    async init({ state, dispatch, commit }) {
+    async init({ state, dispatch, commit, rootState }) {
       commit("setNetworkFetching", true)
       let networks: INetworkConfig[] | null = null
 
@@ -155,18 +164,24 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         }
       }
 
-      const network = networks.find(network => network.id === state.network)
+      let network = networks.find(
+        network => network.chain_title === state.chainTitle
+      )
+
+      if (!network) {
+        network = networks.find(network => network.id === state.network)
+      }
 
       if (!interval) {
         interval = setInterval(
-          () => dispatch("loadNetworkInfo"),
+          () => dispatch("loadNetworkInfoLite"),
           POLLING_TIMEOUT_SEC * 3000
         )
       }
 
       commit("setNetworks", networks)
       dispatch("setNetwork", network || networks[0])
-      dispatch("loadNetworkInfo")
+      dispatch("loadNetworkInfoLite")
       commit("setNetworkFetching", false)
     },
 
@@ -177,23 +192,39 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
 
       // store.dispatch("getDelegates");
     },
-    async setNetworkByChainTitle({commit, state}, payload) {
-      return new Promise((resolve, reject) => {
-        const network = state.networks.find(net => net.chain_title === payload);
-        if (network) {
-          commit("setNetwork", network);
-          resolve("setNetwork success");
-        } else {
-          reject("setNetwork failed");
+    setNetworkByChainTitle({ commit, state }, payload) {
+      const whiteList = ["mainnet", "testnet"]
+
+      const networkConfig = state.networks.find(n => n.chain_title === payload)
+
+      if (networkConfig || whiteList.includes(payload)) {
+        commit("setChainTitle", payload)
+        if (networkConfig) {
+          commit("setNetwork", networkConfig)
         }
-      });
+        return payload
+      } else {
+        return false
+      }
     },
 
-    async loadNetworkInfo({ commit, state }) {
-      let networkInfo
+    async loadNetworkInfoLite({ commit, state }) {
+      let networkInfo = {}
 
       try {
-        networkInfo = await fetchNetworkInfo(state.networkConfig.id)
+        networkInfo = await fetchNetworkInfoLite(state.networkConfig.id)
+      } catch (err) {
+        networkInfo = {}
+      }
+
+      commit("setNetworkInfo", networkInfo)
+    },
+
+    async loadNetworkInfoFull({ commit, state }, chainTitle) {
+      let networkInfo = {}
+
+      try {
+        networkInfo = await fetchNetworkInfo(chainTitle)
       } catch (err) {
         networkInfo = {}
       }

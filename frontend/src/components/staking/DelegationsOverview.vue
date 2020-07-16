@@ -116,7 +116,7 @@ export default {
   },
   async mounted() {
     // this.$store.dispatch(`getValidators`)
-    this.$store.dispatch("getDelegates")
+    // this.$store.dispatch("getDelegates")
   }
 }
 </script>

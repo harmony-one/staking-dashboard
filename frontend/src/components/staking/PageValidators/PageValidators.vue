@@ -25,8 +25,8 @@
           </div>
         </div>
       </div>
-      <div v-if="isNetworkInfoLoading" class="validatorTable">
-        <div class="filterOptions">
+      <div class="validatorTable">
+        <div class="filterOptions" v-if="total">
           <TmField
             v-model="searchTerm"
             class="searchField"
@@ -127,7 +127,7 @@ export default {
     ...mapState({ networkConfig: state => state.connection.networkConfig }),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
-      isNetworkInfoLoading: state => !!state.connection.networkConfig.id,
+      isNetworkInfoLoading: state => !!state.connection.chainTitle,
       isMultiDelegationSupport: state =>
         state.session.sessionType === "extension" &&
         state.session.extensionVersion >= 16
@@ -197,18 +197,16 @@ export default {
       return myWallet.concat(redelegationOptions)
     }
   },
-  watch: {
-    isNetworkFetching: function() {
-      const chainTitle = this.$route.params.chaintitle
-      this.chainTitle = chainTitle
-      if (!this.isNetworkFetching) {
-        this.$store
-          .dispatch("setNetworkByChainTitle", chainTitle)
-          .catch(err => {
-            this.$router.replace("/validators")
-            this.$router.go(0)
-          })
-      }
+  mounted() {
+    this.chainTitle = this.$route.params.chaintitle
+    if (
+      !this.$store.dispatch(
+        "setNetworkByChainTitle",
+        this.$route.params.chaintitle
+      )
+    ) {
+      this.$router.replace("/validators")
+      this.$router.go(0)
     }
   }
 }

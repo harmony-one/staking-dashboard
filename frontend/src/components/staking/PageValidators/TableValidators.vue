@@ -1,10 +1,5 @@
 <template>
-  <div
-    id="validators_table"
-    class="table-container"
-    ref="loadingContainer"
-    style="position: relative;"
-  >
+  <div id="validators_table" class="table-container" v-if="data.length">
     <BaseGrid
       :sort="sort"
       :columns="columns"
@@ -13,6 +8,7 @@
     />
     <PanelPagination :pagination="pagination" :total="totalFound" />
   </div>
+  <TmDataLoading v-else />
 </template>
 
 <script>
@@ -36,10 +32,12 @@ import {
   twoDecimals
 } from "scripts/num"
 import { shuffle, sortByParams } from "./helpers"
+import TmDataLoading from "../../common/TmDataLoading"
 
 export default {
   name: `table-validators`,
   components: {
+    TmDataLoading,
     BaseGrid,
     PanelPagination
   },
@@ -71,9 +69,17 @@ export default {
     data: []
   }),
   computed: {
-    ...mapState([`distribution`, `pool`, `session`, "delegates", "validators"]),
+    ...mapState([
+      `distribution`,
+      `pool`,
+      `session`,
+      "delegates",
+      "connection",
+      "validators"
+    ]),
     ...mapState({
       annualProvision: state => state.minting.annualProvision,
+      chainTitle: state => state.connection.chainTitle,
       isMultiDelegationSupport: state =>
         state.session.sessionType === "extension" &&
         state.session.extensionVersion >= 16
@@ -256,16 +262,19 @@ export default {
     //     this.getValidators()
     //   }, 300)
     // },
-    loading() {
-      if (this.loading) {
-        this.loader = this.$loading.show({
-          container: this.$refs.loadingContainer,
-          canCancel: false
-        })
-      } else if (this.loader) {
-        this.loader.hide()
-      }
+    chainTitle() {
+      this.getValidators()
     }
+    // loading() {
+    //   if (this.loading) {
+    //     this.loader = this.$loading.show({
+    //       container: this.$refs.loadingContainer,
+    //       canCancel: false
+    //     })
+    //   } else if (this.loader) {
+    //     this.loader.hide()
+    //   }
+    // }
   },
   mounted() {
     this.$store.dispatch(`getPool`)
@@ -287,7 +296,7 @@ export default {
     getValidators() {
       this.loading = true
 
-      this.$store.dispatch(`getValidators`).then(data => {
+      this.$store.dispatch(`getValidators`, this.chainTitle).then(data => {
         this.data = shuffle(data)
         this.loading = false
       })

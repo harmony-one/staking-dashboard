@@ -14,8 +14,7 @@
     <main class="tm-page-main">
       <CardSignInRequired v-if="signInRequired && !session.signedIn" />
       <template v-else-if="managed">
-        <TmDataConnecting v-if="!loaded && !connected" />
-        <TmDataLoading v-else-if="!loaded && loading" />
+        <TmDataLoading v-if="!loaded && loading" />
         <TmDataError v-else-if="error" />
         <slot v-else-if="dataEmpty" name="no-data">
           <TmDataEmpty>
@@ -41,7 +40,6 @@ import TmDataEmpty from "common/TmDataEmpty"
 import CardSignInRequired from "common/CardSignInRequired"
 import { mapState, mapGetters } from "vuex"
 import TmDataError from "common/TmDataError"
-import TmDataConnecting from "common/TmDataConnecting"
 
 export default {
   name: `tm-page`,
@@ -50,7 +48,6 @@ export default {
     TmDataEmpty,
     TmDataLoading,
     TmDataError,
-    TmDataConnecting,
     CardSignInRequired
   },
   props: {

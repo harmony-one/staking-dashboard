@@ -68,7 +68,6 @@
         all validators
       </div>
     </template>
-    <TmDataLoading v-if="isNetworkFetching" />
   </TmPage>
 </template>
 
@@ -83,7 +82,6 @@ import RewardHistoryBlock from "./RewardHistoryBlock"
 import DelegatorBlock from "./DelegatorBlock"
 import EventHistoryBlock from "./EventHistoryBlock"
 import TmPage from "common/TmPage"
-import TmDataLoading from "common/TmDataLoading"
 import {
   fetchValidatorByAddress,
   fetchValidatorHistory
@@ -104,7 +102,6 @@ export default {
     EventHistoryBlock,
     TmPage,
     LightWidget,
-    TmDataLoading
   },
   props: {
     showOnMobile: {

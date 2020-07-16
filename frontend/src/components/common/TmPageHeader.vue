@@ -1,22 +1,24 @@
 <template>
   <header class="tm-page-header">
-
-      <div class="tm-page-header-text">
-        <div v-if="$slots['title']" class="tm-page-header-title">
-          <slot name="title" />
-        </div>
-        <!-- <div v-if="$slots['subtitle']" class="tm-page-header-subtitle">
+    <div class="tm-page-header-text">
+      <div v-if="$slots['title']" class="tm-page-header-title">
+        <slot name="title" />
+      </div>
+      <!-- <div v-if="$slots['subtitle']" class="tm-page-header-subtitle">
           <slot name="subtitle" />
         </div>
         <div v-if="$slots['menu-body']" class="tm-page-header-body">
           <slot name="menu-body" />
         </div> -->
-      </div>
+    </div>
 
-      <div v-if="epoch" class="next-epoch">
-        <TimePieBlock :timeNextEpoch="networkInfo.time_next_epoch" class="time-body" />
-      </div>
-<!-- 
+    <div v-if="epoch" class="next-epoch">
+      <TimePieBlock
+        :timeNextEpoch="networkInfo.time_next_epoch"
+        class="time-body"
+      />
+    </div>
+    <!-- 
       <menu class="tm-page-header-menu">
         <slot name="menu" />
       </menu>
@@ -27,8 +29,6 @@
           <slot name="header-buttons" />
         </div>
       </div> -->
-
-
   </header>
 </template>
 
@@ -38,7 +38,7 @@ import Tabs from "common/Tabs"
 import TimePieBlock from "./../wallet/TimePieBlock"
 export default {
   name: `tm-page-header`,
-  components: { 
+  components: {
     Tabs,
     TimePieBlock
   },
@@ -54,17 +54,17 @@ export default {
   },
   computed: {
     ...mapState(["connection"]),
-    ...mapState({ networkInfo: state => {
-      // console.log(state.connection.networkInfo)
-      return state.connection.networkInfo
-    } }),
+    ...mapState({
+      networkInfo: state => {
+        // console.log(state.connection.networkInfo)
+        return state.connection.networkInfo
+      }
+    })
   }
 }
 </script>
 
 <style scoped lang="scss">
-
-
 .tm-page-header {
   background: white;
   display: flex;
@@ -74,17 +74,14 @@ export default {
   color: var(--gray);
   border-bottom: 1px solid var(--light);
 }
-
 .tm-page-header-text {
   flex: 1;
 }
-
 
 .next-epoch {
   height: 56;
   flex: 0 0 56px;
 }
-
 
 .header-buttons {
   padding: 0 1rem 1rem 0;
@@ -121,8 +118,9 @@ export default {
   color: var(--blue);
 }
 
-@media screen and (max-width: 414px) {
-  
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .tm-page-header {
+    padding-right: 20px;
+  }
 }
-
 </style>

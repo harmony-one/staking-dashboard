@@ -293,6 +293,11 @@ export default {
   color: var(--dim);
 }
 @media screen and (max-width: 414px) {
+  .networkInfo {
+    width: 100vw;
+    margin-left: -2rem;
+  }
+
   .validatorTable {
     margin-left: calc(-2 * var(--unit)) !important;
     width: calc(100vw - 1px);
@@ -302,12 +307,12 @@ export default {
   }
 
   .filterOptions {
-    width: 100vw;
+    width: 125%;
     height: 48px;
+    transform: scale(0.8);
+    transform-origin: left;
     .toggles {
       text-align: right;
-      margin-right: 8px;
-      transform: scale(0.8);
       width: 100vw;
     }
   }

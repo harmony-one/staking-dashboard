@@ -140,7 +140,7 @@ export default {
         columns = columns.filter(p => keep.includes(p.value))
       }
       if (this.$mq === "sm" || this.$mq === "md") {
-        const keep = ["name", "remaining_epoch", "apr", "stake"]
+        const keep = ["name", "remaining_epoch", "apr"]
         columns = columns.filter(p => keep.includes(p.value))
       }
 

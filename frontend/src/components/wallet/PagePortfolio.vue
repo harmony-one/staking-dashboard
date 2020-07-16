@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     update(height) {
-      this.lastUpdate = heightF
+      this.lastUpdate = height
       // this.$store.dispatch(`getRewardsFromMyValidators`)
     }
   },

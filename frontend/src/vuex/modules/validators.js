@@ -70,6 +70,10 @@ export default () => {
       //   })
       // }
 
+      if (!data.validators) {
+        return []
+      }
+
       const validators = data.validators.filter(
         v => ones(v.total_stake) >= 10000
       )

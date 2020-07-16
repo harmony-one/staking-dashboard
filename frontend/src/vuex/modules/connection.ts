@@ -195,6 +195,13 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
     setNetworkByChainTitle({ commit, state }, payload) {
       const whiteList = ["mainnet", "testnet"]
 
+      if (
+        state.chainTitle === payload &&
+        state.networkConfig.chain_title === payload
+      ) {
+        return true
+      }
+
       const networkConfig = state.networks.find(n => n.chain_title === payload)
 
       if (networkConfig || whiteList.includes(payload)) {
@@ -202,7 +209,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         if (networkConfig) {
           commit("setNetwork", networkConfig)
         }
-        return payload
+        return true
       } else {
         return false
       }

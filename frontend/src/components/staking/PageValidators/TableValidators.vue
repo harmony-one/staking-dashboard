@@ -274,10 +274,6 @@ export default {
     // }
   },
   mounted() {
-    this.$store.dispatch(`getPool`)
-    this.$store.dispatch(`getRewardsFromMyValidators`)
-    this.$store.dispatch(`getMintingParameters`)
-
     this.getValidators()
   },
   methods: {

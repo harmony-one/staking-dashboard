@@ -66,7 +66,6 @@
         <TableValidators
           :active-only="activeOnly"
           :search="searchTerm.trim()"
-          :chainTitle="chainTitle"
           show-on-mobile="expectedReturns"
         />
       </div>

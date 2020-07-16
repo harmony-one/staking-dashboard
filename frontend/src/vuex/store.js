@@ -130,29 +130,9 @@ export function storeUpdateHandler(mutation, state, pending) {
  */
 function persistState(state) {
   const cachedState = JSON.stringify({
-    transactions: {
-      wallet: state.transactions.wallet,
-      staking: state.transactions.staking
-    },
-    wallet: {
-      balances: state.wallet.balances
-    },
-    delegation: {
-      committedDelegates: state.delegation.committedDelegates,
-      unbondingDelegations: state.delegation.unbondingDelegations
-    },
-    delegates: {
-      delegates: state.delegates.delegates
-    },
     connection: {
       network: state.connection.network
     },
-    stakingParameters: state.stakingParameters,
-    pool: state.pool,
-    proposals: state.proposals,
-    deposits: state.deposits,
-    votes: state.votes,
-    governanceParameters: state.governanceParameters,
     session: {
       address: state.session.address
     }

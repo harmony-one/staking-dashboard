@@ -50,9 +50,6 @@ export default {
       type: String,
       default: () => ""
     },
-    chainTitle: {
-      type: String
-    }
   },
   data: () => ({
     query: ``,

@@ -60,7 +60,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       if (!rootState.session.address) return
 
       const data = await fetchDelegationsByAddress(
-        rootState.connection.networkConfig.id,
+        rootState.connection.chainTitle,
         rootState.session.address
       )
 

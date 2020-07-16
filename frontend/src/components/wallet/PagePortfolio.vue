@@ -18,15 +18,23 @@
             title="Portfolio allocation"
             class="delegations"
           >
-            <div v-if="delegation.loading" class="delegation-body">Loading...</div>
+            <div v-if="delegation.loading" class="delegation-body">
+              Loading...
+            </div>
             <div
               v-else-if="
                 !delegations.length &&
                   !Object.keys(delegation.unbondingDelegations).length
               "
               class="delegation-body"
-            >No delegations in your portfolio</div>
-            <StakeAllocationBlock v-else :delegations="delegations" class="delegation-body" />
+            >
+              No delegations in your portfolio
+            </div>
+            <StakeAllocationBlock
+              v-else
+              :delegations="delegations"
+              class="delegation-body"
+            />
           </LightWidget>
         </div>
         <DelegationsOverview :undelegations="undelegations" />
@@ -142,16 +150,20 @@ export default {
   },
   methods: {
     update(height) {
-      this.lastUpdate = height
-      this.$store.dispatch(`getRewardsFromMyValidators`)
+      this.lastUpdate = heightF
+      // this.$store.dispatch(`getRewardsFromMyValidators`)
     }
   },
-  watch: {
-    isNetworkFetching: function() {
-      this.$store.dispatch("setNetworkByChainTitle", this.$route.params.chaintitle).catch(err => {
-        this.$router.replace('/portfolio');
-        this.$router.go(0);
-      });
+  mounted() {
+    if (
+      !this.$store.dispatch(
+        "setNetworkByChainTitle",
+        this.$route.params.chaintitle
+      )
+    ) {
+      this.$router.replace("/portfolio")
+      this.$router.go(0)
+      return
     }
   }
 }

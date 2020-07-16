@@ -150,6 +150,12 @@ export function fetchNetworkInfo(networkId: string) {
     .then(rez => rez.data)
 }
 
+export function fetchNetworkInfoLite(networkId: string) {
+  return axios
+    .get(`${API_URL}/networks/${networkId}/network_info_lite`)
+    .then(rez => rez.data)
+}
+
 const bodyParams = (method: string, params: string[]) => `{
       "jsonrpc": "2.0",
       "method": "${method}",

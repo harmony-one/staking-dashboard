@@ -101,7 +101,7 @@ export default {
     DelegatorBlock,
     EventHistoryBlock,
     TmPage,
-    LightWidget,
+    LightWidget
   },
   props: {
     showOnMobile: {
@@ -118,7 +118,7 @@ export default {
   }),
   computed: {
     ...mapState({
-      isNetworkFetching: state => state.connection.isNetworkFetching
+      chainTitle: state => state.connection.chainTitle
     }),
     ...mapState({ network: state => state.connection.network }),
     ...mapState({ networks: state => state.connection.networks }),
@@ -128,12 +128,6 @@ export default {
     }
   },
   watch: {
-    isNetworkFetching: function() {
-      this.$store.dispatch("setNetworkByChainTitle", this.$route.params.chaintitle).catch(err => {
-        this.$router.replace('/validators');
-        this.$router.go(0);
-      });
-    },
     networkId: async function() {
       return await this.fetchValidator()
     },
@@ -146,12 +140,23 @@ export default {
     }
   },
   async mounted() {
+    if (
+      !this.$store.dispatch(
+        "setNetworkByChainTitle",
+        this.$route.params.chaintitle
+      )
+    ) {
+      this.$router.replace("/validators")
+      this.$router.go(0)
+      return;
+    }
+
     return await this.fetchValidator()
   },
   methods: {
     fetchValidator: async function() {
       this.loading = true
-      const network = this.network
+      const network = this.chainTitle
       try {
         if (network) {
           this.validator = await fetchValidatorByAddress(

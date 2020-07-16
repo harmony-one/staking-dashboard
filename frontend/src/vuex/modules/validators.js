@@ -22,14 +22,11 @@ export default () => {
         data = []
         for (let i = 0; i < pages; i++) {
           data.push(
-            await fetchValidatorsWithParams(
-              rootState.connection.networkConfig.id,
-              {
-                ...params,
-                page: i,
-                size: 100
-              }
-            )
+            await fetchValidatorsWithParams(rootState.connection.chainTitle, {
+              ...params,
+              page: i,
+              size: 100
+            })
           )
         }
         const validators = data.reduce((a, c) => a.concat(...c.validators), [])
@@ -37,7 +34,7 @@ export default () => {
         data.validators = validators
       } else {
         data = await fetchValidatorsWithParams(
-          rootState.connection.networkConfig.id,
+          rootState.connection.chainTitle,
           params
         )
       }
@@ -51,10 +48,10 @@ export default () => {
       return data.validators
     },
 
-    async getValidators({ commit, rootState }) {
+    async getValidators({ commit, rootState }, chainTitle) {
       commit("setLoading", true)
 
-      let data = await fetchValidators(rootState.connection.networkConfig.id)
+      let data = await fetchValidators(chainTitle)
       // @ts-ignore
       // window.validators = validators
 

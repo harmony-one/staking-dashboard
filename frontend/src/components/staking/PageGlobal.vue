@@ -149,6 +149,7 @@ import EffectiveMedianHistory from "staking/EffectiveMedianHistory"
 import tooltips from "src/components/tooltips"
 import AnalyticsToggle from "./components/AnalyticsToggle"
 import TmDataLoading from "common/TmDataLoading"
+import { POLLING_TIMEOUT_SEC } from "../../constants/time-constants"
 
 export default {
   name: `tab-analytics`,
@@ -174,7 +175,8 @@ export default {
   },
   data: () => ({
     tooltips,
-    isLiveMode: false
+    isLiveMode: false,
+    interval: null
   }),
   computed: {
     ...mapState({
@@ -275,28 +277,35 @@ export default {
   //     // })
   //   }
   // },
-  async mounted() {
+  mounted() {
     // console.log(this.networkInfo.table.length)
-    this.$store.dispatch("getDelegates")
-
-    // this.$store.dispatch(`getValidatorsWithParams`, {
-    //   active: true,
-    //   page: 0,
-    //   size: 200,
-    //   sortProperty: "slot",
-    //   sortOrder: "asc",
-    //   search: "",
-    // })
-  },
-  watch: {
-    isNetworkFetching: function() {
-      if (!this.isNetworkFetching) {
-        this.$store.dispatch("setNetworkByChainTitle", this.$route.params.chaintitle).catch(err => {
-          this.$router.replace('/analytics');
-          this.$router.go(0);
-        });
-      }
+    // this.$store.dispatch("getDelegates")
+    if (
+      !this.$store.dispatch(
+        "setNetworkByChainTitle",
+        this.$route.params.chaintitle
+      )
+    ) {
+      this.$router.replace("/analytics")
+      this.$router.go(0)
+      return
     }
+
+    if (!this.interval) {
+      this.interval = setInterval(
+        () =>
+          this.$store.dispatch(
+            "loadNetworkInfoFull",
+            this.$route.params.chaintitle
+          ),
+        POLLING_TIMEOUT_SEC * 6000
+      )
+    }
+
+    this.$store.dispatch(`loadNetworkInfoFull`, this.$route.params.chaintitle)
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
   }
 }
 </script>

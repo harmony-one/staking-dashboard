@@ -103,3 +103,6 @@ typings/
 appengine/keys/
 
 .DS_Store
+
+# VSCode
+.vscode

@@ -13,6 +13,8 @@
       </div>
       <!-- <MobileMenu /> -->
       <TmNotifications :notifications="notifications" />
+      <WelcomeMessage />
+      <StakeCalculator />
     </div>
   </div>
 </template>
@@ -26,10 +28,14 @@ import MaintenanceBar from "common/MaintenanceBar"
 import DisconnectedBar from "common/DisconnectedBar"
 import TmNotifications from "common/TmNotifications"
 import store from "./vuex/store"
+import WelcomeMessage from "./components/ui/WelcomeMessage/index"
+import StakeCalculator from "./components/ui/StakeCalculator/index"
 
 export default {
   name: `app`,
   components: {
+    StakeCalculator,
+    WelcomeMessage,
     AppHeader,
     TmNotifications,
     CookieBar,

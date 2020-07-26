@@ -10,16 +10,17 @@ import App from "./App.vue"
 import init from "./initializeApp"
 import { getURLParams } from "./scripts/url"
 import "@babel/polyfill"
-import SvgIcon from 'vue-svgicon'
+import SvgIcon from "vue-svgicon"
 // @ts-ignore
-import Loading from 'vue-loading-overlay';
-import 'vue-loading-overlay/dist/vue-loading.css';
+import VueCookie from "vue-cookie"
+// @ts-ignore
+import Loading from "vue-loading-overlay"
+import "vue-loading-overlay/dist/vue-loading.css"
 
 // @ts-ignore
 import VueMq from "vue-mq"
 
-import './icons'
-
+import "./icons"
 
 Vue.config.productionTip = false
 
@@ -28,10 +29,11 @@ Vue.use(Vuelidate)
 Vue.use(VueClipboard)
 Vue.use(InfiniteScroll)
 Vue.use(Loading)
+Vue.use(VueCookie)
 
 // Default tag name is 'svgicon'
 Vue.use(SvgIcon, {
-  tagName: 'svgicon'
+  tagName: "svgicon"
 })
 
 Vue.use(VueMq, {

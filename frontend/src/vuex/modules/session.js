@@ -47,7 +47,8 @@ export default () => {
       track,
       anonymize,
       deanonymize
-    }
+    },
+    stakeCalculator: false
   }
 
   // Temp Mock data
@@ -81,6 +82,9 @@ export default () => {
     popHistory(state) {
       state.history.pop()
     },
+    setStakeCalculatorVisible(state, value) {
+      state.stakeCalculator = value
+    },
     pauseHistory(state, paused) {
       state.pauseHistory = paused
     },
@@ -102,6 +106,12 @@ export default () => {
   }
 
   const actions = {
+    showStakeCalculator({ commit }) {
+      commit(`setStakeCalculatorVisible`, true)
+    },
+    hideStakeCalculator({ commit }) {
+      commit(`setStakeCalculatorVisible`, false)
+    },
     async checkForPersistedSession({ dispatch }) {
       const session = localStorage.getItem(`session`)
       if (session) {

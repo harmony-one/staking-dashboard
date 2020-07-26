@@ -30,11 +30,7 @@
         title="Portfolio"
         @click.native="close"
       >
-        <svgicon
-          name="profile"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="profile" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Portfolio</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -45,11 +41,7 @@
         title="Validators"
         @click.native="close"
       >
-        <svgicon
-          name="validators"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="validators" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Validators</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -60,11 +52,7 @@
         title="Analytics"
         @click.native="close"
       >
-        <svgicon
-          name="world"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="world" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Analytics</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -99,12 +87,9 @@
         exact="exact"
         title="Networks"
         @click.native="close"
+        style="margin-bottom: 30px;"
       >
-        <svgicon
-          name="network"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="network" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -148,6 +133,45 @@
         <h2 class="app-menu-title">Become a Validator</h2>
       </a>
 
+      <a
+        class="app-menu-item small"
+        href="https://docs.harmony.one/home/delegator"
+        @click="close"
+        target="_blank"
+      >
+        <h2 class="app-menu-title">Delegators Guide</h2>
+      </a>
+
+      <a
+        class="app-menu-item small"
+        href="https://docs.harmony.one/home/wallets"
+        @click="close"
+        target="_blank"
+      >
+        <h2 class="app-menu-title">Supported Wallets</h2>
+      </a>
+
+      <div class="app-menu-item small" @click="openStakeCalculator">
+        <h2 class="app-menu-title">Stake Calculator</h2>
+      </div>
+
+      <a
+        class="app-menu-item small"
+        :href="explorerUrl"
+        @click="close"
+        target="_blank"
+      >
+        <h2 class="app-menu-title">Block Explorer</h2>
+      </a>
+
+      <a
+        class="app-menu-item small"
+        href="https://docs.harmony.one/home/validators/definitions"
+        @click="close"
+        target="_blank"
+      >
+        <h2 class="app-menu-title">Terms & Concepts</h2>
+      </a>
 
       <router-link
         class="app-menu-item small"
@@ -169,7 +193,7 @@
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
 
-<!--
+      <!--
       <router-link
         class="app-menu-item small"
         to="#"
@@ -180,12 +204,10 @@
         <h2 class="app-menu-title">Feedback</h2>
       </router-link>-->
 
-
-
       <router-link
         v-if="session.signedIn"
         to="#"
-        class="app-menu-item small"
+        class="app-menu-item small auth"
         exact="exact"
         title="signout"
         @click.native="signOut()"
@@ -196,7 +218,7 @@
       <router-link
         v-else
         to="#"
-        class="app-menu-item small"
+        class="app-menu-item small auth"
         exact="exact"
         title="signin"
         @click.native="signIn()"
@@ -213,15 +235,13 @@
 import noScroll from "no-scroll"
 import Bech32 from "common/Bech32"
 import ConnectedNetwork from "common/TmConnectedNetwork"
-import TmBtn from "common/TmBtn"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, shortDecimals } from "scripts/num.js"
 export default {
   name: `app-menu`,
   components: {
     Bech32,
-    ConnectedNetwork,
-    TmBtn
+    ConnectedNetwork
   },
   filters: {
     atoms,
@@ -234,11 +254,17 @@ export default {
     ...mapGetters([`liquidAtoms`, `totalAtoms`, `bondDenom`]),
     getChainTitle() {
       return this.networkConfig.chain_title
+    },
+    explorerUrl() {
+      return this.networkConfig.explorer_url
     }
   },
   methods: {
     feedback() {
-      console.log('feedback')
+      console.log("feedback")
+    },
+    openStakeCalculator() {
+      this.$store.dispatch("showStakeCalculator")
     },
     close() {
       this.$emit(`close`)
@@ -329,9 +355,30 @@ export default {
   padding-top: var(--unit);
 }
 
+/*
 .app-menu-item.small {
   font-weight: normal;
-  border-left-color: transparent !important;
+  border: 1px solid #33d2d4;
+  border-radius: 15px;
+  padding: 5px 10px;
+  max-width: 170px;
+  text-align: left;
+  margin: 10px auto;
+}
+*/
+
+.app-menu-item.small {
+  font-weight: normal;
+  border: 0;
+  border-bottom: 1px solid #dedede;
+  padding: 10px 10px;
+  text-align: left;
+  margin: 0 0 0 0;
+}
+
+.app-menu-item.auth {
+  margin-top: 20px;
+  border-left: 4px solid var(--gray);
 }
 
 .app-menu-item h2 {

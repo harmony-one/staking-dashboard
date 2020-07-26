@@ -49,7 +49,7 @@ export default {
     search: {
       type: String,
       default: () => ""
-    },
+    }
   },
   data: () => ({
     query: ``,
@@ -147,7 +147,7 @@ export default {
           tooltip: tooltips.v_list.average_apr,
           width: "200px",
           align: "right",
-          render: (value, item) => (item.apr === null ? "new" : percent(value))
+          render: value => percent(value)
         },
         {
           title: `Stake`,
@@ -171,7 +171,7 @@ export default {
           tooltip: tooltips.v_list.uptime,
           width: "110px",
           align: "right",
-          render: (value, item) => (item.apr === null ? "new" : percent(value))
+          render: value => percent(value)
         }
       ]
 

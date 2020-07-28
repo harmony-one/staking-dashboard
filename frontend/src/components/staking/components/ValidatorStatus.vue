@@ -40,7 +40,7 @@ export default {
       return toClassName(this.status)
     },
     status_detailed() {
-      if (this.data.jailed) return `Temporally banned from the network`
+      if (this.data.jailed) return `Temporarily banned from the network`
       if (this.data.tombstoned) return `Banned from the network`
       if (this.data.status === 0) return `Banned from the network`
       return false

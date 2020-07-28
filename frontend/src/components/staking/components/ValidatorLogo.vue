@@ -32,7 +32,7 @@ export default {
   components: {
     Avatar
   },
-  props: ["operatorAddress", "logoUrl", "name", "size"],
+  props: ["operatorAddress", "logoUrl", "name", "size", "identity"],
   data() {
     return {
       isImageLoaded: false,
@@ -41,8 +41,33 @@ export default {
   },
   computed: {
     imageSrc() {
+      let keybaseLogo = ""
+      let requestString = `https://keybase.io/_/api/1.0/user/lookup.json?key_fingerprint=${this.identity}&fields=pictures`
+      let httpRequest = new XMLHttpRequest()
+
+      if (!httpRequest) {
+        console.error("Giving up :( Cannot create an XMLHTTP instance")
+      }
+      httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+          if (httpRequest.status === 200) {
+            let response = JSON.parse(httpRequest.responseText)
+            console.log(response);
+            if (response.status.code === 0 && response.them.length > 0) {
+              keybaseLogo = response.them[0].pictures.primary.url
+            } else {
+              console.error(`Keybase response code: ${response.status.code} or no Keybase user found`)
+            }
+          } else {
+            console.error("There was a problem with the request.")
+          }
+        }
+      };
+      httpRequest.open("GET", requestString, false)
+      httpRequest.send()
+
       return (
-        this.logoUrl ||
+        this.logoUrl || keybaseLogo ||
         `https://github.com/harmony-one/validator-logos/raw/master/validators/${this.operatorAddress}.jpg`
       )
     },

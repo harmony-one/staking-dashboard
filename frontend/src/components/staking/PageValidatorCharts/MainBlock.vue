@@ -6,6 +6,7 @@
           :name="validator.moniker"
           :operator-address="validator.operator_address"
           :logo-url="validator.logo_url"
+          :identity="validator.identity"
           size="large"
         />
         <div class="validator-info">

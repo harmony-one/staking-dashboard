@@ -405,6 +405,7 @@ export class ValidatorsInfoService {
           apr: validator.apr,
           address: validator.address,
           name: validator.name,
+          identity: validator.identity,
           rate: validator.rate,
           total_stake: validator.total_stake,
           uptime_percentage: validator.uptime_percentage,

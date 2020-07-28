@@ -25,6 +25,7 @@
         :name="data.moniker"
         :operator-address="data.operator_address"
         :logo-url="data.logo_url"
+        :identity="data.identity"
       />
       <div class="validator-info">
         <h3 class="li-validator-name">{{ data.moniker }}</h3>

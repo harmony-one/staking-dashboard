@@ -185,7 +185,7 @@ export class ValidatorsInfoService {
           const { epoch_apr } = validatorInfo;
 
           validatorInfo.apr =
-            epoch_apr.reduce((acc, v) => acc + parseFloat(v['Value']), 0) / epoch_apr.length;
+            epoch_apr.reduce((acc, v) => acc + parseFloat(v.apr), 0) / epoch_apr.length;
         }
 
         // if (!this.cache.VALIDATORS_TOTAL_STAKE[validatorInfo.address]) {

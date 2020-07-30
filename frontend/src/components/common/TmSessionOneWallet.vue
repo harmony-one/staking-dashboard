@@ -7,10 +7,10 @@
           Looks like you don't have the Harmony One Wallet extension installed
           yet. Head over to the
           <a
-            href="https://chrome.google.com/webstore/detail/math-wallet/afbcbjpbpfadlkmhmclhkeeodmamcflc"
+            href="https://chrome.google.com/webstore/detail/harmony-one-wallet/gldpceolgfpjnajainimdfghhhgcnfmf"
             target="_blank"
             rel="noopener norefferer"
-          >Harmony One Wallet Extension</a>
+          >Harmony One Wallet</a>
           to quickly install the extension.
         </p>
       </div>

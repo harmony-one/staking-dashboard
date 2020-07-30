@@ -518,9 +518,9 @@ export class StakingNetworkInfoService {
 
   calculateSecondPerBlock = async () => {
     try {
-      let res: { result } = await this.apiClient.post('/', bodyParams('hmyv2_latestHeader'));
+      let res: { data } = await this.apiClient.post('/', bodyParams('hmyv2_latestHeader'));
 
-      const lastBlockNumber = res.result.blockNumber;
+      const lastBlockNumber = res.data.result.blockNumber;
       const txCount = 1000;
 
       res = await this.apiClient.post(
@@ -539,7 +539,7 @@ export class StakingNetworkInfoService {
         )
       );
 
-      const blocksTimestamp = res.result.map(b => Number(b.timestamp));
+      const blocksTimestamp = res.data.result.map(b => Number(b.timestamp));
 
       const diffs = [];
 

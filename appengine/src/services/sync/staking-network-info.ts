@@ -531,11 +531,11 @@ export class StakingNetworkInfoService {
           params: [
             '0x' + Number(lastBlockNumber - txCount).toString(16),
             '0x' + Number(lastBlockNumber).toString(16),
-            JSON.stringify({
+            {
               withSigners: false,
               fullTx: false,
               inclStaking: true,
-            }),
+            },
           ],
           id: 1,
         })

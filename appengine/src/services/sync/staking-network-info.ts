@@ -5,7 +5,7 @@ import { bodyParams, changePercentage, externalShardsByKeys } from './helpers';
 import { IBaseServiceParams, IServices } from './interfaces';
 
 const MAX_LENGTH = 30;
-const SECOND_PER_BLOCK = 5.4;
+let SECOND_PER_BLOCK = 5.4;
 
 export class StakingNetworkInfoService {
   apiClient: AxiosInstance;
@@ -513,6 +513,49 @@ export class StakingNetworkInfoService {
         err,
         res.result
       );
+    }
+  };
+
+  calculateSecondPerBlock = async () => {
+    try {
+      let res: any = this.apiClient.post('/', bodyParams('hmyv2_latestHeader'));
+
+      const lastBlockNumber = res.result.blockNumber;
+      const txCount = 1000;
+
+      res = await this.apiClient.post(
+        '/',
+        bodyParams(
+          'hmy_getBlocks',
+          [
+            '0x' + Number(lastBlockNumber - txCount).toString(16),
+            '0x' + Number(lastBlockNumber).toString(16),
+            JSON.stringify({
+              withSigners: false,
+              fullTx: false,
+              inclStaking: true,
+            }),
+          ].join(',')
+        )
+      );
+
+      const blocksTimestamp = res.result.map(b => Number(b.timestamp));
+
+      const diffs = [];
+
+      for (let i = blocksTimestamp.length - 1; i > 0; i--) {
+        diffs.push(blocksTimestamp[i] - blocksTimestamp[i - 1]);
+      }
+
+      // console.log(JSON.stringify(diffs));
+
+      const average = diffs.reduce((acc, t) => acc + t, 0) / diffs.length;
+
+      SECOND_PER_BLOCK = average;
+
+      console.log('SECOND_PER_BLOCK: ', SECOND_PER_BLOCK);
+    } catch (e) {
+      console.log('Error calculateSecondPerBlock ', e.message);
     }
   };
 }

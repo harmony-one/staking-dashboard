@@ -523,20 +523,23 @@ export class StakingNetworkInfoService {
       const lastBlockNumber = res.data.result.blockNumber;
       const txCount = 1000;
 
-      res = await this.apiClient.post('/', {
-        jsonrpc: '2.0',
-        method: 'hmy_getBlocks',
-        params: [
-          '0x' + Number(lastBlockNumber - txCount).toString(16),
-          '0x' + Number(lastBlockNumber).toString(16),
-          JSON.stringify({
-            withSigners: false,
-            fullTx: false,
-            inclStaking: true,
-          }),
-        ],
-        id: 1,
-      });
+      res = await this.apiClient.post(
+        '/',
+        JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'hmy_getBlocks',
+          params: [
+            '0x' + Number(lastBlockNumber - txCount).toString(16),
+            '0x' + Number(lastBlockNumber).toString(16),
+            JSON.stringify({
+              withSigners: false,
+              fullTx: false,
+              inclStaking: true,
+            }),
+          ],
+          id: 1,
+        })
+      );
 
       const blocksTimestamp = res.data.result.map(b => Number(b.timestamp));
 

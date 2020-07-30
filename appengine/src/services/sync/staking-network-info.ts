@@ -5,7 +5,7 @@ import { bodyParams, changePercentage, externalShardsByKeys } from './helpers';
 import { IBaseServiceParams, IServices } from './interfaces';
 
 const MAX_LENGTH = 30;
-const SECOND_PER_BLOCK = 5;
+const SECOND_PER_BLOCK = 5.4;
 
 export class StakingNetworkInfoService {
   apiClient: AxiosInstance;

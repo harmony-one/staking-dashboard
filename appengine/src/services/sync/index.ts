@@ -4,6 +4,7 @@ import { ValidatorsInfoService } from './validators-info';
 import { IBaseServiceParams, IServices } from './interfaces';
 
 const SYNC_PERIOD = 60000;
+const LONG_SYNC_PERIOD = 5 * 60000;
 
 export class SyncService {
   networkInfoService: StakingNetworkInfoService;
@@ -64,7 +65,12 @@ export class SyncService {
       await this.update();
     }, SYNC_PERIOD);
 
+    setInterval(async () => {
+      await this.longUpdate();
+    }, LONG_SYNC_PERIOD);
+
     this.update();
+    this.longUpdate();
   }
 
   update = async () => {
@@ -94,6 +100,10 @@ export class SyncService {
     } catch (err) {
       console.log('main update Error: ', err.message);
     }
+  };
+
+  longUpdate = async () => {
+    await this.networkInfoService.calculateSecondPerBlock();
   };
 
   getStakingNetworkInfo = () => this.networkInfoService.getStakingNetworkInfo();

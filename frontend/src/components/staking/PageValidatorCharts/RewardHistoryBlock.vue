@@ -72,14 +72,14 @@ export default {
 
       return {
         labels: data.map(
-          v => parseFloat(v.Epoch) /* moment(v.uctDate).format("MM.DD") */
+          v => parseFloat(v.epoch) /* moment(v.uctDate).format("MM.DD") */
         ),
         datasets: [
           {
             label: "Rate",
             borderColor: "#0a93eb",
             fill: false,
-            data: data.map(v => v.Value * 100)
+            data: data.map(v => v.apr * 100)
           }
         ]
       }

@@ -1,10 +1,12 @@
 import { AxiosInstance } from 'axios';
 import { StakingNetworkInfoService } from './staking-network-info';
 import { ValidatorsInfoService } from './validators-info';
+import {ValidatorsAvatarCacheService} from './validators-avatars'
 
 export interface IServices {
   networkInfoService?: StakingNetworkInfoService;
   validatorsInfoService?: ValidatorsInfoService;
+  validatorsAvatarCacheService?: ValidatorsAvatarCacheService
 }
 
 export interface IBaseServiceParams {

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { StakingNetworkInfoService } from './staking-network-info';
 import { ValidatorsInfoService } from './validators-info';
 import { IBaseServiceParams, IServices } from './interfaces';
+import {ValidatorsAvatarCacheService} from './validators-avatars'
 
 const SYNC_PERIOD = 60000;
 const LONG_SYNC_PERIOD = 5 * 60000;
@@ -59,6 +60,7 @@ export class SyncService {
 
     services.networkInfoService = this.networkInfoService;
     services.validatorsInfoService = this.validatorsInfoService;
+    services.validatorsAvatarCacheService = new ValidatorsAvatarCacheService()
 
     setInterval(async () => {
       console.log('--------- Updating ---------', BLOCKCHAIN_SERVER, new Date().toString());

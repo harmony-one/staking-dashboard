@@ -408,6 +408,8 @@ export class ValidatorsInfoService {
           rate: validator.rate,
           total_stake: validator.total_stake,
           uptime_percentage: validator.uptime_percentage,
+          //identity: validator.identity,
+          logoUrl: 'https://i01.fotocdn.net/s123/e1958e718063c678/user_xl/2804839805.jpg'
         };
       })
       .filter(isNotEmpty);

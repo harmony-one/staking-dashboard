@@ -4,7 +4,7 @@
       v-if="!isSmall"
       :name="data.moniker"
       :operator-address="data.operator_address"
-      :logo-url="data.logo_url"
+      :logo-url="data.logoUrl"
     />
     <h3 class="li-validator-name">{{ data.moniker }}</h3>
   </div>

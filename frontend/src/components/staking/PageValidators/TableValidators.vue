@@ -112,7 +112,8 @@ export default {
                 parseInt(pool.pool.bonded_tokens),
                 parseFloat(annualProvision)
               )
-            : undefined
+            : undefined,
+          logoUrl: v.logoUrl
         })
       })
     },
@@ -123,6 +124,7 @@ export default {
       return this.pagination.pageIndex * this.pagination.pageSize
     },
     showingValidators() {
+      console.log({showingValidators: this.sortedEnrichedValidators})
       return this.sortedEnrichedValidators
     },
     columns() {

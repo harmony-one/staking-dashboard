@@ -6,8 +6,9 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "NODE_ENV=production node ./dist/server.js",
-    "build": "rm -rf ./dist && tsc",
     "start:prod": "node ./dist/server.js",
+    "build": "rm -rf ./dist && tsc",
+    "build:dev": "rm -rf ./dist && tsc -w",
     "test": "jest --forceExit",
     "path": "tspath"
   },

@@ -10,6 +10,7 @@ const LONG_SYNC_PERIOD = 5 * 60000;
 export class SyncService {
   networkInfoService: StakingNetworkInfoService;
   validatorsInfoService: ValidatorsInfoService;
+  validatorsAvatarCacheService: ValidatorsAvatarCacheService
 
   constructor(
     BLOCKCHAIN_SERVER,
@@ -57,10 +58,11 @@ export class SyncService {
 
     this.networkInfoService = new StakingNetworkInfoService(baseParams);
     this.validatorsInfoService = new ValidatorsInfoService(baseParams);
+    this.validatorsAvatarCacheService = new ValidatorsAvatarCacheService()
 
     services.networkInfoService = this.networkInfoService;
     services.validatorsInfoService = this.validatorsInfoService;
-    services.validatorsAvatarCacheService = new ValidatorsAvatarCacheService()
+    services.validatorsAvatarCacheService = this.validatorsAvatarCacheService
 
     setInterval(async () => {
       console.log('--------- Updating ---------', BLOCKCHAIN_SERVER, new Date().toString());

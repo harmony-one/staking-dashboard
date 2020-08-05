@@ -70,6 +70,20 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
     })
   );
 
+    app.get(
+        '/networks/:networkId/validators/:address/avatar',
+        asyncHandler(async (req, res) => {
+            const avatar = getSyncService(req.params.networkId).validatorsAvatarCacheService.getValidatorCachedAvatarByValidatorAddress(req.params.address)
+
+            if (!avatar) {
+                throw createError(404, 'Not found');
+            }
+
+            res.type('image/jpg');
+            res.end(avatar);
+        })
+    );
+
   app.get(
     '/networks/:networkId/validator_history/:address',
     asyncHandler(async (req, res) => {

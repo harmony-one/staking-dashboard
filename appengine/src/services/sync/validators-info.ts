@@ -396,6 +396,7 @@ export class ValidatorsInfoService {
         validators = validators
             .map(address => {
                 const validator = this.cache.VALIDATOR_INFO[address];
+                // console.log(JSON.stringify(validator))
 
                 if (!validator) {
                     return null;

@@ -21,6 +21,7 @@ export class ValidatorsAvatarCacheService {
 
         this.isCaching = true
         console.log(`Caching validators' avatars start`)
+        console.log(validators[0])
         for (let v of validators) {
             try {
                 const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)

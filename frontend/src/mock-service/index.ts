@@ -8,9 +8,7 @@ import {
 
 const queryString = require("query-string")
 
-const urls = process.env.MOCK_API_URL
-    ? [process.env.MOCK_API_URL]
-    : [
+const urls = [
   "https://hmny-t.co",
   "https://staking-us-west.hmny.io",
   "https://staking-explorer-test.appspot.com"

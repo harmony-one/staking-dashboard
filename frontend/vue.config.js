@@ -11,8 +11,6 @@ const commitHash = require(`child_process`)
   .toString()
   .trim()
 
-const DEFAULT_MOCK_API_URL = "http://localhost:6000"
-
 module.exports = {
   publicPath: `/`,
   configureWebpack: () => {
@@ -39,9 +37,7 @@ module.exports = {
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),
             RELEASE: JSON.stringify(commitHash),
             MAX_ATTEMPTS: JSON.stringify(process.env.MAX_ATTEMPTS),
-            MOCK_API_URL: JSON.stringify(
-              process.env.MOCK_API_URL || DEFAULT_MOCK_API_URL
-            ),
+            MOCK_API_URL: JSON.stringify(process.env.MOCK_API_URL),
             DEFAULT_NETWORK: JSON.stringify(process.env.DEFAULT_NETWORK),
             DEFAULT_CHAIN_TITLE: JSON.stringify(
               process.env.DEFAULT_CHAIN_TITLE

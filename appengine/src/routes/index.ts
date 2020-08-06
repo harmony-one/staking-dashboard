@@ -1,6 +1,7 @@
 import { asyncHandler, createError } from './helpers';
 import { DBService } from '../services/database';
 import { SyncService } from '../services/sync';
+import request from 'request'
 
 export interface INetwork {
   chain_id: number;
@@ -69,6 +70,21 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
       res.json(validator);
     })
   );
+
+    app.get(
+        '/networks/:networkId/validators/:address/avatar',
+        asyncHandler(async (req, res) => {
+            const avatar = getSyncService(req.params.networkId).validatorsAvatarCacheService
+                .getValidatorCachedAvatarByValidatorAddress(req.params.address)
+
+            if (!avatar) {
+                throw createError(404, 'Not found');
+            }
+
+            res.set('Content-Type', 'image/jpg');
+            res.send(avatar);
+        })
+    );
 
   app.get(
     '/networks/:networkId/validator_history/:address',

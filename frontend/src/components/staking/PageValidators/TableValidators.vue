@@ -112,7 +112,8 @@ export default {
                 parseInt(pool.pool.bonded_tokens),
                 parseFloat(annualProvision)
               )
-            : undefined
+            : undefined,
+          logoUrl: v.logoUrl
         })
       })
     },

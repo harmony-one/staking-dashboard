@@ -2,6 +2,7 @@ import axios from 'axios';
 import { StakingNetworkInfoService } from './staking-network-info';
 import { ValidatorsInfoService } from './validators-info';
 import { IBaseServiceParams, IServices } from './interfaces';
+import {ValidatorsAvatarCacheService} from './validators-avatars'
 
 const SYNC_PERIOD = 60000;
 const LONG_SYNC_PERIOD = 5 * 60000;
@@ -9,13 +10,15 @@ const LONG_SYNC_PERIOD = 5 * 60000;
 export class SyncService {
   networkInfoService: StakingNetworkInfoService;
   validatorsInfoService: ValidatorsInfoService;
+  validatorsAvatarCacheService: ValidatorsAvatarCacheService
 
   constructor(
     BLOCKCHAIN_SERVER,
     chainTitle,
     updateDocument,
     getCollectionDataWithLimit,
-    getGlobalDataWithLimit
+    getGlobalDataWithLimit,
+    validatorsAvatarCacheService
   ) {
     // Currently only work for OS network and testnet.
     if (
@@ -55,10 +58,13 @@ export class SyncService {
     };
 
     this.networkInfoService = new StakingNetworkInfoService(baseParams);
-    this.validatorsInfoService = new ValidatorsInfoService(baseParams);
-
     services.networkInfoService = this.networkInfoService;
+
+    this.validatorsInfoService = new ValidatorsInfoService(baseParams);
     services.validatorsInfoService = this.validatorsInfoService;
+
+    this.validatorsAvatarCacheService = validatorsAvatarCacheService
+    services.validatorsAvatarCacheService = this.validatorsAvatarCacheService
 
     setInterval(async () => {
       console.log('--------- Updating ---------', BLOCKCHAIN_SERVER, new Date().toString());

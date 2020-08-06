@@ -8,7 +8,9 @@ import {
 
 const queryString = require("query-string")
 
-const urls = [
+const urls = process.env.MOCK_API_URL
+    ? [process.env.MOCK_API_URL]
+    : [
   "https://hmny-t.co",
   "https://staking-us-west.hmny.io",
   "https://staking-explorer-test.appspot.com"
@@ -127,6 +129,10 @@ export function fetchValidatorByAddress(networkId: string, address: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/validators/${address}`)
     .then(rez => remapValidator(rez.data, true))
+}
+
+export function fetchValidatorAvatarSrcByAddress(networkId: string, address: string) {
+  return `${API_URL}/networks/${networkId}/validators/${address}/avatar`
 }
 
 export function fetchValidatorHistory(networkId: string, address: string) {

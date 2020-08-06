@@ -81,6 +81,8 @@ export const remapValidator = (
   validator: TBlockchainValidator,
   convertAddress = false
 ): TFrontendValidator => {
+
+
   return {
     ...validator,
     userName: validator.name,

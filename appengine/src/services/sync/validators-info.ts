@@ -143,8 +143,11 @@ export class ValidatorsInfoService {
                 const utcDate = new Date(Date.now());
                 const epochIndex = parseInt(res['last-epoch-in-committee']);
 
+                const validatorAddress = res['one-address'] || res.addres
                 const validatorInfo = {
                     ...res,
+                    hasLogo: this.services.validatorsAvatarCacheService
+                        .hasValidatorCachedAvatar(validatorAddress),
                     self_stake: selfStake,
                     total_stake: totalStake,
                     average_stake: averageStake,
@@ -163,7 +166,7 @@ export class ValidatorsInfoService {
                     blocks_should_sign: 100,
                     uctDate: utcDate,
                     index: epochIndex,
-                    address: res['one-address'] || res.address,
+                    address: validatorAddress,
                     active_nodes: Array.isArray(res['bls-public-keys']) ? res['bls-public-keys'].length : 1,
                     elected_nodes: Array.isArray(res['bls-public-keys'])
                         ? res['bls-public-keys'].filter(item =>

@@ -131,6 +131,10 @@ export function fetchValidatorByAddress(networkId: string, address: string) {
     .then(rez => remapValidator(rez.data, true))
 }
 
+export function fetchValidatorAvatarSrcByAddress(networkId: string, address: string) {
+  return `${API_URL}/networks/${networkId}/validators/${address}/avatar`
+}
+
 export function fetchValidatorHistory(networkId: string, address: string) {
   return axios
     .get(`${API_URL}/networks/${networkId}/validator_history/${address}`)

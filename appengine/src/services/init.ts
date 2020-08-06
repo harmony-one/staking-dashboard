@@ -1,7 +1,7 @@
 import { DBService } from './database';
 import { SyncService } from './sync';
 
-export const InitServices = async function () {
+export const InitServices = async function (validatorsAvatarCacheService) {
   const dbService = new DBService();
 
   const syncServices: Record<string, SyncService> = {};
@@ -14,7 +14,8 @@ export const InitServices = async function () {
       network.chain_title,
       dbService.updateDocument,
       dbService.getCollectionDataWithLimit,
-      dbService.getGlobalDataWithLimit
+      dbService.getGlobalDataWithLimit,
+        validatorsAvatarCacheService
     );
   });
 

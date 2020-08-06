@@ -17,7 +17,8 @@ export class SyncService {
     chainTitle,
     updateDocument,
     getCollectionDataWithLimit,
-    getGlobalDataWithLimit
+    getGlobalDataWithLimit,
+    validatorsAvatarCacheService
   ) {
     // Currently only work for OS network and testnet.
     if (
@@ -57,11 +58,12 @@ export class SyncService {
     };
 
     this.networkInfoService = new StakingNetworkInfoService(baseParams);
-    this.validatorsInfoService = new ValidatorsInfoService(baseParams);
-    this.validatorsAvatarCacheService = new ValidatorsAvatarCacheService()
-
     services.networkInfoService = this.networkInfoService;
+
+    this.validatorsInfoService = new ValidatorsInfoService(baseParams);
     services.validatorsInfoService = this.validatorsInfoService;
+
+    this.validatorsAvatarCacheService = validatorsAvatarCacheService
     services.validatorsAvatarCacheService = this.validatorsAvatarCacheService
 
     setInterval(async () => {

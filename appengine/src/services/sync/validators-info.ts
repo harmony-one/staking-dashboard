@@ -396,7 +396,6 @@ export class ValidatorsInfoService {
         validators = validators
             .map(address => {
                 const validator = this.cache.VALIDATOR_INFO[address];
-                // console.log(JSON.stringify(validator))
 
                 if (!validator) {
                     return null;
@@ -410,9 +409,8 @@ export class ValidatorsInfoService {
                     rate: validator.rate,
                     total_stake: validator.total_stake,
                     uptime_percentage: validator.uptime_percentage,
-                    identity: validator.identity,
-                    logoUrl: this.services.validatorsAvatarCacheService
-                        .getValidatorCachedAvatarByValidatorAddress(validator.address)
+                    hasLogo: !!this.services.validatorsAvatarCacheService
+                        .hasValidatorCachedAvatar(validator.address)
                 };
             })
             .filter(isNotEmpty);

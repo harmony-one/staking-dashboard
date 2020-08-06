@@ -1,10 +1,16 @@
 'use strict';
 
+import {ValidatorsAvatarCacheService} from "./services/sync/validators-avatars";
+
 require('../env');
 import express from 'express';
 import cors from 'cors';
 import { routes } from './routes';
 import { InitServices } from './services/init';
+import {ValidatorsInfoService} from "./services/sync/validators-info";
+
+//singleton
+const validatorsAvatarCacheService = new ValidatorsAvatarCacheService()
 
 const startServer = async () => {
   const app = express();
@@ -16,7 +22,7 @@ const startServer = async () => {
   });
 
   // Init services
-  const services = await InitServices();
+  const services = await InitServices(validatorsAvatarCacheService);
 
   // Init routes
   routes(app, services.dbService, services.syncServices);

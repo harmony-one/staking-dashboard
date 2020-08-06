@@ -24,7 +24,7 @@
       <ValidatorLogo
         :name="validator.moniker"
         :operator-address="validator.operator_address"
-        :logo-url="validator.logo_url"
+        :hasLogo="validator.hasLogo"
       />
       <div class="validator-info">
         <h3 class="li-validator-name">{{ validator.moniker }}</h3>

@@ -1,6 +1,7 @@
 import { asyncHandler, createError } from './helpers';
 import { DBService } from '../services/database';
 import { SyncService } from '../services/sync';
+import request from 'request'
 
 export interface INetwork {
   chain_id: number;
@@ -80,8 +81,8 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
                 throw createError(404, 'Not found');
             }
 
-            res.type('image/jpg');
-            res.end(avatar);
+            res.set('Content-Type', 'image/jpg');
+            res.send(avatar);
         })
     );
 

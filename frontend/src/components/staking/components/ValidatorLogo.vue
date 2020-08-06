@@ -1,13 +1,13 @@
 <template>
   <div :class="containerClasses">
     <img
-      v-if="this.name && !isImageLoaded && !loadedWithError"
+      v-if="this.hasLogo && !isImageLoaded && !loadedWithError"
       class="loader li-validator-image"
       src="~assets/images/loader.svg"
       alt="a small spinning circle to display loading"
     />
     <img
-      v-if="this.name && !loadedWithError"
+      v-if="this.hasLogo && !loadedWithError"
       :src="this.imageSrc"
       :style="{ display: isImageLoaded ? 'block' : 'none' }"
       class="li-validator-image"
@@ -16,7 +16,7 @@
       @load="isImageLoaded = true"
     />
     <Avatar
-      v-if="!this.name || loadedWithError"
+      v-if="!this.hasLogo || loadedWithError"
       class="li-validator-image"
       alt="generic validator logo - generated avatar from address"
       :address="operatorAddress"
@@ -26,25 +26,31 @@
 
 <script>
 import Avatar from "common/Avatar"
+import {fetchValidatorAvatarSrcByAddress} from "@/mock-service"
+import {mapState} from "vuex";
 
 export default {
   name: `ValidatorLogo`,
   components: {
     Avatar
   },
-  props: ["operatorAddress", "logoUrl", "name", "size"],
+  props: ["operatorAddress", "hasLogo", "name", "size"],
   data() {
     return {
       isImageLoaded: false,
       loadedWithError: false
     }
   },
+  methods: {
+    fetchValidatorAvatarSrcByAddress
+  },
   computed: {
+    ...mapState({
+      chainTitle: state => state.connection.chainTitle
+    }),
     imageSrc() {
-      return (
-        this.logoUrl ||
-        `https://github.com/harmony-one/validator-logos/raw/master/validators/${this.operatorAddress}.jpg`
-      )
+      console.log(this.hasLogo)
+      return fetchValidatorAvatarSrcByAddress(this.chainTitle ,this.operatorAddress)
     },
     containerClasses() {
       return {

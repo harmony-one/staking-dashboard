@@ -124,7 +124,6 @@ export default {
       return this.pagination.pageIndex * this.pagination.pageSize
     },
     showingValidators() {
-      console.log({showingValidators: this.sortedEnrichedValidators})
       return this.sortedEnrichedValidators
     },
     columns() {

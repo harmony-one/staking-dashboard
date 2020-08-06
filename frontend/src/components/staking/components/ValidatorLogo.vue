@@ -49,7 +49,6 @@ export default {
       chainTitle: state => state.connection.chainTitle
     }),
     imageSrc() {
-      console.log(this.hasLogo)
       return fetchValidatorAvatarSrcByAddress(this.chainTitle ,this.operatorAddress)
     },
     containerClasses() {

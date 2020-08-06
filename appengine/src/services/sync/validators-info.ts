@@ -409,7 +409,7 @@ export class ValidatorsInfoService {
                     rate: validator.rate,
                     total_stake: validator.total_stake,
                     uptime_percentage: validator.uptime_percentage,
-                    hasLogo: !!this.services.validatorsAvatarCacheService
+                    hasLogo: this.services.validatorsAvatarCacheService
                         .hasValidatorCachedAvatar(validator.address)
                 };
             })

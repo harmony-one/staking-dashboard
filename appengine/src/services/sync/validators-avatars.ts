@@ -26,8 +26,9 @@ export class ValidatorsAvatarCacheService {
             // console.log({v})
             // await get image by url
             // cache image
-            const githubAvatar = await this.getGithubAvatarByOperatorAddress(v.address)
-            this.cache.AVATAR_URLS[v.address] = {githubAvatar}
+            const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)
+            const keyBaseAvatar = await this.fetchKeyBaseAvatarByValidatorIdentity(v.identity)
+            this.cache.AVATAR_URLS[v.address] = {githubAvatar, keyBaseAvatar}
         }
 
         this.cache.lastCachedDate = Date.now()
@@ -37,14 +38,13 @@ export class ValidatorsAvatarCacheService {
     }
 
     getValidatorCachedAvatarByValidatorAddress = (validatorAddress) => {
-        const fallback = 'https://i01.fotocdn.net/s123/e1958e718063c678/user_xl/2804839805.jpg'
-        const githubAvatar = this.cache.AVATAR_URLS[validatorAddress] ? this.cache.AVATAR_URLS[validatorAddress].githubAvatar : null
+        const fallback = null
+        const {githubAvatar, keyBaseAvatar} = this.cache.AVATAR_URLS[validatorAddress] || {}
 
-        console.log('serving avatar', !!githubAvatar)
-        return githubAvatar || fallback
+        return keyBaseAvatar || githubAvatar || fallback
     }
 
-    getGithubAvatarByOperatorAddress = async (validatorAddress) => {
+    fetchGithubAvatarByValidatorAddress = async (validatorAddress) => {
         const url = `https://github.com/harmony-one/validator-logos/raw/master/validators/${validatorAddress}.jpg`
 
         return new Promise((resolve, reject) => {
@@ -54,11 +54,25 @@ export class ValidatorsAvatarCacheService {
                     return
                 }
 
-                console.log(res.statusCode, validatorAddress, typeof body )
+                resolve(body)
+            })
+        })
+    }
+
+    fetchKeyBaseAvatarByValidatorIdentity = async (validatorIdentity) => {
+        const url = `https://keybase.io/_/api/1.0/user/lookup.json?key_fingerprint=${validatorIdentity}&fields=pictures`
+
+        return new Promise((resolve, reject) => {
+            request.get(url, (err, res, body) => {
+                // todo parse response
+
+                if (err || res.statusCode >= 400) {
+                    resolve(null)
+                    return
+                }
+
                 resolve(body)
             })
         })
     }
 }
-
-//one16way77arx9zseyhwa4sn3qkugxchqcjgkgduzp

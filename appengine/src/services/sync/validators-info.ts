@@ -143,7 +143,7 @@ export class ValidatorsInfoService {
                 const utcDate = new Date(Date.now());
                 const epochIndex = parseInt(res['last-epoch-in-committee']);
 
-                const validatorAddress = res['one-address'] || res.addres
+                const validatorAddress = res['one-address'] || res.address
                 const validatorInfo = {
                     ...res,
                     hasLogo: this.services.validatorsAvatarCacheService

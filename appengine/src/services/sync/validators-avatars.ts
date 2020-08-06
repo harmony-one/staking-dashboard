@@ -39,11 +39,11 @@ export class ValidatorsAvatarCacheService {
     }
 
     hasValidatorCachedAvatar = (validatorAddress) => {
-        return this.cache.AVATAR_URLS[validatorAddress]
+        return Boolean(this.cache.AVATAR_URLS[validatorAddress]
             && (
                 this.cache.AVATAR_URLS[validatorAddress].githubAvatar
                 || this.cache.AVATAR_URLS[validatorAddress].keyBaseAvatar
-            )
+            ))
     }
 
     getValidatorCachedAvatarByValidatorAddress = (validatorAddress) => {

@@ -8,11 +8,13 @@ import {
 
 const queryString = require("query-string")
 
-const urls = [
-  "https://hmny-t.co",
-  "https://staking-us-west.hmny.io",
-  "https://staking-explorer-test.appspot.com"
-]
+const urls = process.env.MOCK_API_URL
+    ? [process.env.MOCK_API_URL]
+    : [
+      "https://hmny-t.co",
+      "https://staking-us-west.hmny.io",
+      "https://staking-explorer-test.appspot.com"
+    ]
 
 let urlIndex = 0
 let API_URL = urls[urlIndex]

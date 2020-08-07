@@ -1,7 +1,8 @@
 import request from 'request'
 import {requestPromise} from "../../utils/requestPromise";
 
-const CACHE_TIMEOUT_MS = 1000 * 10 * 60
+const CACHE_EXP_MS = 1000 * 60 * 60
+const LOOP_INTERVAL_MS= 1000 * 1 * 60
 
 /* todo
     intelligent cache
@@ -17,7 +18,10 @@ export class ValidatorsAvatarCacheService {
 
     addValidatorsForCaching = async (validators = []) => {
         validators.forEach(v => {
-            this.cache.VALIDATORS[v.address] = v
+            this.cache.VALIDATORS[v.address] = {
+                ...v,
+                expirationTime: Date.now() + CACHE_EXP_MS
+            }
         })
     }
 
@@ -31,10 +35,14 @@ export class ValidatorsAvatarCacheService {
         const validators = Object.values(this.cache.VALIDATORS) as any
 
         console.log(`Caching validators' avatars start`)
+        const now = Date.now()
+
         for (let v of validators) {
-            if (this.isCached(v.address)) {
+            const {expirationTime} = v
+            if (now < expirationTime && this.isCached(v.address)) {
                 continue
             }
+            console.log('Caching avatar for',v.address)
 
             try {
                 const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)
@@ -45,7 +53,7 @@ export class ValidatorsAvatarCacheService {
         }
         console.log(`Caching validators' avatars end`, validators.length)
 
-        setTimeout(this.loop, CACHE_TIMEOUT_MS)
+        setTimeout(this.loop, LOOP_INTERVAL_MS)
     }
 
     getValidatorCachedAvatarByValidatorAddress = (validatorAddress) => {

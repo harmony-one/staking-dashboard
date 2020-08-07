@@ -1,7 +1,7 @@
 import request from 'request'
 import {requestPromise} from "../../utils/requestPromise";
 
-const CACHE_TIMEOUT_MS = 1000 * 1 * 60
+const CACHE_TIMEOUT_MS = 1000 * 10 * 60
 
 /* todo
     intelligent cache

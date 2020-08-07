@@ -5,7 +5,7 @@
   "private": true,
   "main": "src/server.ts",
   "scripts": {
-    "start": "NODE_ENV=production node ./dist/server.js",
+    "start": "node ./dist/server.js",
     "start:watch": "tsc -w & nodemon -q -w ./dist ./dist/server.js",
     "start:prod": "node ./dist/server.js",
     "build": "rm -rf ./dist && tsc",

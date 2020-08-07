@@ -2,7 +2,7 @@ import request from 'request'
 import {requestPromise} from "../../utils/requestPromise";
 
 const CACHE_EXP_MS = 1000 * 60 * 60
-const LOOP_INTERVAL_MS= 1000 * 1 * 60
+const LOOP_INTERVAL_MS = 1000 * 1 * 60
 
 /* todo
     intelligent cache
@@ -42,14 +42,18 @@ export class ValidatorsAvatarCacheService {
             if (now < expirationTime && this.isCached(v.address)) {
                 continue
             }
-            console.log('Caching avatar for',v.address)
 
-            try {
-                const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)
-                const keyBaseAvatar = await this.fetchKeyBaseAvatarByValidatorIdentity(v.identity)
-                this.cache.AVATAR_URLS[v.address] = {githubAvatar, keyBaseAvatar}
-            } catch (e) {
+            const cacheAvatar = async () => {
+                try {
+                    const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)
+                    const keyBaseAvatar = await this.fetchKeyBaseAvatarByValidatorIdentity(v.identity)
+                    this.cache.AVATAR_URLS[v.address] = {githubAvatar, keyBaseAvatar}
+                } catch (e) {
+                }
             }
+
+            console.log('Caching avatar for', v.address)
+            cacheAvatar().catch()
         }
         console.log(`Caching validators' avatars end`, validators.length)
 

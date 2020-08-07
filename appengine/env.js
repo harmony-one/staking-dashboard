@@ -6,10 +6,10 @@ const path = require('path');
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV || 'production';
 
-if (!NODE_ENV) {
-  throw new Error('The NODE_ENV environment variable is required but was not specified.');
+if (!process.env.NODE_ENV) {
+  console.warn('NODE ENV is not specified. Set to production')
 }
 
 var dotenvFiles = [`${resolveApp('.env')}.${NODE_ENV}`].filter(Boolean);

@@ -143,7 +143,7 @@ export class StakingNetworkInfoService {
         total_stake,
         num: blsKeys.length,
         hasLogo: this.services.validatorsAvatarCacheService
-            .hasValidatorCachedAvatar(nodeAddress),
+            .isCached(nodeAddress),
       };
     });
 
@@ -172,7 +172,7 @@ export class StakingNetworkInfoService {
         total_stake: _.sumBy(blsKeys, k => this.cache.LIVE_RAW_STAKES[k]),
         num: blsKeys.length,
         hasLogo: this.services.validatorsAvatarCacheService
-            .hasValidatorCachedAvatar(nodeAddress),
+            .isCached(nodeAddress),
       };
     });
 

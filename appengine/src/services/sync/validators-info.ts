@@ -147,7 +147,7 @@ export class ValidatorsInfoService {
                 const validatorInfo = {
                     ...res,
                     hasLogo: this.services.validatorsAvatarCacheService
-                        .hasValidatorCachedAvatar(validatorAddress),
+                        .isCached(validatorAddress),
                     self_stake: selfStake,
                     total_stake: totalStake,
                     average_stake: averageStake,
@@ -414,7 +414,7 @@ export class ValidatorsInfoService {
                     uptime_percentage: validator.uptime_percentage,
                     identity: validator.identity,
                     hasLogo: this.services.validatorsAvatarCacheService
-                        .hasValidatorCachedAvatar(validator.address)
+                        .isCached(validator.address)
                 };
             })
             .filter(isNotEmpty);
@@ -424,7 +424,7 @@ export class ValidatorsInfoService {
 
     cacheAllValidators = () => {
         this.cache.ALL_VALIDATORS = this.generateAllValidators();
-        this.services.validatorsAvatarCacheService.cacheAvatars(this.cache.ALL_VALIDATORS)
+        this.services.validatorsAvatarCacheService.addValidatorsForCaching(this.cache.ALL_VALIDATORS)
     }
 
     getAllValidators = () => ({

@@ -23,6 +23,7 @@ const startServer = async () => {
 
   // Init services
   const services = await InitServices(validatorsAvatarCacheService);
+  validatorsAvatarCacheService.loop().catch()
 
   // Init routes
   routes(app, services.dbService, services.syncServices);

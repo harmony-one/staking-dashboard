@@ -18,4 +18,5 @@ export interface IBaseServiceParams {
   getGlobalDataWithLimit: () => any;
   getCollectionDataWithLimit: () => any;
   services: IServices;
+  withAvatarCache?: boolean;
 }

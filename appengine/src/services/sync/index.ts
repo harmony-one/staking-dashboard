@@ -55,6 +55,7 @@ export class SyncService {
       getGlobalDataWithLimit,
       getCollectionDataWithLimit,
       services,
+      withAvatarCache: BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io')
     };
 
     this.networkInfoService = new StakingNetworkInfoService(baseParams);

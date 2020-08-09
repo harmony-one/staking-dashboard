@@ -1,4 +1,3 @@
-import request from 'request'
 import {requestPromise} from "../../utils/requestPromise";
 
 const CACHE_EXP_MS = 1000 * 60 * 60
@@ -34,7 +33,7 @@ export class ValidatorsAvatarCacheService {
     loop = async () => {
         const validators = Object.values(this.cache.VALIDATORS) as any
 
-        console.log(`Caching validators' avatars start`)
+        // console.log(`Caching validators' avatars start`)
         const now = Date.now()
 
         for (let v of validators) {
@@ -52,10 +51,10 @@ export class ValidatorsAvatarCacheService {
                 }
             }
 
-            console.log('Caching avatar for', v.address)
+            // console.log('Caching avatar for', v.address)
             cacheAvatar().catch()
         }
-        console.log(`Caching validators' avatars end`, validators.length)
+        // console.log(`Caching validators' avatars end`, validators.length)
 
         setTimeout(this.loop, LOOP_INTERVAL_MS)
     }

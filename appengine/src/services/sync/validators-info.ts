@@ -28,6 +28,7 @@ export class ValidatorsInfoService {
     getCollectionDataWithLimit;
     historyCollection;
     services: IServices;
+    withAvatarCache: boolean;
 
     cache = {
         VALIDATORS: [],
@@ -48,6 +49,7 @@ export class ValidatorsInfoService {
         this.getCollectionDataWithLimit = params.getCollectionDataWithLimit;
         this.historyCollection = params.historyCollection;
         this.services = params.services;
+        this.withAvatarCache = params.withAvatarCache;
     }
 
     getAllValidatorAddressesData = async () => {
@@ -424,7 +426,10 @@ export class ValidatorsInfoService {
 
     cacheAllValidators = () => {
         this.cache.ALL_VALIDATORS = this.generateAllValidators();
-        this.services.validatorsAvatarCacheService.addValidatorsForCaching(this.cache.ALL_VALIDATORS)
+
+        if(this.withAvatarCache) {
+            this.services.validatorsAvatarCacheService.addValidatorsForCaching(this.cache.ALL_VALIDATORS)
+        }
     }
 
     getAllValidators = () => ({

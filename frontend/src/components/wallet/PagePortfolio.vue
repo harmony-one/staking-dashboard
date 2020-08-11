@@ -175,6 +175,10 @@ export default {
 }
 
 .portfolio-top-container {
+  .delegations {
+    margin-right: 0;
+  }
+
   display: flex;
   flex-flow: row wrap;
   flex-direction: row;
@@ -211,11 +215,17 @@ export default {
     }
 
     .delegations {
-      max-width: 310px;
+      max-width: 100%;
     }
 
     .time_next_epoch {
       max-width: 280px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    .balance {
+      margin-right: 0;
     }
   }
 }

@@ -1,7 +1,7 @@
 import {requestPromise} from "../../utils/requestPromise";
 
 const CACHE_EXP_MS = 1000 * 60 * 60
-const LOOP_INTERVAL_MS = 1000 * 1 * 60
+const LOOP_INTERVAL_MS = 1000 * 20 * 60
 
 /* todo
     intelligent cache
@@ -29,6 +29,11 @@ export class ValidatorsAvatarCacheService {
         return Boolean(cache && (cache.githubAvatar || cache.keyBaseAvatar))
     }
 
+    isCachedKeyBase = validatorAddress => {
+        const cache = this.cache.AVATAR_URLS[validatorAddress]
+        return Boolean(cache && cache.keyBaseAvatar)
+    }
+
     // todo invalidate avatas' cache
     loop = async () => {
         const validators = Object.values(this.cache.VALIDATORS) as any
@@ -38,7 +43,7 @@ export class ValidatorsAvatarCacheService {
 
         for (let v of validators) {
             const {expirationTime} = v
-            if (now < expirationTime && this.isCached(v.address)) {
+            if (now < expirationTime && this.isCachedKeyBase(v.address)) {
                 continue
             }
 

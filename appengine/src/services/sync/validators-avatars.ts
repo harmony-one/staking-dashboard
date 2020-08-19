@@ -1,7 +1,7 @@
 import {requestPromise} from "../../utils/requestPromise";
 
 const CACHE_EXP_MS = 1000 * 60 * 60
-const LOOP_INTERVAL_MS = 1000 * 20 * 60
+const LOOP_INTERVAL_MS = 1000 * 10 * 60
 
 /* todo
     intelligent cache
@@ -52,6 +52,7 @@ export class ValidatorsAvatarCacheService {
                     const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)
                     const keyBaseAvatar = await this.fetchKeyBaseAvatarByValidatorIdentity(v.identity)
                     this.cache.AVATAR_URLS[v.address] = {githubAvatar, keyBaseAvatar}
+                    v.expirationTime = Date.now() + CACHE_EXP_MS
                 } catch (e) {
                 }
             }

@@ -17,9 +17,13 @@ export class ValidatorsAvatarCacheService {
 
     addValidatorsForCaching = async (validators = []) => {
         validators.forEach(v => {
+            const expirationTime = this.cache.VALIDATORS[v.address]
+                ? this.cache.VALIDATORS[v.address].expirationTime
+                : Date.now() + CACHE_EXP_MS
+
             this.cache.VALIDATORS[v.address] = {
                 ...v,
-                expirationTime: Date.now() + CACHE_EXP_MS
+                expirationTime
             }
         })
     }
@@ -34,33 +38,38 @@ export class ValidatorsAvatarCacheService {
         return Boolean(cache && cache.keyBaseAvatar)
     }
 
-    // todo invalidate avatas' cache
     loop = async () => {
-        const validators = Object.values(this.cache.VALIDATORS) as any
+        try {
+            const validators = Object.values(this.cache.VALIDATORS) as any
 
-        // console.log(`Caching validators' avatars start`)
-        const now = Date.now()
+            // console.log(`Caching validators' avatars start`)
+            const now = Date.now()
 
-        for (let v of validators) {
-            const {expirationTime} = v
-            if (now < expirationTime && this.isCachedKeyBase(v.address)) {
-                continue
-            }
+            for (let v of validators) {
+                const {expirationTime} = v
 
-            const cacheAvatar = async () => {
-                try {
-                    const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)
-                    const keyBaseAvatar = await this.fetchKeyBaseAvatarByValidatorIdentity(v.identity)
-                    this.cache.AVATAR_URLS[v.address] = {githubAvatar, keyBaseAvatar}
-                    v.expirationTime = Date.now() + CACHE_EXP_MS
-                } catch (e) {
+                if (now < expirationTime && this.isCachedKeyBase(v.address)) {
+                    // todo disable cache
+                    // continue
                 }
-            }
 
-            // console.log('Caching avatar for', v.address)
-            cacheAvatar().catch()
+                const cacheAvatar = async () => {
+                    try {
+                        const githubAvatar = await this.fetchGithubAvatarByValidatorAddress(v.address)
+                        const keyBaseAvatar = await this.fetchKeyBaseAvatarByValidatorIdentity(v.identity)
+                        this.cache.AVATAR_URLS[v.address] = {githubAvatar, keyBaseAvatar}
+                        v.expirationTime = Date.now() + CACHE_EXP_MS
+                    } catch (e) {
+                    }
+                }
+
+                // console.log('Caching avatar for', v.address)
+                cacheAvatar().catch()
+            }
+            // console.log(`Caching validators' avatars end`, validators.length)
+        } catch (e) {
+            console.error(e)
         }
-        // console.log(`Caching validators' avatars end`, validators.length)
 
         setTimeout(this.loop, LOOP_INTERVAL_MS)
     }

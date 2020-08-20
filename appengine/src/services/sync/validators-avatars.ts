@@ -60,11 +60,12 @@ export class ValidatorsAvatarCacheService {
                         this.cache.AVATAR_URLS[v.address] = {githubAvatar, keyBaseAvatar}
                         v.expirationTime = Date.now() + CACHE_EXP_MS
                     } catch (e) {
+                        console.error(e)
                     }
                 }
 
                 // console.log('Caching avatar for', v.address)
-                cacheAvatar().catch()
+                cacheAvatar()
             }
             // console.log(`Caching validators' avatars end`, validators.length)
         } catch (e) {

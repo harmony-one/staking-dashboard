@@ -187,15 +187,23 @@ export class ValidatorsInfoService {
                 };
 
                 // calculate uptime_percentage
-                let totalSigned = 0;
-                let totalToSigned = 0;
+                // console.log(result.lifetime && result.lifetime["epoch-blocks"]);
+                const epochBlocks = result.lifetime && result.lifetime["epoch-blocks"];
 
-                res.lifetime["epoch-blocks"].slice(0, 30).forEach(({ blocks }) => {
-                    totalSigned += parseFloat(blocks.signed);
-                    totalToSigned += parseFloat(blocks['to-sign']);
-                });
+                if(Array.isArray(epochBlocks)) {
+                    let totalSigned = 0;
+                    let totalToSigned = 0;
 
-                validatorInfo.uptime_percentage = totalToSigned ? totalSigned / totalToSigned : null;
+                    epochBlocks.slice(0, 30).forEach(({blocks}) => {
+                        totalSigned += parseFloat(blocks.signed);
+                        totalToSigned += parseFloat(blocks['to-sign']);
+                    });
+
+                    validatorInfo.uptime_percentage = totalToSigned ? totalSigned / totalToSigned : null;
+                } else {
+                    validatorInfo.uptime_percentage = null;
+                    // console.log('Error - not found epochBlocks for ', validatorInfo.address);
+                }
                 // -- end calculate uptime_percentage
 
                 // if (validatorInfo.active) {

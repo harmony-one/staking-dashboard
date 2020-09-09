@@ -176,15 +176,27 @@ export class ValidatorsInfoService {
                         ).length
                         : 0,
                     active: this.cache.ACTIVE_VALIDATORS.includes(res.address),
-                    uptime_percentage:
-                        _.get(result, 'lifetime.blocks.signed') && _.get(result, 'lifetime.blocks.to-sign')
-                            ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
-                            parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
-                            : null,
+                    // uptime_percentage:
+                    //     _.get(result, 'lifetime.blocks.signed') && _.get(result, 'lifetime.blocks.to-sign')
+                    //         ? parseFloat(_.get(result, 'lifetime.blocks.signed')) /
+                    //         parseFloat(_.get(result, 'lifetime.blocks.to-sign'))
+                    //         : null,
                     last_apr: _.get(result, 'lifetime.apr', null),
                     epoch_apr: _.get(result, 'lifetime.epoch-apr', null),
                     lifetime_reward_accumulated: _.get(result, 'lifetime.reward-accumulated', null),
                 };
+
+                // calculate uptime_percentage
+                let totalSigned = 0;
+                let totalToSigned = 0;
+
+                res.lifetime["epoch-blocks"].slice(0, 30).forEach(({ blocks }) => {
+                    totalSigned += parseFloat(blocks.signed);
+                    totalToSigned += parseFloat(blocks['to-sign']);
+                });
+
+                validatorInfo.uptime_percentage = totalToSigned ? totalSigned / totalToSigned : null;
+                // -- end calculate uptime_percentage
 
                 // if (validatorInfo.active) {
                 if (Array.isArray(validatorInfo.epoch_apr)) {

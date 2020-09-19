@@ -234,12 +234,16 @@ export default {
     sliderValueOutput: 50
   }),
   computed: {
-    ...mapState([`session`]),
+    ...mapState([`session`, `delegates`, "connection"]),
     ...mapGetters([`modalContext`]),
+    ...mapState({
+      chainTitle: state => state.connection.chainTitle
+    }),
     balance() {
       if (!this.session.signedIn) return 0
 
-      return this.fromOptions[this.selectedIndex].maximum
+
+      return Number(this.fromOptions[this.selectedIndex].maximum) + Number(this.undelegationsAmount) / 1e12
     },
     from() {
       if (!this.session.signedIn) return ``
@@ -306,6 +310,37 @@ export default {
       else if (this.validator.tombstoned) return `banned from the network`
       else if (this.validator.status === 0) return `banned from the network`
       else return false
+    },
+    undelegations() {
+      const epoch = this.connection.networkInfo.current_epoch
+      const delegates = this.delegates.loading ? [] : this.delegates.delegates
+      const undelegations = []
+      for (let i = 0; i < delegates.length; i++) {
+        const d = delegates[i]
+        for (let j = 0; j < d.Undelegations.length; j++) {
+          const ud = d.Undelegations[j]
+          if (ud.Epoch + 7 < epoch) continue
+
+          const lastEpochInCommit = d.validator_info["last-epoch-in-committee"]
+          let remaining_epoch = 1
+
+          if (lastEpochInCommit) {
+            // remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 1
+            remaining_epoch =
+              7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))
+          }
+
+          if (remaining_epoch < 7 && this.chainTitle === "testnet") {
+            undelegations.push(ud.Amount)
+          }
+        }
+      }
+      // console.log(this.networkInfo, undelegations)
+
+      return undelegations
+    },
+    undelegationsAmount() {
+      return this.undelegations.reduce((acc, v) => acc + v, 0)
     }
   },
   methods: {
@@ -338,7 +373,10 @@ export default {
       )
     },
     isMaxAmount() {
-      return parseFloat(this.amount) === parseFloat(atoms(this.balance))
+      return (
+        parseFloat(this.amount) ===
+        parseFloat(atoms(this.balance))
+      )
     },
     enterPressed() {
       this.$refs.actionModal.validateChangeStep()
@@ -357,7 +395,10 @@ export default {
         decimal,
         minValue: minValue(Math.max(SMALLEST, ones(this.minAmount))),
         maxValue: maxValue(
-          Math.min(atoms(this.balance), ones(this.validator.remainder))
+          Math.min(
+            atoms(this.balance),
+            ones(this.validator.remainder)
+          )
         )
 
         // between: between(

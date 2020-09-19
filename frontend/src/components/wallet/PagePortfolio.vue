@@ -88,7 +88,8 @@ export default {
     ...mapGetters([`lastHeader`]),
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
-      isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading
+      isNetworkInfoLoading: state => state.connection.isNetworkInfoLoading,
+      chainTitle: state => state.connection.chainTitle
     }),
     delegations() {
       return this.delegates.loading
@@ -113,9 +114,15 @@ export default {
           const lastEpochInCommit = d.validator_info["last-epoch-in-committee"]
           let remaining_epoch = 1
 
-          // if (lastEpochInCommit) {
-          //   remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 1
-          // }
+          if (lastEpochInCommit && this.chainTitle === "testnet") {
+            console.log(lastEpochInCommit, ud.Epoch, epoch, epoch - ud.Epoch)
+
+            // remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 1
+            remaining_epoch =
+              7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))
+
+            console.log(remaining_epoch)
+          }
 
           undelegations.push({
             ...d.validator_info,
@@ -148,12 +155,6 @@ export default {
       }
     }
   },
-  methods: {
-    update(height) {
-      this.lastUpdate = height
-      // this.$store.dispatch(`getRewardsFromMyValidators`)
-    }
-  },
   mounted() {
     if (
       !this.$store.dispatch(
@@ -164,6 +165,12 @@ export default {
       this.$router.replace("/portfolio")
       this.$router.go(0)
       return
+    }
+  },
+  methods: {
+    update(height) {
+      this.lastUpdate = height
+      // this.$store.dispatch(`getRewardsFromMyValidators`)
     }
   }
 }

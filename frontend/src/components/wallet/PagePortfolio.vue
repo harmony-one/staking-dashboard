@@ -114,14 +114,15 @@ export default {
           const lastEpochInCommit = d.validator_info["last-epoch-in-committee"]
           let remaining_epoch = 1
 
-          if (lastEpochInCommit && this.chainTitle === "testnet") {
-            console.log(lastEpochInCommit, ud.Epoch, epoch, epoch - ud.Epoch)
+          if (epoch >= 290) {
+            if (lastEpochInCommit > 0) {
+              remaining_epoch =
+                7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))
+            } else {
+              remaining_epoch = 7 - (epoch - ud.Epoch)
+            }
 
-            // remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 1
-            remaining_epoch =
-              7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))
-
-            console.log(remaining_epoch)
+            remaining_epoch = Math.max(0, remaining_epoch)
           }
 
           undelegations.push({

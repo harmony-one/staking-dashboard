@@ -942,10 +942,12 @@ export default {
       }
     }
 
-    if (this.chainTitle !== "testnet") {
-      validations.invoiceTotal = { between: between(0, this.balanceInAtoms) }
-    } else {
+    const epoch = this.connection.networkInfo.current_epoch
+
+    if (epoch >= 290) {
       validations.invoiceTotal = { minLength: minLength(0) }
+    } else {
+      validations.invoiceTotal = { between: between(0, this.balanceInAtoms) }
     }
 
     return validations

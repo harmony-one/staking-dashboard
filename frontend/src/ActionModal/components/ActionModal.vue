@@ -944,7 +944,7 @@ export default {
 
     const epoch = this.connection.networkInfo.current_epoch
 
-    if (epoch >= 290) {
+    if (epoch >= 289) {
       validations.invoiceTotal = { minLength: minLength(0) }
     } else {
       validations.invoiceTotal = { between: between(0, this.balanceInAtoms) }

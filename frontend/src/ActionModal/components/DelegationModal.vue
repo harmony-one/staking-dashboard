@@ -330,7 +330,7 @@ export default {
               7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))
           }
 
-          if (remaining_epoch < 7 && epoch >= 289) {
+          if (remaining_epoch < 7 && epoch >= 290) {
             undelegations.push(ud.Amount)
           }
         }

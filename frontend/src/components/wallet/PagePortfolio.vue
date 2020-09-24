@@ -114,7 +114,7 @@ export default {
           const lastEpochInCommit = d.validator_info["last-epoch-in-committee"]
           let remaining_epoch = 1
 
-          if (epoch >= 289) {
+          if (epoch >= 290) {
             if (lastEpochInCommit > 0) {
               remaining_epoch =
                 7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))

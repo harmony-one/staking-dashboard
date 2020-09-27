@@ -12,7 +12,7 @@ export const bodyParams = (method: string, params?: string | number) => `{
 export const bodyParams2 = (method: string, params?: string | number) => `{
       "jsonrpc": "2.0",
       "method": "${method}",
-      "params": ${params !== undefined ? `["${params}"]` : '[]'},
+      "params": ${params !== undefined ? `[${params}]` : '[]'},
       "id": 1
     }`;
 

@@ -279,6 +279,7 @@ export default {
   padding: var(--half) var(--half) 6px var(--half);
   border: 1px solid;
   border-radius: var(--unit);
+  text-align: center;
 }
 .validator-status-detailed {
   margin: 0;
@@ -293,7 +294,6 @@ export default {
 .validator-status.elected {
   color: var(--blue);
   border-color: var(--blue);
-  text-align: center;
 }
 
 .validator-main-block .validator-info > h2 {

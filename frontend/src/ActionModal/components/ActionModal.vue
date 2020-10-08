@@ -368,6 +368,7 @@ import config from "src/config"
 import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
 import { openExtensionPopup } from "../utils/openExtensionPopup"
+import {BigNumber} from "bignumber.js";
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -489,7 +490,7 @@ export default {
     featureAvailable: true
   }),
   computed: {
-    ...mapState([`extension`, `session`, `connection`, "wallet"]),
+    ...mapState([`extension`, `session`, `connection`, "wallet", "delegates"]),
     ...mapState({
       network: state => state.connection.network,
       networkConfig: state => state.connection.networkConfig,
@@ -512,7 +513,51 @@ export default {
     isTransactionFailed() {
       return this.txConfirmResult && this.txConfirmResult.error
     },
+
+    undelegations() {
+      const epoch = this.connection.networkInfo.current_epoch
+      const delegates = this.delegates.loading ? [] : this.delegates.delegates
+      const undelegations = []
+      for (let i = 0; i < delegates.length; i++) {
+        const d = delegates[i]
+        for (let j = 0; j < d.Undelegations.length; j++) {
+          const ud = d.Undelegations[j]
+          if (ud.Epoch + 7 < epoch) continue
+
+          const lastEpochInCommit = d.validator_info["last-epoch-in-committee"]
+          let remaining_epoch = 1
+
+          if (lastEpochInCommit) {
+            // remaining_epoch = Math.min(lastEpochInCommit, ud.Epoch) - epoch + 1
+            remaining_epoch =
+              7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))
+          }
+
+          if (remaining_epoch < 7 && epoch >= 290) {
+            undelegations.push(ud.Amount)
+          }
+        }
+      }
+      // console.log(this.networkInfo, undelegations)
+
+      return undelegations
+    },
+
+    undelegationsAmount() {
+      return this.undelegations.reduce((acc, v) => acc + v, 0)
+    },
+
     balanceInAtoms() {
+      const { type } = this.transactionData
+
+      if (type === "MsgDelegate") {
+        return BigNumber(this.undelegationsAmount)
+          .div(1e12)
+          .plus(this.liquidAtoms)
+          .div(1e6)
+          .toNumber()
+      }
+
       return atoms(this.liquidAtoms)
     },
     estimatedFee() {
@@ -939,15 +984,8 @@ export default {
         // we don't use SMALLEST as min gas price because it can be a fraction of uatom
         // min is 0 because we support sending 0 fees
         between: between(0, this.balanceInAtoms)
-      }
-    }
-
-    const epoch = this.connection.networkInfo.current_epoch
-
-    if (epoch >= 290) {
-      validations.invoiceTotal = { minLength: minLength(0) }
-    } else {
-      validations.invoiceTotal = { between: between(0, this.balanceInAtoms) }
+      },
+      invoiceTotal: { between: between(0, this.balanceInAtoms) }
     }
 
     return validations

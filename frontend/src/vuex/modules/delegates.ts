@@ -48,7 +48,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       state.loading = loading
     },
     setDelegates(state, delegates) {
-      state.delegates = delegates
+      state.delegates = delegates || []
     },
     setSelfBond(state, { validator: { operator_address }, ratio }) {
       Vue.set(state.selfBond, operator_address, ratio)

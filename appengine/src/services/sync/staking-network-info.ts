@@ -5,7 +5,6 @@ import { bodyParams, changePercentage, externalShardsByKeys } from './helpers';
 import { IBaseServiceParams, IServices } from './interfaces';
 
 const MAX_LENGTH = 30;
-let SECOND_PER_BLOCK = 5.4;
 
 export class StakingNetworkInfoService {
   apiClient: AxiosInstance;
@@ -37,6 +36,7 @@ export class StakingNetworkInfoService {
     VALIDATORS_TOTAL_STAKE: {},
     LIVE_VALIDATORS_CANDIDATE: [],
     EFFECTIVE_STAKE: {},
+    SECOND_PER_BLOCK: 5.4,
   };
 
   constructor(params: IBaseServiceParams) {
@@ -227,7 +227,7 @@ export class StakingNetworkInfoService {
         this.cache.STAKING_NETWORK_INFO.current_block_number
       ) {
         this.cache.STAKING_NETWORK_INFO.time_next_epoch =
-          SECOND_PER_BLOCK *
+          this.cache.SECOND_PER_BLOCK *
           (this.cache.STAKING_NETWORK_INFO['epoch-last-block'] -
             this.cache.STAKING_NETWORK_INFO.current_block_number);
       }
@@ -557,9 +557,9 @@ export class StakingNetworkInfoService {
 
       const average = diffs.reduce((acc, t) => acc + t, 0) / diffs.length;
 
-      SECOND_PER_BLOCK = average;
+      this.cache.SECOND_PER_BLOCK = average;
 
-      console.log('SECOND_PER_BLOCK: ', SECOND_PER_BLOCK);
+      console.log('SECOND_PER_BLOCK: ', this.cache.SECOND_PER_BLOCK);
     } catch (e) {
       console.log('Error calculateSecondPerBlock ', e.message);
     }

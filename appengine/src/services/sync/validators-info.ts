@@ -277,6 +277,7 @@ export class ValidatorsInfoService {
                 ...this.cache.VALIDATOR_INFO[elem.validator_address],
                 delegations: [],
                 epoch_apr: [],
+                "bls-public-keys": [],
             };
         });
         if (isNotEmpty(result)) {

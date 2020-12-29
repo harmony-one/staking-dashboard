@@ -273,7 +273,11 @@ export class ValidatorsInfoService {
 
         let result = res.data.result;
         result = _.forEach(result, elem => {
-            elem.validator_info = this.cache.VALIDATOR_INFO[elem.validator_address];
+            elem.validator_info = {
+                ...this.cache.VALIDATOR_INFO[elem.validator_address],
+                delegations: [],
+                epoch_apr: [],
+            };
         });
         if (isNotEmpty(result)) {
             this.cache.DELEGATIONS_BY_DELEGATOR[address] = result;

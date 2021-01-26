@@ -201,6 +201,10 @@ export default [
     component: () => import(`./components/common/PageTerms`)
   },
   {
+    path: `/snapshot`,
+    component: () => import(`./components/common/PageSnapshot`)
+  },
+  {
     path: `/security`,
     component: () => import(`./components/common/PageSecurity`)
   },

@@ -1,6 +1,6 @@
 <template>
   <iframe
-    src="https://harmony-snapshot.firebaseapp.com/#/test"
+    src="https://hmny-governance.netlify.app/#"
     width="100%"
     height="100%"
     >Your browser does not support iframes!

@@ -1,6 +1,6 @@
 <template>
   <SessionFrame title="Create New Account" image="account">
-      <h2 class="session-title">Use Harmony Browser Extension</h2>
+      <h2 class="session-title">Use Harmony Browser Extension (Deprecated)</h2>
       <div v-if="!extension.enabled" class="session-main">
         <p>
           Looks like you don't have the Harmony browser extension installed yet.

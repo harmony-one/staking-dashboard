@@ -389,10 +389,6 @@ const signMethodOptions = {
     key: `Ledger Nano`,
     value: SIGN_METHODS.LEDGER
   },
-  EXTENSION: {
-    key: `Harmony Browser Extension`,
-    value: SIGN_METHODS.EXTENSION
-  },
   MATHWALLET: {
     key: `Math Wallet`,
     value: SIGN_METHODS.MATHWALLET
@@ -404,7 +400,11 @@ const signMethodOptions = {
   LOCAL: {
     key: `Local Account (Unsafe)`,
     value: SIGN_METHODS.LOCAL
-  }
+  },
+  EXTENSION: {
+    key: `Harmony Browser Extension (Deprecated)`,
+    value: SIGN_METHODS.EXTENSION
+  },
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")

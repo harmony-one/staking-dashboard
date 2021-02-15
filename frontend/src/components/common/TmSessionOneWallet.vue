@@ -7,7 +7,7 @@
           Looks like you don't have the Harmony One Wallet extension installed
           yet. Head over to the
           <a
-            href="https://chrome.google.com/webstore/detail/harmony-one-wallet/gldpceolgfpjnajainimdfghhhgcnfmf"
+            href="https://chrome.google.com/webstore/detail/harmony-one-wallet/fnnegphlobjdpkhecapkijjdkgcjhkib"
             target="_blank"
             rel="noopener norefferer"
           >Harmony One Wallet</a>

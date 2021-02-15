@@ -21,14 +21,6 @@
         />
         <LiSession
           v-if="!isMobileApp"
-          id="use-extension"
-          icon="laptop"
-          title="Use Harmony Browser Extension"
-          route="extension"
-        >
-        </LiSession>
-        <LiSession
-          v-if="!isMobileApp"
           id="use-mathwallet"
           icon="laptop"
           title="Use Math Wallet"
@@ -56,6 +48,14 @@
           title="Sign in with account"
           route="login"
         />
+        <LiSession
+          v-if="!isMobileApp"
+          id="use-extension"
+          icon="laptop"
+          title="Use Harmony Browser Extension (Deprecated)"
+          route="extension"
+        >
+        </LiSession>
       </div>
       <router-link to="create" style="padding-left: 16px;">
         Want to create a new address?

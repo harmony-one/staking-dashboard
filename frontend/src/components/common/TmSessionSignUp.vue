@@ -1,5 +1,5 @@
 <template>
-  <SessionFrame  title="Create New Address" image="new">
+  <SessionFrame title="Create New Address" image="new">
     <TmFormStruct :submit="onSubmit.bind(this)">
       <h2 class="session-title">
         Create a new address
@@ -126,11 +126,11 @@
       </div>
       <div v-if="!session.insecureMode" class="session-main">
         <p v-if="!extension.enabled">
-          Creating an address in the browser is unsafe. Please install our
+          Creating an address in the browser is unsafe. Please install
           <a
             target="_blank"
-            href="https://harmony.one/chrome-wallet"
-            >browser extension</a
+            href="https://chrome.google.com/webstore/detail/harmony-one-wallet/fnnegphlobjdpkhecapkijjdkgcjhkib"
+            >One Wallet</a
           >
         </p>
         <!--        <p>-->

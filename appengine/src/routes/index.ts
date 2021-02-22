@@ -1,7 +1,7 @@
 import { asyncHandler, createError } from './helpers';
 import { DBService } from '../services/database';
 import { SyncService } from '../services/sync';
-import request from 'request'
+import request from 'request';
 
 export interface INetwork {
   chain_id: number;
@@ -71,20 +71,21 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
     })
   );
 
-    app.get(
-        '/networks/:networkId/validators/:address/avatar',
-        asyncHandler(async (req, res) => {
-            const avatar = getSyncService(req.params.networkId).validatorsAvatarCacheService
-                .getValidatorCachedAvatarByValidatorAddress(req.params.address)
+  app.get(
+    '/networks/:networkId/validators/:address/avatar',
+    asyncHandler(async (req, res) => {
+      const avatar = getSyncService(
+        req.params.networkId
+      ).validatorsAvatarCacheService.getValidatorCachedAvatarByValidatorAddress(req.params.address);
 
-            if (!avatar) {
-                throw createError(404, 'Not found');
-            }
+      if (!avatar) {
+        throw createError(404, 'Not found');
+      }
 
-            res.set('Content-Type', 'image/jpg');
-            res.send(avatar);
-        })
-    );
+      res.set('Content-Type', 'image/jpg');
+      res.send(avatar);
+    })
+  );
 
   app.get(
     '/networks/:networkId/validator_history/:address',
@@ -104,6 +105,17 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
     asyncHandler(async (req, res) => {
       const data = await getSyncService(req.params.networkId).getDelegationsByDelegator(
         req.params.address
+      );
+
+      res.json(data);
+    })
+  );
+
+  app.get(
+    '/networks/:networkId/validators-by-epoch/:epoch',
+    asyncHandler(async (req, res) => {
+      const data = await getSyncService(req.params.networkId).getValidatorsByEpoch(
+        req.params.epoch
       );
 
       res.json(data);

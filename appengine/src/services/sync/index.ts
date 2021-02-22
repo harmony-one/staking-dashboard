@@ -2,7 +2,7 @@ import axios from 'axios';
 import { StakingNetworkInfoService } from './staking-network-info';
 import { ValidatorsInfoService } from './validators-info';
 import { IBaseServiceParams, IServices } from './interfaces';
-import {ValidatorsAvatarCacheService} from './validators-avatars'
+import { ValidatorsAvatarCacheService } from './validators-avatars';
 
 const SYNC_PERIOD = 60000;
 const LONG_SYNC_PERIOD = 5 * 60000;
@@ -10,7 +10,7 @@ const LONG_SYNC_PERIOD = 5 * 60000;
 export class SyncService {
   networkInfoService: StakingNetworkInfoService;
   validatorsInfoService: ValidatorsInfoService;
-  validatorsAvatarCacheService: ValidatorsAvatarCacheService
+  validatorsAvatarCacheService: ValidatorsAvatarCacheService;
 
   constructor(
     BLOCKCHAIN_SERVER,
@@ -55,7 +55,7 @@ export class SyncService {
       getGlobalDataWithLimit,
       getCollectionDataWithLimit,
       services,
-      withAvatarCache: BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io')
+      withAvatarCache: BLOCKCHAIN_SERVER.includes('api.s0.t.hmny.io'),
     };
 
     this.networkInfoService = new StakingNetworkInfoService(baseParams);
@@ -64,8 +64,8 @@ export class SyncService {
     this.validatorsInfoService = new ValidatorsInfoService(baseParams);
     services.validatorsInfoService = this.validatorsInfoService;
 
-    this.validatorsAvatarCacheService = validatorsAvatarCacheService
-    services.validatorsAvatarCacheService = this.validatorsAvatarCacheService
+    this.validatorsAvatarCacheService = validatorsAvatarCacheService;
+    services.validatorsAvatarCacheService = this.validatorsAvatarCacheService;
 
     setInterval(async () => {
       console.log('--------- Updating ---------', BLOCKCHAIN_SERVER, new Date().toString());
@@ -117,6 +117,7 @@ export class SyncService {
   getNetworkInfoLite = () => this.networkInfoService.getNetworkInfoLite();
 
   getValidators = () => this.validatorsInfoService.getAllValidators();
+  getValidatorsByEpoch = epoch => this.validatorsInfoService.getValidatorsByEpoch(epoch);
   getValidatorsWithPage = params => this.validatorsInfoService.getValidatorsWithPage(params);
   getValidatorsSizes = () => this.validatorsInfoService.getValidatorsSizes();
   getActiveValidators = () => this.validatorsInfoService.getActiveValidators();

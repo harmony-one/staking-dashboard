@@ -488,5 +488,17 @@ export class ValidatorsInfoService {
 
     getValidatorHistory = address => _.values(this.cache.VALIDATOR_INFO_HISTORY[address]);
 
+    getValidatorsByEpoch = (epoch) => {
+        const validators = !this.cache.VALIDATORS ? [] : this.cache.VALIDATORS;
+
+        return validators.map(address => {
+            const allHistory = _.values(this.cache.VALIDATOR_INFO_HISTORY[address]);
+
+            const history = allHistory && allHistory.find(h => h.index == epoch);
+
+            return { address, totalStake: history ? history.total_stake : 0 }
+        }).filter(v => !!v.totalStake)
+    }
+
     getDelegationsByValidator = address => this.cache.DELEGATIONS_BY_VALIDATOR[address];
 }

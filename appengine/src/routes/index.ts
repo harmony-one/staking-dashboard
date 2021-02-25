@@ -101,7 +101,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   );
 
   app.get(
-    '/networks/:networkId/delegations/:address',
+    '/networks/:networkId/delegations/:?address',
     asyncHandler(async (req, res) => {
       const data = await getSyncService(req.params.networkId).getDelegationsByDelegator(
         req.params.address
@@ -119,6 +119,30 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
       );
 
       res.json(data);
+    })
+  );
+
+  app.get(
+    '/networks/:networkId/network-info-by-epoch/:epoch',
+    asyncHandler(async (req, res) => {
+      const data = await getSyncService(req.params.networkId).getNetworkInfoByEpoch(
+        req.params.epoch
+      );
+
+      res.json(data);
+    })
+  );
+
+  app.post(
+    '/networks/:networkId/validators-by-address',
+    asyncHandler(async (req, res) => {
+      // const data = await getSyncService(req.params.networkId).getValidatorsByAddress(
+      //   req.params.epoch
+      // );
+
+      console.log(req.params);
+
+      res.json('');
     })
   );
 

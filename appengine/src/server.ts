@@ -4,6 +4,7 @@ import {ValidatorsAvatarCacheService} from "./services/sync/validators-avatars";
 
 require('../env');
 import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import { routes } from './routes';
 import { InitServices } from './services/init';
@@ -16,6 +17,8 @@ const startServer = async () => {
   const app = express();
 
   app.use(cors());
+
+  app.use(bodyParser.json({ type: 'application/*+json' }))
 
   app.get('/', (req, res) => {
     res.send('Hello from App Engine!');

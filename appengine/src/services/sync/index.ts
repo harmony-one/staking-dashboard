@@ -115,6 +115,7 @@ export class SyncService {
 
   getStakingNetworkInfo = () => this.networkInfoService.getStakingNetworkInfo();
   getNetworkInfoLite = () => this.networkInfoService.getNetworkInfoLite();
+  getNetworkInfoByEpoch = epoch => this.networkInfoService.getNetworkInfoByEpoch(epoch);
 
   getValidators = () => this.validatorsInfoService.getAllValidators();
   getValidatorsByEpoch = epoch => this.validatorsInfoService.getValidatorsByEpoch(epoch);

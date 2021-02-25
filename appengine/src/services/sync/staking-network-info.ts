@@ -115,6 +115,8 @@ export class StakingNetworkInfoService {
     return stakingNetworkInfo;
   };
 
+  getNetworkInfoByEpoch = epoch => this.cache.GLOBAL_VIEW[epoch] || this.cache.STAKING_NETWORK_INFO;
+
   getNetworkInfoLite = () => {
     const networkInfoLite = !this.cache.STAKING_NETWORK_INFO
       ? {}

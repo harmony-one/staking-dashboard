@@ -30,11 +30,7 @@
         title="Portfolio"
         @click.native="close"
       >
-        <svgicon
-          name="profile"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="profile" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Portfolio</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -45,11 +41,7 @@
         title="Validators"
         @click.native="close"
       >
-        <svgicon
-          name="validators"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="validators" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Validators</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -60,11 +52,7 @@
         title="Analytics"
         @click.native="close"
       >
-        <svgicon
-          name="world"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="world" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Analytics</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -100,11 +88,7 @@
         title="Networks"
         @click.native="close"
       >
-        <svgicon
-          name="network"
-          width="20"
-          height="20"
-        ></svgicon>
+        <svgicon name="network" width="20" height="20"></svgicon>
         <h2 class="app-menu-title">Networks</h2>
         <i class="material-icons">chevron_right</i>
       </router-link>
@@ -141,13 +125,21 @@
 
       <a
         class="app-menu-item small"
+        href="https://governance.harmony.one/#/"
+        @click="close"
+        target="_blank"
+      >
+        <h2 class="app-menu-title">Governance</h2>
+      </a>
+
+      <a
+        class="app-menu-item small"
         href="https://docs.harmony.one/home/validators"
         @click="close"
         target="_blank"
       >
         <h2 class="app-menu-title">Become a Validator</h2>
       </a>
-
 
       <router-link
         class="app-menu-item small"
@@ -169,7 +161,7 @@
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
 
-<!--
+      <!--
       <router-link
         class="app-menu-item small"
         to="#"
@@ -179,8 +171,6 @@
       >
         <h2 class="app-menu-title">Feedback</h2>
       </router-link>-->
-
-
 
       <router-link
         v-if="session.signedIn"
@@ -238,7 +228,7 @@ export default {
   },
   methods: {
     feedback() {
-      console.log('feedback')
+      console.log("feedback")
     },
     close() {
       this.$emit(`close`)

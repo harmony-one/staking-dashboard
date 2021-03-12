@@ -106,17 +106,38 @@ export const processOneWalletMessage = async (
         if (confiremdTxn.isConfirmed()) {
           return { txhash: txnHash }
         } else {
+          if (txnHash && txnHash.length === 66) {
+            return {
+              error: true,
+              txhash: txnHash,
+              message:
+                "The transaction is still not confirmed after 5 attempts."
+            }
+          } else {
+            return {
+              error: true,
+              txhash: "",
+              message:
+                txnHash ||
+                "The transaction is still not confirmed after 5 attempts."
+            }
+          }
+        }
+      } catch (error) {
+        if (txnHash && txnHash.length === 66) {
           return {
             error: true,
             txhash: txnHash,
             message: "The transaction is still not confirmed after 5 attempts."
           }
-        }
-      } catch (error) {
-        return {
-          error: true,
-          txhash: txnHash,
-          message: "The transaction is still not confirmed after 5 attempts."
+        } else {
+          return {
+            error: true,
+            txhash: "",
+            message:
+              txnHash ||
+              "The transaction is still not confirmed after 5 attempts."
+          }
         }
       }
     }

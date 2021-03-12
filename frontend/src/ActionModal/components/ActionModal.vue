@@ -279,7 +279,7 @@
                 <div v-if="txHash && !Array.isArray(txHash)">
                   <br />Transaction:
                   <a :href="linkToTransaction(txHash)" target="_blank">{{
-                    prettyTransactionHash(txHash)
+                    txHash
                   }}</a>
                 </div>
               </div>
@@ -368,7 +368,7 @@ import config from "src/config"
 import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
 import { openExtensionPopup } from "../utils/openExtensionPopup"
-import {BigNumber} from "bignumber.js";
+import { BigNumber } from "bignumber.js"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -404,7 +404,7 @@ const signMethodOptions = {
   EXTENSION: {
     key: `Harmony Browser Extension (Deprecated)`,
     value: SIGN_METHODS.EXTENSION
-  },
+  }
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
@@ -908,7 +908,9 @@ export default {
         this.onTxIncluded(type, transactionProperties, feeProperties)
 
         // close modal in 2 sec after success tx
-        setTimeout(() => this.close(), 10000)
+        if(!this.txConfirmResult.error) {
+          setTimeout(() => this.close(), 10000)
+        }
       } catch ({ message }) {
         console.log("[submit] error", message)
 

@@ -101,7 +101,7 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
   );
 
   app.get(
-    '/networks/:networkId/delegations/:?address',
+    '/networks/:networkId/delegations/:address',
     asyncHandler(async (req, res) => {
       const data = await getSyncService(req.params.networkId).getDelegationsByDelegator(
         req.params.address

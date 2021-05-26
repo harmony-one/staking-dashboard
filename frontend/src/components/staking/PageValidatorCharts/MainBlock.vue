@@ -89,7 +89,7 @@
       :validator="validator"
       :denom="bondDenom"
       :disabled="validator.remainder === 0"
-      :minAmount="1000 * 1e18"
+      :minAmount="network === 'testnet' ? 100 * 1e18 : 1000 * 1e18"
     />
     <UndelegationModal
       ref="undelegationModal"
@@ -151,6 +151,7 @@ export default {
       `liquidAtoms`,
       `connected`
     ]),
+    ...mapState({ network: state => state.connection.chainTitle }),
     status() {
       if (
         this.validator.jailed ||

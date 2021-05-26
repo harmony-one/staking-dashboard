@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="validatorTable">
-        <div class="filterOptions" v-if="total">
+        <div v-if="total" class="filterOptions">
           <TmField
             v-model="searchTerm"
             class="searchField"
@@ -35,27 +35,27 @@
           <div class="toggles">
             <TmBtn
               v-if="isMultiDelegationSupport"
+              v-tooltip.top="tooltips.v_list.multi_delegate"
               :value="
                 selectedValidators.length
                   ? `Delegate (${selectedValidators.length})`
                   : 'Delegate'
               "
-              v-tooltip.top="tooltips.v_list.multi_delegate"
               class="btn-radio secondary"
+              :disabled="selectedValidators.length === 0"
               @click.native="multidelgate"
-              v-bind:disabled="selectedValidators.length === 0"
             />
             <TmBtn
-              value="Elected"
               v-tooltip.top="tooltips.v_list.elected"
+              value="Elected"
               :number="totalActive"
               class="btn-radio secondary"
               :type="activeOnly ? `active` : `secondary`"
               @click.native="activeOnly = true"
             />
             <TmBtn
-              value="All"
               v-tooltip.top="tooltips.v_list.all"
+              value="All"
               :number="total"
               class="btn-radio secondary"
               :type="!activeOnly ? `active` : `secondary`"
@@ -75,7 +75,11 @@
         :from-options="delegationTargetOptions()"
         :to="selectedValidators"
         :denom="bondDenom"
-        :minAmount="1000 * selectedValidators.length"
+        :min-amount="
+          chainTitle === 'testnet'
+            ? 100 * selectedValidators.length
+            : 1000 * selectedValidators.length
+        "
       />
       <TmDataLoading v-if="isLoading || isNetworkFetching" />
     </template>
@@ -127,6 +131,7 @@ export default {
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
       isNetworkInfoLoading: state => !!state.connection.chainTitle,
+      chainTitle: state => state.connection.chainTitle,
       isMultiDelegationSupport: state =>
         state.session.sessionType === "extension" &&
         state.session.extensionVersion >= 16
@@ -145,6 +150,18 @@ export default {
     linkToTransaction() {
       const blocksUrl = this.networkConfig.explorer_url + "/block/"
       return blocksUrl + this.networkInfo.current_block_hash
+    }
+  },
+  mounted() {
+    this.chainTitle = this.$route.params.chaintitle
+    if (
+      !this.$store.dispatch(
+        "setNetworkByChainTitle",
+        this.$route.params.chaintitle
+      )
+    ) {
+      this.$router.replace("/validators")
+      this.$router.go(0)
     }
   },
   methods: {
@@ -194,18 +211,6 @@ export default {
           })
         }, [])
       return myWallet.concat(redelegationOptions)
-    }
-  },
-  mounted() {
-    this.chainTitle = this.$route.params.chaintitle
-    if (
-      !this.$store.dispatch(
-        "setNetworkByChainTitle",
-        this.$route.params.chaintitle
-      )
-    ) {
-      this.$router.replace("/validators")
-      this.$router.go(0)
     }
   }
 }

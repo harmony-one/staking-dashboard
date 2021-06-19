@@ -90,8 +90,8 @@ export default class Staking {
     return this.harmony.transactions.newTx({
       to: transactionData.toAddress,
       value: new Unit(value).asSzabo().toWei(),
-      gasLimit: transactionData.fee.gasEstimate,
-      gasPrice: new Unit(transactionData.gasPrice).asGwei().toWei(),
+      gasPrice: GAS_PRICE,
+      gasLimit: GAS_LIMIT,
       shardID: shardId,
       toShardID: 0
       //nonce: "0x"

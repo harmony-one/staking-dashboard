@@ -165,9 +165,9 @@
         class="app-menu-item small"
         href="https://www.harmonyvalidators.com/" 
         target="_blink"
-        title="dApp & Services" 
+        title="dApps & Services" 
       >
-        <h2 class="app-menu-title">dApp & Services</h2>
+        <h2 class="app-menu-title">dApps & Services</h2>
       </a>
 
       <!--

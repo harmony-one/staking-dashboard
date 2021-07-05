@@ -161,6 +161,15 @@
         <h2 class="app-menu-title">Privacy Policy</h2>
       </router-link>
 
+      <a
+        class="app-menu-item small"
+        href="https://www.harmonyvalidators.com/" 
+        target="_blink"
+        title="dApps & Services" 
+      >
+        <h2 class="app-menu-title">dApps & Services</h2>
+      </a>
+
       <!--
       <router-link
         class="app-menu-item small"

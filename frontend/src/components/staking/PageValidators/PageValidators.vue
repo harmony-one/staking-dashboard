@@ -76,9 +76,7 @@
         :to="selectedValidators"
         :denom="bondDenom"
         :min-amount="
-          chainTitle === 'testnet'
-            ? 100 * selectedValidators.length
-            : 1000 * selectedValidators.length
+          100 * selectedValidators.length
         "
       />
       <TmDataLoading v-if="isLoading || isNetworkFetching" />

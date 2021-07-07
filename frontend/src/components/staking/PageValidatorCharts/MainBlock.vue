@@ -89,7 +89,7 @@
       :validator="validator"
       :denom="bondDenom"
       :disabled="validator.remainder === 0"
-      :minAmount="network === 'testnet' ? 100 * 1e18 : 1000 * 1e18"
+      :minAmount="100 * 1e18"
     />
     <UndelegationModal
       ref="undelegationModal"

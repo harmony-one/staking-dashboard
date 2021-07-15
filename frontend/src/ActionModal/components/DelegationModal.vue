@@ -283,7 +283,7 @@ export default {
       if (this.from === this.modalContext.userAddress) {
         return {
           title: `Successful delegation!`,
-          body: `You have successfully delegated your ${viewDenom(this.denom)}s`
+          body: `You have successfully delegated your ${viewDenom(this.denom)}s. Rewards start to accrue on the next epoch.`
         }
       } else {
         return {

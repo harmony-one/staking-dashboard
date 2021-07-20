@@ -95,7 +95,7 @@ export default class ActionManager {
 
   async simulate() {
     if (this.messageType === "MsgSend") {
-      return "21000"
+      return "25000"
     } else {
       return "25000"
     }

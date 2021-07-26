@@ -77,6 +77,7 @@
           @click.native="setMaxAmount()"
         />
       </TmFieldGroup>
+      
       <TmFormMsg
         v-if="balance === 0"
         :msg="`doesn't have any ${viewDenom(denom)}s`"
@@ -107,6 +108,52 @@
         class="tm-form-msg max-message"
       />
     </TmFormGroup>
+    <TmFormGroup
+      class="action-modal-form-group"
+      field-id="gas-price"
+      field-label="Gas price"
+    >
+      <TmField
+          id="gas-price"
+          v-model.number="gasPrice"  
+          type="number"
+          min="1"
+          placeholder="Gas price" 
+        />
+     </TmFormGroup>
+
+     <TmFormGroup 
+      class="action-modal-form-group"
+      field-id="gas-limit"
+      field-label="Gas Limit"
+    >
+      <TmField
+          id="gas-limit"
+          v-model.number="gasLimit"
+          type="number"
+          min="25000"
+          placeholder="Gas Limit" 
+        />
+     </TmFormGroup>
+
+     <TmFormGroup 
+      
+      class="action-modal-form-group"
+      field-id="gas-fee"
+      field-label="Gas Fee"
+    >
+        <TmField
+            id="gas-fee" 
+            :value="calculateFee()"  
+            type="number"
+            placeholder="Gas fee"
+            disabled="true"
+          />
+          <TmFormMsg
+            v-if="calculateFee() < '0.000025000'"
+            name="Gas fee minimum 0,000025." 
+          />
+     </TmFormGroup>
 <!--    <TmBtn-->
 <!--      v-if="editMemo === false"-->
 <!--      id="edit-memo-btn"-->
@@ -141,7 +188,7 @@
 
 <script>
 import b32 from "scripts/b32"
-import { required, between, decimal, maxLength } from "vuelidate/lib/validators"
+import { required, between, decimal, maxLength, minValue } from "vuelidate/lib/validators"
 import { uatoms, atoms, viewDenom, SMALLEST } from "src/scripts/num"
 import { mapState } from "vuex"
 import TmFormGroup from "src/components/common/TmFormGroup"
@@ -167,6 +214,9 @@ export default {
   data: () => ({
     address: ``,
     amount: null,
+    gasPrice: 1,
+    gasLimit: 25000,
+    gasFee: 1e-9 * 25000,
     denom: ``,
     memo: defaultMemo,
     max_memo_characters: 256,
@@ -188,6 +238,9 @@ export default {
             denom: this.denom
           }
         ],
+        gasFee: this.calculateFee(),
+        gasPrice: this.gasPrice,
+        gasLimit: this.gasLimit,
         memo: this.memo
       }
     },
@@ -202,6 +255,9 @@ export default {
   },
   methods: {
     viewDenom,
+    calculateFee() {
+      return ((this.gasPrice * 1e-9) * this.gasLimit).toFixed(9)
+    },
     open(denom) {
       this.denom = denom
       this.$refs.actionModal.open()
@@ -218,6 +274,8 @@ export default {
       this.editMemo = false
       this.memo = defaultMemo
       this.sending = false
+      this.gasPrice = 1
+      this.gasLimit = 25000
     },
     setMaxAmount() {
       this.amount = atoms(this.balance)

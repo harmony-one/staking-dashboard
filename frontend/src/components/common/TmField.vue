@@ -61,7 +61,7 @@
       />
     </div>
   </label>
-
+ 
   <input
     v-else
     ref="numTextInput"
@@ -69,6 +69,7 @@
     :class="css"
     :placeholder="placeholder"
     :value="value"
+    :min="min"
     @change="onChange"
     @keyup="onKeyup"
     @keydown="onKeydown"
@@ -77,6 +78,7 @@
 </template>
 
 <script>
+import debounce from 'lodash.debounce'
 export default {
   name: `tm-field`,
   props: {
@@ -87,6 +89,10 @@ export default {
     value: {
       type: [String, Number, Boolean],
       default: null
+    },
+    min: {
+      type: String,
+      default: null,
     },
     placeholder: {
       type: String,
@@ -147,6 +153,7 @@ export default {
       if (this.placeholder) return this.placeholder
       else return `Select option...`
     }
+     
   },
   watch: {
     value(newValue) {
@@ -157,6 +164,7 @@ export default {
     this.currentToggleState = !!this.value
   },
   methods: {
+   
     toggle() {
       if (!this.isDisabled) {
         this.currentToggleState = !this.currentToggleState
@@ -168,8 +176,8 @@ export default {
 
       if (this.type === `number`) {
         formattedValue = value.trim()
+        
       }
-
       // Emit the number value through the input event
       this.$emit(`input`, formattedValue)
     },

@@ -550,6 +550,8 @@ export default {
     balanceInAtoms() {
       const { type } = this.transactionData
 
+      console.log(this.transactionData)
+
       if (type === "MsgDelegate") {
         return BigNumber(this.undelegationsAmount)
           .div(1e12)
@@ -561,9 +563,17 @@ export default {
       return atoms(this.liquidAtoms)
     },
     estimatedFee() {
-      return Number(this.gasPrice) * Number(this.gasEstimate) // already in atoms
+      const {gasPrice, gasLimit, gasFee} = this.transactionData
+       
+      this.gasPrice = gasPrice * 1e-9
+      this.gasEstimate = gasLimit
+
+      const defaultValue = Number(gasFee) // already in atoms 
+      return  defaultValue
     },
     invoiceTotal() {
+        const finish =  Number(this.amount) + Number(this.gasPrice) * Number(this.gasEstimate)
+        console.log(finish)
       return (
         Number(this.amount) + Number(this.gasPrice) * Number(this.gasEstimate)
       )
@@ -817,10 +827,14 @@ export default {
       }
     },
     async simulate() {
-      const { type, memo, ...properties } = this.transactionData
+      const { type, memo, gasLimit, gasPrice, ...properties } = this.transactionData
+       
       this.actionManager.setMessage(type, properties)
       try {
-        this.gasEstimate = await this.actionManager.simulate(memo)
+        this.gasEstimate = gasLimit ? gasLimit : await this.actionManager.simulate(memo)
+        if (gasPrice) {
+          this.gasPrice = gasPrice * 1e-9
+        }
 
         if (Array.isArray(this.transactionData.validatorAddress)) {
           this.gasEstimate =

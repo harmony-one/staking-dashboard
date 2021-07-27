@@ -79,6 +79,54 @@
         type="between"
       />
     </TmFormGroup>
+    <TmFormGroup
+      class="action-modal-form-group"
+      field-id="gas-price"
+      field-label="Gas price"
+      :error="$v.gasPrice.$error && $v.gasPrice.$invalid"
+    >
+      <TmField
+          id="gas-price"
+          v-model.number="gasPrice"  
+          type="number"
+          min="1"
+          placeholder="Gas price" 
+        />
+     </TmFormGroup>
+
+     <TmFormGroup 
+      class="action-modal-form-group"
+      field-id="gas-limit"
+      field-label="Gas Limit"
+    >
+      <TmField
+          id="gas-limit"
+          v-model.number="gasLimit"
+          type="number"
+          min="25000"
+          placeholder="Gas Limit" 
+        />
+     </TmFormGroup>
+
+     <TmFormGroup 
+      
+      class="action-modal-form-group"
+      field-id="gas-fee"
+      field-label="Gas Fee"
+    >
+        <TmField
+            id="gas-fee" 
+            :value="calculateFee()"  
+            type="number"
+            placeholder="Gas fee"
+            disabled="true"
+          />
+          <TmFormMsg
+            v-if="calculateFee() < '0.000025000'"
+            name="Gas fee minimum 0,000025." 
+            type="custom"
+          />
+     </TmFormGroup>
   </ActionModal>
 </template>
 
@@ -131,7 +179,10 @@ export default {
   data: () => ({
     amount: null,
     atoms,
-    num
+    num,
+    gasPrice: 1,
+    gasLimit: 25000,
+    gasFee: 1e-9 * 25000,
   }),
   computed: {
     ...mapGetters([`liquidAtoms`]),
@@ -140,7 +191,10 @@ export default {
         type: transaction.UNDELEGATE,
         validatorAddress: this.validator.operator_address,
         amount: uatoms(this.amount),
-        denom: this.denom
+        denom: this.denom,
+        gasFee: this.calculateFee(),
+        gasPrice: this.gasPrice,
+        gasLimit: this.gasLimit,
       }
     },
     notifyMessage() {
@@ -158,10 +212,16 @@ export default {
         required: x => !!x && x !== `0`,
         decimal,
         between: between(SMALLEST, this.maximum)
+      },
+      gasPrice: {
+        required: x => !!x && x > `0`,
       }
     }
   },
   methods: {
+    calculateFee() {
+      return ((this.gasPrice * 1e-9) * this.gasLimit).toFixed(9)
+    },
     open() {
       this.$refs.actionModal.open()
     },
@@ -174,6 +234,8 @@ export default {
       this.$v.$reset()
 
       this.amount = null
+      this.gasPrice = 1
+      this.gasLimit = 25000
     },
     setMaxAmount() {
       this.amount = this.maximum

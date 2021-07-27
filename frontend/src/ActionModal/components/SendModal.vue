@@ -112,6 +112,7 @@
       class="action-modal-form-group"
       field-id="gas-price"
       field-label="Gas price"
+      :error="$v.gasPrice.$error && $v.gasPrice.$invalid"
     >
       <TmField
           id="gas-price"
@@ -152,6 +153,7 @@
           <TmFormMsg
             v-if="calculateFee() < '0.000025000'"
             name="Gas fee minimum 0,000025." 
+            type="custom"
           />
      </TmFormGroup>
 <!--    <TmBtn-->
@@ -320,6 +322,9 @@ export default {
       denom: { required },
       memo: {
         maxLength: maxLength(this.max_memo_characters)
+      },
+      gasPrice: {
+        required: x => !!x && x > `0`,
       }
     }
   }

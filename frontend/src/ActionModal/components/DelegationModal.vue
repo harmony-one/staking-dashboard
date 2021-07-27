@@ -159,7 +159,58 @@
         type="custom"
         class="tm-form-msg"
       />
+
+      <TmFormGroup
+      class="action-modal-form-group"
+      field-id="gas-price"
+      field-label="Gas price"
+      :error="$v.gasPrice.$error && $v.gasPrice.$invalid"
+    >
+      <TmField
+          id="gas-price"
+          v-model.number="gasPrice"  
+          type="number"
+          min="1"
+          placeholder="Gas price" 
+        />
+     </TmFormGroup>
+
+     <TmFormGroup 
+      class="action-modal-form-group"
+      field-id="gas-limit"
+      field-label="Gas Limit"
+    >
+      <TmField
+          id="gas-limit"
+          v-model.number="gasLimit"
+          type="number"
+          min="25000"
+          placeholder="Gas Limit" 
+        />
+     </TmFormGroup>
+
+     <TmFormGroup 
+      
+      class="action-modal-form-group"
+      field-id="gas-fee"
+      field-label="Gas Fee"
+    >
+        <TmField
+            id="gas-fee" 
+            :value="calculateFee()"  
+            type="number"
+            placeholder="Gas fee"
+            disabled="true"
+          />
+          <TmFormMsg
+            v-if="calculateFee() < '0.000025000'"
+            name="Gas fee minimum 0,000025." 
+            type="custom"
+          />
+     </TmFormGroup>
     </TmFormGroup>
+
+    
 
     <div v-else class="body_container">
       <TmFormMsg
@@ -231,7 +282,10 @@ export default {
     amount: null,
     selectedIndex: 0,
     sliderValue: 50,
-    sliderValueOutput: 50
+    sliderValueOutput: 50,
+    gasPrice: 1,
+    gasLimit: 25000,
+    gasFee: 1e-9 * 25000,
   }),
   computed: {
     ...mapState([`session`, `delegates`, "connection"]),
@@ -264,7 +318,10 @@ export default {
           type: transaction.DELEGATE,
           validatorAddress: this.validator.operator_address,
           amount: uatoms(this.amount),
-          denom: this.denom
+          denom: this.denom,
+          gasFee: this.calculateFee(),
+          gasPrice: this.gasPrice,
+          gasLimit: this.gasLimit,
         }
       } else {
         const validatorSrc = this.modalContext.delegates.find(
@@ -275,7 +332,10 @@ export default {
           validatorSourceAddress: validatorSrc.operator_address,
           validatorDestinationAddress: this.validator.operator_address,
           amount: uatoms(this.amount),
-          denom: this.denom
+          denom: this.denom,
+          gasFee: this.calculateFee(),
+          gasPrice: this.gasPrice,
+          gasLimit: this.gasLimit,
         }
       }
     },
@@ -344,6 +404,9 @@ export default {
     }
   },
   methods: {
+    calculateFee() {
+      return ((this.gasPrice * 1e-9) * this.gasLimit).toFixed(9)
+    },
     change() {
       this.sliderValueOutput = this.sliderValue
       this.amount = atoms((this.balance * this.sliderValue) / 100)
@@ -365,6 +428,8 @@ export default {
 
       this.selectedIndex = 0
       this.amount = null
+      this.gasPrice = 1
+      this.gasLimit = 25000
     },
     setMaxAmount() {
       this.amount = Math.min(
@@ -405,6 +470,9 @@ export default {
         //   Math.max(SMALLEST, this.minAmount),
         //   Math.min(atoms(this.balance), ones(this.validator.remainder))
         // )
+      },
+      gasPrice: {
+        required: x => !!x && x > `0`,
       }
     }
   }

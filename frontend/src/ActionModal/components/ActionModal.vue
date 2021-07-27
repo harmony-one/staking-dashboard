@@ -563,9 +563,9 @@ export default {
       return atoms(this.liquidAtoms)
     },
     estimatedFee() {
-      const {gasPrice, gasLimit, gasFee} = this.transactionData
+      const {gasPrice = 1, gasLimit = 25000, gasFee = '0.000025'} = this.transactionData
        
-      this.gasPrice = gasPrice * 1e-9
+      this.gasPrice = (gasPrice * 1e-9).toFixed(9)
       this.gasEstimate = gasLimit
 
       const defaultValue = Number(gasFee) // already in atoms 
@@ -833,7 +833,7 @@ export default {
       try {
         this.gasEstimate = gasLimit ? gasLimit : await this.actionManager.simulate(memo)
         if (gasPrice) {
-          this.gasPrice = gasPrice * 1e-9
+          this.gasPrice = (gasPrice * 1e-9).toFixed(9)
         }
 
         if (Array.isArray(this.transactionData.validatorAddress)) {

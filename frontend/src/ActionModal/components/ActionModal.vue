@@ -550,8 +550,6 @@ export default {
     balanceInAtoms() {
       const { type } = this.transactionData
 
-      console.log(this.transactionData)
-
       if (type === "MsgDelegate") {
         return BigNumber(this.undelegationsAmount)
           .div(1e12)
@@ -572,11 +570,9 @@ export default {
       return  defaultValue
     },
     invoiceTotal() {
-        const finish =  Number(this.amount) + Number(this.gasPrice) * Number(this.gasEstimate)
-        console.log(finish)
-      return (
-        Number(this.amount) + Number(this.gasPrice) * Number(this.gasEstimate)
-      )
+      const finish =  Number(this.amount) + Number(this.gasPrice) * Number(this.gasEstimate)
+         
+      return finish
     },
     isValidChildForm() {
       // here we trigger the validation of the child form

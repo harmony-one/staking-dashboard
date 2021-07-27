@@ -72,7 +72,7 @@ export default (opts = {}) => {
 
   store.subscribe(mutation => {
     if (mutation.type === "setSessionType") {
-      if (mutation.payload === "leger" && !isLegerModuleRegistered) {
+      if (mutation.payload === "ledger" && !isLegerModuleRegistered) {
         getLegerModule().then(legerModule => {
           store.registerModule("ledger", legerModule.default())
           isLegerModuleRegistered = true

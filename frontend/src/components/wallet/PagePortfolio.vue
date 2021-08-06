@@ -115,15 +115,17 @@ export default {
           let remaining_epoch = 1
 
           if (epoch >= 290) {
-            if (lastEpochInCommit > 0) {
+            if (lastEpochInCommit > 0 && d.validator_info.active === true) {
               remaining_epoch =
-                7 - (epoch - Math.min(lastEpochInCommit, ud.Epoch))
+                7 - (epoch - Math.min(lastEpochInCommit , ud.Epoch))
             } else {
               remaining_epoch = 7 - (epoch - ud.Epoch)
             }
 
             remaining_epoch = Math.max(0, remaining_epoch)
           }
+
+           
 
           undelegations.push({
             ...d.validator_info,
@@ -135,8 +137,7 @@ export default {
           })
         }
       }
-      // console.log(this.networkInfo, undelegations)
-
+      // console.log(this.networkInfo, undelegations) 
       return undelegations
     }
   },

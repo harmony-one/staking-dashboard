@@ -36,7 +36,7 @@
         <h3>Total pending undelegations {{ bondDenom | viewDenom }}</h3>
         <h2
           class="total-atoms__value"
-          style="color: #000000; margin-bottom: 10px;"
+          style="color: #777777; margin-bottom: 10px;"
         >
           {{ totalUndelegated | ones | zeroDecimals }}
         </h2>

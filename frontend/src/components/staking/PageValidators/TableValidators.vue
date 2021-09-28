@@ -159,7 +159,7 @@ export default {
           render: value => zeroDecimals(ones(value))
         },
         {
-          title: `Fees`,
+          title: `Commissions`,
           value: `rate`,
           tooltip: tooltips.v_list.fees,
           width: "96px",

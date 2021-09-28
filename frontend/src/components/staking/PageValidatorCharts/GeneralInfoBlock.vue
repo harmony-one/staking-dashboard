@@ -40,7 +40,7 @@
           v-tooltip.top="tooltips.v_profile.commission"
           class="inline"
         >
-          Fee:&nbsp;
+          Commission:&nbsp;
         </h4>
         <span>{{ validator.rate | percent | notAvailable }}</span>
       </li>
@@ -50,7 +50,7 @@
           v-tooltip.top="tooltips.v_profile.max_daily_change"
           class="inline"
         >
-          Max Fee Change:&nbsp;
+          Max Commission Change:&nbsp;
         </h4>
         <span>{{ validator.max_change_rate | percent | notAvailable }} (per day)</span>
       </li>

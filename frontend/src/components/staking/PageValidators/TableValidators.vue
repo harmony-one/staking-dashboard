@@ -159,10 +159,10 @@ export default {
           render: value => zeroDecimals(ones(value))
         },
         {
-          title: `Commissions`,
+          title: `Commission`,
           value: `rate`,
           tooltip: tooltips.v_list.fees,
-          width: "96px",
+          width: "150px",
           align: "right",
           render: value => percent(value) // render as function - do format value here
         },

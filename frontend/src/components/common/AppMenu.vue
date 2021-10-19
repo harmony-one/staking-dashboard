@@ -254,7 +254,11 @@ export default {
           .forgetIdentity()
           .then(() => {})
           .catch(err => {})
-      } else if (this.session.sessionType === "walletconnect" && window.walletconnect) {
+      } else if (
+        this.session.sessionType === "walletconnect" &&
+        window.walletconnect
+      ) {
+        disconnect()
         window.walletconnect
           .forgetIdentity()
           .then(() => {})

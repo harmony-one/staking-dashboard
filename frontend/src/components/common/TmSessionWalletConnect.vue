@@ -16,8 +16,11 @@
         </p>
       </div>
       -->
-      <div class="session-main">
+      <div v-if="!isConnect" class="session-main">
         <TmBtn value="Sign In" @click.native="connect()" />
+      </div>
+      <div v-if="isConnect" class="session-main">
+        <TmBtn value="Disconect" @click.native="disconnect()" />
       </div>
     </div>
   </SessionFrame>
@@ -57,10 +60,12 @@ export default {
     TmBtn,
   },
   data: () => ({
-    isWalletConnect: false
+    isWalletConnect: false,
+    isConnect: false
   }),
   mounted() {
     setInterval(() => {
+      this.isConnect = localStorage.getItem("walletconnect") === null ? false : true
       this.isWalletConnect = window.walletconnect && window.walletconnect.isWalletConnect
     }, 1000)
   },
@@ -68,9 +73,13 @@ export default {
     async connect() {
       provider.enable()
       const accounts = web3.eth.getAccounts()
-      this.$store.dispatch(`signIn`, {
-        sessionType: `walletconnect`,
-        address: accounts.address,
+      console.log(accounts[0]);
+      window.walletconnect.getAccount().then((accounts) => {
+        this.$store.dispatch(`signIn`, {
+          sessionType: `walletconnect`,
+          address: accounts[0],
+        })
+        this.$router.push(`/`)
       })
     },
     async disconnect() {
@@ -78,7 +87,7 @@ export default {
       alert("disconnected")
     },
     async signIn(address) {
-      window.harmony.getAccount().then((account) => {
+      window.walletconnect.getAccount().then((account) => {
         this.$store.dispatch(`signIn`, {
           sessionType: `walletconnect`,
           address: account.address,
@@ -90,6 +99,10 @@ export default {
 }
 </script>
 <style scoped>
+.session-container {
+  display: flex;
+  flex-direction: column;
+}
 .session-title,
 .extension-message {
   padding: 0 1rem;

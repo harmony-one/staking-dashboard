@@ -407,10 +407,12 @@ const signMethodOptions = {
   }
 }
 
+const getWhallateConnectUtils = () => import("scripts/walletconnect-utils")
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
 const getOneWalletUtils = () => import("scripts/onewallet-utils")
 let processMathWalletMessage
 let processOneWalletMessage
+let processWalletConnectMessage
 
 const sessionType = {
   EXPLORE: "explore",
@@ -418,7 +420,8 @@ const sessionType = {
   LEDGER: SIGN_METHODS.LEDGER,
   EXTENSION: SIGN_METHODS.EXTENSION,
   MATHWALLET: SIGN_METHODS.MATHWALLET,
-  ONEWALLET: SIGN_METHODS.ONEWALLET
+  ONEWALLET: SIGN_METHODS.ONEWALLET,
+  WALLETCONNECT: SIGN_METHODS.WALLETCONNECT
 }
 
 export default {
@@ -677,6 +680,13 @@ export default {
     ) {
       getOneWalletUtils().then(module => {
         processOneWalletMessage = module.processOneWalletMessage
+      })
+    } else if (
+      this.session.sessionType === SIGN_METHODS.WALLETCONNECT &&
+      !processWalletConnectMessage
+    ) {
+      getWhallateConnectUtils().then(module => {
+        processWalletConnectMessage = module.processWalletConnectMessage
       })
     }
   },

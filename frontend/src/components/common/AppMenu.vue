@@ -254,6 +254,11 @@ export default {
           .forgetIdentity()
           .then(() => {})
           .catch(err => {})
+      } else if (this.session.sessionType === "walletconnect" && window.walletconnect) {
+        window.walletconnect
+          .forgetIdentity()
+          .then(() => {})
+          .catch(err => {})
       }
       this.$emit(`close`)
       this.$store.dispatch(`signOut`)

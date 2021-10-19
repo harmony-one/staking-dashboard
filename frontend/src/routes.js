@@ -182,6 +182,16 @@ export default [
     }
   },
   {
+    path: `/walletconnect`,
+    name: `walletconnect`,
+    components: {
+      session: require(`./components/common/TmSessionWalletConnect`).default
+    },
+    meta: {
+      feature: "Session"
+    }
+  },
+  {
     path: `/existing`,
     name: `existing`,
     components: {

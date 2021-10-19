@@ -37,7 +37,7 @@
     "@harmony-js/core": "^0.1.36",
     "@ledgerhq/hw-transport-webhid": "^5.7.0",
     "@ledgerhq/hw-transport-webusb": "4.74.1",
-    "vue-loading-overlay": "^3.3.2",
+    "@walletconnect/web3-provider": "1.6.6",
     "apollo-boost": "^0.4.3",
     "apollo-cache-inmemory": "^1.6.2",
     "autosize": "^4.0.2",
@@ -67,12 +67,14 @@
     "vue-clipboard2": "^0.3.0",
     "vue-directive-tooltip": "^1.4.5",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-loading-overlay": "^3.3.2",
     "vue-mq": "1.0.1",
     "vue-property-decorator": "^8.3.0",
     "vue-router": "^3.0.3",
     "vue-slider-component": "3.1.0",
     "vuelidate": "^0.7.4",
-    "vuex": "^3.1.1"
+    "vuex": "^3.1.1",
+    "web3": "1.6.0"
   },
   "devDependencies": {
     "@ascendancyy/vue-cli-plugin-stylelint": "^1.1.2",
@@ -125,7 +127,11 @@
     "typescript": "~3.5.3",
     "vue-cli-plugin-webpack-bundle-analyzer": "2.0.0",
     "vue-svgicon": "3.2.6",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "@walletconnect/client": "^2.0.0-beta.19",
+    "@walletconnect/qrcode-modal": "^2.0.0-alpha.20",
+    "@walletconnect/types": "^2.0.0-beta.19",
+    "@walletconnect/utils": "^2.0.0-beta.19"
   },
   "engines": {
     "node": ">=10.13.0"

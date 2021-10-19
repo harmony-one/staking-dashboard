@@ -42,7 +42,7 @@ const provider = new WalletConnectProvider({
     1666700002: "https://api.s2.b.hmny.io",
     1666700003: "https://api.s3.b.hmny.io"
   },
-  bridge: "https://bridge.myhostedserver.com",
+  bridge: "https://bridge.walletconnect.org",
   qrcodeModalOptions: {
     mobileLinks: ["metamask", "trust"],
   },

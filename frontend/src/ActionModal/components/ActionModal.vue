@@ -381,7 +381,8 @@ const SIGN_METHODS = {
   LEDGER: `ledger`,
   EXTENSION: `extension`,
   MATHWALLET: `mathwallet`,
-  ONEWALLET: `onewallet`
+  ONEWALLET: `onewallet`,
+  WALLETCONNECT: `walletconnect`,
 }
 
 const signMethodOptions = {
@@ -396,6 +397,10 @@ const signMethodOptions = {
   ONEWALLET: {
     key: `One Wallet`,
     value: SIGN_METHODS.ONEWALLET
+  },
+  WALLETCONNECT: {
+    key: `WalletConnect`,
+    value: SIGN_METHODS.WALLETCONNECT
   },
   LOCAL: {
     key: `Local Account (Unsafe)`,
@@ -591,6 +596,8 @@ export default {
         signMethods.push(signMethodOptions.MATHWALLET)
       } else if (this.session.sessionType === sessionType.ONEWALLET) {
         signMethods.push(signMethodOptions.ONEWALLET)
+      } else if (this.session.sessionType === sessionType.WALLETCONNECT) {
+        signMethods.push(signMethodOptions.WALLETCONNECT)
       } else {
         signMethods.push(signMethodOptions.LOCAL)
       }
@@ -606,6 +613,8 @@ export default {
           return `Waiting for Math Wallet`
         case "onewallet":
           return `Waiting for Harmony One Wallet`
+        case "walletconnect":
+          return `Waiting for WalletConnect`
         default:
           return "Sending..."
       }
@@ -615,6 +624,7 @@ export default {
         this.session.browserWithLedgerSupport ||
         this.session.selectedSignMethod === "onewallet" ||
         this.session.selectedSignMethod === "mathwallet" ||
+        this.session.selectedSignMethod === "walletconnect" ||
         (this.selectedSignMethod === "extension" &&
           this.modalContext.isExtensionAccount)
       )
@@ -652,6 +662,13 @@ export default {
       ) {
         getOneWalletUtils().then(module => {
           processOneWalletMessage = module.processOneWalletMessage
+        })
+      } else if (
+        this.session.sessionType === SIGN_METHODS.WALLETCONNECT &&
+        !processOneWalletMessage
+      ) {
+        getWalletConnectUtils().then(module => {
+          processWalletConnectMessage = module.processWalletConnectMessage
         })
       }
     }
@@ -893,6 +910,14 @@ export default {
           this.$store.commit(`setActionInProgress`, true)
 
           sendResponse = await processOneWalletMessage(
+            sendData,
+            this.networkConfig,
+            this.wallet.address
+          )
+        } else if (this.selectedSignMethod === SIGN_METHODS.WALLETCONNECT) {
+          this.$store.commit(`setActionInProgress`, true)
+
+          sendResponse = await processWalletConnectMessage(
             sendData,
             this.networkConfig,
             this.wallet.address

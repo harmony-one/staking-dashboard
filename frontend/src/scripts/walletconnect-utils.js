@@ -2,7 +2,11 @@ import { Harmony } from "@harmony-js/core"
 import { HarmonyAddress, BN } from "@harmony-js/crypto"
 import { StakingFactory } from "@harmony-js/staking"
 import { ChainType, Unit } from "@harmony-js/utils"
-export const processWalletConnectMessage = async (sendData, networkConfig, from) => {
+export const processWalletConnectMessage = async (
+  sendData,
+  networkConfig,
+  from
+) => {
   const { type, fee, gasPrice } = sendData
   const { gasEstimate } = fee
   const { chain_id, rpc_url } = networkConfig
@@ -26,7 +30,7 @@ export const processWalletConnectMessage = async (sendData, networkConfig, from)
         gasPrice: Unit.One(gasPrice).toHex()
       })
 
-      signedTxn = await window.walletconnect.signTransaction(txn)
+      signedTxn = await window.harmony.signTransaction(txn)
       break
     }
     case "MsgDelegate": {
@@ -45,7 +49,7 @@ export const processWalletConnectMessage = async (sendData, networkConfig, from)
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      signedTxn = await window.walletconnect.signTransaction(stakingTxn)
+      signedTxn = await window.harmony.signTransaction(stakingTxn)
       break
     }
     case "MsgUndelegate": {
@@ -64,7 +68,7 @@ export const processWalletConnectMessage = async (sendData, networkConfig, from)
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      signedTxn = await window.walletconnect.signTransaction(stakingTxn)
+      signedTxn = await window.harmony.signTransaction(stakingTxn)
       break
     }
     case "MsgWithdrawDelegationReward": {
@@ -81,7 +85,7 @@ export const processWalletConnectMessage = async (sendData, networkConfig, from)
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      signedTxn = await window.walletconnect.signTransaction(stakingTxn)
+      signedTxn = await window.harmony.signTransaction(stakingTxn)
       break
     }
     default:
@@ -102,38 +106,17 @@ export const processWalletConnectMessage = async (sendData, networkConfig, from)
         if (confiremdTxn.isConfirmed()) {
           return { txhash: txnHash }
         } else {
-          if (txnHash && txnHash.length === 66) {
-            return {
-              error: true,
-              txhash: txnHash,
-              message:
-                "The transaction is still not confirmed after 5 attempts."
-            }
-          } else {
-            return {
-              error: true,
-              txhash: "",
-              message:
-                txnHash ||
-                "The transaction is still not confirmed after 5 attempts."
-            }
-          }
-        }
-      } catch (error) {
-        if (txnHash && txnHash.length === 66) {
           return {
             error: true,
             txhash: txnHash,
             message: "The transaction is still not confirmed after 5 attempts."
           }
-        } else {
-          return {
-            error: true,
-            txhash: "",
-            message:
-              txnHash ||
-              "The transaction is still not confirmed after 5 attempts."
-          }
+        }
+      } catch (error) {
+        return {
+          error: true,
+          txhash: txnHash,
+          message: "The transaction is still not confirmed after 5 attempts."
         }
       }
     }

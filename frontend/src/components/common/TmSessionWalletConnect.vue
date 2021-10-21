@@ -2,22 +2,8 @@
   <SessionFrame>
     <div class="session-container">
       <h2 class="session-title">Use WalletConnect</h2>
-      <!-- WindowCheck
-      <div v-if="!isWalletConnect" class="session-main">
-        <p>
-          It looks like you don't have a compatible wallet with Walletconnect,
-          check the compatible wallets below and download one.
-          <a
-            href="https://walletconnect.com/registry/wallets"
-            target="_blank"
-            rel="noopener norefferer"
-            >WalletConnect Wallets</a
-          >
-        </p>
-      </div>
-      -->
       <div v-if="!isConnect" class="session-main">
-        <TmBtn value="Sign In" @click.native="connect()" />
+        <TmBtn value="Sign In" @click.native="signIn()" />
       </div>
       <div v-if="isConnect" class="session-main">
         <TmBtn value="Disconect" @click.native="disconnect()" />
@@ -27,6 +13,7 @@
 </template>
 
 <script>
+import { getAddress } from '../../utils'
 import SessionFrame from "common/SessionFrame"
 import TmBtn from "common/TmBtn"
 import { mapState } from "vuex"
@@ -36,14 +23,8 @@ import WalletConnectProvider from "@walletconnect/web3-provider"
 
 const provider = new WalletConnectProvider({
   rpc: {
-    1666600000: "https://api.harmony.one",
-    1666600001: "https://s1.api.harmony.one",
-    1666600002: "https://s2.api.harmony.one",
-    1666600003: "https://s3.api.harmony.one",
-    1666700000: "https://api.s0.b.hmny.io",
-    1666700001: "https://api.s1.b.hmny.io",
-    1666700002: "https://api.s2.b.hmny.io",
-    1666700003: "https://api.s3.b.hmny.io"
+    1: "https://api.harmony.one", // Mainnet
+    2: "https://api.s0.b.hmny.io", // TestNet
   },
   bridge: "https://bridge.walletconnect.org",
   qrcodeModalOptions: {
@@ -53,47 +34,51 @@ const provider = new WalletConnectProvider({
 
 const web3 = new Web3(provider)
 
+export const getWalletAccount = async () => {
+  let accounts = null
+  let addressOne = null
+  if (web3) {
+    try {
+      await provider.enable() 
+      accounts = await web3.eth.getAccounts() 
+      addressOne = await getAddress(accounts[0]).bech32
+      return addressOne
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
 export default {
   name: `session-walletconnect`,
   components: {
     SessionFrame,
-    TmBtn,
+    TmBtn
   },
   data: () => ({
-    isWalletConnect: false,
-    isConnect: false
+    isConnect: false,
+    address: null
   }),
   mounted() {
     setInterval(() => {
-      this.isConnect = localStorage.getItem("walletconnect") === null ? false : true
-      this.isWalletConnect = window.walletconnect && window.walletconnect.isWalletConnect
+      this.isConnect = !localStorage.getItem("walletconnect") ? false : true
     }, 1000)
   },
   methods: {
-    async connect() {
-      provider.enable()
-      const accounts = web3.eth.getAccounts()
-      console.log(accounts[0]);
-      window.walletconnect.getAccount().then((accounts) => {
-        this.$store.dispatch(`signIn`, {
-          sessionType: `walletconnect`,
-          address: accounts[0],
-        })
-        this.$router.push(`/`)
-      })
-    },
     async disconnect() {
-      provider.disconnect()
-      alert("disconnected")
+      await provider.disconnect()
     },
     async signIn(address) {
-      window.walletconnect.getAccount().then((account) => {
-        this.$store.dispatch(`signIn`, {
-          sessionType: `walletconnect`,
-          address: account.address,
-        })
-        this.$router.push(`/`)
+      try {
+      this.$store.dispatch(`signIn`, {
+        sessionType: `walletconnect`,
+        address: await getWalletAccount()
       })
+      this.$router.push(`/`)
+      } catch (e) {
+        console.log(e)
+      }
+      
     },
   },
 }

@@ -185,7 +185,7 @@ export default [
     path: `/walletconnect`,
     name: `walletconnect`,
     components: {
-      session: require(`./components/common/TmSessionWalletConnect`).default
+      session: () => import(`./components/common/TmSessionWalletConnect`)
     },
     meta: {
       feature: "Session"

@@ -254,15 +254,11 @@ export default {
           .forgetIdentity()
           .then(() => {})
           .catch(err => {})
-      } else if (
-        this.session.sessionType === "walletconnect" &&
-        window.walletconnect
-      ) {
-        disconnect()
-        window.walletconnect
-          .forgetIdentity()
-          .then(() => {})
-          .catch(err => {})
+      } else if (this.session.sessionType === "walletconnect") {
+        const keysWalletconnect = ["store_account_settings", "addresses", "walletconnect", "session"]
+        for (let key of keysWalletconnect) {
+          localStorage.removeItem(key)
+        }
       }
       this.$emit(`close`)
       this.$store.dispatch(`signOut`)

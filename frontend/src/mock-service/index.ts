@@ -9,8 +9,9 @@ import {
 const queryString = require("query-string")
 
 const urls = process.env.MOCK_API_URL
-    ? [process.env.MOCK_API_URL]
-    : [
+  ? [process.env.MOCK_API_URL]
+  : [
+      "https://api.stake.hmny.io/",
       "https://hmny-t.co",
       "https://staking-us-west.hmny.io",
       "https://staking-explorer-test.appspot.com"
@@ -131,7 +132,10 @@ export function fetchValidatorByAddress(networkId: string, address: string) {
     .then(rez => remapValidator(rez.data, true))
 }
 
-export function fetchValidatorAvatarSrcByAddress(networkId: string, address: string) {
+export function fetchValidatorAvatarSrcByAddress(
+  networkId: string,
+  address: string
+) {
   return `${API_URL}/networks/${networkId}/validators/${address}/avatar`
 }
 

@@ -2,6 +2,53 @@ import { Harmony } from "@harmony-js/core"
 import { HarmonyAddress, BN } from "@harmony-js/crypto"
 import { StakingFactory } from "@harmony-js/staking"
 import { ChainType, Unit } from "@harmony-js/utils"
+import { getAddress } from "../../src/utils"
+
+import Web3 from "web3"
+import WalletConnectProvider from "@walletconnect/web3-provider"
+
+
+const rpc = {
+  1: "https://api.harmony.one",
+  2: "https://api.s0.b.hmny.io"
+}
+
+const provider = new WalletConnectProvider({
+  rpc: rpc,
+  bridge: "https://bridge.walletconnect.org",
+  qrcodeModalOptions: {
+    mobileLinks: ["rainbow", "metamask", "argent", "trust", "imtoken", "pillar"]
+  },
+  supportedChainIds: [
+    1, // harmony
+    2 // harmony testnet
+  ]
+})
+
+export const web3WalletConnect = new Web3(provider)
+
+export const getWalletAccount = async () => {
+  let accounts = null
+  let addressOne = null
+  
+  if (web3WalletConnect) {
+    try {
+      if (await provider.enable()) {
+        accounts = await web3WalletConnect.eth.getAccounts()
+        addressOne = await getAddress(accounts[0]).bech32
+        return addressOne
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
+export const walletConnectDisconnet = async () => {
+  if (web3WalletConnect) {
+    await provider.disconnect()
+  }
+}
 export const processWalletConnectMessage = async (
   sendData,
   networkConfig,
@@ -30,7 +77,7 @@ export const processWalletConnectMessage = async (
         gasPrice: Unit.One(gasPrice).toHex()
       })
 
-      signedTxn = await window.harmony.signTransaction(txn)
+      signedTxn = await web3WalletConnect.eth.signTransaction(txn)
       break
     }
     case "MsgDelegate": {
@@ -49,7 +96,7 @@ export const processWalletConnectMessage = async (
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      signedTxn = await window.harmony.signTransaction(stakingTxn)
+      signedTxn = await web3WalletConnect.eth.signTransaction(stakingTxn)
       break
     }
     case "MsgUndelegate": {
@@ -68,7 +115,7 @@ export const processWalletConnectMessage = async (
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      signedTxn = await window.harmony.signTransaction(stakingTxn)
+      signedTxn = await web3WalletConnect.eth.signTransaction(stakingTxn)
       break
     }
     case "MsgWithdrawDelegationReward": {
@@ -85,7 +132,7 @@ export const processWalletConnectMessage = async (
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      signedTxn = await window.harmony.signTransaction(stakingTxn)
+      signedTxn = await web3WalletConnect.eth.signTransaction(stakingTxn)
       break
     }
     default:

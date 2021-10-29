@@ -14,10 +14,6 @@
 
     <div
       class="show-on-ledger"
-      v-tooltip="{
-        placement: 'top',
-        content: ledgerSuccess || `Click to show on Ledger`
-      }"
     >
       <a
         v-if="session && !session.isMobile && session.sessionType === 'ledger'"

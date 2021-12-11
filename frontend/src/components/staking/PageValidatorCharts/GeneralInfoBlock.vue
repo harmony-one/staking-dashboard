@@ -63,6 +63,7 @@
 </template>
 <script>
 import { shortDecimals, percent, ones } from "scripts/num"
+import { validURL } from "scripts/url"
 import Bech32 from "common/Bech32"
 import tooltips from "src/components/tooltips"
 
@@ -88,7 +89,11 @@ export default {
       return percent(this.validator.self_stake / this.validator.total_stake)
     },
     website() {
-      let url = this.validator.website
+      let url = this.validator.website;
+
+      if(!validURL(url)) {
+        return "";
+      }
 
       if (!url || url === "[do-not-modify]") {
         return ""

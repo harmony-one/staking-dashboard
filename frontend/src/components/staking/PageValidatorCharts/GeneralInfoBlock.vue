@@ -89,14 +89,14 @@ export default {
       return percent(this.validator.self_stake / this.validator.total_stake)
     },
     website() {
-      let url = sanitizeUrl(this.validator.website);
+      let url = this.validator.website
 
       if (!url || url === "[do-not-modify]") {
         return ""
       } else if (!url.match(/http[s]?/)) {
         url = `https://` + url
       }
-      return url
+      return sanitizeUrl(url)
     }
   },
 

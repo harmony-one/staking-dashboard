@@ -1,11 +1,11 @@
 <template>
   <div class="next-epoch">
     <div class="chart-container-next-epoch">
-      <ChartPie
-        :chartdata="chartdata"
-        :options="options"
-        style="height: 48px; width: 48px; margin: auto"
-      />
+<!--      <ChartPie-->
+<!--        :chartdata="chartdata"-->
+<!--        :options="options"-->
+<!--        style="height: 48px; width: 48px; margin: auto"-->
+<!--      />-->
     </div>
     <div class="legend">next epoch:<br/>{{chartdata.legend}}</div>
   </div>
@@ -73,7 +73,7 @@ export default {
   align-items: center;
 }
 @media screen and (max-width: 414px) {
-  
+
   .next-epoch {
     width: 190px;
   }

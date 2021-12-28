@@ -191,12 +191,22 @@ export default {
     display: inline-block;
   }
 }
-@media screen and (max-width: 414px) {
-  .chart {
-    display: flex;
-    height: 50%;
-    margin: 0 auto;
-    width: 256px;
+
+@media screen and (min-width: 1000px) and (max-width: 1200px) {
+  .legend-container {
+    width: 100%;
+    height: auto;
+    min-height: 56px;
+  }
+
+  .chart-container-stake-allocate {
+    width:100%;
+    display: inline-block;
+
+    .chart {
+      display: inline-block;
+      margin-bottom: 16px;
+    }
   }
 }
 </style>

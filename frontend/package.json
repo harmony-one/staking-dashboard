@@ -141,6 +141,16 @@
     "url": "git+https://github.com/luniehq/lunie.git"
   },
   "resolutions": {
-    "braces": ">=2.3.1"
+    "braces": ">=2.3.1",
+    "simsala/axios": "^0.24.0",
+    "@ascendancyy/vue-cli-plugin-stylelint/**/trim": "^1.0.1",
+    "@ascendancyy/vue-cli-plugin-stylelint/**/trim-newlines": "^3.0.1",
+    "babel-cli/**/glob-parent": "^5.1.2",
+    "@vue/cli-service/**/glob-parent": "^5.1.2",
+    "@vue/cli-plugin-babel/**/glob-parent": "^5.1.2",
+    "live-server/**/glob-parent": "^5.1.2",
+    "@ascendancyy/vue-cli-plugin-stylelint/**/glob-parent": "^5.1.2",
+    "@vue/cli-plugin-eslint/**/glob-parent": "^5.1.2",
+    "@vue/cli-service/**/is-svg": "^4.3.0"
   }
 }

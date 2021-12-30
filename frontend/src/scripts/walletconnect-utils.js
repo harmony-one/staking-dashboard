@@ -98,7 +98,6 @@ export const processWalletConnectMessage = async (
         to: stakingTxn.stakeMsg.delegatorAddress,
         data: "0x"
       }
-
       wcSign = await wcProvider.connector.signTransaction(stakingTxnRaw)
       wcSign = wcSign.replace("0x", "")
       var bytes = []
@@ -136,6 +135,11 @@ export const processWalletConnectMessage = async (
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
+      const stakingTxnRaw = {
+        from: stakingTxn.from,
+        to: stakingTxn.stakeMsg.delegatorAddress,
+        data: "0x"
+      }
       wcSign = await wcProvider.connector.signTransaction(stakingTxnRaw)
       wcSign = wcSign.replace("0x", "")
       var bytes = []
@@ -171,6 +175,11 @@ export const processWalletConnectMessage = async (
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
+      const stakingTxnRaw = {
+        from: stakingTxn.from,
+        to: stakingTxn.stakeMsg.delegatorAddress,
+        data: "0x"
+      }
       wcSign = await wcProvider.connector.signTransaction(stakingTxnRaw)
       wcSign = wcSign.replace("0x", "")
       var bytes = []

@@ -12,7 +12,7 @@ const emptyState = {
   error: null,
   accountNumber: null,
   address: "",
-  externals: { config, axios }
+  externals: { config, axios },
 }
 
 export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
@@ -37,7 +37,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     },
     setAccountNumber(state, accountNumber) {
       state.accountNumber = accountNumber
-    }
+    },
   },
   actions: {
     async reconnected({ rootState, state, dispatch }) {
@@ -80,13 +80,13 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       } catch (error) {
         commit(`notifyError`, {
           title: `Error fetching balances`,
-          body: error.message
+          body: error.message,
         })
         state.error = error
       }
     },
     queryWalletStateAfterHeight({ rootState, dispatch }, height) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         // wait until height is >= `height`
         const interval = setInterval(() => {
           if (rootState.connection.lastHeader.height < height) return
@@ -94,12 +94,12 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
           dispatch(`queryWalletBalances`)
           dispatch(`getBondedDelegates`) // TODO move away
           dispatch(`getRewardsFromMyValidators`) // TODO move away
-          resolve()
+          resolve(true)
         }, 1000)
       })
     },
     async walletSubscribe({ state, rootState, dispatch }) {
       if (!rootState.session.address) return
-    }
-  }
+    },
+  },
 })

@@ -3,18 +3,17 @@ import { TNode } from "@/connectors/node"
 import { Module } from "vuex"
 
 const mockState = {
-  loaded: true
+  loaded: true,
 }
 
 const emptyState = {
   loading: false,
-  loaded: false,
   error: null,
 
   // our delegations which are already on the blockchain
   committedDelegates: {} as any,
   unbondingDelegations: {} as any,
-  ...mockState
+  ...mockState,
 }
 
 export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
@@ -33,12 +32,12 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
             .reduce(
               (dict: any, { validator_address, entries }: any) => ({
                 ...dict,
-                [validator_address]: entries.length > 0 ? entries : undefined
+                [validator_address]: entries.length > 0 ? entries : undefined,
               }),
               {}
             )
         : {}
-    }
+    },
   },
   actions: {
     reconnected({ state, dispatch, rootState }) {
@@ -67,7 +66,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
         const delegator = {
           delegations,
           unbondingDelegations: [],
-          redelegations
+          redelegations,
         }
         state.error = null
         state.loading = false
@@ -87,13 +86,13 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
             ({ validator_address, shares }: any) => {
               commit(`setCommittedDelegation`, {
                 candidateId: validator_address,
-                value: parseFloat(shares)
+                value: parseFloat(shares),
               })
             }
           )
         }
         // delete delegations not present anymore
-        Object.keys(state.committedDelegates).forEach(validatorAddr => {
+        Object.keys(state.committedDelegates).forEach((validatorAddr) => {
           if (
             !delegator.delegations ||
             !delegator.delegations.find(
@@ -103,7 +102,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
           )
             commit(`setCommittedDelegation`, {
               candidateId: validatorAddr,
-              value: 0
+              value: 0,
             })
         })
 
@@ -111,12 +110,12 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       } catch (error) {
         commit(`notifyError`, {
           title: `Error fetching delegations`,
-          body: error.message
+          body: error.message,
         })
         state.error = error
       }
 
       state.loading = false
-    }
-  }
+    },
+  },
 })

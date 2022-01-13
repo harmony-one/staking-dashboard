@@ -13,7 +13,9 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     "prefer-const": "off",
     "no-var": "off",
-    "vue/no-unused-components": "off"
+    "vue/no-unused-components": "off",
+    "vue/no-use-v-if-with-v-for": "warn",
+    "vue/require-v-for-key": "warn"
   },
 
   parserOptions: {

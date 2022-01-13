@@ -182,6 +182,16 @@ export default [
     }
   },
   {
+    path: `/metamask`,
+    name: `metamask`,
+    components: {
+      session: require(`./components/common/TmSessionMetaMask`).default
+    },
+    meta: {
+      feature: "Session"
+    }
+  },
+  {
     path: `/existing`,
     name: `existing`,
     components: {

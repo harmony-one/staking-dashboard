@@ -381,7 +381,8 @@ const SIGN_METHODS = {
   LEDGER: `ledger`,
   EXTENSION: `extension`,
   MATHWALLET: `mathwallet`,
-  ONEWALLET: `onewallet`
+  ONEWALLET: `onewallet`,
+  METAMASK: `metamask`
 }
 
 const signMethodOptions = {
@@ -404,21 +405,28 @@ const signMethodOptions = {
   EXTENSION: {
     key: `Harmony Browser Extension (Deprecated)`,
     value: SIGN_METHODS.EXTENSION
+  },
+  METAMASK: {
+    key: 'MetaMask',
+    value: SIGN_METHODS.METAMASK
   }
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
 const getOneWalletUtils = () => import("scripts/onewallet-utils")
+const getMetaMaskUtils = () => {}
 let processMathWalletMessage
 let processOneWalletMessage
+let processMetaMaskMessage
 
-const sessionType = {
+export const sessionType = {
   EXPLORE: "explore",
   LOCAL: SIGN_METHODS.LOCAL,
   LEDGER: SIGN_METHODS.LEDGER,
   EXTENSION: SIGN_METHODS.EXTENSION,
   MATHWALLET: SIGN_METHODS.MATHWALLET,
-  ONEWALLET: SIGN_METHODS.ONEWALLET
+  ONEWALLET: SIGN_METHODS.ONEWALLET,
+  METAMASK: SIGN_METHODS.METAMASK
 }
 
 export default {
@@ -588,6 +596,8 @@ export default {
         signMethods.push(signMethodOptions.MATHWALLET)
       } else if (this.session.sessionType === sessionType.ONEWALLET) {
         signMethods.push(signMethodOptions.ONEWALLET)
+      } else if (this.session.sessionType === sessionType.METAMASK) {
+        signMethods.push(signMethodOptions.METAMASK)
       } else {
         signMethods.push(signMethodOptions.LOCAL)
       }
@@ -664,20 +674,29 @@ export default {
     }
   },
   mounted() {
-    if (
-      this.session.sessionType === SIGN_METHODS.MATHWALLET &&
-      !processMathWalletMessage
-    ) {
+    if (processMathWalletMessage) {
+      return
+    }
+
+    const sessionType = this.session.sessionType
+    if (sessionType === SIGN_METHODS.MATHWALLET) {
       getMathWalletUtils().then(module => {
         processMathWalletMessage = module.processMathWalletMessage
       })
-    } else if (
-      this.session.sessionType === SIGN_METHODS.ONEWALLET &&
-      !processOneWalletMessage
-    ) {
+      return
+    }
+
+    if (sessionType === SIGN_METHODS.ONEWALLET) {
       getOneWalletUtils().then(module => {
         processOneWalletMessage = module.processOneWalletMessage
       })
+    }
+
+    if (sessionType === SIGN_METHODS.METAMASK) {
+      getMetaMaskUtils().then(module => {
+        processMetaMaskMessage = module.processOneWalletMessage
+      })
+      return;
     }
   },
   methods: {
@@ -880,6 +899,14 @@ export default {
             this.wallet.address
           )
         } else if (this.selectedSignMethod === SIGN_METHODS.ONEWALLET) {
+          this.$store.commit(`setActionInProgress`, true)
+
+          sendResponse = await processOneWalletMessage(
+            sendData,
+            this.networkConfig,
+            this.wallet.address
+          )
+        } else if (this.selectedSignMethod === SIGN_METHODS.METAMASK) {
           this.$store.commit(`setActionInProgress`, true)
 
           sendResponse = await processOneWalletMessage(

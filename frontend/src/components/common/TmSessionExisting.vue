@@ -33,6 +33,13 @@
           title="Use Harmony One Wallet"
           route="onewallet"
         />
+        <LiSession
+          v-if="!isMobileApp"
+          id="use-metamask"
+          icon="extension"
+          title="Use Metamask Wallet"
+          route="metamask"
+        />
 
         <LiSession
           v-if="session.insecureMode"

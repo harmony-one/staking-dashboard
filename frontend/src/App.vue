@@ -13,6 +13,7 @@
       </div>
       <!-- <MobileMenu /> -->
       <TmNotifications :notifications="notifications" />
+      <AccountWatcher />
     </div>
   </div>
 </template>
@@ -25,6 +26,7 @@ import CookieBar from "common/CookieBar"
 import MaintenanceBar from "common/MaintenanceBar"
 import DisconnectedBar from "common/DisconnectedBar"
 import TmNotifications from "common/TmNotifications"
+import AccountWatcher from "common/AccountWatcher"
 import store from "./vuex/store"
 
 export default {
@@ -35,7 +37,8 @@ export default {
     CookieBar,
     MaintenanceBar,
     DisconnectedBar,
-    MobileMenu
+    MobileMenu,
+    AccountWatcher
   },
   computed: {
     ...mapState([`notifications`, `session`])

@@ -28,7 +28,7 @@ import SessionFrame from "common/SessionFrame"
 import { toBech32 } from "@harmony-js/crypto"
 import detectEthereumProvider from "@metamask/detect-provider"
 import TmBtn from "common/TmBtn"
-import {sessionType} from "src/ActionModal/components/ActionModal"
+import { sessionType } from "src/ActionModal/components/ActionModal"
 
 export default {
   name: `session-onewallet`,
@@ -51,15 +51,12 @@ export default {
   },
   methods: {
     async signIn() {
-      console.log('### signin');
-
       try {
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts"
         })
 
         if (accounts.length === 0) {
-          console.error("### accounts", accounts)
           return
         }
 

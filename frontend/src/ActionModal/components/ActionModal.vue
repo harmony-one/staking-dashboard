@@ -414,7 +414,7 @@ const signMethodOptions = {
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
 const getOneWalletUtils = () => import("scripts/onewallet-utils")
-const getMetaMaskUtils = () => {}
+const getMetaMaskUtils = () => import("scripts/metamask-utils")
 let processMathWalletMessage
 let processOneWalletMessage
 let processMetaMaskMessage
@@ -690,13 +690,14 @@ export default {
       getOneWalletUtils().then(module => {
         processOneWalletMessage = module.processOneWalletMessage
       })
+      return
     }
 
     if (sessionType === SIGN_METHODS.METAMASK) {
       getMetaMaskUtils().then(module => {
-        processMetaMaskMessage = module.processOneWalletMessage
+        processMetaMaskMessage = module.processMetamaskMessage
       })
-      return;
+      return
     }
   },
   methods: {
@@ -909,7 +910,7 @@ export default {
         } else if (this.selectedSignMethod === SIGN_METHODS.METAMASK) {
           this.$store.commit(`setActionInProgress`, true)
 
-          sendResponse = await processOneWalletMessage(
+          sendResponse = await processMetaMaskMessage(
             sendData,
             this.networkConfig,
             this.wallet.address

@@ -11,7 +11,7 @@ export const processMetamaskMessage = async (
     // const { chain_id, rpc_url } = networkConfig //TODO: switch chain
 
     const web3URL = window.ethereum ? window.ethereum : process.env.HMY_NODE_URL;
-    export const hmyWeb3 = new Web3(web3URL);
+    const hmyWeb3 = new Web3(web3URL);
 
     const web3Contract = new hmyWeb3.eth.Contract(abi, "0x5ecf7797e73485fa883d1b9872a5b0e3d768e7dd");
 

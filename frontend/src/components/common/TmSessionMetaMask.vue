@@ -28,18 +28,18 @@ import SessionFrame from "common/SessionFrame"
 import { toBech32 } from "@harmony-js/crypto"
 import detectEthereumProvider from "@metamask/detect-provider"
 import TmBtn from "common/TmBtn"
-import { mapState } from "vuex"
+import {sessionType} from "src/ActionModal/components/ActionModal"
+
 export default {
   name: `session-onewallet`,
   components: {
     SessionFrame,
-    TmBtn,
+    TmBtn
   },
   data: () => ({
-    isMetamaskExist: false,
+    isMetamaskExist: false
   }),
   mounted() {
-
     setInterval(() => {
       detectEthereumProvider().then((provider) => {
         if (provider === window.ethereum) {
@@ -50,31 +50,30 @@ export default {
     }, 1000)
   },
   methods: {
-    async signIn(address) {
+    async signIn() {
+      console.log('### signin');
 
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts"
+        })
 
-      if (accounts.length === 0) {
-        console.error("### accounts", accounts)
-        return
+        if (accounts.length === 0) {
+          console.error("### accounts", accounts)
+          return
+        }
+
+        this.$store.dispatch("signIn", {
+          sessionType: sessionType.METAMASK,
+          address: toBech32(accounts[0])
+        })
+
+        this.$router.push(`/`)
+      } catch (ex) {
+        console.error("### ex", ex)
       }
-
-      this.$store.dispatch("signIn", {
-        sessionType: sessionType.METAMASK,
-        address: toBech32(accounts[0]),
-      })
-
-      this.$router.push(`/`)
-
-      // window.onewallet.getAccount().then((account) => {
-      //   this.$store.dispatch(`signIn`, {
-      //     sessionType: `metamask`,
-      //     address: account.address,
-      //   })
-      //   this.$router.push(`/`)
-      // })
-    },
-  },
+    }
+  }
 }
 </script>
 <style scoped>

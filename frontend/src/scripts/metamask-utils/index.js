@@ -10,7 +10,7 @@ export const processMetaMaskMessage = async (
 ) => {
     debugger;
 
-    const { type, fee, gasPrice: gasPriceData, validatorAddress, amount, amounts, toAddress } = sendData
+    const { type, fee, gasPrice: gasPriceData, validatorAddress, amount:amountData, amounts, toAddress } = sendData
     const { gasEstimate } = fee
     // const { chain_id, rpc_url } = networkConfig //TODO: switch chain
 
@@ -20,6 +20,10 @@ export const processMetaMaskMessage = async (
     const web3Contract = new hmyWeb3.eth.Contract(abi, "0x5ecf7797e73485fa883d1b9872a5b0e3d768e7dd");
 
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+    console.log(Unit.Szabo(amountData || 0).toHex());
+
+    const amount = Unit.Szabo(amountData || 0).toHex();
 
     let result;
     let error;
@@ -47,7 +51,7 @@ export const processMetaMaskMessage = async (
             case "MsgDelegate": {
                 result = await web3Contract.methods.delegate(new HarmonyAddress(validatorAddress).checksum, amount).send({
                     from: accounts[0],
-                    value: new BN(amount),
+                    // value: amount,
                     gasPrice,
                     gas,
                 });
@@ -56,7 +60,7 @@ export const processMetaMaskMessage = async (
             case "MsgUndelegate": {
                 result = await web3Contract.methods.undelegate(new HarmonyAddress(validatorAddress).checksum, amount).send({
                     from: accounts[0],
-                    value: new BN(amount),
+                    // value: amount,
                     gasPrice,
                     gas,
                 });

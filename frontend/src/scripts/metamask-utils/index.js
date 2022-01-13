@@ -6,7 +6,7 @@ export const processMetamaskMessage = async (
     networkConfig,
     from
 ) => {
-    const { type, fee, gasPrice } = sendData
+    const { type, fee, gasPrice: gasPriceData } = sendData
     const { gasEstimate } = fee
     // const { chain_id, rpc_url } = networkConfig //TODO: switch chain
 
@@ -18,6 +18,9 @@ export const processMetamaskMessage = async (
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
     let result;
+
+    const gas = 6721900;
+    const gasPrice = Math.max(new BN(await hmyWeb3.eth.getGasPrice()).mul(new BN(1)).toNumber(), gasPriceData);
 
     switch (type) {
         case "MsgSend": {
@@ -31,9 +34,6 @@ export const processMetamaskMessage = async (
             //     gasLimit: gasEstimate,
             //     gasPrice: Unit.One(gasPrice).toHex(),
             // })
-
-            const gas = 6721900;
-            const gasPrice = new BN(await hmyWeb3.eth.getGasPrice()).mul(new BN(1));
 
             result = await web3.eth
                 .sendTransaction({
@@ -60,42 +60,26 @@ export const processMetamaskMessage = async (
             });
             break
         }
-        // case "MsgUndelegate": {
-        //     const { validatorAddress, delegatorAddress, amount } = sendData
-        //     const stakingTxn = new StakingFactory(harmony.messenger)
-        //         .undelegate({
-        //             delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
-        //             validatorAddress: new HarmonyAddress(validatorAddress).checksum,
-        //             amount: Unit.Szabo(amount).toHex(),
-        //         })
-        //         .setTxParams({
-        //             gasPrice: Unit.One(gasPrice).toHex(),
-        //             gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-        //             chainId: harmony.chainId,
-        //         })
-        //         .build()
-        //     stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
-        //
-        //     signedTxn = await window.onewallet.signTransaction(stakingTxn)
-        //     break
-        // }
-        // case "MsgWithdrawDelegationReward": {
-        //     const { delegatorAddress } = sendData
-        //     const stakingTxn = new StakingFactory(harmony.messenger)
-        //         .collectRewards({
-        //             delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
-        //         })
-        //         .setTxParams({
-        //             gasPrice: Unit.One(gasPrice).toHex(),
-        //             gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-        //             chainId: harmony.chainId,
-        //         })
-        //         .build()
-        //     stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
-        //
-        //     signedTxn = await window.onewallet.signTransaction(stakingTxn)
-        //     break
-        // }
+        case "MsgUndelegate": {
+            const { validatorAddress, delegatorAddress, amount } = sendData
+
+            result = web3Contract.methods.undelegate(new HarmonyAddress(validatorAddress).checksum, amount).send({
+                from: accounts[0],
+                value: amount,
+                gasPrice,
+                gas,
+            });
+
+            break
+        }
+        case "MsgWithdrawDelegationReward": {
+            result = web3Contract.methods.collectRewards().send({
+                from: accounts[0],
+                gasPrice,
+                gas,
+            });
+            break
+        }
         default:
             break
     }

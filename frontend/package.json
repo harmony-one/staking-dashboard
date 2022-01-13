@@ -38,6 +38,7 @@
     "@harmony-js/core": "^0.1.36",
     "@ledgerhq/hw-transport-webhid": "^5.7.0",
     "@ledgerhq/hw-transport-webusb": "4.74.1",
+    "@metamask/detect-provider": "1.2.0",
     "apollo-boost": "^0.4.3",
     "apollo-cache-inmemory": "^1.6.2",
     "autosize": "^4.0.2",

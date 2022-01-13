@@ -381,7 +381,8 @@ const SIGN_METHODS = {
   LEDGER: `ledger`,
   EXTENSION: `extension`,
   MATHWALLET: `mathwallet`,
-  ONEWALLET: `onewallet`
+  ONEWALLET: `onewallet`,
+  METAMASK: `metamask`,
 }
 
 const signMethodOptions = {
@@ -404,6 +405,10 @@ const signMethodOptions = {
   EXTENSION: {
     key: `Harmony Browser Extension (Deprecated)`,
     value: SIGN_METHODS.EXTENSION
+  },
+  METAMASK: {
+    key: 'MetaMask',
+    value: SIGN_METHODS.METAMASK,
   }
 }
 
@@ -418,7 +423,8 @@ const sessionType = {
   LEDGER: SIGN_METHODS.LEDGER,
   EXTENSION: SIGN_METHODS.EXTENSION,
   MATHWALLET: SIGN_METHODS.MATHWALLET,
-  ONEWALLET: SIGN_METHODS.ONEWALLET
+  ONEWALLET: SIGN_METHODS.ONEWALLET,
+  METAMASK: SIGN_METHODS.METAMASK,
 }
 
 export default {
@@ -588,6 +594,8 @@ export default {
         signMethods.push(signMethodOptions.MATHWALLET)
       } else if (this.session.sessionType === sessionType.ONEWALLET) {
         signMethods.push(signMethodOptions.ONEWALLET)
+      } else if (this.session.sessionType === sessionType.METAMASK) {
+        signMethods.push(signMethodOptions.METAMASK)
       } else {
         signMethods.push(signMethodOptions.LOCAL)
       }
@@ -625,6 +633,7 @@ export default {
     signMethods: {
       immediate: true,
       handler(signMethods) {
+        console.log('### signMethods', signMethods);
         if (signMethods.length) {
           this.selectedSignMethod = signMethods[0].value
         }

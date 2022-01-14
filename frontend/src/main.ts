@@ -54,7 +54,7 @@ const urlParams = getURLParams(window)
 const { store, router } = init(urlParams)
 
 // window.store = store;
-// update
+// update1
 
 new Vue({
   router,

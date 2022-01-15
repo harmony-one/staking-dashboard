@@ -126,8 +126,8 @@
       <a
         class="app-menu-item small"
         href="https://governance.harmony.one/#/"
-        @click="close"
         target="_blank"
+        @click="close"
       >
         <h2 class="app-menu-title">Governance</h2>
       </a>
@@ -135,8 +135,8 @@
       <a
         class="app-menu-item small"
         href="https://docs.harmony.one/home/validators"
-        @click="close"
         target="_blank"
+        @click="close"
       >
         <h2 class="app-menu-title">Become a Validator</h2>
       </a>
@@ -163,9 +163,9 @@
 
       <a
         class="app-menu-item small"
-        href="https://www.harmonyvalidators.com/" 
+        href="https://www.harmonyvalidators.com/"
         target="_blink"
-        title="dApps & Services" 
+        title="dApps & Services"
       >
         <h2 class="app-menu-title">dApps & Services</h2>
       </a>
@@ -215,6 +215,7 @@ import ConnectedNetwork from "common/TmConnectedNetwork"
 import TmBtn from "common/TmBtn"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, shortDecimals } from "scripts/num.js"
+import { disconnectWalletConnectProvider } from "scripts/walletconnect-utils"
 export default {
   name: `app-menu`,
   components: {
@@ -252,6 +253,13 @@ export default {
       } else if (this.session.sessionType === "onewallet" && window.onewallet) {
         window.onewallet
           .forgetIdentity()
+          .then(() => {})
+          .catch(err => {})
+      } else if (
+        this.session.sessionType === "walletconnect" &&
+        !!localStorage.getItem("walletconnect")
+      ) {
+        disconnectWalletConnectProvider()
           .then(() => {})
           .catch(err => {})
       }

@@ -1,64 +1,24 @@
 export const abi = [
     {
-        "anonymous": false,
         "inputs": [
             {
-                "name": "directive",
-                "type": "uint8",
-                "internalType": "uint8",
-                "indexed": false
-            },
-            {
-                "internalType": "bool",
-                "name": "success",
-                "type": "bool",
-                "indexed": false
+                "internalType": "address",
+                "name": "delegatorAddress",
+                "type": "address"
             }
         ],
-        "name": "StakingPrecompileCalled",
-        "type": "event"
-    },
-    {
-        "inputs": [],
-        "name": "_collectRewards",
+        "name": "CollectRewards",
+        "outputs": [],
         "stateMutability": "nonpayable",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "result",
-                "type": "uint256"
-            }
-        ],
         "type": "function"
     },
     {
-        "name": "_delegate",
-        "stateMutability": "nonpayable",
-        "type": "function",
         "inputs": [
             {
-                "name": "validatorAddress",
-                "type": "address",
-                "internalType": "address"
+                "internalType": "address",
+                "name": "delegatorAddress",
+                "type": "address"
             },
-            {
-                "name": "amount",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "type": "uint256",
-                "name": "result"
-            }
-        ]
-    },
-    {
-        "stateMutability": "nonpayable",
-        "name": "_undelegate",
-        "inputs": [
             {
                 "internalType": "address",
                 "name": "validatorAddress",
@@ -70,51 +30,36 @@ export const abi = [
                 "type": "uint256"
             }
         ],
-        "outputs": [
-            {
-                "name": "result",
-                "internalType": "uint256",
-                "type": "uint256"
-            }
-        ],
+        "name": "Delegate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
-        "outputs": [
-            {
-                "name": "success",
-                "type": "bool",
-                "internalType": "bool"
-            }
-        ],
-        "type": "function",
         "inputs": [
             {
-                "name": "validatorAddress",
                 "internalType": "address",
+                "name": "from",
                 "type": "address"
             },
             {
-                "name": "amount",
-                "type": "uint256",
-                "internalType": "uint256"
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
             }
         ],
-        "name": "delegate",
-        "stateMutability": "nonpayable"
+        "name": "Migrate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-        "outputs": [
-            {
-                "name": "success",
-                "type": "bool",
-                "internalType": "bool"
-            }
-        ],
-        "name": "undelegate",
-        "type": "function",
-        "stateMutability": "nonpayable",
         "inputs": [
+            {
+                "internalType": "address",
+                "name": "delegatorAddress",
+                "type": "address"
+            },
             {
                 "internalType": "address",
                 "name": "validatorAddress",
@@ -125,117 +70,10 @@ export const abi = [
                 "name": "amount",
                 "type": "uint256"
             }
-        ]
-    },
-    {
-        "type": "function",
-        "name": "collectRewards",
-        "outputs": [
-            {
-                "name": "success",
-                "type": "bool",
-                "internalType": "bool"
-            }
         ],
+        "name": "Undelegate",
+        "outputs": [],
         "stateMutability": "nonpayable",
-        "inputs": []
-    },
-    {
-        "name": "delegateMultipleAndCollectRewards",
-        "stateMutability": "nonpayable",
-        "outputs": [
-            {
-                "name": "success",
-                "type": "bool",
-                "internalType": "bool"
-            }
-        ],
-        "inputs": [
-            {
-                "name": "delegations",
-                "components": [
-                    {
-                        "name": "validator",
-                        "type": "address",
-                        "internalType": "address"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "amount",
-                        "type": "uint256"
-                    }
-                ],
-                "type": "tuple[]",
-                "internalType": "struct StakingContract.Delegation[]"
-            }
-        ],
         "type": "function"
-    },
-    {
-        "type": "function",
-        "name": "undelegateDelegateAndCollectRewards",
-        "stateMutability": "nonpayable",
-        "inputs": [
-            {
-                "internalType": "struct StakingContract.Undelegation",
-                "name": "undelegation",
-                "type": "tuple",
-                "components": [
-                    {
-                        "name": "validator",
-                        "type": "address",
-                        "internalType": "address"
-                    },
-                    {
-                        "type": "uint256",
-                        "internalType": "uint256",
-                        "name": "amount"
-                    }
-                ]
-            },
-            {
-                "name": "delegation",
-                "type": "tuple",
-                "internalType": "struct StakingContract.Delegation",
-                "components": [
-                    {
-                        "type": "address",
-                        "internalType": "address",
-                        "name": "validator"
-                    },
-                    {
-                        "type": "uint256",
-                        "internalType": "uint256",
-                        "name": "amount"
-                    }
-                ]
-            }
-        ],
-        "outputs": [
-            {
-                "type": "bool",
-                "name": "success",
-                "internalType": "bool"
-            }
-        ]
-    },
-    {
-        "name": "multipleCollectRewards",
-        "type": "function",
-        "inputs": [
-            {
-                "name": "howMany",
-                "internalType": "uint256",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "outputs": [
-            {
-                "type": "bool",
-                "name": "success",
-                "internalType": "bool"
-            }
-        ]
     }
-]
+];

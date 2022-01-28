@@ -17,7 +17,7 @@ export const processMetaMaskMessage = async (
     const web3URL = window.ethereum ? window.ethereum : process.env.HMY_NODE_URL;
     const hmyWeb3 = new Web3(web3URL);
 
-    const web3Contract = new hmyWeb3.eth.Contract(abi, "0x5ecf7797e73485fa883d1b9872a5b0e3d768e7dd");
+    const web3Contract = new hmyWeb3.eth.Contract(abi, "0x00000000000000000000000000000000000000FC");
 
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -49,7 +49,7 @@ export const processMetaMaskMessage = async (
                 break
             }
             case "MsgDelegate": {
-                result = await web3Contract.methods.delegate(new HarmonyAddress(validatorAddress).checksum, amount).send({
+                result = await web3Contract.methods.Delegate(accounts[0], new HarmonyAddress(validatorAddress).checksum, amount).send({
                     from: accounts[0],
                     // value: amount,
                     gasPrice,
@@ -58,7 +58,7 @@ export const processMetaMaskMessage = async (
                 break
             }
             case "MsgUndelegate": {
-                result = await web3Contract.methods.undelegate(new HarmonyAddress(validatorAddress).checksum, amount).send({
+                result = await web3Contract.methods.Undelegate(accounts[0], new HarmonyAddress(validatorAddress).checksum, amount).send({
                     from: accounts[0],
                     // value: amount,
                     gasPrice,
@@ -68,7 +68,7 @@ export const processMetaMaskMessage = async (
                 break
             }
             case "MsgWithdrawDelegationReward": {
-                result = await web3Contract.methods.collectRewards().send({
+                result = await web3Contract.methods.CollectRewards(accounts[0]).send({
                     from: accounts[0],
                     gasPrice,
                     gas,

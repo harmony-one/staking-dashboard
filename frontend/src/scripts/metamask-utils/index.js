@@ -3,6 +3,21 @@ import { HarmonyAddress, BN } from "@harmony-js/crypto"
 import {abi} from "./staking-abi";
 import { Unit } from "@harmony-js/utils"
 
+const CHAIN_ID_TESTNET = 1666700000
+const CHAIN_ID_MAINNET = 1666600000
+
+const isNetworkEqual = (networkConfig, metamaskChainId) => {
+    if (networkConfig.id === 'harmony-testnet' && metamaskChainId === CHAIN_ID_TESTNET) {
+        return true
+    }
+
+    if (networkConfig.id === 'harmony' && metamaskChainId === CHAIN_ID_MAINNET) {
+        return true
+    }
+
+    return false
+}
+
 export const processMetaMaskMessage = async (
     sendData,
     networkConfig,
@@ -32,6 +47,12 @@ export const processMetaMaskMessage = async (
     const gasPrice = Math.max(new BN(await hmyWeb3.eth.getGasPrice()).mul(new BN(1)).toNumber(), gasPriceData);
 
     try {
+
+        const metamaskChainId = await hmyWeb3.eth.net.getId();
+        if (!isNetworkEqual(networkConfig, metamaskChainId)) {
+            throw new Error('Please check metamask network');
+        }
+
         switch (type) {
             case "MsgSend": {
                 result = await hmyWeb3.eth

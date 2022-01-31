@@ -34,9 +34,9 @@ export const processMetaMaskMessage = async (
 
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-    console.log(Unit.Szabo(amountData || 0).toHex());
+    // console.log(Unit.Szabo(amountData || 0).toHex());
 
-    const amount = Unit.Szabo(amountData || 0).toHex();
+    let amount;
 
     let result;
     let error;
@@ -53,6 +53,7 @@ export const processMetaMaskMessage = async (
 
         switch (type) {
             case "MsgSend": {
+                amount = Unit.Szabo(amountData || 0).toHex();
                 result = await hmyWeb3.eth
                     .sendTransaction({
                         from: accounts[0],
@@ -68,6 +69,7 @@ export const processMetaMaskMessage = async (
                 break
             }
             case "MsgDelegate": {
+                amount = Unit.Szabo(amountData || 0).toHex();
                 result = await web3Contract.methods.Delegate(accounts[0], new HarmonyAddress(validatorAddress).checksum, amount).send({
                     from: accounts[0],
                     // value: amount,
@@ -77,6 +79,7 @@ export const processMetaMaskMessage = async (
                 break
             }
             case "MsgUndelegate": {
+                amount = Unit.Szabo(amountData || 0).toHex();
                 result = await web3Contract.methods.Undelegate(accounts[0], new HarmonyAddress(validatorAddress).checksum, amount).send({
                     from: accounts[0],
                     // value: amount,

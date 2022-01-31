@@ -48,7 +48,7 @@ export const processMetaMaskMessage = async (
 
         const metamaskChainId = await hmyWeb3.eth.net.getId();
         if (!isNetworkEqual(networkConfig, metamaskChainId)) {
-            throw new Error('Please check metamask network');
+            throw new Error('Please switch metamask to correct harmony network');
         }
 
         switch (type) {

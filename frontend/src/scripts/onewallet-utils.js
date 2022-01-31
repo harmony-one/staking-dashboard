@@ -1,5 +1,5 @@
 import { Harmony, HarmonyExtension } from "@harmony-js/core"
-import { HarmonyAddress, toBech32, BN } from "@harmony-js/crypto"
+import { HarmonyAddress, BN } from "@harmony-js/crypto"
 import { StakingFactory } from "@harmony-js/staking"
 import { ChainType, Unit } from "@harmony-js/utils"
 export const processOneWalletMessage = async (
@@ -13,7 +13,7 @@ export const processOneWalletMessage = async (
 
   const harmony = await new Harmony(rpc_url, {
     chainType: ChainType.Harmony,
-    chainId: chain_id,
+    chainId: chain_id
   })
 
   var signedTxn = null
@@ -27,7 +27,7 @@ export const processOneWalletMessage = async (
         shardID: 0,
         toShardID: 0,
         gasLimit: gasEstimate,
-        gasPrice: Unit.One(gasPrice).toHex(),
+        gasPrice: Unit.One(gasPrice).toHex()
       })
 
       signedTxn = await window.onewallet.signTransaction(txn)
@@ -39,12 +39,12 @@ export const processOneWalletMessage = async (
         .delegate({
           delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
           validatorAddress: new HarmonyAddress(validatorAddress).checksum,
-          amount: Unit.Szabo(amount).toHex(),
+          amount: Unit.Szabo(amount).toHex()
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
           gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-          chainId: harmony.chainId,
+          chainId: harmony.chainId
         })
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
@@ -58,12 +58,12 @@ export const processOneWalletMessage = async (
         .undelegate({
           delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
           validatorAddress: new HarmonyAddress(validatorAddress).checksum,
-          amount: Unit.Szabo(amount).toHex(),
+          amount: Unit.Szabo(amount).toHex()
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
           gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-          chainId: harmony.chainId,
+          chainId: harmony.chainId
         })
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
@@ -75,12 +75,12 @@ export const processOneWalletMessage = async (
       const { delegatorAddress } = sendData
       const stakingTxn = new StakingFactory(harmony.messenger)
         .collectRewards({
-          delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
+          delegatorAddress: new HarmonyAddress(delegatorAddress).checksum
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
           gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-          chainId: harmony.chainId,
+          chainId: harmony.chainId
         })
         .build()
       stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
@@ -95,14 +95,14 @@ export const processOneWalletMessage = async (
     return {
       error: true,
       txhash: "",
-      message: "Unknow message type",
+      message: "Unknow message type"
     }
   }
   const [sentTxn, txnHash] = await signedTxn.sendTransaction()
   return {
     included: async () => {
       try {
-        const confiremdTxn = await sentTxn.confirm(txnHash, 5)
+        const confiremdTxn = await sentTxn.confirm(txnHash, 20)
         if (confiremdTxn.isConfirmed()) {
           return { txhash: txnHash }
         } else {
@@ -111,7 +111,7 @@ export const processOneWalletMessage = async (
               error: true,
               txhash: txnHash,
               message:
-                "The transaction is still not confirmed after 5 attempts.",
+                "The transaction is still not confirmed after 20 attempts."
             }
           } else {
             return {
@@ -119,7 +119,7 @@ export const processOneWalletMessage = async (
               txhash: "",
               message:
                 txnHash ||
-                "The transaction is still not confirmed after 5 attempts.",
+                "The transaction is still not confirmed after 20 attempts."
             }
           }
         }
@@ -128,7 +128,7 @@ export const processOneWalletMessage = async (
           return {
             error: true,
             txhash: txnHash,
-            message: "The transaction is still not confirmed after 5 attempts.",
+            message: "The transaction is still not confirmed after 5 attempts."
           }
         } else {
           return {
@@ -136,10 +136,10 @@ export const processOneWalletMessage = async (
             txhash: "",
             message:
               txnHash ||
-              "The transaction is still not confirmed after 5 attempts.",
+              "The transaction is still not confirmed after 20 attempts."
           }
         }
       }
-    },
+    }
   }
 }

@@ -23,8 +23,6 @@ export const processMetaMaskMessage = async (
     networkConfig,
     from
 ) => {
-    debugger;
-
     const { type, fee, gasPrice: gasPriceData, validatorAddress, amount:amountData, amounts, toAddress } = sendData
     const { gasEstimate } = fee
     // const { chain_id, rpc_url } = networkConfig //TODO: switch chain

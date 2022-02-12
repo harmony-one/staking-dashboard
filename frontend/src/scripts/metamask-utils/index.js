@@ -45,10 +45,10 @@ export const processMetaMaskMessage = async (
     const gasPrice = Math.max(new BN(await hmyWeb3.eth.getGasPrice()).mul(new BN(1)).toNumber(), gasPriceData);
 
     try {
-
         const metamaskChainId = await hmyWeb3.eth.net.getId();
         if (!isNetworkEqual(networkConfig, metamaskChainId)) {
-            throw new Error('Please switch metamask to correct harmony network');
+            throw new Error(`You are currently not on the ${networkConfig.title} network in Metamask. 
+                Please choose ${networkConfig.title} to continue.`);
         }
 
         switch (type) {

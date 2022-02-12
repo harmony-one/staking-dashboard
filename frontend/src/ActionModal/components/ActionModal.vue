@@ -255,7 +255,7 @@
               <div slot="title">
                 {{
                   isTransactionFailed
-                    ? "Transaction failed"
+                    ? "Failed"
                     : notifyMessage.title
                 }}
               </div>

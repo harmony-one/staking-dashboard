@@ -145,6 +145,21 @@ export default () => {
 
       commit(`setSignIn`, true)
       commit(`setSessionType`, sessionType)
+
+      await dispatch(`changeAccount`, { address, sessionType })
+
+      // state.externals.track(`event`, `session`, `sign-in`, sessionType)
+    },
+    signOut({ state, commit, dispatch }) {
+      // state.externals.track(`event`, `session`, `sign-out`)
+
+      dispatch(`resetSessionData`)
+      commit(`setSignIn`, false)
+    },
+    async changeAccount(
+      { state, commit, dispatch },
+      { address, sessionType = `ledger` }
+    ) {
       commit(`setUserAddress`, address)
 
       await dispatch(`rememberAddress`, { address, sessionType })
@@ -159,14 +174,6 @@ export default () => {
       dispatch(`persistAddresses`, {
         addresses
       })
-
-      // state.externals.track(`event`, `session`, `sign-in`, sessionType)
-    },
-    signOut({ state, commit, dispatch }) {
-      // state.externals.track(`event`, `session`, `sign-out`)
-
-      dispatch(`resetSessionData`)
-      commit(`setSignIn`, false)
     },
     resetSessionData({ commit, state }) {
       state.history = ["/"]

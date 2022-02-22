@@ -1033,23 +1033,29 @@ export default {
 <style lang="scss">
 .action-modal-overlay {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  background-repeat: repeat;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
   background: black;
   opacity: 0.5;
   z-index: 1;
 }
-
+    
 .action-modal {
-  position: fixed;
-  top: calc(50vh - 250px);
-  right: calc(50vw - 250px);
-  width: 100%;
-  width: 500px;
+position: fixed;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+  
+  width: 90%;
+  min-width: 250px;
   max-width: 500px;
-  height: auto;
+  height: 90%;
   max-height: 600px;
   overflow: hidden;
   overflow-y: scroll;

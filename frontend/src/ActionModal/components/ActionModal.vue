@@ -1,6 +1,6 @@
 <template>
   <transition v-if="openModalId === transactionData.type" name="slide-fade">
-    <div>
+    <div class="action-modal-container">
       <div class="action-modal-overlay" @click="close"></div>
       <div v-focus-last class="action-modal" tabindex="0" @keyup.esc="close">
         <div
@@ -616,6 +616,8 @@ export default {
           return `Waiting for Math Wallet`
         case "onewallet":
           return `Waiting for Harmony One Wallet`
+        case "metamask":
+          return `Waiting for Metamask`
         default:
           return "Sending..."
       }
@@ -623,8 +625,9 @@ export default {
     hasSigningMethod() {
       return (
         this.session.browserWithLedgerSupport ||
-        this.session.selectedSignMethod === "onewallet" ||
-        this.session.selectedSignMethod === "mathwallet" ||
+        this.session.sessionType === "onewallet" ||
+        this.session.sessionType === "mathwallet" ||
+        this.session.sessionType === "metamask" ||
         (this.selectedSignMethod === "extension" &&
           this.modalContext.isExtensionAccount)
       )
@@ -1031,12 +1034,24 @@ export default {
 </script>
 
 <style lang="scss">
+
+.action-modal-container {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .action-modal-overlay {
   position: fixed;
   top: 0;
   right: 0;
-  width: 100vw;
-  height: 100vh;
+  bottom: 0;
+  left: 0;
   background: black;
   opacity: 0.5;
   z-index: 1;
@@ -1044,10 +1059,7 @@ export default {
 
 .action-modal {
   position: fixed;
-  top: calc(50vh - 250px);
-  right: calc(50vw - 250px);
   width: 100%;
-  width: 500px;
   max-width: 500px;
   height: auto;
   max-height: 600px;

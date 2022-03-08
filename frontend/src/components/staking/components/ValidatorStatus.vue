@@ -1,6 +1,10 @@
 <template>
   <div class="status-container">
     <span
+      v-tooltip.top="{
+        placement: 'top',
+        content: status === 'Elected' ? tooltips.v_list.elected : tooltips.v_list.not_elected
+      }"
       :class="status_class"
       class="validator-status"
       :title="status_detailed"

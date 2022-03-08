@@ -49,123 +49,120 @@ export const walletConnectDisconnet = async () => {
     await provider.disconnect()
   }
 }
+
+
+const CHAIN_ID_TESTNET = 1666700000
+const CHAIN_ID_MAINNET = 1666600000
+
+const isNetworkEqual = (networkConfig, metamaskChainId) => {
+    if (networkConfig.id === 'harmony-testnet' && metamaskChainId === CHAIN_ID_TESTNET) {
+        return true
+    }
+
+    if (networkConfig.id === 'harmony' && metamaskChainId === CHAIN_ID_MAINNET) {
+        return true
+    }
+
+    return false
+}
+
+
 export const processWalletConnectMessage = async (
   sendData,
   networkConfig,
   from
 ) => {
-  const { type, fee, gasPrice } = sendData
+  const { type, fee, gasPrice: gasPriceData } = sendData
   const { gasEstimate } = fee
-  const { chain_id, rpc_url } = networkConfig
+  // const { chain_id, rpc_url } = networkConfig
 
-  const harmony = await new Harmony(rpc_url, {
-    chainType: ChainType.Harmony,
-    chainId: chain_id
-  })
+  // const harmony = await new Harmony(rpc_url, {
+  //   chainType: ChainType.Harmony,
+  //   chainId: chain_id
+  // })
 
-  var signedTxn = null
-  switch (type) {
-    case "MsgSend": {
-      const { toAddress, amounts } = sendData
-      const txn = harmony.transactions.newTx({
-        from: new HarmonyAddress(from).checksum,
-        to: new HarmonyAddress(toAddress).checksum,
-        value: Unit.Szabo(amounts[0].amount).toWei(),
-        shardID: 0,
-        toShardID: 0,
-        gasLimit: gasEstimate,
-        gasPrice: Unit.One(gasPrice).toHex()
-      })
+  const web3URL = web3WalletConnect ? web3WalletConnect : process.env.HMY_NODE_URL;
+  const hmyWeb3 = web3WalletConnect
 
-      signedTxn = await web3WalletConnect.eth.signTransaction(txn)
-      break
+  const web3Contract = new hmyWeb3.eth.Contract(abi, "0x00000000000000000000000000000000000000FC");
+
+  const accounts = await web3WalletConnect.eth.getAccounts()
+
+  const gas = 6721900;
+  const gasPrice = Math.max(new BN(await hmyWeb3.eth.getGasPrice()).mul(new BN(1)).toNumber(), gasPriceData);
+
+
+  try {
+    const walletConnectChainId = await hmyWeb3.eth.net.getId();
+    if(!isNetworkEqual(networkConfig, walletConnectChainId)) {
+      throw new Error(`You are currently not on the ${networkConfig.title} network in Metamask. 
+                Please choose ${networkConfig.title} to continue.`);
     }
-    case "MsgDelegate": {
-      const { delegatorAddress, validatorAddress, amount } = sendData
-      const stakingTxn = new StakingFactory(harmony.messenger)
-        .delegate({
-          delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
-          validatorAddress: new HarmonyAddress(validatorAddress).checksum,
-          amount: Unit.Szabo(amount).toHex()
-        })
-        .setTxParams({
-          gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-          chainId: harmony.chainId
-        })
-        .build()
-      stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
 
-      signedTxn = await web3WalletConnect.eth.signTransaction(stakingTxn)
-      break
-    }
-    case "MsgUndelegate": {
-      const { validatorAddress, delegatorAddress, amount } = sendData
-      const stakingTxn = new StakingFactory(harmony.messenger)
-        .undelegate({
-          delegatorAddress: new HarmonyAddress(delegatorAddress).checksum,
-          validatorAddress: new HarmonyAddress(validatorAddress).checksum,
-          amount: Unit.Szabo(amount).toHex()
-        })
-        .setTxParams({
-          gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-          chainId: harmony.chainId
-        })
-        .build()
-      stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
-
-      signedTxn = await web3WalletConnect.eth.signTransaction(stakingTxn)
-      break
-    }
-    case "MsgWithdrawDelegationReward": {
-      const { delegatorAddress } = sendData
-      const stakingTxn = new StakingFactory(harmony.messenger)
-        .collectRewards({
-          delegatorAddress: new HarmonyAddress(delegatorAddress).checksum
-        })
-        .setTxParams({
-          gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-          chainId: harmony.chainId
-        })
-        .build()
-      stakingTxn.setFromAddress(new HarmonyAddress(from).checksum)
-
-      signedTxn = await web3WalletConnect.eth.signTransaction(stakingTxn)
-      break
-    }
-    default:
-      break
-  }
-  if (!signedTxn) {
-    return {
-      error: true,
-      txhash: "",
-      message: "Unknow message type"
-    }
-  }
-  const [sentTxn, txnHash] = await signedTxn.sendTransaction()
-  return {
-    included: async () => {
-      try {
-        const confiremdTxn = await sentTxn.confirm(txnHash, 5)
-        if (confiremdTxn.isConfirmed()) {
-          return { txhash: txnHash }
-        } else {
-          return {
-            error: true,
-            txhash: txnHash,
-            message: "The transaction is still not confirmed after 5 attempts."
-          }
-        }
-      } catch (error) {
-        return {
-          error: true,
-          txhash: txnHash,
-          message: "The transaction is still not confirmed after 5 attempts."
-        }
+    switch (type) {
+      case "MsgSend": {
+          amount = Unit.Szabo(amountData || 0).toHex();
+          result = await hmyWeb3.eth
+              .sendTransaction({
+                  from: accounts[0],
+                  to: new HarmonyAddress(toAddress).checksum,
+                  value: Unit.Szabo(amounts[0].amount).toWei(),
+                  gasPrice,
+                  gas,
+              })
+              .on('error', console.error)
+              .on('transactionHash', transactionHash => {
+                  console.log(`Transaction is sending: ${transactionHash}`);
+              });
+          break
       }
-    }
+      case "MsgDelegate": {
+          amount = Unit.Szabo(amountData || 0).toHex();
+          result = await web3Contract.methods.Delegate(accounts[0], new HarmonyAddress(validatorAddress).checksum, amount).send({
+              from: accounts[0],
+              // value: amount,
+              gasPrice,
+              gas,
+          });
+          break
+      }
+      case "MsgUndelegate": {
+          amount = Unit.Szabo(amountData || 0).toHex();
+          result = await web3Contract.methods.Undelegate(accounts[0], new HarmonyAddress(validatorAddress).checksum, amount).send({
+              from: accounts[0],
+              // value: amount,
+              gasPrice,
+              gas,
+          });
+
+          break
+      }
+      case "MsgWithdrawDelegationReward": {
+          result = await web3Contract.methods.CollectRewards(accounts[0]).send({
+              from: accounts[0],
+              gasPrice,
+              gas,
+          });
+          break
+      }
+      default:
+          break
   }
+} catch (e) {
+  error = e;
+}
+
+return {
+  included: async () => {
+      if(!error && result && result.status === true) {
+          return {txhash: result.transactionHash}
+      } else {
+          return {
+              error: true,
+              txhash: '',
+              message: error && error.message,
+          }
+      }
+  }
+}
 }

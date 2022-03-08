@@ -119,7 +119,13 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
 
   mutations: {
     setNetwork(state, networkConfig: INetworkConfig) {
-      state.networkConfig = networkConfig
+      state.networkConfig = {
+        ...networkConfig,
+        explorer_url:
+            networkConfig.chain_title === 'testnet' ?
+                "https://explorer.pops.one":
+                networkConfig.explorer_url
+      }
       state.network = networkConfig.id
       state.chainTitle = networkConfig.chain_title
       state.lastHeader = { height: 0, ...networkConfig }

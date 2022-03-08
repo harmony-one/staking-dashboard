@@ -63,6 +63,7 @@
 </template>
 <script>
 import { shortDecimals, percent, ones } from "scripts/num"
+import { sanitizeUrl } from "@braintree/sanitize-url";
 import Bech32 from "common/Bech32"
 import tooltips from "src/components/tooltips"
 
@@ -95,7 +96,7 @@ export default {
       } else if (!url.match(/http[s]?/)) {
         url = `https://` + url
       }
-      return url
+      return sanitizeUrl(url)
     }
   },
 

@@ -27,9 +27,7 @@ export default {
   data: () => ({
     options: {
       plugins: {
-        labels: {
-          render: () => ""
-        }
+        labels: false
       },
       responsive: true,
       maintainAspectRatio: false,

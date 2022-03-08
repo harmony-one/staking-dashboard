@@ -102,7 +102,7 @@ export const processOneWalletMessage = async (
   return {
     included: async () => {
       try {
-        const confiremdTxn = await sentTxn.confirm(txnHash, 5)
+        const confiremdTxn = await sentTxn.confirm(txnHash, 20)
         if (confiremdTxn.isConfirmed()) {
           return { txhash: txnHash }
         } else {
@@ -111,7 +111,7 @@ export const processOneWalletMessage = async (
               error: true,
               txhash: txnHash,
               message:
-                "The transaction is still not confirmed after 5 attempts."
+                "The transaction is still not confirmed after 20 attempts."
             }
           } else {
             return {
@@ -119,7 +119,7 @@ export const processOneWalletMessage = async (
               txhash: "",
               message:
                 txnHash ||
-                "The transaction is still not confirmed after 5 attempts."
+                "The transaction is still not confirmed after 20 attempts."
             }
           }
         }
@@ -136,7 +136,7 @@ export const processOneWalletMessage = async (
             txhash: "",
             message:
               txnHash ||
-              "The transaction is still not confirmed after 5 attempts."
+              "The transaction is still not confirmed after 20 attempts."
           }
         }
       }

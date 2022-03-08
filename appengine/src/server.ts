@@ -19,6 +19,8 @@ const startServer = async () => {
   app.use(cors());
 
   app.use(bodyParser.json({ type: 'application/*+json' }))
+  
+  console.log('start');
 
   app.get('/', (req, res) => {
     res.send('Hello from App Engine!');

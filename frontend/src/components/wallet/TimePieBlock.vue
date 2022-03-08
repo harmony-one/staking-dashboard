@@ -29,9 +29,7 @@ export default {
       maintainAspectRatio: false,
       cutoutPercentage: 60,
       plugins: {
-        labels: {
-          render: () => ""
-        }
+        labels: false
       },
       tooltips: {
         enabled: false

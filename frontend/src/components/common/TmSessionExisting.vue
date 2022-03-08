@@ -19,13 +19,15 @@
           title="Use Ledger Nano"
           route="ledger"
         />
+        
         <LiSession
           v-if="!isMobileApp"
-          id="use-mathwallet"
-          icon="laptop"
-          title="Use Math Wallet"
-          route="mathwallet"
+          id="use-metamask"
+          icon="extension"
+          title="Use Metamask Wallet"
+          route="metamask"
         />
+        
         <LiSession
           v-if="!isMobileApp"
           id="use-onewallet"
@@ -39,6 +41,14 @@
           icon="extension"
           title="Use WalletConnect"
           route="walletconnect"
+          />
+        
+        <LiSession
+          v-if="!isMobileApp"
+          id="use-mathwallet"
+          icon="laptop"
+          title="Use Math Wallet"
+          route="mathwallet"
         />
 
         <LiSession

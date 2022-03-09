@@ -29,7 +29,7 @@
           <h3 v-info-style v-tooltip.top="tooltips.portfolio.rewards">
             Rewards
           </h3>
-          <h2>+{{ parseFloat(ones(rewards()).toFixed(3)) }}</h2>
+          <h2>+ {{rewards | ones | threeDecimals}}</h2>
         </div>
       </div>
       <div class="total-atoms total-undel" v-if="totalUndelegated">

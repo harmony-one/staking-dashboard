@@ -122,7 +122,7 @@ export default {
             tooltip: tooltips.portfolio.reward_up_to_date,
             width: "200px",
             align: "right",
-            render: threeDecimals(ones(value)) + " ONE" 
+            render: value => threeDecimals(ones(value)) + " ONE" 
           },
           {
             title: `Expected Return`,

@@ -46,20 +46,20 @@
               @click.native="multidelgate"
             />
             <TmBtn
-              v-tooltip.top="tooltips.v_list.all"
-              value="All"
-              :number="total"
-              class="btn-radio secondary"
-              :type="!activeOnly ? `active` : `secondary`"
-              @click.native="activeOnly = false"
-            />
-            <TmBtn
               v-tooltip.top="tooltips.v_list.elected"
               value="Elected"
               :number="totalActive"
               class="btn-radio secondary"
               :type="activeOnly ? `active` : `secondary`"
               @click.native="activeOnly = true"
+            />
+            <TmBtn
+              v-tooltip.top="tooltips.v_list.all"
+              value="All"
+              :number="total"
+              class="btn-radio secondary"
+              :type="!activeOnly ? `active` : `secondary`"
+              @click.native="activeOnly = false"
             />
           </div>
         </div>
@@ -116,7 +116,7 @@ export default {
     tooltips,
     searchTerm: "",
     chainTitle: process.env.DEFAULT_CHAIN_TITLE,
-    activeOnly: false
+    activeOnly: true
   }),
   computed: {
     ...mapState([`session`, `delegates`, `validators`]),

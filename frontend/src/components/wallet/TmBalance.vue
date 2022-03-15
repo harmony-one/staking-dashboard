@@ -29,7 +29,7 @@
           <h3 v-info-style v-tooltip.top="tooltips.portfolio.rewards">
             Rewards
           </h3>
-          <h2>+{{ rewards | ones | zeroDecimals }}</h2>
+          <h2>+{{ rewards | ones | threeDecimals }}</h2>
         </div>
       </div>
       <div class="total-atoms total-undel" v-if="totalUndelegated">
@@ -38,7 +38,7 @@
           class="total-atoms__value"
           style="color: #777777; margin-bottom: 10px;"
         >
-          {{ totalUndelegated | ones | zeroDecimals }}
+          {{ totalUndelegated | ones | threeDecimals }}
         </h2>
       </div>
     </div>
@@ -68,7 +68,7 @@
 </template>
 <script>
 import num from "scripts/num"
-import { zeroDecimals, ones } from "scripts/num"
+import { zeroDecimals, threeDecimals, ones } from "scripts/num"
 import TmBtn from "common/TmBtn"
 import SendModal from "src/ActionModal/components/SendModal"
 import ModalWithdrawRewards from "src/ActionModal/components/ModalWithdrawRewards"
@@ -86,6 +86,7 @@ export default {
   filters: {
     viewDenom: num.viewDenom,
     zeroDecimals,
+    threeDecimals,
     ones
   },
   data() {

@@ -50,10 +50,6 @@ export function twoDecimals(value) {
   return setDecimalLength(value, 2, 2)
 }
 
-export function threeDecimals(value) {
-  return setDecimalLength(value, 2, 3)
-}
-
 export function fourDecimals(value) {
   return setDecimalLength(value, 2, 4)
 }

@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
-    "@braintree/sanitize-url": "5.0.2",
+    "@braintree/sanitize-url": "6.0.0",
     "@dicebear/avatars": "3.1.4",
     "@dicebear/avatars-jdenticon-sprites": "1.1.4",
     "@harmony-js/core": "^0.1.36",

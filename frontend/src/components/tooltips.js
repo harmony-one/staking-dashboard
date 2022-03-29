@@ -30,7 +30,8 @@ export default {
       "Validator currently selected & eligible to sign blocks & earn rewards",
     not_elected:
       "Validator currently not-selected to sign blocks due to low stake or insufficient uptime",
-
+    elected_badge: 'Elected Validators can generate rewards.',
+    not_elected_badge: 'Unelected validators don’t generate rewards, but delegating with this validator may improve the protocols decentralization.',
     // table list
     status: `Election status of validator in current epoch`,
 

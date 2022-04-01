@@ -7,7 +7,7 @@
           Looks like you don't have the MetaMask extension installed yet. Head
           over to the
           <a
-            href="https://chrome.google.com/webstore/detail/harmony-one-wallet/fnnegphlobjdpkhecapkijjdkgcjhkib"
+            href="https://metamask.io"
             target="_blank"
             rel="noopener norefferer"
           >

@@ -35,6 +35,13 @@
           title="Use Harmony One Wallet"
           route="onewallet"
         />
+        <LiSession
+          v-if="!isMobileApp"
+          id="use-walletconnect"
+          icon="extension"
+          title="Use WalletConnect"
+          route="walletconnect"
+          />
         
         <LiSession
           v-if="!isMobileApp"

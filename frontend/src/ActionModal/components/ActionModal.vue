@@ -382,6 +382,7 @@ const SIGN_METHODS = {
   EXTENSION: `extension`,
   MATHWALLET: `mathwallet`,
   ONEWALLET: `onewallet`,
+  WALLETCONNECT: `walletconnect`,
   METAMASK: `metamask`
 }
 
@@ -398,6 +399,10 @@ const signMethodOptions = {
     key: `One Wallet`,
     value: SIGN_METHODS.ONEWALLET
   },
+  WALLETCONNECT: {
+    key: `WalletConnect`,
+    value: SIGN_METHODS.WALLETCONNECT
+  },
   LOCAL: {
     key: `Local Account (Unsafe)`,
     value: SIGN_METHODS.LOCAL
@@ -412,11 +417,13 @@ const signMethodOptions = {
   }
 }
 
+const getWhallateConnectUtils = () => import("scripts/walletconnect-utils")
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
 const getOneWalletUtils = () => import("scripts/onewallet-utils")
 const getMetaMaskUtils = () => import("scripts/metamask-utils/index")
 let processMathWalletMessage
 let processOneWalletMessage
+let processWalletConnectMessage
 let processMetaMaskMessage
 
 export const sessionType = {
@@ -426,6 +433,7 @@ export const sessionType = {
   EXTENSION: SIGN_METHODS.EXTENSION,
   MATHWALLET: SIGN_METHODS.MATHWALLET,
   ONEWALLET: SIGN_METHODS.ONEWALLET,
+  WALLETCONNECT: SIGN_METHODS.WALLETCONNECT,
   METAMASK: SIGN_METHODS.METAMASK
 }
 
@@ -596,6 +604,8 @@ export default {
         signMethods.push(signMethodOptions.MATHWALLET)
       } else if (this.session.sessionType === sessionType.ONEWALLET) {
         signMethods.push(signMethodOptions.ONEWALLET)
+      } else if (this.session.sessionType === sessionType.WALLETCONNECT) {
+        signMethods.push(signMethodOptions.WALLETCONNECT)
       } else if (this.session.sessionType === sessionType.METAMASK) {
         signMethods.push(signMethodOptions.METAMASK)
       } else {
@@ -616,6 +626,8 @@ export default {
           return `Waiting for Math Wallet`
         case "onewallet":
           return `Waiting for Harmony One Wallet`
+        case "walletconnect":
+          return `Waiting for WalletConnect`
         default:
           return "Sending..."
       }
@@ -625,6 +637,7 @@ export default {
         this.session.browserWithLedgerSupport ||
         this.session.selectedSignMethod === "onewallet" ||
         this.session.selectedSignMethod === "mathwallet" ||
+        this.session.selectedSignMethod === "walletconnect" ||
         (this.selectedSignMethod === "extension" &&
           this.modalContext.isExtensionAccount)
       )
@@ -663,6 +676,13 @@ export default {
         getOneWalletUtils().then(module => {
           processOneWalletMessage = module.processOneWalletMessage
         })
+      } else if (
+        this.session.sessionType === SIGN_METHODS.WALLETCONNECT &&
+        !processOneWalletMessage
+      ) {
+        getWalletConnectUtils().then(module => {
+          processWalletConnectMessage = module.processWalletConnectMessage
+        })
       } else if(this.session.sessionType === SIGN_METHODS.METAMASK &&
               !processMetaMaskMessage) {
         getMetamaskUtils().then()(module => {
@@ -697,6 +717,13 @@ export default {
     if (sessionType === SIGN_METHODS.ONEWALLET) {
       getOneWalletUtils().then(module => {
         processOneWalletMessage = module.processOneWalletMessage
+      })
+    } else if (
+      this.session.sessionType === SIGN_METHODS.WALLETCONNECT &&
+      !processWalletConnectMessage
+    ) {
+      getWhallateConnectUtils().then(module => {
+        processWalletConnectMessage = module.processWalletConnectMessage
       })
     }
 
@@ -911,6 +938,14 @@ export default {
 
           sendResponse = await processOneWalletMessage(
             sendData,
+            this.networkConfig,
+            this.wallet.address
+          )
+        } else if (this.selectedSignMethod === SIGN_METHODS.WALLETCONNECT) {
+          this.$store.commit(`setActionInProgress`, true)
+
+          sendResponse = await processWalletConnectMessage(
+             sendData,
             this.networkConfig,
             this.wallet.address
           )

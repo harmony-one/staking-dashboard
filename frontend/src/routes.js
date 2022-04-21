@@ -203,6 +203,16 @@ export default [
     }
   },
   {
+    path: `/walletconnect`,
+    name: `walletconnect`,
+    components: {
+      session: () => import(`./components/common/TmSessionWalletConnect`)
+    },
+    meta: {
+      feature: "Session"
+    }
+  },
+  {
     path: `/existing`,
     name: `existing`,
     components: {

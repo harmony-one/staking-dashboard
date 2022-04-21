@@ -163,9 +163,9 @@
 
       <a
         class="app-menu-item small"
-        href="https://www.harmonyvalidators.com/" 
+        href="https://www.harmonyvalidators.com/"
         target="_blink"
-        title="dApps & Services" 
+        title="dApps & Services"
       >
         <h2 class="app-menu-title">dApps & Services</h2>
       </a>
@@ -215,6 +215,7 @@ import ConnectedNetwork from "common/TmConnectedNetwork"
 import TmBtn from "common/TmBtn"
 import { mapState, mapGetters } from "vuex"
 import { atoms, viewDenom, shortDecimals } from "scripts/num.js"
+import { walletConnectDisconnet } from "../../scripts/walletconnect-utils"
 export default {
   name: `app-menu`,
   components: {
@@ -254,6 +255,17 @@ export default {
           .forgetIdentity()
           .then(() => {})
           .catch(err => {})
+      } else if (this.session.sessionType === "walletconnect") {
+        const keysWalletconnect = [
+          "store_account_settings",
+          "addresses",
+          "walletconnect",
+          "session"
+        ]
+        for (let key of keysWalletconnect) {
+          localStorage.removeItem(key)
+          walletConnectDisconnet()
+        }
       }
       this.$emit(`close`)
       this.$store.dispatch(`signOut`)

@@ -32,6 +32,7 @@ export class StakingNetworkInfoService {
     LIVE_STAKING_DISTRO_TABLE: {},
     ELECTED_KEYS_PER_NODE: {},
     LAST_EPOCH_METRICS: {},
+    BLSKEYS_SHARD_MAP: {},
     LIVE_EPOCH_METRICS: {},
     VALIDATORS_TOTAL_STAKE: {},
     LIVE_VALIDATORS_CANDIDATE: [],
@@ -141,6 +142,7 @@ export class StakingNetworkInfoService {
         address: nodeAddress,
         name: this.getValidatorInfo(nodeAddress).name,
         effective_stake: this.cache.EFFECTIVE_STAKE[blsKeys[0]],
+        bls_keys_count: this.cache.BLSKEYS_SHARD_MAP[nodeAddress],
         bid: total_stake / blsKeys.length,
         total_stake,
         num: blsKeys.length,
@@ -173,6 +175,7 @@ export class StakingNetworkInfoService {
         bid: _.sumBy(blsKeys, k => this.cache.LIVE_RAW_STAKES[k]) / blsKeys.length,
         total_stake: _.sumBy(blsKeys, k => this.cache.LIVE_RAW_STAKES[k]),
         num: blsKeys.length,
+        bls_keys_count: this.cache.BLSKEYS_SHARD_MAP[nodeAddress],
         hasLogo: this.services.validatorsAvatarCacheService
             .isCached(nodeAddress),
       };
@@ -334,6 +337,7 @@ export class StakingNetworkInfoService {
       const electedKeys = [];
       const effectiveStakes = {};
       const electedKeysPerNode = {};
+      const blsKeysShardMap = {};
       const externalShards = _.range(this.numOfShards).map(e => {
         const total = _.get(
           res,
@@ -348,6 +352,17 @@ export class StakingNetworkInfoService {
               rawStakes[blsKey] = parseFloat(item['raw-stake']);
               effectiveStakes[blsKey] = parseFloat(item['effective-stake']);
               electedKeys.push(blsKey);
+
+              if (!blsKeysShardMap[address]) {
+                blsKeysShardMap[address] = {};
+              }
+
+              if (!blsKeysShardMap[address][`shard${e}`]) {
+                blsKeysShardMap[address][`shard${e}`] = 0;
+              }
+
+              blsKeysShardMap[address][`shard${e}`] = blsKeysShardMap[address][`shard${e}`] + 1;
+
               if (electedKeysPerNode[address]) {
                 electedKeysPerNode[address].push(blsKey);
               } else {
@@ -356,9 +371,18 @@ export class StakingNetworkInfoService {
             }
           });
 
+          const effectiveStakesTotal = total.reduce((acc, item) => {
+            if (!item['is-harmony-slot']) {
+              return acc + parseFloat(item['effective-stake']);
+            }
+
+            return acc;
+          }, 0);
+
           return {
             total: total.length,
             external: total.filter(item => !item['is-harmony-slot']).length,
+            external_effective_stake_total: effectiveStakesTotal,
           };
         } else {
           console.log('error when getting elected bls keys');
@@ -374,6 +398,8 @@ export class StakingNetworkInfoService {
       this.cache.ELECTED_KEYS_PER_NODE = null;
       this.cache.ELECTED_KEYS_PER_NODE = electedKeysPerNode;
       this.cache.LAST_EPOCH_METRICS = null;
+      this.cache.BLSKEYS_SHARD_MAP = null;
+      this.cache.BLSKEYS_SHARD_MAP = blsKeysShardMap;
 
       const calculateTotalStakeByShard = (shard, type, address?) => {
         const committeeMembers = _.get(

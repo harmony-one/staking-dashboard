@@ -2,8 +2,31 @@
 
 #### In appengine folder
 
+
+##### Create firebase config 
 ```
-npm run dev
+mkdir ./keys
+touch ./keys/staking_exproler.json
+```
+
+##### Run db init script
+```
+node ./db_utils/db.js
+```
+
+##### Run app
+
+developer:
+
+```
+npm run start:watch 
+```
+
+production:
+
+```
+npm run build
+npm run prod
 ```
 
 #### In frontend folder

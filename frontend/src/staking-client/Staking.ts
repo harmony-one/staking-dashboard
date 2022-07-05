@@ -7,7 +7,7 @@ import { StakingFactory, StakingTransaction } from "@harmony-js/staking"
 
 const URL_MAINNET = `https://api.s0.t.hmny.io`
 
-const GAS_PRICE = new Unit('30').asGwei().toHex();
+const GAS_PRICE = new Unit('100').asGwei().toHex();
 const GAS_LIMIT = new Unit('25000').asWei().toHex();
 
 const MAX_ATTEMPTS = process.env.MAX_ATTEMPTS

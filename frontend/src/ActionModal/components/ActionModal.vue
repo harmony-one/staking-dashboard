@@ -625,6 +625,7 @@ export default {
         this.session.browserWithLedgerSupport ||
         this.session.selectedSignMethod === "onewallet" ||
         this.session.selectedSignMethod === "mathwallet" ||
+        this.session.sessionType === 'metamask' ||
         (this.selectedSignMethod === "extension" &&
           this.modalContext.isExtensionAccount)
       )
@@ -1043,11 +1044,11 @@ export default {
 }
 
 .action-modal {
-  position: fixed;
-  top: calc(50vh - 250px);
-  right: calc(50vw - 250px);
-  width: 100%;
-  width: 500px;
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
   max-width: 500px;
   height: auto;
   max-height: 600px;

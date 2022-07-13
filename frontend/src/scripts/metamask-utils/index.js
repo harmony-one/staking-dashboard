@@ -41,7 +41,7 @@ export const processMetaMaskMessage = async (
     let result;
     let error;
 
-    const gas = 6721900;
+    const gas = 100000;
     const gasPrice = Math.max(new BN(await hmyWeb3.eth.getGasPrice()).mul(new BN(1)).toNumber(), gasPriceData);
 
     try {

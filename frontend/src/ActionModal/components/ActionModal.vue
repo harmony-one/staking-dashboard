@@ -178,11 +178,16 @@
               >
                 <div v-if="!sending">
                   Please send the transaction to be signed in the Harmony One
-                  Wallet.
+                  Wallet.<hr/>
+                  <h4 style="color: red; fontWeight: bold">Harmony One Wallet is discontinued. Please consider migrating to a different supported wallet, such as, Metamask. Click <a href="https://www.youtube.com/watch?v=I_VxStYi-ow" target="_blank">HERE</a> for migration tutorial.</h4>
+
                 </div>
+                
                 <div v-if="sending">
                   Please open the Harmony One Wallet, review the details, and
-                  approve the transaction.
+                  approve the transaction.<hr/>
+                  <h4 style="color: red; fontWeight: bold">Harmony One Wallet is discontinued. Please consider migrating to a different supported wallet, such as, Metamask. Click <a href="https://www.youtube.com/watch?v=I_VxStYi-ow" target="_blank">HERE</a> for migration tutorial.</h4>
+
                 </div>
               </HardwareState>
               <form

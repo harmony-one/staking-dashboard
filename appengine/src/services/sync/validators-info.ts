@@ -486,7 +486,7 @@ export class ValidatorsInfoService {
 
     getValidatorInfo = address => this.cache.VALIDATOR_INFO[address];
 
-    getValidatorHistory = address => _.values(this.cache.VALIDATOR_INFO_HISTORY[address]);
+    getValidatorHistory = address => _.values(this.cache.VALIDATOR_INFO_HISTORY[address]).map(v => ({...v, delegations: []}));
 
     getValidatorsByEpoch = (epoch) => {
         const validators = !this.cache.VALIDATORS ? [] : this.cache.VALIDATORS;

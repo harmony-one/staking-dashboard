@@ -123,6 +123,28 @@
         <h2 class="app-menu-title">Security</h2>
       </router-link>-->
 
+      <router-link
+        v-if="session.signedIn"
+        to="#"
+        class="app-menu-item small"
+        exact="exact"
+        title="signout"
+        @click.native="signOut()"
+      >
+        <h2 class="app-menu-title">Sign Out</h2>
+      </router-link>
+
+      <router-link
+        v-else
+        to="#"
+        class="app-menu-item small"
+        exact="exact"
+        title="signin"
+        @click.native="signIn()"
+      >
+        <h2 class="app-menu-title">Sign In</h2>
+      </router-link>
+      
       <a
         class="app-menu-item small"
         href="https://governance.harmony.one/#/"
@@ -181,27 +203,7 @@
         <h2 class="app-menu-title">Feedback</h2>
       </router-link>-->
 
-      <router-link
-        v-if="session.signedIn"
-        to="#"
-        class="app-menu-item small"
-        exact="exact"
-        title="signout"
-        @click.native="signOut()"
-      >
-        <h2 class="app-menu-title">Sign Out</h2>
-      </router-link>
-
-      <router-link
-        v-else
-        to="#"
-        class="app-menu-item small"
-        exact="exact"
-        title="signin"
-        @click.native="signIn()"
-      >
-        <h2 class="app-menu-title">Sign In</h2>
-      </router-link>
+      
     </div>
 
     <ConnectedNetwork />

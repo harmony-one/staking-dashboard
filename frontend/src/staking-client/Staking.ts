@@ -5,9 +5,10 @@ import { Unit } from "@harmony-js/utils"
 import { Transaction } from "@harmony-js/transaction"
 import { StakingFactory, StakingTransaction } from "@harmony-js/staking"
 
-const URL_MAINNET = `https://api.s0.t.hmny.io`
+const URL_MAINNET = `https://harmony-0-rpc.gateway.pokt.network`;
 
 const GAS_PRICE = new Unit('100').asGwei().toHex();
+const GAS_PRICE_REWARDS = new Unit('200').asGwei().toHex();
 const GAS_LIMIT = new Unit('25000').asWei().toHex();
 
 const MAX_ATTEMPTS = process.env.MAX_ATTEMPTS
@@ -152,7 +153,7 @@ export default class Staking {
       })
       .setTxParams({
         // nonce: "0x2",
-        gasPrice: GAS_PRICE,
+        gasPrice: GAS_PRICE_REWARDS,
         gasLimit: GAS_LIMIT,
         // gasPrice: new Unit(this.transactionDetails.fee).asMwei().toWei(),
         // gasLimit: this.transactionDetails.gas,

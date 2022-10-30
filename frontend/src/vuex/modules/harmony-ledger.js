@@ -287,4 +287,8 @@ export default class HarmonyApp {
 
         return stakingTxn;
     }
+
+    log(message) {
+        console.log('### message', message);
+    }
 }

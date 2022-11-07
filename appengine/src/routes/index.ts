@@ -96,7 +96,18 @@ export const routes = (app, db: DBService, syncServices: Record<string, SyncServ
         throw createError(400, 'Not found');
       }
 
-      res.json(history);
+      // remove delegations and bls-public-keys from response to facilitate the payload
+     const historyWithoutDelegations =  Object.keys(history)
+         .reduce((obj, key)=>{
+             obj[key] = {
+                 ...history[key],
+                 delegations: undefined,
+                 ['bls-public-keys']: undefined
+             }
+             return obj
+         }, {})
+
+      res.json(historyWithoutDelegations);
     })
   );
 

@@ -18,6 +18,19 @@
         </span>
         <span v-else id="validator-website">{{ website | noBlanks }}</span>
       </li>
+      <li class="column" v-if="!!validator.countryName">
+        <h4 class="inline">1.country name:&nbsp;</h4>
+        <span v-if="website !== `--`">
+          <a
+            id="validator-website"
+            :href="`https://${validator.countryName}.1.country`"
+            target="_blank"
+            rel="nofollow noreferrer noopener"
+            >{{ validator.countryName }}</a
+          >
+        </span>
+        <span v-else id="validator-website">{{ website | noBlanks }}</span>
+      </li>
       <li class="column">
         <h4>Validator Address:&nbsp;</h4>
         <span>

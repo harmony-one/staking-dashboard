@@ -144,6 +144,15 @@
       >
         <h2 class="app-menu-title">Sign In</h2>
       </router-link>
+
+      <a
+        class="app-menu-item small"
+        href="https://cxone.harmony.one/"
+        @click="close"
+        target="_blank"
+      >
+        <h2 class="app-menu-title">Cross Shard Transfer</h2>
+      </a>
       
       <a
         class="app-menu-item small"

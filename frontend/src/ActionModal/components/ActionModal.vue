@@ -374,6 +374,7 @@ import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
 import { openExtensionPopup } from "../utils/openExtensionPopup"
 import { BigNumber } from "bignumber.js"
+import { toBech32 } from "@harmony-js/crypto"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -485,6 +486,7 @@ export default {
     }
   },
   data: () => ({
+    isWidget: window.location.pathname.includes('/widget/'),
     step: defaultStep,
     selectedSignMethod: null,
     password: null,
@@ -777,9 +779,32 @@ export default {
       track(...args)
     },
     goToSession() {
-      this.close()
+      if(!this.isWidget) {
+        this.close()
+        this.$router.push(`/welcome`)
+      } else {
+        this.signIn();
+      }
+    },
+    async signIn() {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts"
+        })
 
-      this.$router.push(`/welcome`)
+        if (accounts.length === 0) {
+          return
+        }
+
+        this.$store.dispatch("signIn", {
+          sessionType: sessionType.METAMASK,
+          address: toBech32(accounts[0])
+        })
+
+        // this.$router.push(`/`)
+      } catch (ex) {
+        console.error("### ex", ex)
+      }
     },
     isValidInput(property) {
       this.$v[property].$touch()
@@ -952,10 +977,11 @@ export default {
         if(!this.txConfirmResult.error) {
           setTimeout(() => this.close(), 10000)
         }
-      } catch ({ message }) {
-        console.log("[submit] error", message)
+      } catch (e) {
+        log.error(e);
+        console.log("[submit] error", e.message)
 
-        this.onSendingFailed(message)
+        this.onSendingFailed(e.message)
         this.txConfirmResult = null
         // this.session.actionInProgress.close()
         this.close()

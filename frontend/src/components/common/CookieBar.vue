@@ -20,7 +20,7 @@ export default {
     Bar
   },
   data: () => ({
-    show: true
+    show: !window.location.pathname.includes('/widget/')
   }),
   computed: {
     ...mapState([`session`])

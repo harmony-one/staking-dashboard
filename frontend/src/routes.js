@@ -51,6 +51,16 @@ export default [
     component: () => import(`./components/staking/PageValidatorCharts/index`),
   },
   {
+    path: `/widget/:chaintitle/:validator`,
+    name: `widget`,
+    components: {
+      session: () => import(`./components/staking/PageValidatorCharts/widget`),
+    },
+    meta: {
+      feature: "Session",
+    },
+  },
+  {
     path: `/staking/validators/:validator`,
     redirect: `/validators/:validator`,
   },

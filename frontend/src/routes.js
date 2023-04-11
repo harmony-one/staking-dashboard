@@ -203,10 +203,10 @@ export default [
     },
   },
   {
-    path: `/metamask`,
-    name: `metamask`,
+    path: `/multisig`,
+    name: `multisig`,
     components: {
-      session: require(`./components/common/TmSessionMetaMask`).default
+      session: require(`./components/common/TmSessionMultisig`).default
     },
     meta: {
       feature: "Session"

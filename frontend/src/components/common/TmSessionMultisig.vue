@@ -24,6 +24,14 @@ const opts = {
   debug: true,
 };
 
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
 export default {
   name: `session-onewallet`,
   components: {
@@ -36,8 +44,9 @@ export default {
   mounted() { },
   methods: {
     async signIn() {
-      console.log(document.location.href);
-      console.log(document.location.origin);
+      if(!inIframe()) {
+        window.location.replace("https://multisig.harmony.one/hmy:0x4b729c5fbc0630B5D64b7eF86819137Dd5070B70/apps?appUrl=https%3A%2F%2Fstaking.harmony.one");
+      }  
 
       try {
         const appsSdk = new SafeAppsSDK(opts);

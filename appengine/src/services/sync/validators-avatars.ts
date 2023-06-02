@@ -40,7 +40,7 @@ export class ValidatorsAvatarCacheService {
 
     loop = async () => {
         try {
-            const validators = (Object.values(this.cache.VALIDATORS) as any).filter(x => x.active)
+            const validators = (Object.values(this.cache.VALIDATORS) as any)
 
             // console.log(`Caching validators' avatars start`)
             const now = Date.now()

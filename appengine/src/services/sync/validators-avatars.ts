@@ -50,7 +50,7 @@ export class ValidatorsAvatarCacheService {
 
                 if (now < expirationTime && this.isCachedKeyBase(v.address)) {
                     // todo disable cache
-                    // continue
+                    continue
                 }
 
                 const cacheAvatar = async () => {

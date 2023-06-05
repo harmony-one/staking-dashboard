@@ -94,18 +94,18 @@ export class ValidatorsAvatarCacheService {
     fetchKeyBaseAvatarByValidatorIdentity = async (validatorIdentity) => {
         const url = `https://keybase.io/_/api/1.0/user/lookup.json?key_fingerprint=${validatorIdentity}&fields=pictures`
 
-        const reqParams = {
-            rejectUnauthorized: false,
-            requestCert: false,//add when working with https sites
-            agent: false,//add when working with https sites
-            strictSSL: false,
-        }
+        // const reqParams = {
+        //     rejectUnauthorized: false,
+        //     requestCert: false,//add when working with https sites
+        //     agent: false,//add when working with https sites
+        //     strictSSL: false,
+        // }
 
         try {
-            const keyBaseData = (await requestPromise({url, ...reqParams})).toString() as any
+            const keyBaseData = (await requestPromise({url})).toString() as any
             const imgUrl = JSON.parse(keyBaseData).them[0].pictures.primary.url
 
-            return await requestPromise({url: imgUrl, ...reqParams})
+            return await requestPromise({url: imgUrl})
         } catch (e) {
             return null
         }

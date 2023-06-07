@@ -58,7 +58,7 @@ export class ValidatorsAvatarCacheService {
             const now = Date.now()
             const filteredValidators = validators.filter(v => !(now < v.expirationTime && this.isCachedKeyBase(v.address)))
 
-            await processPromisesBatch(filteredValidators, 50, this.cacheAvatar)
+            await processPromisesBatch(filteredValidators, 10, this.cacheAvatar)
 
             // console.log(`Caching validators' avatars end`, filteredValidators.length)
         } catch (e) {

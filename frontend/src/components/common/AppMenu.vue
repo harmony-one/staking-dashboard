@@ -156,7 +156,7 @@
       
       <a
         class="app-menu-item small"
-        href="https://governance.harmony.one/#/"
+        href="https://snapshot.org/#/harmony-mainnet.eth/"
         @click="close"
         target="_blank"
       >

@@ -144,7 +144,7 @@
             <li>
               <a 
               target="_blank" 
-              href="https://www.frontier.xyz/"
+              href="https://www.frontier.xyz/download"
               >Frontier (Mobile)</a>
             </li>
             <li>

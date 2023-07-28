@@ -126,7 +126,7 @@
       </div>
       <div v-if="!session.insecureMode" class="session-main" >
         <p>
-          Please set up any of the below wallets:
+          Set up with any of the below wallets:
           <ul class="wallet-list">
             <li>
                 <a

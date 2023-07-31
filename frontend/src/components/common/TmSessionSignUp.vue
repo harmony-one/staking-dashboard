@@ -168,24 +168,24 @@
               <td><a target="_blank" href="http://fortune-one.uk/guides">Community</a></td>
             </tr>
             <tr>
-              <td>Ledger Nano</td>
-              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/hardware-wallets/ledger">Harmony</a></td>
-              <td><a target="_blank" href="https://fortune-one.uk/ledger">Community</a></td>
-            </tr>
-            <tr>
               <td>Metamask</td>
               <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/browser-extensions-wallets/metamask-wallet">Harmony</a></td>
               <td><a target="_blank" href="https://fortune-one.uk/metamask">Community</a></td>
             </tr>
             <tr>
-              <td>Harmony CLI</td>
-              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/harmony-cli/create-import-wallet">Harmony</a></td>
-              <td>-</td>
+              <td>Ledger Nano</td>
+              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/hardware-wallets/ledger">Harmony</a></td>
+              <td><a target="_blank" href="https://fortune-one.uk/ledger">Community</a></td>
             </tr>
             <tr>
               <td>Frontier</td>
               <td>-</td>
               <td><a target="_blank" href="https://fortune-one.uk/frontier">Community</a></td>
+            </tr>
+            <tr>
+              <td>Harmony CLI</td>
+              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/harmony-cli/create-import-wallet">Harmony</a></td>
+              <td>-</td>
             </tr>
           </table>
         <br>

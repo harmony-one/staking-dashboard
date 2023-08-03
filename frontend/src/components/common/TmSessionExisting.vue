@@ -27,6 +27,14 @@
           title="Use Metamask Wallet"
           route="metamask"
         />
+
+        <LiSession
+          v-if="!isMobileApp"
+          id="use-multisig"
+          icon="extension"
+          title="Use Harmony Multisig"
+          route="multisig"
+        />
         
         <LiSession
           v-if="!isMobileApp"

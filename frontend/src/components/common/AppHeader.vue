@@ -1,6 +1,6 @@
 <template>
 
-  <div class="container">
+  <div class="container" v-if="!isWidget">
 
     <div class="mobile-menu-button">
       <div v-if="open" class="close-menu" @click="close()">
@@ -57,7 +57,8 @@ export default {
   },
   data: () => ({
     open: false,
-    desktop: false
+    desktop: false,
+    isWidget: window.location.pathname.includes('/widget/')
   }),
   computed: {
     ...mapState([`session`])

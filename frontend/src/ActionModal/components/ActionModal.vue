@@ -374,6 +374,7 @@ import ActionManager from "../utils/ActionManager"
 import { closeExtensionSession } from "scripts/extension-utils"
 import { openExtensionPopup } from "../utils/openExtensionPopup"
 import { BigNumber } from "bignumber.js"
+import { toBech32 } from "@harmony-js/crypto"
 
 const defaultStep = `details`
 const feeStep = `fees`
@@ -387,7 +388,8 @@ const SIGN_METHODS = {
   EXTENSION: `extension`,
   MATHWALLET: `mathwallet`,
   ONEWALLET: `onewallet`,
-  METAMASK: `metamask`
+  METAMASK: `metamask`,
+  MULTISIG: 'multisig'
 }
 
 const signMethodOptions = {
@@ -414,15 +416,21 @@ const signMethodOptions = {
   METAMASK: {
     key: 'MetaMask',
     value: SIGN_METHODS.METAMASK
+  },
+  MULTISIG: {
+    key: 'Multisig',
+    value: SIGN_METHODS.MULTISIG
   }
 }
 
 const getMathWalletUtils = () => import("scripts/mathwallet-utils")
 const getOneWalletUtils = () => import("scripts/onewallet-utils")
 const getMetaMaskUtils = () => import("scripts/metamask-utils/index")
+const getMultisigUtils = () => import("scripts/multisig-utils/index")
 let processMathWalletMessage
 let processOneWalletMessage
 let processMetaMaskMessage
+let processMultisigMessage
 
 export const sessionType = {
   EXPLORE: "explore",
@@ -431,7 +439,8 @@ export const sessionType = {
   EXTENSION: SIGN_METHODS.EXTENSION,
   MATHWALLET: SIGN_METHODS.MATHWALLET,
   ONEWALLET: SIGN_METHODS.ONEWALLET,
-  METAMASK: SIGN_METHODS.METAMASK
+  METAMASK: SIGN_METHODS.METAMASK,
+  MULTISIG: SIGN_METHODS.MULTISIG
 }
 
 export default {
@@ -485,6 +494,7 @@ export default {
     }
   },
   data: () => ({
+    isWidget: window.location.pathname.includes('/widget/'),
     step: defaultStep,
     selectedSignMethod: null,
     password: null,
@@ -603,6 +613,8 @@ export default {
         signMethods.push(signMethodOptions.ONEWALLET)
       } else if (this.session.sessionType === sessionType.METAMASK) {
         signMethods.push(signMethodOptions.METAMASK)
+      } else if (this.session.sessionType === sessionType.MULTISIG) {
+        signMethods.push(signMethodOptions.MULTISIG)
       } else {
         signMethods.push(signMethodOptions.LOCAL)
       }
@@ -631,6 +643,7 @@ export default {
         this.session.selectedSignMethod === "onewallet" ||
         this.session.selectedSignMethod === "mathwallet" ||
         this.session.sessionType === 'metamask' ||
+        this.session.sessionType === 'multisig' ||
         (this.selectedSignMethod === "extension" &&
           this.modalContext.isExtensionAccount)
       )
@@ -674,6 +687,11 @@ export default {
         getMetamaskUtils().then()(module => {
           processMetaMaskMessage = module.processMetaMaskMessage
         })
+      } else if(this.session.sessionType === SIGN_METHODS.MULTISIG &&
+              !processMultisigMessage) {
+        getMultisigUtils().then()(module => {
+          processMultisigMessage = module.processMultisigMessage
+        })
       }
     }
   },
@@ -712,6 +730,13 @@ export default {
       })
       return;
     }
+
+    if (sessionType === SIGN_METHODS.MULTISIG) {
+      getMultisigUtils().then(module => {
+        processMultisigMessage = module.processMultisigMessage
+      })
+      return;
+    }
   },
   methods: {
     prettyTransactionHash(txHash) {
@@ -720,7 +745,7 @@ export default {
     linkToTransaction(txHash) {
       return this.networkConfig
         ? this.networkConfig.explorer_url +
-            (this.transactionData.type === "MsgSend" || this.session.sessionType === SIGN_METHODS.METAMASK
+            (this.transactionData.type === "MsgSend" || this.session.sessionType === SIGN_METHODS.METAMASK || this.session.sessionType === SIGN_METHODS.MULTISIG
               ? "/tx/"
               : "/staking-tx/") +
             txHash
@@ -777,9 +802,32 @@ export default {
       track(...args)
     },
     goToSession() {
-      this.close()
+      if(!this.isWidget) {
+        this.close()
+        this.$router.push(`/welcome`)
+      } else {
+        this.signIn();
+      }
+    },
+    async signIn() {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts"
+        })
 
-      this.$router.push(`/welcome`)
+        if (accounts.length === 0) {
+          return
+        }
+
+        this.$store.dispatch("signIn", {
+          sessionType: sessionType.METAMASK,
+          address: toBech32(accounts[0])
+        })
+
+        // this.$router.push(`/`)
+      } catch (ex) {
+        console.error("### ex", ex)
+      }
     },
     isValidInput(property) {
       this.$v[property].$touch()
@@ -928,6 +976,14 @@ export default {
             this.networkConfig,
             this.wallet.address
           )
+        } else if (this.selectedSignMethod === SIGN_METHODS.MULTISIG) {
+          this.$store.commit(`setActionInProgress`, true)
+
+          sendResponse = await processMultisigMessage(
+            sendData,
+            this.networkConfig,
+            this.wallet.address
+          )
         } else {
           this.$store.commit(`setActionInProgress`, true)
 
@@ -952,10 +1008,11 @@ export default {
         if(!this.txConfirmResult.error) {
           setTimeout(() => this.close(), 10000)
         }
-      } catch ({ message }) {
-        console.log("[submit] error", message)
+      } catch (e) {
+        log.error(e);
+        console.log("[submit] error", e.message)
 
-        this.onSendingFailed(message)
+        this.onSendingFailed(e.message)
         this.txConfirmResult = null
         // this.session.actionInProgress.close()
         this.close()

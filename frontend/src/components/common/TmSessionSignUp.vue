@@ -124,37 +124,71 @@
           <TmBtn value="Create Address" />
         </div>
       </div>
-      <div v-if="!session.insecureMode" class="session-main">
-        <p v-if="!extension.enabled">
-          Creating an address in the browser is unsafe. Please install
-          <a
-            target="_blank"
-            href="https://chrome.google.com/webstore/detail/harmony-one-wallet/fnnegphlobjdpkhecapkijjdkgcjhkib"
-            >One Wallet</a
-          >
-        </p>
-        <!--        <p>-->
-        <!--          Creating an address in the browser is unsafe. To offer you a secure-->
-        <!--          alternative we will be releasing a browser extension and a mobile app-->
-        <!--          soon.-->
-        <!--        </p>-->
+      <div v-if="!session.insecureMode" class="session-main" >
         <p>
-          In the meantime, you can create a new account outside of the browser
-          by using a
-          <a
-            href="https://shop.ledger.com/?r=3dd204ef7508"
-            target="_blank"
-            rel="noopener norefferer"
-            >Ledger Nano</a
-          >
-          or the
-          <a
-            href="https://docs.harmony.one/home/wallet-guides/harmony-cli/create-import-wallet"
-            target="_blank"
-            rel="noopener norefferer"
-            >command line</a
-          >.
+          Download and install any of below wallets:
+          <ul class="wallet-list">
+            <li>
+                <a
+                target="_blank"
+                href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+                >Metamask (Desktop)</a>
+            </li>
+            <li>
+              <a 
+              href="https://shop.ledger.com/?r=3dd204ef7508"
+              target="_blank"
+              rel="noopener norefferer"
+              >Ledger Nano (Hardware)</a>
+            </li>
+            <li>
+              <a 
+              target="_blank" 
+              href="https://www.frontier.xyz/download"
+              >Frontier (Mobile)</a>
+            </li>
+            <li>
+              <a
+                href="https://docs.harmony.one/home/general/ecosystem/wallets/harmony-cli/create-import-wallet"
+                target="_blank"
+                rel="noopener norefferer"
+                >Command line (CLI)</a>
+            </li>
+            <li>
+              <a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets">Other Wallets</a>
+            </li>
+          </ul>
         </p>
+        <br>
+        <h2 data-v-ff5a1c6c="" data-v-7f59745c="" class="session-title"> Guides </h2>
+          <table class="guides-table">
+            <tr>
+              <td>Wallet Guides</td>
+              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets">Harmony</a></td>
+              <td><a target="_blank" href="http://fortune-one.uk/guides">Community</a></td>
+            </tr>
+            <tr>
+              <td>Metamask</td>
+              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/browser-extensions-wallets/metamask-wallet">Harmony</a></td>
+              <td><a target="_blank" href="https://fortune-one.uk/metamask">Community</a></td>
+            </tr>
+            <tr>
+              <td>Ledger Nano</td>
+              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/hardware-wallets/ledger">Harmony</a></td>
+              <td><a target="_blank" href="https://fortune-one.uk/ledger">Community</a></td>
+            </tr>
+            <tr>
+              <td>Frontier</td>
+              <td>-</td>
+              <td><a target="_blank" href="https://fortune-one.uk/frontier">Community</a></td>
+            </tr>
+            <tr>
+              <td>Harmony CLI</td>
+              <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/harmony-cli/create-import-wallet">Harmony</a></td>
+              <td>-</td>
+            </tr>
+          </table>
+        <br>
         <router-link to="existing"
           >Want to use an existing address?</router-link
         >
@@ -257,5 +291,21 @@ export default {
   font-size: var(--m);
   color: var(--danger);
   padding-bottom: 0.25rem;
+}
+.session-title , .session-main{
+  text-align: left !important;
+}
+.guides-table
+{
+  text-align: left !important;
+}
+.guides-table td{
+  padding: 3px 15px 3px 3px !important;
+  width:100% !important;
+  text-align: left !important;
+}
+.wallet-list {
+  list-style: circle !important; 
+  margin-left:20px !important;
 }
 </style>

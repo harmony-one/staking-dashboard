@@ -123,7 +123,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         ...networkConfig,
         explorer_url:
             networkConfig.chain_title === 'testnet' ?
-                "https://explorer.pops.one":
+                "https://explorer.testnet.harmony.one":
                 networkConfig.explorer_url
       }
       state.network = networkConfig.id

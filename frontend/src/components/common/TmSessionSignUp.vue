@@ -165,22 +165,22 @@
             <tr>
               <td>Wallet Guides</td>
               <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets">Harmony</a></td>
-              <td><a target="_blank" href="http://fortune-one.uk/guides">Community</a></td>
+              <td><a target="_blank" href="https://fortune-validator.pro/guides">Community</a></td>
             </tr>
             <tr>
               <td>Metamask</td>
               <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/browser-extensions-wallets/metamask-wallet">Harmony</a></td>
-              <td><a target="_blank" href="https://fortune-one.uk/metamask">Community</a></td>
+              <td><a target="_blank" href="https://fortune-validator.pro/metamask">Community</a></td>
             </tr>
             <tr>
               <td>Ledger Nano</td>
               <td><a target="_blank" href="https://docs.harmony.one/home/general/ecosystem/wallets/hardware-wallets/ledger">Harmony</a></td>
-              <td><a target="_blank" href="https://fortune-one.uk/ledger">Community</a></td>
+              <td><a target="_blank" href="https://fortune-validator.pro/ledger">Community</a></td>
             </tr>
             <tr>
               <td>Frontier</td>
               <td>-</td>
-              <td><a target="_blank" href="https://fortune-one.uk/frontier">Community</a></td>
+              <td><a target="_blank" href="https://fortune-validator.pro/frontier">Community</a></td>
             </tr>
             <tr>
               <td>Harmony CLI</td>

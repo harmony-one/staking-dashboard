@@ -57,7 +57,7 @@
     "lodash.sumby": "4.6.0",
     "lodash.trim": "^4.5.1",
     "lodash.uniqby": "^4.7.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "no-scroll": "^2.1.1",
     "one-country-sdk": "0.3.0",
     "query-string": "6.11.0",

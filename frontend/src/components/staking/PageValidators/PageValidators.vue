@@ -147,7 +147,7 @@ export default {
     },
     linkToTransaction() {
       const blocksUrl = this.networkConfig.explorer_url + "/block/"
-      return blocksUrl + this.networkInfo.current_block_hash + "?shard=0"
+      return blocksUrl + this.networkInfo.current_block_number + "?shard=0"
     }
   },
   mounted() {

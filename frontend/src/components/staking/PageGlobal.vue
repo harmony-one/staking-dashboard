@@ -263,7 +263,7 @@ export default {
     },
     linkToTransaction() {
       const blocksUrl = this.networkConfig.explorer_url + "/block/"
-      return blocksUrl + this.networkInfo.current_block_hash
+      return blocksUrl + this.networkInfo.current_block_hash + "?shard=0"
     }
   },
   // watch: {

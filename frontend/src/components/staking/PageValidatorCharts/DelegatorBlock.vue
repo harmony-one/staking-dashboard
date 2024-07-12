@@ -18,13 +18,13 @@
         {{index + 1}}
       </div>
       <div class="address">
-        <a :href="`${networkConfig.explorer_url}/address/${delegator['delegator-address']}`" target="_blank">
+        <a :href="`${networkConfig.explorer_url}/address/${delegator['delegator-address']}?shard=0`" target="_blank">
           {{ delegator['delegator-address'] }}
         </a>
         {{validator_address === delegator['delegator-address'] ? '(self)' : ''}}
       </div>
       <div class="short-address">
-        <a :href="`${networkConfig.explorer_url}/address/${delegator['delegator-address']}`" target="_blank">
+        <a :href="`${networkConfig.explorer_url}/address/${delegator['delegator-address']}?shard=0`" target="_blank">
           {{ shortAddress(delegator['delegator-address']) }}
         </a>
         {{validator_address === delegator['delegator-address'] ? '(self)' : ''}}

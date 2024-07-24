@@ -1,13 +1,6 @@
 <template>
-  <TmPage
-    :managed="true"
-    :loading="loading"
-    :loaded="!loading"
-    :error="validator.error"
-    :data-empty="!validator.operator_address"
-    :hide-header="false"
-    :title="validator.moniker"
-  >
+  <TmPage :managed="true" :loading="loading" :loaded="!loading" :error="validator.error"
+    :data-empty="!validator.operator_address" :hide-header="false" :title="validator.moniker">
     <template v-if="validator.operator_address" slot="managed-body">
       <div class="validator-layout">
         <div class="validator-top">
@@ -27,30 +20,15 @@
 
         <div>
           <div class="widget-row">
-            <LightWidget
-              title="Stake & Delegation history"
-              :tooltip="tooltips.v_profile.stake_delegation_history"
-            >
-              <StakeHistoryBlock
-                :history="validatorHistory"
-                :validator="validator"
-              />
+            <LightWidget title="Stake & Delegation history" :tooltip="tooltips.v_profile.stake_delegation_history">
+              <StakeHistoryBlock :history="validatorHistory" :validator="validator" />
             </LightWidget>
-            <LightWidget
-              title="Expected Return History"
-              :tooltip="tooltips.v_profile.reward_rate_history"
-            >
-              <RewardHistoryBlock
-                :history="validatorHistory"
-                :validator="validator"
-              />
+            <LightWidget title="Expected Return History" :tooltip="tooltips.v_profile.reward_rate_history">
+              <RewardHistoryBlock :history="validatorHistory" :validator="validator" />
             </LightWidget>
           </div>
           <div class="widget-row">
-            <LightWidget
-              title="Delegators"
-              :tooltip="tooltips.v_profile.delegators"
-            >
+            <LightWidget title="Delegators" :tooltip="tooltips.v_profile.delegators">
               <DelegatorBlock :validator="validator" />
             </LightWidget>
             <!--            <LightWidget v-if="allHistory.length" title="Event history">-->
@@ -89,6 +67,9 @@ import {
 import { formatByStep, generateEventHistory } from "./helpers"
 import { SECONDS_PER_EPOCH } from "@/constants/time-constants"
 import tooltips from "src/components/tooltips"
+import { OneCountry } from 'one-country-sdk'
+import { HarmonyAddress } from "@harmony-js/crypto"
+import Web3 from 'web3'
 
 export default {
   name: `page-validator-charts`,
@@ -128,7 +109,7 @@ export default {
     }
   },
   watch: {
-    networkId: async function() {
+    networkId: async function () {
       return await this.fetchValidator()
     },
     "validator.operator_address": {
@@ -154,18 +135,56 @@ export default {
     return await this.fetchValidator()
   },
   methods: {
-    fetchValidator: async function() {
+    fetchValidator: async function () {
       this.loading = true
       const network = this.chainTitle
       try {
         if (network) {
-          this.validator = await fetchValidatorByAddress(
+          const provider = new Web3.providers.HttpProvider('https://api.s0.t.hmny.io')
+
+          const oneCountry = new OneCountry({
+            provider,
+            contractAddress: '0x08b3F83557C4aB8C42fC3C87B04A79f1e4665912'
+          });
+
+          let addr = '';
+          let countryName = '';
+
+          try {
+            addr = new HarmonyAddress(this.$route.params.validator).checksum;
+          } catch (e) {
+            console.error(e);
+          }
+
+          if (!addr) {
+            try {
+              addr = (await oneCountry.getRecordByName(this.$route.params.validator)).renter;
+              countryName = this.$route.params.validator;
+            } catch (e) {
+              console.error(e);
+            }
+          }
+
+          if (!addr) {
+            addr = this.$route.params.validator;
+          }
+
+          addr = new HarmonyAddress(addr).bech32;
+
+          if(!countryName) {
+            try {
+            countryName = await oneCountry.getNameForRenter(
+              new HarmonyAddress(addr).checksum);
+            } catch (e) {}
+          }
+
+          const validator = await fetchValidatorByAddress(
             network,
-            this.$route.params.validator
+            addr
           )
           let history = await fetchValidatorHistory(
             network,
-            this.$route.params.validator
+            addr
           )
 
           // console.log(this, this.validator)
@@ -174,6 +193,11 @@ export default {
 
           this.allHistory = history
           this.validatorHistory = history
+
+          this.validator = {
+            ...validator,
+            countryName
+          }
 
           // don't need to use
           // this.validatorHistory = formatByStep(history, SECONDS_PER_EPOCH * 1000)
@@ -196,13 +220,15 @@ export default {
   width: 100%;
   margin: 0 0 var(--unit) 0;
   padding-right: var(--unit);
-  > div {
+
+  >div {
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
     flex: 1;
   }
-  > div:last-child {
+
+  >div:last-child {
     margin-right: 0 !important;
   }
 }
@@ -213,11 +239,12 @@ export default {
 
 @media screen and (max-width: 414px) {
   .widget-row {
-    > div {
+    >div {
       min-width: 300px;
       margin-right: 0 !important;
     }
-    > .widget-container:nth-child(odd) {
+
+    >.widget-container:nth-child(odd) {
       margin-right: 0;
     }
   }
@@ -230,7 +257,8 @@ export default {
   justify-content: flex-start;
   flex-wrap: wrap;
   margin-right: calc(var(--unit) * -1);
-  > div {
+
+  >div {
     flex-grow: 1;
   }
 }
@@ -243,16 +271,19 @@ export default {
   border-radius: var(--unit);
   margin-right: var(--unit);
   margin-bottom: var(--unit);
-  > div {
+
+  >div {
     //min-width: 350px;
     flex-grow: 1;
     padding: var(--unit);
     border-right: 1px solid var(--light2);
   }
-  > div:last-child {
+
+  >div:last-child {
     min-width: 250px;
     border-right: none;
   }
+
   .title {
     font-size: 16px;
     color: var(--blue);
@@ -266,6 +297,7 @@ export default {
     max-width: calc(100vw - 2 * var(--double));
   }
 }
+
 @media screen and (max-width: 1200px) {
   .validator-top {
     display: flex;
@@ -273,7 +305,8 @@ export default {
     background: none;
     border: none;
     margin-bottom: var(--unit);
-    > div {
+
+    >div {
       flex-grow: 1;
       width: 100%;
       background: white;
@@ -282,9 +315,11 @@ export default {
       margin-bottom: var(--unit);
       padding: var(--unit);
     }
-    > div:last-child {
+
+    >div:last-child {
       border-right: 1px solid var(--light2);
     }
+
     .title {
       font-size: 16px;
       color: var(--blue);

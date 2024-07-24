@@ -1,0 +1,20 @@
+{
+  "short_name": "Staking Dashboard",
+  "name": "Harmony Staking Dashboard Safe App",
+  "description": "Harmony is a fast and open blockchain for decentralized applications. Our mainnet supports state sharding with instant finality. Our staking mechanism reduces centralization while supporting delegation and slashing.",
+  "icons": [
+    {
+      "src": "https://staking.harmony.one/img/icons/i48.png",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "providedBy": {
+    "name": "Harmony Foundation",
+    "url": "https://www.harmony.one/"
+  },
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

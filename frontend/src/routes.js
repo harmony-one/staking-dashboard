@@ -51,6 +51,16 @@ export default [
     component: () => import(`./components/staking/PageValidatorCharts/index`),
   },
   {
+    path: `/widget/:chaintitle/:validator`,
+    name: `widget`,
+    components: {
+      session: () => import(`./components/staking/PageValidatorCharts/widget`),
+    },
+    meta: {
+      feature: "Session",
+    },
+  },
+  {
     path: `/staking/validators/:validator`,
     redirect: `/validators/:validator`,
   },
@@ -193,10 +203,10 @@ export default [
     },
   },
   {
-    path: `/metamask`,
-    name: `metamask`,
+    path: `/multisig`,
+    name: `multisig`,
     components: {
-      session: require(`./components/common/TmSessionMetaMask`).default
+      session: require(`./components/common/TmSessionMultisig`).default
     },
     meta: {
       feature: "Session"

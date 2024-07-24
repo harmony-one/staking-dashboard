@@ -11,6 +11,11 @@ const mockSessionState = {
   // sessionType: "extension"
 }
 
+const opts = {
+  allowedDomains: [/multisig.harmony.one$/, /staging-safe.harmony.one$/],
+  debug: true,
+};
+
 export default () => {
   const USER_PREFERENCES_KEY = `harmony_user_preferences`
 
@@ -105,8 +110,24 @@ export default () => {
     async checkForPersistedSession({ dispatch }) {
       const session = localStorage.getItem(`session`)
       if (session) {
-        const { address, sessionType } = JSON.parse(session)
-        await dispatch(`signIn`, { address, sessionType })
+        let { address, sessionType } = JSON.parse(session)
+
+        if (sessionType === "multisig") {
+          try {
+            const appsSdk = new SafeAppsSDK(opts);
+
+            const safe = await appsSdk.safe.getInfo();
+
+            await dispatch(`signIn`, {
+              address: toBech32(safe.safeAddress),
+              sessionType
+            })
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          await dispatch(`signIn`, { address, sessionType })
+        }
       }
     },
     async checkForPersistedAddresses({ commit }) {
@@ -230,7 +251,7 @@ export default () => {
 
   // TODO TEMP Mock actions to empty functions
   const mockedActions = Object.keys(actions).reduce((acc, key) => {
-    acc[key] = () => {}
+    acc[key] = () => { }
     return acc
   }, {})
 

@@ -20,11 +20,11 @@ import { sessionType } from "src/ActionModal/components/ActionModal"
 import SafeAppsSDK from '@safe-global/safe-apps-sdk';
 
 const opts = {
-  allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/, /multisig.harmony.one$/],
+  allowedDomains: [/multisig.harmony.one$/, /staging-safe.harmony.one$/],
   debug: true,
 };
 
-function inIframe () {
+const inIframe = () => {
     try {
         return window.self !== window.top;
     } catch (e) {
@@ -45,7 +45,7 @@ export default {
   methods: {
     async signIn() {
       if(!inIframe()) {
-        window.location.replace("https://multisig.harmony.one/hmy:0x4b729c5fbc0630B5D64b7eF86819137Dd5070B70/apps?appUrl=https%3A%2F%2Fstaking.harmony.one");
+        window.location.replace("https://staging-safe.harmony.one/apps");
       }  
 
       try {

@@ -39,6 +39,9 @@
     "@ledgerhq/hw-transport-webhid": "^5.7.0",
     "@ledgerhq/hw-transport-webusb": "4.74.1",
     "@metamask/detect-provider": "1.2.0",
+    "@safe-global/safe-apps-provider": "^0.16.0",
+    "@safe-global/safe-apps-react-sdk": "^4.6.4",
+    "@safe-global/safe-apps-sdk": "^7.10.1",
     "apollo-boost": "^0.4.3",
     "apollo-cache-inmemory": "^1.6.2",
     "autosize": "^4.0.2",
@@ -133,7 +136,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=16.20.2"
   },
   "homepage": "https://lunie.io",
   "license": "Apache-2.0",
@@ -144,15 +147,6 @@
   },
   "resolutions": {
     "braces": ">=2.3.1",
-    "simsala/axios": "^0.24.0",
-    "@ascendancyy/vue-cli-plugin-stylelint/**/trim": "^1.0.1",
-    "@ascendancyy/vue-cli-plugin-stylelint/**/trim-newlines": "^3.0.1",
-    "babel-cli/**/glob-parent": "^5.1.2",
-    "@vue/cli-service/**/glob-parent": "^5.1.2",
-    "@vue/cli-plugin-babel/**/glob-parent": "^5.1.2",
-    "live-server/**/glob-parent": "^5.1.2",
-    "@ascendancyy/vue-cli-plugin-stylelint/**/glob-parent": "^5.1.2",
-    "@vue/cli-plugin-eslint/**/glob-parent": "^5.1.2",
-    "@vue/cli-service/**/is-svg": "^4.3.0"
+    "simsala/axios": "^0.24.0"
   }
 }

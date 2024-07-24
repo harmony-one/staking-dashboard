@@ -6,7 +6,7 @@ import { Unit } from "@harmony-js/utils"
 import SafeAppsSDK, { TransactionStatus } from '@safe-global/safe-apps-sdk';
 
 const opts = {
-    allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/, /multisig.harmony.one$/],
+    allowedDomains: [/multisig.harmony.one$/, /staging-safe.harmony.one$/],
     debug: true,
 };
 

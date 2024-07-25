@@ -60,6 +60,7 @@ import LightWidget from "./components/LightWidget"
 import moment from "moment"
 import tooltips from "src/components/tooltips"
 import TmDataLoading from "common/TmDataLoading"
+import bech32 from "bech32"
 
 export default {
   name: `page-portfolio`,
@@ -158,6 +159,19 @@ export default {
     }
   },
   mounted() {
+    if(this.$route.query.explore) {
+      try {
+        bech32.decode(this.$route.query.explore)
+        
+        this.$store.dispatch(`signIn`, {
+          sessionType: `explore`,
+          address: this.$route.query.explore
+        })
+
+        localStorage.setItem(`prevAddress`, this.address)
+      } catch (error) {}
+    }
+
     if (
       !this.$store.dispatch(
         "setNetworkByChainTitle",

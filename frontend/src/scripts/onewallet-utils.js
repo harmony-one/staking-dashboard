@@ -43,7 +43,7 @@ export const processOneWalletMessage = async (
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
+          gasLimit: Unit.Wei(new BN(gasEstimate)).toHex(),
           chainId: harmony.chainId
         })
         .build()
@@ -62,7 +62,7 @@ export const processOneWalletMessage = async (
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
+          gasLimit: Unit.Wei(new BN(gasEstimate)).toHex(),
           chainId: harmony.chainId
         })
         .build()
@@ -79,7 +79,7 @@ export const processOneWalletMessage = async (
         })
         .setTxParams({
           gasPrice: Unit.One(gasPrice).toHex(),
-          gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
+          gasLimit: Unit.Wei(new BN(gasEstimate)).toHex(),
           chainId: harmony.chainId
         })
         .build()

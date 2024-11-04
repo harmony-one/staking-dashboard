@@ -199,7 +199,7 @@ export class ValidatorsInfoService {
                         totalToSigned += parseFloat(blocks['to-sign']);
                     });
 
-                    validatorInfo.uptime_percentage = totalToSigned ? totalSigned / totalToSigned : null;
+                    validatorInfo.uptime_percentage = totalToSigned ? Math.ceil((totalSigned / totalToSigned) * 100) / 100 : null;
                 } else {
                     validatorInfo.uptime_percentage = null;
                     // console.log('Error - not found epochBlocks for ', validatorInfo.address);

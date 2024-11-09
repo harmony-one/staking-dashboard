@@ -143,7 +143,7 @@ export default {
           renderComponent: ValidatorName // render as Component - use custom Vue components
         },
         {
-          title: `Expected Return`,
+          title: `Average Return`,
           value: `apr`,
           tooltip: tooltips.v_list.average_apr,
           width: "200px",
@@ -201,7 +201,7 @@ export default {
       }
 
       if (this.$mq === "sm" || this.$mq === "md") {
-        const keep = ["name", "uptime_percentage"]
+        const keep = ["name","apr"]
         props = props.filter(p => keep.includes(p.value))
       }
 

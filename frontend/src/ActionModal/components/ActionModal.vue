@@ -56,40 +56,54 @@
             <slot />
           </div>
           <div v-else-if="step === feeStep" class="action-modal-form">
-            <TmFormGroup
-              v-if="session.experimentalMode"
+             <TmFormGroup
+              class="action-modal-form-group"
+              field-id="gas-price"
+              field-label="Gas price"
               :error="$v.gasPrice.$error && $v.gasPrice.$invalid"
-              class="action-modal-group"
-              field-id="gasPrice"
-              field-label="Gas Price"
             >
-              <span class="input-suffix">{{ bondDenom | viewDenom }}</span>
               <TmField
-                id="gas-price"
-                v-model="gasPrice"
-                step="0.000000001"
-                type="number"
-                min="0"
-              />
-              <TmFormMsg
-                v-if="balanceInAtoms === 0"
-                :msg="`doesn't have any ${bondDenom}s`"
-                name="Wallet"
-                type="custom"
-              />
-              <TmFormMsg
-                v-else-if="$v.gasPrice.$error && !$v.gasPrice.required"
-                name="Gas price"
-                type="required"
-              />
-              <TmFormMsg
-                v-else-if="$v.gasPrice.$error && !$v.gasPrice.between"
-                :max="$v.gasPrice.$params.between.max"
-                :min="0"
-                name="Gas price"
-                type="between"
-              />
+                  id="gas-price"
+                  v-model.number="gasPrice"  
+                  type="number"
+                  min="1"
+                  placeholder="Gas price" 
+                />
             </TmFormGroup>
+
+            <TmFormGroup 
+              class="action-modal-form-group"
+              field-id="gas-limit"
+              field-label="Gas Limit"
+            >
+              <TmField
+                  id="gas-limit"
+                  v-model.number="gasLimit"
+                  type="number"
+                  min="25000"
+                  placeholder="Gas Limit" 
+                />
+            </TmFormGroup>
+
+            <TmFormGroup
+              class="action-modal-form-group"
+              field-id="gas-fee"
+              field-label="Gas Fee"
+            >
+                <TmField
+                    id="gas-fee" 
+                    :value="calculateFee()"  
+                    type="number"
+                    placeholder="Gas fee"
+                    disabled="true"
+                  />
+                  <TmFormMsg
+                    v-if="calculateFee() < '0.000025000'"
+                    name="Gas fee minimum 0,000025." 
+                    type="custom"
+                  />
+            </TmFormGroup>
+            
             <TableInvoice
               :amount="Number(amount)"
               :estimated-fee="estimatedFee"
@@ -499,8 +513,10 @@ export default {
     selectedSignMethod: null,
     password: null,
     sending: false,
-    gasEstimate: null,
-    gasPrice: config.default_gas_price.toFixed(9),
+    gasEstimate: 25000,
+    gasPrice: 1,
+    gasLimit: 25000,
+    gasFee: 1e-9 * 25000,
     submissionError: null,
     actionManager: new ActionManager(),
     txConfirmResult: null,
@@ -584,11 +600,11 @@ export default {
       return atoms(this.liquidAtoms)
     },
     estimatedFee() {
-      return Number(this.gasPrice) * Number(this.gasEstimate) // already in atoms
+      return Number(this.gasPrice) * 1e-9 * Number(this.gasLimit) // already in atoms
     },
     invoiceTotal() {
       return (
-        Number(this.amount) + Number(this.gasPrice) * Number(this.gasEstimate)
+        Number(this.amount) + Number(this.gasPrice) * 1e-9 * Number(this.gasLimit)
       )
     },
     isValidChildForm() {
@@ -702,7 +718,7 @@ export default {
     }
 
     if (this.step === "fees" && this.$refs.send) {
-      this.$refs.send.$el.focus()
+      // this.$refs.send.$el.focus()
     }
   },
   mounted() {
@@ -738,7 +754,17 @@ export default {
       return;
     }
   },
+  
   methods: {
+    calculateFee() {
+      return ((this.gasPrice * 1e-9) * this.gasLimit).toFixed(9)
+    },
+    clear() {
+      this.$v.$reset()
+
+      this.gasPrice = 1
+      this.gasLimit = 25000
+    },
     prettyTransactionHash(txHash) {
       return txHash ? transactionToShortString(txHash) : ""
     },
@@ -773,7 +799,7 @@ export default {
       }
 
       this.$store.commit(`setModalId`, this.transactionData.type)
-      this.gasPrice = config.default_gas_price.toFixed(9)
+      // this.gasPrice = config.default_gas_price.toFixed(9)
 
       // this.trackEvent(`event`, `modal`, this.title)
       // this.checkFeatureAvailable()
@@ -901,11 +927,12 @@ export default {
       const { type, memo, ...properties } = this.transactionData
       this.actionManager.setMessage(type, properties)
       try {
-        this.gasEstimate = await this.actionManager.simulate(memo)
+          
+        this.gasEstimate = this.gasLimit
 
         if (Array.isArray(this.transactionData.validatorAddress)) {
           this.gasEstimate =
-            this.gasEstimate * this.transactionData.validatorAddress.length
+            this.gasLimit * this.transactionData.validatorAddress.length
         }
 
         this.step = feeStep
@@ -926,12 +953,12 @@ export default {
       const { type, memo, ...transactionProperties } = this.transactionData
 
       const gasPrice = {
-        amount: this.gasPrice,
+        amount: (this.gasPrice * 1e-9).toFixed(9),
         denom: this.bondDenom
       }
 
       const feeProperties = {
-        gasEstimate: this.gasEstimate,
+        gasEstimate: this.gasLimit,
         gasPrice: gasPrice,
         submitType: this.selectedSignMethod,
         password: this.password
@@ -940,12 +967,13 @@ export default {
       const sendData = {
         ...this.transactionData,
         fee: feeProperties,
-        gasPrice: this.gasPrice,
+        gasPrice: (this.gasPrice * 1e-9).toFixed(9),
         delegatorAddress: this.wallet.address
       }
 
       try {
         let sendResponse
+
 
         if (this.selectedSignMethod === SIGN_METHODS.LEDGER) {
           sendResponse = await this.$store.dispatch(
@@ -962,6 +990,7 @@ export default {
           )
         } else if (this.selectedSignMethod === SIGN_METHODS.ONEWALLET) {
           this.$store.commit(`setActionInProgress`, true)
+           
 
           sendResponse = await processOneWalletMessage(
             sendData,
@@ -1078,13 +1107,16 @@ export default {
         )
       },
       gasPrice: {
-        required: requiredIf(
-          () => this.step === feeStep && this.session.experimentalMode
-        ),
-        // we don't use SMALLEST as min gas price because it can be a fraction of uatom
-        // min is 0 because we support sending 0 fees
-        between: between(0, this.balanceInAtoms)
+        required: x => !!x && x > `0`,
       },
+      // gasPrice: {
+      //   required: requiredIf(
+      //     () => this.step === feeStep && this.session.experimentalMode
+      //   ),
+      //   // we don't use SMALLEST as min gas price because it can be a fraction of uatom
+      //   // min is 0 because we support sending 0 fees
+      //   between: between(0, this.balanceInAtoms)
+      // },
       invoiceTotal: { between: between(0, this.balanceInAtoms) }
     }
 

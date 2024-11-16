@@ -57,7 +57,7 @@
         </h4>
         <span>{{ validator.rate | percent | notAvailable }}</span>
       </li>
-      <li class="column">
+      <!-- <li class="column">
         <h4
           v-info-style
           v-tooltip.top="tooltips.v_profile.max_daily_change"
@@ -66,7 +66,7 @@
           Max Commission Change:&nbsp;
         </h4>
         <span>{{ validator.max_change_rate | percent | notAvailable }} (per day)</span>
-      </li>
+      </li> -->
       <li v-show="false" class="column">
         <h4 class="inline">Last Commission Change:&nbsp;</h4>
         <span>Block #{{ validator.update_height }}</span>

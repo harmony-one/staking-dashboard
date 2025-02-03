@@ -153,16 +153,6 @@ export default [
     },
   },
   {
-    path: `/ledger`,
-    name: `ledger`,
-    components: {
-      session: () => import(`./components/common/TmSessionHardware`),
-    },
-    meta: {
-      feature: "Session",
-    },
-  },
-  {
     path: `/extension`,
     name: `extension`,
     components: {

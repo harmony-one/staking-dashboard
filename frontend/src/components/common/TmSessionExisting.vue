@@ -17,10 +17,10 @@
           v-if="!isMobileApp && !isIframe"
           id="use-ledger-nano"
           icon="vpn_key"
-          title="Use Ledger Nano"
+          title="Use Ledger Nano (Pending Maintenance)"
           route="ledger"
         />
-        
+
         <LiSession
           v-if="!isMobileApp && !isIframe"
           id="use-metamask"
@@ -44,7 +44,7 @@
           title="Use Harmony One Wallet"
           route="onewallet"
         />
-        
+
         <LiSession
           v-if="!isMobileApp && !isIframe"
           id="use-mathwallet"

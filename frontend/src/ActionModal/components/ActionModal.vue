@@ -389,7 +389,8 @@ const SIGN_METHODS = {
   MATHWALLET: `mathwallet`,
   ONEWALLET: `onewallet`,
   METAMASK: `metamask`,
-  MULTISIG: 'multisig'
+  MULTISIG: 'multisig',
+  WALLETCONNECT: 'walletconnect'
 }
 
 const signMethodOptions = {

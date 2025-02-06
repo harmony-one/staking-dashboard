@@ -15,10 +15,10 @@
         />
         <LiSession
           v-if="!isMobileApp && !isIframe"
-          id="use-ledger-nano"
+          id="use-ledger-walletconnect"
           icon="vpn_key"
-          title="Use Ledger Nano (Pending Maintenance)"
-          route="ledger"
+          title="Use Ledger via WalletConnect"
+          route="walletconnect"
         />
 
         <LiSession

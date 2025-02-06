@@ -2,6 +2,11 @@ import { createAppKit } from '@reown/appkit/vue'
 import { mainnet } from '@reown/appkit/networks'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { toBech32 } from "@harmony-js/crypto"
+import { writeContract, simulateContract } from '@wagmi/core'
+import { parseEther } from 'viem'
+import { abi } from '../metamask-utils/staking-abi'
+
+const STAKING_CONTRACT = '0x00000000000000000000000000000000000000FC'
 
 const HARMONY_MAINNET = {
   id: 1666600000,
@@ -43,48 +48,53 @@ export const initWalletConnect = (projectId) => {
 
 export const processWalletConnectMessage = async (transactionData, fee, networkConfig) => {
   const { gasEstimate } = fee
-  const { chain_id, rpc_url } = networkConfig
 
-  const harmony = new Harmony(rpc_url, {
-    chainType: ChainType.Harmony,
-    chainId: chain_id
-  })
-
-  const txnParams = {
-    gasLimit: Unit.Wei(new BN(gasEstimate).add(new BN("20000"))).toHex(),
-    gasPrice: Unit.Wei(new BN(1000000000)).toHex(),
-    chainId: harmony.chainId
+  const baseRequest = {
+    address: STAKING_CONTRACT,
+    abi,
+    chainId: networkConfig.chain_id,
+    gas: BigInt(gasEstimate) + BigInt(20000),
   }
 
   switch (transactionData.type) {
     case "MsgSend":
-      return harmony.transactions.signTransaction({
-        ...txnParams,
-        to: transactionData.to,
-        value: Unit.Wei(transactionData.amount).toHex(),
-        data: "0x"
+      return writeContract({
+        ...baseRequest,
+        functionName: 'Delegate',
+        args: [
+          transactionData.delegatorAddress,
+          transactionData.validatorAddress,
+          parseEther(transactionData.amount.toString())
+        ]
       })
 
     case "MsgDelegate":
-      return harmony.stakings.delegate({
-        ...txnParams,
-        delegatorAddress: transactionData.delegatorAddress,
-        validatorAddress: transactionData.validatorAddress,
-        amount: Unit.Wei(transactionData.amount).toHex()
+      return writeContract({
+        ...baseRequest,
+        functionName: 'Delegate',
+        args: [
+          transactionData.delegatorAddress,
+          transactionData.validatorAddress,
+          parseEther(transactionData.amount.toString())
+        ]
       })
 
     case "MsgUndelegate":
-      return harmony.stakings.undelegate({
-        ...txnParams,
-        delegatorAddress: transactionData.delegatorAddress,
-        validatorAddress: transactionData.validatorAddress,
-        amount: Unit.Wei(transactionData.amount).toHex()
+      return writeContract({
+        ...baseRequest,
+        functionName: 'Undelegate',
+        args: [
+          transactionData.delegatorAddress,
+          transactionData.validatorAddress,
+          parseEther(transactionData.amount.toString())
+        ]
       })
 
     case "MsgWithdrawDelegationReward":
-      return harmony.stakings.collectRewards({
-        ...txnParams,
-        delegatorAddress: transactionData.delegatorAddress
+      return writeContract({
+        ...baseRequest,
+        functionName: 'CollectRewards',
+        args: [transactionData.delegatorAddress]
       })
 
     default:

@@ -126,7 +126,7 @@ export default {
             render: value => threeDecimals(ones(value)) + " ONE"
           },
           {
-            title: `Expected Return`,
+            title: `Average Return`,
             value: `apr`,
             tooltip: tooltips.portfolio.apr_avg,
             width: "200px",

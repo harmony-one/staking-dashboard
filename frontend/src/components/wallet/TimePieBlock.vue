@@ -67,7 +67,7 @@ export default {
 
 .next-epoch {
   display: flex;
-  width: 164px;
+  width: 180px;
   align-items: center;
 }
 @media screen and (max-width: 414px) {

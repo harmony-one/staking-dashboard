@@ -60,7 +60,7 @@
     "ts-jest": "^21.1.4",
     "ts-node": "^8.8.1",
     "typescript": "^3.8.3",
-    "@google-cloud/nodejs-repo-tools": "1.4.17",
+    "@google-cloud/nodejs-repo-tools": "3.3.0",
     "ava": "0.22.0",
     "nodemon": "^2.0.3",
     "semistandard": "^12.0.1"

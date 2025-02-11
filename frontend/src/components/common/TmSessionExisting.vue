@@ -17,7 +17,7 @@
           v-if="!isMobileApp && !isIframe"
           id="use-ledger-nano"
           icon="vpn_key"
-          title="Use Ledger Nano (Pending Maintenance)"
+          title="Use Ledger Nano (Doesn't work for ledger app version 1.15.0)"
           route="ledger"
         />
 
@@ -36,7 +36,7 @@
           title="Use Harmony Multisig"
           route="multisig"
         />
-        
+
         <LiSession
           v-if="!isMobileApp && !isIframe"
           id="use-onewallet"

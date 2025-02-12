@@ -18,7 +18,7 @@ export const processWalletConnectMessage = async (
     
     switch (type) {
       case "MsgDelegate": {
-        const amount = parseUnits(amountData.toString(), 'szabo')
+        const amount = parseUnits(amountData.toString(), 6) // szabo = 6 decimals
         const hash = await writeContract(config, {
           abi,
           address: CONTRACT_ADDRESS,
@@ -30,7 +30,7 @@ export const processWalletConnectMessage = async (
         return { included: async () => ({ txhash: hash }) }
       }
       case "MsgUndelegate": {
-        const amount = parseUnits(amountData.toString(), 'szabo')
+        const amount = parseUnits(amountData.toString(), 6) // szabo = 6 decimals
         const hash = await writeContract(config, {
           abi,
           address: CONTRACT_ADDRESS,

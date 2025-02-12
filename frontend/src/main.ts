@@ -9,7 +9,6 @@ import { tooltipStyles, focusElement, focusParentLast } from "src/directives"
 import App from "./App.vue"
 import init from "./initializeApp"
 import { getURLParams } from "./scripts/url"
-import "@babel/polyfill"
 import SvgIcon from 'vue-svgicon'
 // @ts-ignore
 import Loading from 'vue-loading-overlay';

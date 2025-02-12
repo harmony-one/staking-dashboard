@@ -15,10 +15,10 @@
         />
         <LiSession
           v-if="!isMobileApp && !isIframe"
-          id="use-ledger-nano"
+          id="use-ledger-walletconnect"
           icon="vpn_key"
-          title="Use Ledger Nano (Doesn't work for ledger app version 1.15.0)"
-          route="ledger"
+          title="Use Ledger via WalletConnect"
+          route="walletconnect"
         />
 
         <LiSession
@@ -36,7 +36,7 @@
           title="Use Harmony Multisig"
           route="multisig"
         />
-
+        
         <LiSession
           v-if="!isMobileApp && !isIframe"
           id="use-onewallet"

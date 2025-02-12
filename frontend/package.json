@@ -37,14 +37,11 @@
     "@dicebear/avatars-jdenticon-sprites": "1.1.4",
     "@harmony-js/core": "^0.1.36",
     "@ledgerhq/hw-transport-webhid": "^5.7.0",
-    "@ledgerhq/hw-transport-webusb": "4.74.1",
     "@metamask/detect-provider": "1.2.0",
     "@wagmi/vue": "^0.1.9",
     "@reown/appkit": "^1.6.6",
     "@reown/appkit-adapter-wagmi": "^1.6.6",
     "@tanstack/vue-query": "^4.36.1",
-    "viem": "^1.21.4",
-    "@wagmi/vue": "^0.1.9",
     "@safe-global/safe-apps-provider": "^0.16.0",
     "@safe-global/safe-apps-react-sdk": "^4.6.4",
     "@safe-global/safe-apps-sdk": "^7.10.1",
@@ -145,7 +142,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "engines": {
-    "node": ">=16.20.2"
+    "node": ">=20"
   },
   "homepage": "https://lunie.io",
   "license": "Apache-2.0",

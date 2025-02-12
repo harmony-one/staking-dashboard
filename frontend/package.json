@@ -95,6 +95,7 @@
     "@capacitor/ios": "1.1.1",
     "@types/jest": "^23.1.4",
     "@types/ledgerhq__hw-transport-webusb": "4.70.1",
+    "@ledgerhq/hw-transport-webusb": "4.74.1",
     "@types/lodash": "4.14.178",
     "@types/lodash.uniqby": "4.7.6",
     "@typescript-eslint/eslint-plugin": "^4.18.0",

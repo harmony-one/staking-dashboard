@@ -5,10 +5,23 @@ import { abi } from '../metamask-utils/staking-abi'
 
 const CONTRACT_ADDRESS = '0x00000000000000000000000000000000000000FC'
 
+interface SendData {
+  type: string
+  fee: { gasEstimate: number }
+  gasPrice: number
+  validatorAddress: string
+  amount?: number
+}
+
+interface NetworkConfig {
+  id: string
+  title: string
+}
+
 export const processWalletConnectMessage = async (
-  sendData,
-  networkConfig,
-  from
+  sendData: SendData,
+  networkConfig: NetworkConfig,
+  from: string
 ) => {
   const { type, fee, gasPrice: gasPriceData, validatorAddress, amount: amountData } = sendData
   const { gasEstimate } = fee
@@ -55,12 +68,12 @@ export const processWalletConnectMessage = async (
       default:
         throw new Error(`Unsupported message type: ${type}`)
     }
-  } catch (error) {
+  } catch (error: unknown) {
     return {
       included: async () => ({
         error: true,
         txhash: '',
-        message: error.message,
+        message: error instanceof Error ? error.message : 'Unknown error',
       })
     }
   }

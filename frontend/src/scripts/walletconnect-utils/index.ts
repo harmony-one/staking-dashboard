@@ -32,6 +32,7 @@ export const processWalletConnectMessage = async (
     switch (type) {
       case "MsgDelegate": {
         if (!amountData) throw new Error('Amount is required for delegation')
+        const amount = parseUnits(amountData.toString(), 6) // szabo = 6 decimals
         const hash = await writeContract(config, {
           abi,
           address: CONTRACT_ADDRESS,
@@ -44,6 +45,7 @@ export const processWalletConnectMessage = async (
       }
       case "MsgUndelegate": {
         if (!amountData) throw new Error('Amount is required for undelegation')
+        const amount = parseUnits(amountData.toString(), 6) // szabo = 6 decimals
         const hash = await writeContract(config, {
           abi,
           address: CONTRACT_ADDRESS,

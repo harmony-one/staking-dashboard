@@ -1,6 +1,7 @@
 import config from "src/config"
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
-import HarmonyApp, { SW_ERR } from "./harmony-ledger"
+// import HarmonyApp, { SW_ERR } from "./harmony-ledger"
+import HarmonyApp, { SW_ERR } from "./ledger-via-sdk"
 
 import { Module } from "vuex"
 import Staking, { ITransactionData } from "@/staking-client/Staking"

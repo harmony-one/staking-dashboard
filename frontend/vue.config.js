@@ -13,6 +13,7 @@ const commitHash = require(`child_process`)
 
 module.exports = {
   publicPath: `/`,
+  transpileDependencies: ["viem", "abitype", "ox", "@noble/curves"],
   configureWebpack: () => {
     const config = {
       resolve: {
@@ -27,7 +28,25 @@ module.exports = {
           staking: resolve(`src/components/staking`),
           transactions: resolve(`src/components/transactions`),
           wallet: resolve(`src/components/wallet`),
-          test: resolve(`test`)
+          test: resolve(`test`),
+
+          // Redirect the package root to the src folder
+          "@ledgerhq/cryptoassets-evm-signatures": path.resolve(
+            __dirname,
+            "node_modules/@ledgerhq/cryptoassets-evm-signatures/src"
+          ),
+          "@ledgerhq/devices": path.resolve(
+            __dirname,
+            "node_modules/@ledgerhq/devices/src"
+          ),
+          "@ledgerhq/domain-service": path.resolve(
+            __dirname,
+            "node_modules/@ledgerhq/domain-service/src"
+          ),
+          "@ledgerhq/evm-tools": path.resolve(
+            __dirname,
+            "node_modules/@ledgerhq/evm-tools/src"
+          )
         },
         extensions: [`.js`, `.vue`, `.css`]
       },
@@ -48,7 +67,7 @@ module.exports = {
           }
         }),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
-      ],
+      ]
     }
 
     if (process.env.NODE_ENV === `production` && !process.env.E2E_TESTS) {

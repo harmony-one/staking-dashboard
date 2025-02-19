@@ -13,7 +13,7 @@ import TransportWebHID from "@ledgerhq/hw-transport-webhid"
 const INTERACTION_TIMEOUT = 120 * 1000
 var harmonyApp: any
 
-const staking = new Staking();
+const staking = new Staking()
 
 declare global {
   interface Navigator {
@@ -134,13 +134,13 @@ export default (): Module<any, any> => ({
       { commit, rootState },
       transactionData: ITransactionData
     ) {
+      // console.log("signTransactionLeger", { transactionData })
       await staking.initHarmony(
         rootState.connection.networkConfig.rpc_url,
         rootState.connection.networkConfig.chain_id
       )
-
       const app = await getHarmonyApp()
-
+      // console.log("getHarmonyApp", app)
       let signedTxn: Transaction | StakingTransaction,
         txn,
         shardId = 0
@@ -167,9 +167,11 @@ export default (): Module<any, any> => ({
           signedTxn = await signTransaction(txn)
           break
         case "MsgDelegate":
+          // console.log("MsgDelegate branch")
           await staking.setSharding()
-
+          // console.log("setSharding")
           txn = staking.createDelegateTransaction(transactionData)
+          // console.log("createDelegateTransaction", txn)
           signedTxn = await signStakingTransaction(txn)
           signedTxn.setMessenger(staking.harmony.messenger)
           break
@@ -191,9 +193,13 @@ export default (): Module<any, any> => ({
       }
 
       // const rawTransaction = signedTxn.getRawTransaction()
-
-      const included = async () => await staking.sendTransaction(signedTxn)
-
+      //@ts-ignore
+      // console.log("sending signed transaction", signedTxn)
+      const included = async () => {
+        const r = await staking.sendTransaction(signedTxn)
+        // console.log("sent! res=", r)
+        return r
+      }
       return { included }
     }
   }

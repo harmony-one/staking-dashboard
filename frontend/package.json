@@ -4,6 +4,9 @@
   "description": "Lunie is the staking and governance platform for proof-of-stake blockchains.",
   "author": "Lunie International Software Systems Inc. <hello@lunie.io>",
   "scripts": {
+    "install2": "yarn install --ignore-engines",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider yarn serve",
+    "postinstall": "patch-package",
     "serve": "kill-port 9080 && vue-cli-service serve --port 9080",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
@@ -136,6 +139,7 @@
     "live-server-https": "^0.0.2",
     "nightwatch": "^1.1.13",
     "numeral": "2.0.6",
+    "patch-package": "8.0.0",
     "prettier": "^2.2.1",
     "sass": "^1.18.0",
     "sass-loader": "^7.1.0",

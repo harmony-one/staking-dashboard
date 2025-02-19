@@ -745,7 +745,7 @@ export default {
     linkToTransaction(txHash) {
       return this.networkConfig
         ? this.networkConfig.explorer_url +
-            (this.transactionData.type === "MsgSend" || this.session.sessionType === SIGN_METHODS.METAMASK || this.session.sessionType === SIGN_METHODS.MULTISIG
+            (this.transactionData.type === "MsgSend" || this.session.sessionType === SIGN_METHODS.METAMASK || this.session.sessionType === SIGN_METHODS.MULTISIG || this.session.sessionType === SIGN_METHODS.LEDGER
               ? "/tx/"
               : "/staking-tx/") +
             txHash

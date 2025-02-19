@@ -1,7 +1,7 @@
-import Eth from "@ledgerhq/hw-app-eth"
-import { toBech32 } from "@harmony-js/crypto"
+import Eth, { ledgerService } from "@ledgerhq/hw-app-eth"
+import { toBech32, fromBech32 } from "@harmony-js/crypto"
 import Transport from "@ledgerhq/hw-transport"
-import ethers, { UnsignedTransaction } from "ethers"
+import { ethers, UnsignedTransaction } from "ethers"
 import { StakingTransaction } from "@harmony-js/staking"
 import { Messenger } from "@harmony-js/network"
 import {
@@ -10,6 +10,7 @@ import {
   Undelegate
 } from "@harmony-js/staking/src/stakingTransaction"
 import { ChainType } from "@harmony-js/utils"
+import { Transaction, TxStatus } from "@harmony-js/transaction"
 
 export const PrecompileAbi = [
   {
@@ -91,7 +92,7 @@ export const PrecompileAbi = [
   }
 ]
 
-const PrecompileInterface = new ethers.utils.Interface(PrecompileAbi);
+const PrecompileInterface = new ethers.utils.Interface(PrecompileAbi)
 
 export const SW_ERR = 0x6985
 
@@ -214,7 +215,11 @@ export default class HarmonyApp {
   //   }
   // }
   //
-  static async getAccountShardNonce(address: string, shardID: number, messenger: Messenger) {
+  static async getAccountShardNonce(
+    address: string,
+    shardID: number,
+    messenger: Messenger
+  ) {
     const nonce = await messenger.send(
       "hmy_getTransactionCount",
       [address, "latest"],
@@ -285,12 +290,27 @@ export default class HarmonyApp {
     shardId: number,
     messenger: Messenger
   ) {
+    let address: string = ""
+    const eth = new Eth(this.transport)
     try {
-      const eth = new Eth(this.transport)
-      const gas = 1000000n
-      const gasPrice = 100n
+      const { address: a } = await eth.getAddress(`${HD_PATH}/0`, false, true)
+      address = a
+    } catch (err) {
+      return processErrorResponse(err)
+    }
+    try {
+      // console.log("signStakingTransaction", {
+      //   address,
+      //   stakingTxn,
+      //   chainId,
+      //   shardId,
+      //   messenger
+      // })
+      const gas = 1_000_000n
+      const gasPrice = 200_000_000_000n
       let data = ""
       const directive = (stakingTxn as any).directive as Directive
+      // console.log("directive", directive)
 
       if (directive === Directive.DirectiveDelegate) {
         const delegatorAddress = ((stakingTxn as any).stakeMsg as Delegate)
@@ -298,23 +318,34 @@ export default class HarmonyApp {
         const validatorAddress = ((stakingTxn as any).stakeMsg as Delegate)
           .validatorAddress
         const amount = ((stakingTxn as any).stakeMsg as Delegate).amount
-        data = PrecompileInterface.encodeFunctionData('Delegate', [delegatorAddress, validatorAddress, amount])
+        data = PrecompileInterface.encodeFunctionData("Delegate", [
+          fromBech32(delegatorAddress),
+          fromBech32(validatorAddress),
+          amount
+        ])
       } else if (directive === Directive.DirectiveUndelegate) {
         const delegatorAddress = ((stakingTxn as any).stakeMsg as Undelegate)
           .delegatorAddress
         const validatorAddress = ((stakingTxn as any).stakeMsg as Undelegate)
           .validatorAddress
         const amount = ((stakingTxn as any).stakeMsg as Undelegate).amount
-        data = PrecompileInterface.encodeFunctionData('Undelegate', [delegatorAddress, validatorAddress, amount])
+        data = PrecompileInterface.encodeFunctionData("Undelegate", [
+          fromBech32(delegatorAddress),
+          fromBech32(validatorAddress),
+          amount
+        ])
       }
-      const { address } = await eth.getAddress(`${HD_PATH}/0`, false, true)
+      // console.log("about to get nonce")
       const nonce = await HarmonyApp.getAccountShardNonce(
         address,
         shardId,
         messenger
       )
+      // console.log("nonce", nonce)
       const transaction: UnsignedTransaction = {
-        chainId: CHAINID_SHARD0,
+        // chainId: '0x' + BigInt(CHAINID_SHARD0).toString(16),
+        chainId: CHAINID_SHARD0, // '0x' + BigInt(CHAINID_SHARD0).toString(16),
+        value: 0,
         type: 0,
         // from: address,
         to: PRECOMPILE_DEST,
@@ -323,22 +354,42 @@ export default class HarmonyApp {
         data,
         gasPrice
       }
-      const unsignedRawTransaction = ethers.utils.serializeTransaction(transaction)
+      const unsignedRawTransaction =
+        ethers.utils.serializeTransaction(transaction)
+      // console.log("unsignedTransaction", transaction)
+      // console.log("unsignedRawTransaction", unsignedRawTransaction)
+      const resolution = await ledgerService.resolveTransaction(
+        unsignedRawTransaction.slice(2),
+        {},
+        {}
+      )
+      // console.log("resolution", resolution)
       const { r, s, v } = await eth.signTransaction(
         `${HD_PATH}/0`,
-        unsignedRawTransaction
+        unsignedRawTransaction.slice(2),
+        resolution
       )
-      console.log({ r, s, v, transaction })
-      const signedRawTransaction = ethers.utils.serializeTransaction(transaction, {
-        r,
-        s,
-        v: Number(v)
-      })
+      // console.log({ r, s, v, transaction })
+      const signedRawTransaction = ethers.utils.serializeTransaction(
+        transaction,
+        {
+          r: "0x" + r,
+          s: "0x" + s,
+          v: Number(BigInt("0x" + v))
+        }
+      )
       messenger.setChainType(ChainType.Ethereum)
-      stakingTxn.setRawTransaction(signedRawTransaction)
-      return stakingTxn
-    } catch (err) {
-      return processErrorResponse(err)
+      return new Transaction(
+        {
+          shardId,
+          rawTransaction: signedRawTransaction
+        },
+        messenger,
+        TxStatus.INTIALIZED
+      )
+    } catch (ex: any) {
+      console.trace(ex)
+      throw ex
     }
   }
 

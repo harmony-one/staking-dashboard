@@ -1009,7 +1009,7 @@ export default {
           setTimeout(() => this.close(), 10000)
         }
       } catch (e) {
-        log.error(e);
+        // log.error(e);
         console.log("[submit] error", e.message)
 
         this.onSendingFailed(e.message)

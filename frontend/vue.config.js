@@ -14,9 +14,27 @@ const commitHash = require(`child_process`)
 module.exports = {
   publicPath: `/`,
   transpileDependencies: ["viem", "abitype", "ox", "@noble/curves"],
+  // chainWebpack: config => {
+  //   config.module
+  //     .rule("one-country-sdk-json")
+  //     .test(/\.json$/)
+  //     .include.add(path.resolve(__dirname, "node_modules/one-country-sdk/lib/esm/abi"))
+  //     .end()
+  //     .use("json-named-loader")
+  //     .loader(path.resolve(__dirname, "json-named-loader.js"))
+  //     .end();
+  // },
   configureWebpack: () => {
     const config = {
       resolve: {
+        fallback: {
+          buffer: require.resolve("buffer/"),
+          stream: require.resolve("stream-browserify"),
+          assert: require.resolve("assert/"),
+          crypto: require.resolve("crypto-browserify"),
+          process: require.resolve("process/browser"),
+          vm: require.resolve("vm-browserify")
+        },
         alias: {
           src: resolve(`src`),
           "@": resolve(`src`),
@@ -51,6 +69,12 @@ module.exports = {
         extensions: [`.js`, `.vue`, `.css`]
       },
       plugins: [
+        new webpack.ProvidePlugin({
+          process: "process/browser"
+        }),
+        new webpack.ProvidePlugin({
+          Buffer: ["buffer", "Buffer"]
+        }),
         new webpack.DefinePlugin({
           "process.env": {
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),

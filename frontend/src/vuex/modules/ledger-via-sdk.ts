@@ -2,7 +2,7 @@ import Eth, { ledgerService } from "@ledgerhq/hw-app-eth"
 import { toBech32, fromBech32 } from "@harmony-js/crypto"
 import Transport from "@ledgerhq/hw-transport"
 import { ethers, UnsignedTransaction } from "ethers"
-import { StakingTransaction } from "@harmony-js/staking"
+import { StakingTransaction as HarmonyStakingTransaction } from "@harmony-js/staking"
 import { Messenger } from "@harmony-js/network"
 import {
   Delegate,
@@ -10,7 +10,13 @@ import {
   Undelegate
 } from "@harmony-js/staking/src/stakingTransaction"
 import { ChainType } from "@harmony-js/utils"
-import { Transaction, TxStatus } from "@harmony-js/transaction"
+import {
+  Transaction as HarmonyTransaction,
+  TxStatus as HarmonyTxStatus
+} from "@harmony-js/transaction"
+
+const GAS_LIMIT = 1_000_000n
+const GAS_PRICE = 200_000_000_000n
 
 export const PrecompileAbi = [
   {
@@ -148,73 +154,6 @@ export default class HarmonyApp {
     }
   }
 
-  //
-  // async signTx(message) {
-  //   let resp
-  //   const p = hexToBytes(message)
-  //   const buffer = Buffer.from(p)
-  //   const chunks = []
-  //   for (let i = 0; i < buffer.length; i += CHUNK_SIZE) {
-  //     let end = i + CHUNK_SIZE
-  //     if (i > buffer.length) {
-  //       end = buffer.length
-  //     }
-  //     chunks.push(buffer.slice(i, end))
-  //   }
-  //   try {
-  //     for (let i = 0; i < chunks.length; i += 1) {
-  //       const p1 = i === 0 ? CMDS.P1_FIRST : CMDS.P1_MORE
-  //       const p2 = i === chunks.length - 1 ? CMDS.P2_FINISH : CMDS.P2_SIGNHASH
-  //       resp = await this.transport.send(CLA, INS.SIGN_TX, p1, p2, chunks[i])
-  //     }
-  //   } catch (err) {
-  //     return processErrorResponse(resp)
-  //   }
-  //   const errorCodeData = resp.slice(-2)
-  //   const returnCode = errorCodeData[0] * 256 + errorCodeData[1]
-  //   return {
-  //     signature: Buffer.from(resp.slice(0, 65)),
-  //     return_code: returnCode
-  //   }
-  // }
-  //
-  // async signStake(message) {
-  //   let resp = null
-  //   const p = hexToBytes(message)
-  //   const buffer = Buffer.from(p)
-  //   const chunks = []
-  //   for (let i = 0; i < buffer.length; i += CHUNK_SIZE) {
-  //     let end = i + CHUNK_SIZE
-  //     if (i > buffer.length) {
-  //       end = buffer.length
-  //     }
-  //     chunks.push(buffer.slice(i, end))
-  //   }
-  //
-  //   try {
-  //     for (let i = 0; i < chunks.length; i += 1) {
-  //       const p1 = i === 0 ? CMDS.P1_FIRST : CMDS.P1_MORE
-  //       const p2 = i === chunks.length - 1 ? CMDS.P2_FINISH : CMDS.P2_SIGNHASH
-  //       // eslint-disable-next-line
-  //       resp = await this.transport.send(
-  //         CLA,
-  //         INS.SIGN_STAKING,
-  //         p1,
-  //         p2,
-  //         chunks[i]
-  //       )
-  //     }
-  //   } catch (err) {
-  //     return processErrorResponse(resp)
-  //   }
-  //   const errorCodeData = resp.slice(-2)
-  //   const returnCode = errorCodeData[0] * 256 + errorCodeData[1]
-  //   return {
-  //     signature: Buffer.from(resp.slice(0, 65)),
-  //     return_code: returnCode
-  //   }
-  // }
-  //
   static async getAccountShardNonce(
     address: string,
     shardID: number,
@@ -233,127 +172,22 @@ export default class HarmonyApp {
     return Number(BigInt(nonce.result))
   }
 
-  //
-  // async signTransaction(txn, chainId, shardId, messenger) {
-  //   // get public address of ledger account
-  //   let response = await this.publicKey(true)
-  //   if (response.return_code !== 0x9000) {
-  //     this.log(`Error [${response.return_code}] ${response.error_message}`)
-  //     return
-  //   }
-  //
-  //   // get nonce for the current account/shardID and set the transaction nonce
-  //   const address = response.one_address.toString()
-  //   const accountNonce = await HarmonyApp.getAccountShardNonce(
-  //     address,
-  //     shardId,
-  //     messenger
-  //   )
-  //   txn.setParams({ ...txn.txParams, nonce: accountNonce })
-  //
-  //   // sign RLP encoded raw transaction using ledger private key
-  //   const [unsignedRawTransaction, raw] = txn.getRLPUnsigned()
-  //   response = await this.signTx(unsignedRawTransaction)
-  //
-  //   if (response.return_code == SW_ERR) {
-  //     throw new Error("Reject by Leger")
-  //   }
-  //
-  //   // update the signature r,s,v field in transaction
-  //   const bytes = response.signature
-  //   const r = hexlify(bytes.slice(0, 32))
-  //   const s = hexlify(bytes.slice(32, 64))
-  //   let v = bytes[64]
-  //   if (v !== 27 && v !== 28) {
-  //     v = 27 + (v % 2)
-  //   }
-  //
-  //   // replace empty r,s,v with signature r,s,v
-  //   raw.pop()
-  //   raw.pop()
-  //   raw.pop()
-  //
-  //   v += chainId * 2 + 8
-  //   raw.push(hexlify(v))
-  //   raw.push(stripZeros(arrayify(r) || []))
-  //   raw.push(stripZeros(arrayify(s) || []))
-  //
-  //   const encodedRaw = encode(raw)
-  //   txn.setParams({ ...txn.txParams, rawTransaction: encodedRaw })
-  //
-  //   return txn
-  // }
-  //
-  async signStakingTransaction(
-    stakingTxn: StakingTransaction,
+  async executeTransactionFlow(
+    transaction: UnsignedTransaction,
     chainId: number,
     shardId: number,
     messenger: Messenger
-  ) {
-    let address: string = ""
+  ): Promise<HarmonyTransaction> {
     const eth = new Eth(this.transport)
+    const { address } = await eth.getAddress(`${HD_PATH}/0`, false, true)
     try {
-      const { address: a } = await eth.getAddress(`${HD_PATH}/0`, false, true)
-      address = a
-    } catch (err) {
-      return processErrorResponse(err)
-    }
-    try {
-      // console.log("signStakingTransaction", {
-      //   address,
-      //   stakingTxn,
-      //   chainId,
-      //   shardId,
-      //   messenger
-      // })
-      const gas = 1_000_000n
-      const gasPrice = 200_000_000_000n
-      let data = ""
-      const directive = (stakingTxn as any).directive as Directive
-      // console.log("directive", directive)
-
-      if (directive === Directive.DirectiveDelegate) {
-        const delegatorAddress = ((stakingTxn as any).stakeMsg as Delegate)
-          .delegatorAddress
-        const validatorAddress = ((stakingTxn as any).stakeMsg as Delegate)
-          .validatorAddress
-        const amount = ((stakingTxn as any).stakeMsg as Delegate).amount
-        data = PrecompileInterface.encodeFunctionData("Delegate", [
-          fromBech32(delegatorAddress),
-          fromBech32(validatorAddress),
-          amount
-        ])
-      } else if (directive === Directive.DirectiveUndelegate) {
-        const delegatorAddress = ((stakingTxn as any).stakeMsg as Undelegate)
-          .delegatorAddress
-        const validatorAddress = ((stakingTxn as any).stakeMsg as Undelegate)
-          .validatorAddress
-        const amount = ((stakingTxn as any).stakeMsg as Undelegate).amount
-        data = PrecompileInterface.encodeFunctionData("Undelegate", [
-          fromBech32(delegatorAddress),
-          fromBech32(validatorAddress),
-          amount
-        ])
-      }
-      // console.log("about to get nonce")
       const nonce = await HarmonyApp.getAccountShardNonce(
         address,
         shardId,
         messenger
       )
-      // console.log("nonce", nonce)
-      const transaction: UnsignedTransaction = {
-        // chainId: '0x' + BigInt(CHAINID_SHARD0).toString(16),
-        chainId: CHAINID_SHARD0, // '0x' + BigInt(CHAINID_SHARD0).toString(16),
-        value: 0,
-        type: 0,
-        // from: address,
-        to: PRECOMPILE_DEST,
-        gasLimit: gas,
-        nonce,
-        data,
-        gasPrice
-      }
+      transaction = { ...transaction, nonce }
+      // console.log("signTransaction nonce", nonce)
       const unsignedRawTransaction =
         ethers.utils.serializeTransaction(transaction)
       // console.log("unsignedTransaction", transaction)
@@ -379,18 +213,86 @@ export default class HarmonyApp {
         }
       )
       messenger.setChainType(ChainType.Ethereum)
-      return new Transaction(
+      return new HarmonyTransaction(
         {
           shardId,
           rawTransaction: signedRawTransaction
         },
         messenger,
-        TxStatus.INTIALIZED
+        HarmonyTxStatus.INTIALIZED
       )
     } catch (ex: any) {
       console.trace(ex)
       throw ex
     }
+  }
+
+  async signTransaction(
+    txn: HarmonyTransaction,
+    chainId: number,
+    shardId: number,
+    messenger: Messenger
+  ) {
+    let value = BigInt(txn.txParams.value.toString())
+
+    const transaction: UnsignedTransaction = {
+      chainId: CHAINID_SHARD0,
+      value,
+      type: 0,
+      to: txn.txParams.to,
+      gasLimit: GAS_LIMIT,
+      gasPrice: GAS_PRICE
+    }
+    return this.executeTransactionFlow(transaction, chainId, shardId, messenger)
+  }
+
+  async signStakingTransaction(
+    stakingTxn: HarmonyStakingTransaction,
+    chainId: number,
+    shardId: number,
+    messenger: Messenger
+  ) {
+    let data = ""
+    const directive = (stakingTxn as any).directive as Directive
+    if (directive === Directive.DirectiveDelegate) {
+      const delegatorAddress = ((stakingTxn as any).stakeMsg as Delegate)
+        .delegatorAddress
+      const validatorAddress = ((stakingTxn as any).stakeMsg as Delegate)
+        .validatorAddress
+      const amount = ((stakingTxn as any).stakeMsg as Delegate).amount
+      data = PrecompileInterface.encodeFunctionData("Delegate", [
+        fromBech32(delegatorAddress),
+        fromBech32(validatorAddress),
+        amount
+      ])
+    } else if (directive === Directive.DirectiveUndelegate) {
+      const delegatorAddress = ((stakingTxn as any).stakeMsg as Undelegate)
+        .delegatorAddress
+      const validatorAddress = ((stakingTxn as any).stakeMsg as Undelegate)
+        .validatorAddress
+      const amount = ((stakingTxn as any).stakeMsg as Undelegate).amount
+      data = PrecompileInterface.encodeFunctionData("Undelegate", [
+        fromBech32(delegatorAddress),
+        fromBech32(validatorAddress),
+        amount
+      ])
+    } else if (directive === Directive.DirectiveCollectRewards) {
+      const delegatorAddress = ((stakingTxn as any).stakeMsg as Undelegate)
+        .delegatorAddress
+      data = PrecompileInterface.encodeFunctionData("CollectRewards", [
+        fromBech32(delegatorAddress)
+      ])
+    }
+    const transaction: UnsignedTransaction = {
+      chainId: CHAINID_SHARD0,
+      value: 0,
+      type: 0,
+      to: PRECOMPILE_DEST,
+      gasLimit: GAS_LIMIT,
+      data,
+      gasPrice: GAS_PRICE
+    }
+    return this.executeTransactionFlow(transaction, chainId, shardId, messenger)
   }
 
   log(message: any) {

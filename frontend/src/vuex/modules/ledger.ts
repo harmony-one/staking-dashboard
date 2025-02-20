@@ -49,7 +49,7 @@ async function getHarmonyApp() {
     } catch (err) {
       /* istanbul ignore next: specific error rewrite */
       if (
-        err.message
+        (err as Error).message
           .trim()
           .startsWith("No WebUSB interface found for your Ledger device")
       ) {
@@ -58,21 +58,21 @@ async function getHarmonyApp() {
         )
       }
       /* istanbul ignore next: specific error rewrite */
-      if (err.message.trim().startsWith("Unable to claim interface")) {
+      if ((err as Error).message.trim().startsWith("Unable to claim interface")) {
         // apparently can't use it in several tabs in parallel
         throw new Error(
           "Could not access Ledger device. Is it being used in another tab?"
         )
       }
       /* istanbul ignore next: specific error rewrite */
-      if (err.message.trim().startsWith("Not supported")) {
+      if ((err as Error).message.trim().startsWith("Not supported")) {
         // apparently can't use it in several tabs in parallel
         throw new Error(
           "Your browser doesn't seem to support WebUSB yet. Try updating it to the latest version."
         )
       }
       /* istanbul ignore next: specific error rewrite */
-      if (err.message.trim().startsWith("No device selected")) {
+      if ((err as Error).message.trim().startsWith("No device selected")) {
         // apparently can't use it in several tabs in parallel
         throw new Error(
           "You did not select a Ledger device. Check if the Ledger is plugged in and unlocked."

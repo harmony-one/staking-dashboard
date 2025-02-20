@@ -14,7 +14,10 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   mutations: {
     setProposalDeposits(state, { proposalId, deposits }: any) {
       Vue.set(state.deposits, proposalId, deposits)
-    }
+    },
+    setError(state, error) {
+      state.error = error;
+    },
   },
   actions: {
     async getProposalDeposits({ state, commit, rootState }, proposalId) {
@@ -29,7 +32,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         state.loaded = true
         commit(`setProposalDeposits`, { proposalId, deposits })
       } catch (error) {
-        state.error = error
+        commit('setError', error);
       }
     },
     async postMsgDeposit(

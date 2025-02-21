@@ -94,10 +94,7 @@ module.exports = {
       ]
     }
 
-    if (
-      true ||
-      (process.env.NODE_ENV === `production` && !process.env.E2E_TESTS)
-    ) {
+    if (process.env.NODE_ENV === `production` && !process.env.E2E_TESTS) {
       config.plugins.push(
         // adds the content security policy to the index.html
         // new HtmlWebpackPlugin(),

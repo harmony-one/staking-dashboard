@@ -95,32 +95,32 @@ module.exports = {
     }
 
     if (process.env.NODE_ENV === `production` && !process.env.E2E_TESTS) {
-      config.plugins.push(
-        // adds the content security policy to the index.html
-        // new HtmlWebpackPlugin(),
-        new CspHtmlWebpackPlugin(
-          {
-            "object-src": `'none'`,
-            "base-uri": `'self'`,
-            "worker-src": `'none'`,
-            "default-src": ["*", "chrome-extension://*"],
-            "script-src": [
-              "*",
-              "'unsafe-inline'",
-              "'unsafe-eval'",
-              "chrome-extension://*"
-            ],
-            "style-src": ["*", "'unsafe-inline'", "chrome-extension://*"],
-            "connect-src": ["*", "chrome-extension://*"],
-            "img-src": ["*", "data:", "chrome-extension://*"],
-            "font-src": ["*", "chrome-extension://*"]
-          },
-          {
-            nonceEnabled: { "style-src": false },
-            hashEnabled: { "script-src": false, "style-src": false }
-          }
-        )
-      )
+      // config.plugins.push(
+      //   // adds the content security policy to the index.html
+      //   // new HtmlWebpackPlugin(),
+      //   // new CspHtmlWebpackPlugin(
+      //   //   {
+      //   //     "object-src": [`'none'`, "chrome-extension://*"],
+      //   //     "base-uri": [`'self'`, "chrome-extension://*"],
+      //   //     "worker-src": [`'none'`, "chrome-extension://*"],
+      //   //     "default-src": ["*", "chrome-extension://*"],
+      //   //     "script-src": [
+      //   //       "*",
+      //   //       "'unsafe-inline'",
+      //   //       "'unsafe-eval'",
+      //   //       "chrome-extension://*"
+      //   //     ],
+      //   //     "style-src": ["*", "'unsafe-inline'", "chrome-extension://*"],
+      //   //     "connect-src": ["*", "chrome-extension://*"],
+      //   //     "img-src": ["*", "data:", "chrome-extension://*"],
+      //   //     "font-src": ["*", "chrome-extension://*"]
+      //   //   },
+      //   //   {
+      //   //     nonceEnabled: { "style-src": false },
+      //   //     hashEnabled: { "script-src": false, "style-src": false }
+      //   //   }
+      //   // )
+      // )
     }
 
     return config

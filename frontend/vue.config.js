@@ -94,33 +94,35 @@ module.exports = {
       ]
     }
 
-    if (process.env.NODE_ENV === `production` && !process.env.E2E_TESTS) {
+    if (
+      true ||
+      (process.env.NODE_ENV === `production` && !process.env.E2E_TESTS)
+    ) {
       config.plugins.push(
         // adds the content security policy to the index.html
         // new HtmlWebpackPlugin(),
-        new CspHtmlWebpackPlugin({
-          "object-src": `'none'`,
-          "base-uri": `'self'`,
-          "default-src": `'self'`,
-          "script-src": [`'self'`, `https://*.harmony.one`],
-          "worker-src": `'none'`,
-          "style-src": [`'self'`, `'unsafe-inline'`]
-          // "connect-src": [
-          //   // third party tools
-          //   //`https://api-iam.intercom.io`,
-          //   // mainnet
-          //   `https://stargate.lunie.io`,
-          //   `wss://rpc.lunie.io:26657`,
-          //   `https://stargate.cosmos.network`,
-          //   `wss://rpc.cosmos.network:26657`,
-          //   ...[process.env.STARGATE].filter(x => x !== undefined),
-          //   ...[process.env.RPC]
-          //     .filter(x => x !== undefined)
-          //     .map(x => x.replace("https", "wss"))
-          // ],
-          //"frame-src": [`'self'`, `https://api-iam.intercom.io`],
-          //"img-src": [`'self'`, `https://www.google-analytics.com/`]
-        })
+        new CspHtmlWebpackPlugin(
+          {
+            "object-src": `'none'`,
+            "base-uri": `'self'`,
+            "worker-src": `'none'`,
+            "default-src": ["*", "chrome-extension://*"],
+            "script-src": [
+              "*",
+              "'unsafe-inline'",
+              "'unsafe-eval'",
+              "chrome-extension://*"
+            ],
+            "style-src": ["*", "'unsafe-inline'", "chrome-extension://*"],
+            "connect-src": ["*", "chrome-extension://*"],
+            "img-src": ["*", "data:", "chrome-extension://*"],
+            "font-src": ["*", "chrome-extension://*"]
+          },
+          {
+            nonceEnabled: { "style-src": false },
+            hashEnabled: { "script-src": false, "style-src": false }
+          }
+        )
       )
     }
 

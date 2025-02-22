@@ -14,7 +14,10 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
   mutations: {
     setProposalVotes(state, { proposalId, votes }) {
       Vue.set(state.votes, proposalId, votes)
-    }
+    },
+    setError(state, error) {
+      state.error = error;
+    },
   },
   actions: {
     async getProposalVotes({ state, commit, rootState }, proposalId) {
@@ -29,7 +32,7 @@ export default ({ node }: { node: TNode }): Module<typeof state, any> => ({
         state.loading = false
         state.loaded = true
       } catch (error) {
-        state.error = error
+        commit('setError', error);
       }
     },
     async postMsgVote({ dispatch }, { txProps: { proposalId } }) {

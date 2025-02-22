@@ -1,3 +1,4 @@
+
 <template>
   <PageContainer :managed="true" :epoch="true" title="Validators">
     <template slot="managed-body">
@@ -90,6 +91,7 @@ import TableValidators from "./TableValidators"
 import PageContainer from "common/PageContainer"
 import TmField from "common/TmField"
 import TmBtn from "common/TmBtn"
+import TmDataLoading from "common/TmDataLoading"
 import { transactionToShortString } from "src/scripts/transaction-utils"
 import { ones, shortDecimals, zeroDecimals, twoDecimals } from "scripts/num"
 import tooltips from "src/components/tooltips"
@@ -100,6 +102,7 @@ import isEmpty from "lodash.isempty"
 export default {
   name: `tab-validators`,
   components: {
+    TmDataLoading,
     MultidelegationModal,
     TableValidators,
     PageContainer,
@@ -115,7 +118,6 @@ export default {
   data: () => ({
     tooltips,
     searchTerm: "",
-    chainTitle: process.env.DEFAULT_CHAIN_TITLE,
     activeOnly: true
   }),
   computed: {
@@ -129,7 +131,15 @@ export default {
     ...mapState({ networkInfo: state => state.connection.networkInfo }),
     ...mapState({
       isNetworkInfoLoading: state => !!state.connection.chainTitle,
-      chainTitle: state => state.connection.chainTitle,
+      // chainTitle: state => state.connection.chainTitle,
+      chainTitle: {
+        get() {
+          return this.$store.state.connection.chainTitle;
+        },
+        set(value) {
+          this.$store.dispatch("setNetworkByChainTitle", value);
+        }
+      },
       isMultiDelegationSupport: state =>
         state.session.sessionType === "extension" &&
         state.session.extensionVersion >= 16
@@ -151,7 +161,7 @@ export default {
     }
   },
   mounted() {
-    this.chainTitle = this.$route.params.chaintitle
+    // this.chainTitle = this.$route.params.chaintitle
     if (
       !this.$store.dispatch(
         "setNetworkByChainTitle",

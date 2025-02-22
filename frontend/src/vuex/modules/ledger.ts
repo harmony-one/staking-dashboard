@@ -1,6 +1,7 @@
 import config from "src/config"
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
-import HarmonyApp, { SW_ERR } from "./harmony-ledger"
+// import HarmonyApp, { SW_ERR } from "./harmony-ledger"
+import HarmonyApp, { SW_ERR } from "./ledger-via-sdk"
 
 import { Module } from "vuex"
 import Staking, { ITransactionData } from "@/staking-client/Staking"
@@ -12,7 +13,7 @@ import TransportWebHID from "@ledgerhq/hw-transport-webhid"
 const INTERACTION_TIMEOUT = 120 * 1000
 var harmonyApp: any
 
-const staking = new Staking();
+const staking = new Staking()
 
 declare global {
   interface Navigator {
@@ -48,7 +49,7 @@ async function getHarmonyApp() {
     } catch (err) {
       /* istanbul ignore next: specific error rewrite */
       if (
-        err.message
+        (err as Error).message
           .trim()
           .startsWith("No WebUSB interface found for your Ledger device")
       ) {
@@ -57,21 +58,21 @@ async function getHarmonyApp() {
         )
       }
       /* istanbul ignore next: specific error rewrite */
-      if (err.message.trim().startsWith("Unable to claim interface")) {
+      if ((err as Error).message.trim().startsWith("Unable to claim interface")) {
         // apparently can't use it in several tabs in parallel
         throw new Error(
           "Could not access Ledger device. Is it being used in another tab?"
         )
       }
       /* istanbul ignore next: specific error rewrite */
-      if (err.message.trim().startsWith("Not supported")) {
+      if ((err as Error).message.trim().startsWith("Not supported")) {
         // apparently can't use it in several tabs in parallel
         throw new Error(
           "Your browser doesn't seem to support WebUSB yet. Try updating it to the latest version."
         )
       }
       /* istanbul ignore next: specific error rewrite */
-      if (err.message.trim().startsWith("No device selected")) {
+      if ((err as Error).message.trim().startsWith("No device selected")) {
         // apparently can't use it in several tabs in parallel
         throw new Error(
           "You did not select a Ledger device. Check if the Ledger is plugged in and unlocked."
@@ -133,13 +134,13 @@ export default (): Module<any, any> => ({
       { commit, rootState },
       transactionData: ITransactionData
     ) {
+      // console.log("signTransactionLeger", { transactionData })
       await staking.initHarmony(
         rootState.connection.networkConfig.rpc_url,
         rootState.connection.networkConfig.chain_id
       )
-
       const app = await getHarmonyApp()
-
+      // console.log("getHarmonyApp", app)
       let signedTxn: Transaction | StakingTransaction,
         txn,
         shardId = 0
@@ -166,9 +167,11 @@ export default (): Module<any, any> => ({
           signedTxn = await signTransaction(txn)
           break
         case "MsgDelegate":
+          // console.log("MsgDelegate branch")
           await staking.setSharding()
-
+          // console.log("setSharding")
           txn = staking.createDelegateTransaction(transactionData)
+          // console.log("createDelegateTransaction", txn)
           signedTxn = await signStakingTransaction(txn)
           signedTxn.setMessenger(staking.harmony.messenger)
           break
@@ -190,9 +193,13 @@ export default (): Module<any, any> => ({
       }
 
       // const rawTransaction = signedTxn.getRawTransaction()
-
-      const included = async () => await staking.sendTransaction(signedTxn)
-
+      //@ts-ignore
+      // console.log("sending signed transaction", signedTxn)
+      const included = async () => {
+        const r = await staking.sendTransaction(signedTxn)
+        // console.log("sent! res=", r)
+        return r
+      }
       return { included }
     }
   }

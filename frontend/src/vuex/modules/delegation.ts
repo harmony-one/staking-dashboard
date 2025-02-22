@@ -38,6 +38,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
             )
         : {}
     },
+    setError(state, error) {
+      state.error = error;
+    },
   },
   actions: {
     reconnected({ state, dispatch, rootState }) {
@@ -110,9 +113,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       } catch (error) {
         commit(`notifyError`, {
           title: `Error fetching delegations`,
-          body: error.message,
+          body: (error instanceof Error ? error.message : String(error)),
         })
-        state.error = error
+        commit('setError', error);
       }
 
       state.loading = false

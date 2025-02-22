@@ -1,0 +1,4 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "object-src 'none'; base-uri 'self'; default-src 'self'; script-src 'self' https://*.harmony.one https://www.google-analytics.com/analytics.js 'unsafe-eval' 'unsafe-inline'; worker-src 'none'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://*.harmony.one https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://api.stake.hmny.io/ https://api.s0.t.hmny.io/ https://api.s0.b.hmny.io/; img-src 'self' data: https://www.google-analytics.com https://staking.harmony.one https://api.stake.hmny.io;"

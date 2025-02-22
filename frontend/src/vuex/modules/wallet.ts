@@ -38,6 +38,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     setAccountNumber(state, accountNumber) {
       state.accountNumber = accountNumber
     },
+    setError(state, error) {
+      state.error = error;
+    },
   },
   actions: {
     async reconnected({ rootState, state, dispatch }) {
@@ -80,9 +83,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       } catch (error) {
         commit(`notifyError`, {
           title: `Error fetching balances`,
-          body: error.message,
+          body: (error instanceof Error ? error.message : String(error)),
         })
-        state.error = error
+        commit('setError', error);
       }
     },
     queryWalletStateAfterHeight({ rootState, dispatch }, height) {

@@ -7,5 +7,8 @@ module.exports = {
       }
     ]
   ],
-  plugins: [["@babel/transform-runtime"]]
+  plugins: [
+    ["@babel/transform-runtime"],
+    "@babel/plugin-transform-numeric-separator"
+  ]
 }

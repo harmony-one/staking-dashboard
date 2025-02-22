@@ -17,7 +17,10 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
   mutations: {
     setGovParameters(state, parameters) {
       state.parameters = parameters
-    }
+    },
+    setError(state, error) {
+      state.error = error;
+    },
   },
   actions: {
     signIn({ dispatch }) {
@@ -42,9 +45,9 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
       } catch (error) {
         commit(`notifyError`, {
           title: `Error fetching governance parameters`,
-          body: error.message
+          body: (error instanceof Error ? error.message : String(error)),
         })
-        state.error = error
+        commit('setError', error);
       }
       state.loading = false
     }

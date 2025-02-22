@@ -34,7 +34,10 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
     },
     setProposalTally(state, { proposal_id, final_tally_result }) {
       Vue.set(state.tallies, proposal_id, final_tally_result)
-    }
+    },
+    setError(state, error) {
+      state.error = error;
+    },
   },
   actions: {
     async reconnected({ state, dispatch }) {
@@ -61,7 +64,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
         state.loaded = true
         state.loading = false
       } catch (error) {
-        state.error = error
+        commit('setError', error);
       }
     },
     async getProposal({ state, commit }, proposal_id) {
@@ -74,7 +77,7 @@ export default ({ node }: { node: TNode }): Module<typeof emptyState, any> => ({
         state.loading = false
         return proposal
       } catch (error) {
-        state.error = error
+        commit('setError', error);
       }
       return undefined
     },

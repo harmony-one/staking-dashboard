@@ -745,7 +745,7 @@ export default {
     linkToTransaction(txHash) {
       return this.networkConfig
         ? this.networkConfig.explorer_url +
-            (this.transactionData.type === "MsgSend" || this.session.sessionType === SIGN_METHODS.METAMASK || this.session.sessionType === SIGN_METHODS.MULTISIG
+            (this.transactionData.type === "MsgSend" || this.session.sessionType === SIGN_METHODS.METAMASK || this.session.sessionType === SIGN_METHODS.MULTISIG || this.session.sessionType === SIGN_METHODS.LEDGER
               ? "/tx/"
               : "/staking-tx/") +
             txHash
@@ -1009,7 +1009,7 @@ export default {
           setTimeout(() => this.close(), 10000)
         }
       } catch (e) {
-        log.error(e);
+        // log.error(e);
         console.log("[submit] error", e.message)
 
         this.onSendingFailed(e.message)

@@ -1,0 +1,37 @@
+diff --git a/node_modules/@ledgerhq/hw-app-eth/lib-es/Eth.js b/node_modules/@ledgerhq/hw-app-eth/lib-es/Eth.js
+index 05972b0..599ec0b 100644
+--- a/node_modules/@ledgerhq/hw-app-eth/lib-es/Eth.js
++++ b/node_modules/@ledgerhq/hw-app-eth/lib-es/Eth.js
+@@ -199,6 +199,8 @@ export default class Eth {
+                     throw remapTransactionRelatedErrors(e);
+                 });
+             }
++            // console.log('device response', response, [response[0], chainId, parsedTransaction.type], response.subarray(1, 1 + 32).toString("hex"), response.subarray(1 + 32, 1 + 32 + 32).toString("hex"))
++            // console.log('calling getV', response[0], chainId, parsedTransaction.type)
+             const v = getV(response[0], chainId, parsedTransaction.type);
+             const r = response.subarray(1, 1 + 32).toString("hex");
+             const s = response.subarray(1 + 32, 1 + 32 + 32).toString("hex");
+diff --git a/node_modules/@ledgerhq/hw-app-eth/lib-es/utils.js b/node_modules/@ledgerhq/hw-app-eth/lib-es/utils.js
+index 21848ad..47a2360 100644
+--- a/node_modules/@ledgerhq/hw-app-eth/lib-es/utils.js
++++ b/node_modules/@ledgerhq/hw-app-eth/lib-es/utils.js
+@@ -79,6 +79,8 @@ export const getParity = (vFromDevice, chainId, transactionType) => {
+         return vFromDevice;
+     // The device use a 4 bytes integer to represent the chainId and keeps the highest bytes
+     const chainIdUint32 = getChainIdAsUint32(chainId);
++    const chainIdString = chainId.toString()
++    // console.log({chainId, chainIdUint32, vFromDevice, chainIdString})
+     // Then applies EIP-155 to this chainId
+     const chainIdWithEIP155 = chainIdUint32 * 2 + 35;
+     // Since it's a single byte, we need to apply the overflow after reaching the max 0xff value and starting again to 0x00
+@@ -103,8 +105,10 @@ export const getParity = (vFromDevice, chainId, transactionType) => {
+  * @returns {Number}
+  */
+ export const getChainIdAsUint32 = (chainId) => {
++    // return chainId
+     const chainIdBuff = Buffer.from(padHexString(new BigNumber(chainId).toString(16)), "hex");
+     const chainIdUint32 = chainIdBuff.subarray(0, 4);
++    // console.log('getChainIdAsUint32', {chainId, ret: parseInt(chainIdUint32.toString("hex"), 16), chainIdBuff, chainIdUint32, chainIdStr: new BigNumber(chainId).toString(16)})
+     return parseInt(chainIdUint32.toString("hex"), 16);
+ };
+ /**

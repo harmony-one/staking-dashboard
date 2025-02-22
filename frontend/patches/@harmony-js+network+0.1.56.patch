@@ -1,0 +1,13 @@
+diff --git a/node_modules/@harmony-js/network/dist/providers/defaultFetcher.js b/node_modules/@harmony-js/network/dist/providers/defaultFetcher.js
+index 7f94a56..4bfc5d3 100644
+--- a/node_modules/@harmony-js/network/dist/providers/defaultFetcher.js
++++ b/node_modules/@harmony-js/network/dist/providers/defaultFetcher.js
+@@ -10,7 +10,7 @@ var tslib_1 = require("tslib");
+ var cross_fetch_1 = tslib_1.__importDefault(require("cross-fetch"));
+ exports.fetchRPC = {
+     requestHandler: function (request, headers) {
+-        return cross_fetch_1.default(request.url, {
++        return window.fetch(request.url, {
+             method: request.options && request.options.method ? request.options.method : 'POST',
+             cache: 'no-cache',
+             mode: 'cors',

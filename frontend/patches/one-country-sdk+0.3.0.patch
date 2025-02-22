@@ -1,0 +1,14 @@
+diff --git a/node_modules/one-country-sdk/lib/esm/index.mjs b/node_modules/one-country-sdk/lib/esm/index.mjs
+index 9bba514..6ed46e1 100644
+--- a/node_modules/one-country-sdk/lib/esm/index.mjs
++++ b/node_modules/one-country-sdk/lib/esm/index.mjs
+@@ -1,7 +1,8 @@
+ import Web3 from 'web3';
+ import BN from 'bn.js';
+-import { abi as ContractAbi } from './abi/d1dc.json';
++import ContractAbiJson from './abi/d1dc.json';
+ import { NullAddress } from "./constants";
++const ContractAbi = ContractAbiJson.abi
+ export class OneCountry {
+     web3;
+     contract;

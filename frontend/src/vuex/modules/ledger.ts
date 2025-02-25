@@ -95,7 +95,7 @@ export default (): Module<any, any> => ({
   actions: {
     async connectLedgerApp() {
       const app = await getHarmonyApp()
-      let response: any = await app.publicKey(true)
+      let response: any = await app.publicKey(false)
       if (response.return_code === SW_ERR) {
         throw new Error("Authorization request rejected")
       }
@@ -113,7 +113,7 @@ export default (): Module<any, any> => ({
 
     async showLedgerAddress() {
       const app = await getHarmonyApp()
-      let response: any = await app.publicKey(false)
+      let response: any = await app.publicKey(true)
 
       if (response.return_code === SW_ERR) {
         throw new Error("Address Rejected")

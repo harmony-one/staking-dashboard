@@ -144,7 +144,7 @@ export default class HarmonyApp {
   async publicKey(silentMode: boolean) {
     try {
       const eth = new Eth(this.transport)
-      const { address } = await eth.getAddress(`${HD_PATH}/0`, false, true)
+      const { address } = await eth.getAddress(`${HD_PATH}/0`, silentMode, true)
       return {
         one_address: toBech32(address),
         return_code: SUCCESS

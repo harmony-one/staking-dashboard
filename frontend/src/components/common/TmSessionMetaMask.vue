@@ -62,7 +62,8 @@ export default {
 
         this.$store.dispatch("signIn", {
           sessionType: sessionType.METAMASK,
-          address: toBech32(accounts[0])
+          address: toBech32(accounts[0]),
+          evmAddress: accounts[0]
         })
 
         this.$router.push(`/`)

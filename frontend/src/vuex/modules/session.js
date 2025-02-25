@@ -29,6 +29,7 @@ export default () => {
     extensionVersion: 0,
     history: [],
     address: null, // Current address
+    evmAddress: null, // Current EVM address
     addresses: [], // Array of previously used addresses
     errorCollection: false,
     analyticsCollection: false,
@@ -70,6 +71,9 @@ export default () => {
     },
     setUserAddresses(state, addresses) {
       state.addresses = addresses
+    },
+    setEvmAddress(state, evmAddress) {
+      state.evmAddress = evmAddress
     },
     setExperimentalMode(state) {
       state.experimentalMode = true
@@ -158,7 +162,7 @@ export default () => {
     },
     async signIn(
       { state, commit, dispatch },
-      { address, sessionType = `ledger` }
+      { address, evmAddress, sessionType = `ledger` }
     ) {
       if (state.signedIn) {
         await dispatch(`resetSessionData`)
@@ -167,7 +171,7 @@ export default () => {
       commit(`setSignIn`, true)
       commit(`setSessionType`, sessionType)
 
-      await dispatch(`changeAccount`, { address, sessionType })
+      await dispatch(`changeAccount`, { address, evmAddress, sessionType })
 
       // state.externals.track(`event`, `session`, `sign-in`, sessionType)
     },
@@ -179,9 +183,10 @@ export default () => {
     },
     async changeAccount(
       { state, commit, dispatch },
-      { address, sessionType = `ledger` }
+      { address, evmAddress, sessionType = `ledger` }
     ) {
       commit(`setUserAddress`, address)
+      commit(`setEvmAddress`, evmAddress)
 
       await dispatch(`rememberAddress`, { address, sessionType })
 

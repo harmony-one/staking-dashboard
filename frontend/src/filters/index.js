@@ -32,6 +32,25 @@ export const formatBech32 = (
     )
   }
 }
+export const formatEVM = (
+  EVMaddress,
+  longForm = false,
+  length = 4,
+  start = 4) => {
+  if (!EVMaddress) {
+    return `Address Not Found`
+  } else if (!/^0x[a-fA-F0-9]{40}$/.test(EVMaddress)) {
+    return `Not A Valid EVM Address`
+  } else if (longForm) {
+    return EVMaddress
+  } else {
+    return (
+      EVMaddress.slice(0, start + 2) +
+      `…` +
+      EVMaddress.slice(-1 * length)
+    )
+  }
+}
 
 export const resolveValidatorName = (address, validators) => {
   if (validators[address]) {

@@ -3,7 +3,7 @@
     <div v-if="session.signedIn" class="user-box">
       <div>
         <h3>Your Address</h3>
-        <Bech32 :session="session" :address="session.address || ''" />
+        <Bech32 :session="session" :address="session.address" :evmAddress="session.evmAddress || ''" />
       </div>
     </div>
 
@@ -153,7 +153,7 @@
       >
         <h2 class="app-menu-title">Cross Shard Transfer</h2>
       </a>
-      
+
       <a
         class="app-menu-item small"
         href="https://snapshot.org/#/harmony-mainnet.eth/"
@@ -194,14 +194,14 @@
  <!--
       <a
         class="app-menu-item small"
-        href="https://www.harmonyvalidators.com/" 
+        href="https://www.harmonyvalidators.com/"
         target="_blink"
-        title="dApps & Services" 
+        title="dApps & Services"
       >
         <h2 class="app-menu-title">dApps & Services</h2>
       </a>
 
-     
+
       <router-link
         class="app-menu-item small"
         to="#"
@@ -212,7 +212,7 @@
         <h2 class="app-menu-title">Feedback</h2>
       </router-link>-->
 
-      
+
     </div>
 
     <ConnectedNetwork />

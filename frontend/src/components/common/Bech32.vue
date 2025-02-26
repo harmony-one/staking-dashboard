@@ -21,7 +21,7 @@
       v-clipboard:success="() => onCopy()"
       class="address"
     >
-      {{ evmAddress | formatEVM(false, 4, 4) }}
+      {{ evmAddress | formatEVM(longForm, 4, 4) }}
     </div>
 
     <div

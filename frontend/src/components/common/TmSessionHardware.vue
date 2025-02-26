@@ -51,6 +51,7 @@ import { mapState } from "vuex"
 import HardwareState from "common/TmHardwareState"
 import SessionFrame from "common/SessionFrame"
 import CopyLink from "./CopyLink"
+import { fromBech32 } from "@harmony-js/crypto"
 export default {
   name: `session-hardware`,
   components: {
@@ -90,9 +91,12 @@ export default {
         this.connectionError = message
         return
       }
+      console.log(`address`, this.address)
+      console.log(`fromBech32(this.address)`, fromBech32(this.address))
       await this.$store.dispatch(`signIn`, {
         sessionType: `ledger`,
-        address: this.address
+        address: this.address,
+        evmAddress: fromBech32(this.address)
       })
     }
   },

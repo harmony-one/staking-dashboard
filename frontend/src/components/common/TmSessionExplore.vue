@@ -75,6 +75,7 @@ import TmFormStruct from "common/TmFormStruct"
 import TmField from "common/TmField"
 import TmFormMsg from "common/TmFormMsg"
 import bech32 from "bech32"
+import { fromBech32 } from "@harmony-js/crypto"
 import { formatBech32 } from "src/filters"
 
 export default {
@@ -107,7 +108,8 @@ export default {
 
       this.$store.dispatch(`signIn`, {
         sessionType: `explore`,
-        address: this.address
+        address: this.address,
+        evmAddress: fromBech32(this.address)
       })
       localStorage.setItem(`prevAddress`, this.address)
       this.$router.push(`/`)

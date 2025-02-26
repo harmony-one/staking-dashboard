@@ -34,7 +34,7 @@
       <li class="column">
         <h4>Validator Address:&nbsp;</h4>
         <span>
-          <Bech32 :address="validator.operator_address" :long-form="true" />
+          <Bech32 :address="validator.operator_address" :evmAddress=evmAddress :long-form="true" />
         </span>
       </li>
       <li class="column">
@@ -79,6 +79,7 @@ import { shortDecimals, percent, ones } from "scripts/num"
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import Bech32 from "common/Bech32"
 import tooltips from "src/components/tooltips"
+import { fromBech32 } from "@harmony-js/crypto"
 
 export default {
   name: `general-info-block`,
@@ -98,6 +99,9 @@ export default {
   props: ["validator"],
   data: () => ({ tooltips }),
   computed: {
+    evmAddress() {
+      return fromBech32(this.validator.operator_address)
+    },
     selfBondPercent() {
       return percent(this.validator.self_stake / this.validator.total_stake)
     },

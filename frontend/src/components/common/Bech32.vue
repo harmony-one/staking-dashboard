@@ -13,6 +13,18 @@
     </div>
 
     <div
+      v-tooltip="{
+        placement: 'top',
+        content: copySuccess || `Click to copy`
+      }"
+      v-clipboard:copy="evmAddress"
+      v-clipboard:success="() => onCopy()"
+      class="address"
+    >
+      {{ evmAddress | formatEVM(longForm, 4, 4) }}
+    </div>
+
+    <div
       class="show-on-ledger"
       v-tooltip="{
         placement: 'top',
@@ -44,12 +56,13 @@
 </template>
 
 <script>
-import { formatBech32 } from "src/filters"
+import { formatBech32, formatEVM } from "src/filters"
 
 export default {
   name: `bech32-address`,
   filters: {
-    formatBech32
+    formatBech32,
+    formatEVM
   },
   props: {
     session: {
@@ -57,6 +70,10 @@ export default {
       required: false
     },
     address: {
+      type: String,
+      required: true
+    },
+    evmAddress: {
       type: String,
       required: true
     },

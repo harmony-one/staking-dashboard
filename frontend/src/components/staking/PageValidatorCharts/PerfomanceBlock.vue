@@ -39,7 +39,7 @@
       </li>
       <li class="row">
         <h4 v-info-style v-tooltip.top="tooltips.v_profile.apr">
-          Latest expected return
+          Previous Epoch Return
         </h4>
         <span>{{ validator.last_apr | percent | notAvailable }}</span>
       </li>
